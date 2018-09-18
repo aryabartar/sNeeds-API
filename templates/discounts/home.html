@@ -1,0 +1,76 @@
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+
+{% block main_content %}
+    <body data-smooth-scroll-offset="77">
+    <div class="nav-container"></div>
+    <div class="main-container">
+        <section class="switchable feature-large feature-large-13 text-right switchable--switch">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <div class="col-md-6"><img alt="Image" class="border--round box-shadow-wide"
+                                               src="{% static "img/inner-2.jpg" %}"></div>
+                    <div class="col-md-6 col-lg-5">
+                        <div class="switchable__text">
+                            <h2>تخفیفات کافه ها و رستوران ها</h2>
+                            <p class="lead"> سایت sneeds هر هفته با دانشجو های محصل در خارج کشور مصاحبه کرده و اطلاعات
+                                با ارزشی درمورد اپلای و تحصیل در خارج در اختیار دانشجو ها قرار میدهد همچنین به طور
+                                پیوسته با اساتید هر رشته درباره اپلای صحبت کرده و برروی سایت قرار داده می‌شود.
+
+                            </p>
+                            <div class="text-block">
+                                <h5>تخفیفات رایگان </h5>
+                                <p> تخفیفات رایگان کافه ها و رستوران ها با قیمت های دانشجویی ! </p>
+                            </div>
+                            <div class="text-block">
+                                <h5>10 % تا 50% تخفیف</h5>
+                                <p>با ارائه کد های اسنیدز تخفیف بگیرید . </p>
+                            </div>
+                            <div class="text-block">
+                                <h5>10 % تا 50% تخفیف</h5>
+                                <p>با ارائه کد های اسنیدز تخفیف بگیرید . </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="container">
+                <div class="masonry">
+                    <div class="masonry__container row masonry--active">
+                        {% for discount in discounts %}
+                            <div class="col-md-4 masonry__item">
+                                <div class="card card-2 text-center">
+                                    <div class="card__top">
+                                        <a href="#"> <img alt="Image" src="{{ discount.cafe.images.all.1.image.url }}"> </a>
+                                    </div>
+                                    <div class="card__body">
+                                        <h4>{{ discount.string_represent }}</h4> <span
+                                            class="type--fade">روی تمامی خدمات و منو</span>
+                                        <p> بعدا در اینجا چیز هایی در مورد نوع کافه و توضیحات قرار داده شود و استفاده
+                                            شود. توسط </p>
+                                    </div>
+                                    <div class="card__bottom text-center">
+                                        <a class="btn btn--primary" href="{% url "discounts:discount_page" discount.pk %}">
+                                            <span class="btn__text">مشاهده کافه و دریافت تخفیف</span>
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    </body>
+{% endblock main_content %}
+
+
+
+

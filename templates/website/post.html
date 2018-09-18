@@ -1,0 +1,26 @@
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+{% block main_content %}
+    <body data-smooth-scroll-offset="77">
+    <div class="nav-container"></div>
+    <div class="main-container">
+        <section class="text-right">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-10 col-lg-8">
+                        <article>
+                            <div class="article__title text-center">
+                                <h1 class="h2">{{ post.title }}</h1> <span>Change this later </span><span><a
+                                    href="#">Also this</a></span></div>
+                            <div class="article__body"><img alt="Image" src="{{ post.post_image.url }}">
+                                <p> {{ post.text }}</p>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock main_content %}
