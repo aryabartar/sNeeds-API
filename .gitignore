@@ -3,3 +3,4 @@ media/*
 static/*
 templates/*
 db.sqlite3
+.idea/
