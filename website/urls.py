@@ -21,7 +21,7 @@ from . import views
 app_name = "website"
 urlpatterns = [
                   path('', views.home, name="home"),
-                  path('posts/<int:pk>', views.get_post, name="posts"),
+                  path('posts/<str:slug>', views.get_post, name="posts"),
                   path('booklets/<int:pk>', views.get_booklet, name="booklets"),
                   path('categories/<str:hierarchy>', views.show_category, name="categories"),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
