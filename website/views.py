@@ -31,6 +31,19 @@ def get_booklet (request , pk) :
     booklet = get_object_or_404(Booklet, pk=pk)
     return render(request, 'website/booklet.html' , context={"booklet" :booklet})
 
-def get_categories (request , slug) :
-    category = get_object_or_404(Topic , slug=slug)
-    return render(request , 'website/category.html' , context={})
+def show_category(request,hierarchy= None):
+    category_slug = hierarchy.split('/')
+    category_queryset = list(Topic.objects.all())
+    all_slugs = [ x.slug for x in category_queryset ]
+    parent = None
+    for slug in category_slug:
+        if slug in all_slugs:
+            parent = get_object_or_404(Topic,slug=slug,parent=parent)
+        else:
+            instance = get_object_or_404(Post, slug=slug)
+            breadcrumbs_link = instance.get_cat_list()
+            category_name = [' '.join(i.split('/')[-1].split('-')) for i in breadcrumbs_link]
+            breadcrumbs = zip(breadcrumbs_link, category_name)
+            return render(request, "website/categories.html", {'instance':instance,'breadcrumbs':breadcrumbs})
+
+    return render(request,"website/categories.html",{'sub_categories':parent.children.all()})
