@@ -49,3 +49,36 @@ def show_category(request, hierarchy=None):
             parent = get_object_or_404(Topic, slug=slug, parent=parent)
     return render(request, "website/category.html",
                   {'post_set': parent.posts.all(), 'sub_categories': parent.children.all()})
+
+
+def blog_posts(request, page=1):
+    '''
+    This method is used to show different blog posts in one page .
+    :param request: 
+    :return: 
+    '''
+
+    def first_10_words(text):
+        splitted_text = text.split(" ")
+        temp_text = ""
+        counter = 0
+        for word in splitted_text:
+            temp_text += str(word + " ")
+            counter += 1
+            if counter > 10:
+                temp_text += " ... "
+                break
+        return temp_text
+
+    def get_first_words_of_post(posts):
+        text_list = []
+        for post in posts:
+            text_list.append(first_10_words(post.text))
+        return text_list
+
+
+    all_posts = Post.objects.all()
+    descriptions_text = get_first_words_of_post(all_posts)
+    post_list = list(zip(all_posts, descriptions_text)) #The first one is post and second is description
+    my_dict = {"post_list": post_list }
+    return render(request, "website/blog-posts.html", context=my_dict)
