@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views
 
 app_name = "website"
@@ -23,5 +23,6 @@ urlpatterns = [
                   path('', views.home, name="home"),
                   path('posts/<str:slug>', views.get_post, name="posts"),
                   path('booklets/<int:pk>', views.get_booklet, name="booklets"),
-                  path('categories/<str:hierarchy>', views.show_category, name="categories"),
+                  # path('category/<str:hierarchy>', views.show_category, name="category"),
+                  re_path(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
