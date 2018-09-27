@@ -57,6 +57,8 @@ def blog_posts(request, page=1):
     :param request: 
     :return: 
     '''
+    post_per_page = 1  # If you want to change number of posts in a blog page,change this.
+    blog_pages_number = int(len(Post.objects.all()))  # for determining all blog pages size
 
     def first_10_words(text):
         splitted_text = text.split(" ")
@@ -76,9 +78,21 @@ def blog_posts(request, page=1):
             text_list.append(first_10_words(post.text))
         return text_list
 
+    def get_blog_page_numbers(page):
+        page_number_list = []
+        if page - 2 > 0:
+            page_number_list.append((page - 2, True))
+        if page - 1 > 0:
+            page_number_list.append((page - 1, True))
+        page_number_list.append((page, False))
+        if page < blog_pages_number:
+            page_number_list.append((page + 1, True))
+        if page + 1 < blog_pages_number:
+            page_number_list.append((page + 2, True))
+        return page_number_list
 
-    all_posts = Post.objects.all()
+    all_posts = Post.objects.all()[(page - 1) * post_per_page:page * post_per_page]
     descriptions_text = get_first_words_of_post(all_posts)
-    post_list = list(zip(all_posts, descriptions_text)) #The first one is post and second is description
-    my_dict = {"post_list": post_list }
+    post_list = list(zip(all_posts, descriptions_text))  # The first one is post and second is description
+    my_dict = {"post_list": post_list, "page_number": get_blog_page_numbers(page)}
     return render(request, "website/blog-posts.html", context=my_dict)

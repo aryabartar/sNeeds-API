@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from .models import Discount
 
@@ -8,6 +9,7 @@ def home(request):
     my_dict = {"discounts": discounts}
     return render(request, "discounts/home.html" , context=my_dict)
 
+@login_required(login_url='account:login')
 def discount_page(request , pk):
     discount = get_object_or_404(Discount , pk=pk)
     my_dict = {"discount": discount}
