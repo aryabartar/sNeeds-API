@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = '!-d4b-f(-i7#6mqx1^618-+e2axkjkpgjb6xr=ptp4mx-q&3_$'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -40,6 +38,22 @@ INSTALLED_APPS = [
     'website',
     'widget_tweaks',
     'discounts',
+
+    # wagtail cms --STARTED--
+    'wagtail.contrib.forms',
+    'wagtail.contrib.redirects',
+    'wagtail.embeds',
+    'wagtail.sites',
+    'wagtail.users',
+    'wagtail.snippets',
+    'wagtail.documents',
+    'wagtail.images',
+    'wagtail.search',
+    'wagtail.admin',
+    'wagtail.core',
+    'modelcluster',
+    'taggit',
+    # wagtail CMS --ENDED--
 ]
 
 MIDDLEWARE = [
@@ -50,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'wagtail.core.middleware.SiteMiddleware',
+    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
 ]
 
 ROOT_URLCONF = 'sneeds.urls'
@@ -73,19 +89,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sneeds.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'todo',
-        'USER' : 'root',
-        'PASSWORD' : '122221'
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'sneeds_db',
+        'USER': 'postgres',
+        'PASSWORD': 'Sneeds@203040',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -105,7 +122,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
@@ -119,13 +135,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
-
-
 
 STATICFILES_DIRS = [
     'static',
@@ -133,9 +146,10 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
+WAGTAIL_SITE_NAME = 'sNeeds'
