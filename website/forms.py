@@ -8,7 +8,6 @@ class UploadBookletForm(forms.ModelForm):
         fields = ['title',
                   'owner',
                   'topic',
-                  'text',
                   'booklet_content',
                   'booklet_image',
                   ]

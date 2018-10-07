@@ -22,10 +22,6 @@ class Topic(models.Model):
         return ' -> '.join(full_path[::-1])
 
 
-class BookletTopic(models.Model):
-    subject = models.CharField(max_length=120)
-
-
 # Create your models here.
 class Post(models.Model):
     author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
@@ -54,13 +50,29 @@ class Post(models.Model):
         return self.title
 
 
+class BookletField(models.Model):
+    """
+    For example Civil Eng, Computer Eng, ...
+    """
+    subject = models.CharField(max_length=120, blank=False, null=True)
+
+
+class BookletTopic(models.Model):
+    """
+    For example AP, DS, Environment, ...
+    """
+    field = models.ForeignKey(BookletField, on_delete=models.CASCADE, related_name='topics', blank=False , null=True)
+    subject = models.CharField(max_length=120, blank=False)
+
+    def __str__(self):
+        temp_str = self.subject + " " + self.field.subject
+        return temp_str
+
 class Booklet(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=200, blank=False)
     # Booklet writer name
     owner = models.CharField(max_length=200, blank=True, default="ناشناس")
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', blank=False)
-    text = models.TextField()
     booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
 
