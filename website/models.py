@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib.admin import ModelAdmin
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
@@ -55,18 +56,24 @@ class BookletField(models.Model):
     For example Civil Eng, Computer Eng, ...
     """
     subject = models.CharField(max_length=120, blank=False, null=True)
+    slug = models.SlugField(null=True, help_text="Lower case")
+
+    def __str__(self):
+        return self.subject
 
 
 class BookletTopic(models.Model):
     """
     For example AP, DS, Environment, ...
     """
-    field = models.ForeignKey(BookletField, on_delete=models.CASCADE, related_name='topics', blank=False , null=True)
-    subject = models.CharField(max_length=120, blank=False)
+    field = models.ForeignKey(BookletField, on_delete=models.CASCADE, related_name='topics', blank=False, null=True)
+    subject = models.CharField(max_length=120, blank=False, help_text="Booklet topic", verbose_name="عنوان")
+    slug = models.SlugField(null=True , help_text="Lower case")
 
     def __str__(self):
-        temp_str = self.subject + " " + self.field.subject
+        temp_str = self.subject + " | " + self.field.subject
         return temp_str
+
 
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)

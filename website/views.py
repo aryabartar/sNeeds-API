@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Post, Booklet, Topic
+from .models import Post, Booklet, Topic, BookletTopic
 
 
 # Create your views here.
@@ -96,3 +96,11 @@ def blog_posts(request, page=1):
     post_list = list(zip(all_posts, descriptions_text))  # The first one is post and second is description
     my_dict = {"post_list": post_list, "page_number": get_blog_page_numbers(page)}
     return render(request, "website/blog-posts.html", context=my_dict)
+
+
+def get_booklet_topic(request, slug):
+    booklet_topic = get_object_or_404(BookletTopic , slug=slug.lower())
+    booklets = Booklet.objects.filter(topic__exact=booklet_topic)
+    my_dict = {"booklets" : booklets }
+
+    return render(request, "website/booklet-topic.html", context=my_dict)
