@@ -68,7 +68,7 @@ class BookletTopic(models.Model):
     """
     field = models.ForeignKey(BookletField, on_delete=models.CASCADE, related_name='topics', blank=False, null=True)
     subject = models.CharField(max_length=120, blank=False, help_text="Booklet topic", verbose_name="عنوان")
-    slug = models.SlugField(null=True , help_text="Lower case")
+    slug = models.SlugField(null=True, help_text="Lower case")
 
     def __str__(self):
         temp_str = self.subject + " | " + self.field.subject
@@ -77,11 +77,17 @@ class BookletTopic(models.Model):
 
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)
+    slug = models.SlugField(null=True, default=None)
+
     # Booklet writer name
     owner = models.CharField(max_length=200, blank=True, default="ناشناس")
-    topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', blank=False)
+    topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', null=True , blank=True)
     booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('website:booklets', args=[str(self.slug)])
 
     def __str__(self):
         return self.title

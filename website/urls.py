@@ -22,8 +22,8 @@ app_name = "website"
 urlpatterns = [
                   path('', views.home, name="home"),
                   path('posts/<str:slug>', views.get_post, name="posts"),
-                  path('booklets/<int:pk>', views.get_booklet, name="booklets"),
-                  path('booklets/topic/<str:slug>', views.get_booklet_topic, name="booklets_topic"),  # Goes to specific page of the blog
+                  path('booklets/<str:slug>', views.get_booklet, name="booklets"),
+                  path('booklets/topic/<str:slug>', views.BookletTopic.as_view(), name="booklets_topic"),
                   re_path(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
                   path('blog/', views.blog_posts),#Automatically goes to first page (default page is 1)
                   path('blog/<int:page>', views.blog_posts, name="blog"),#Goes to specific page of the blog

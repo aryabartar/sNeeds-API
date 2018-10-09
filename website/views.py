@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404
+from django.views import generic
+
 from .models import Post, Booklet, Topic, BookletTopic
 
 
@@ -34,8 +36,8 @@ def get_post(request, slug):
     return render(request, "website/post.html", {'post': post, 'breadcrumbs': breadcrumbs})
 
 
-def get_booklet(request, pk):
-    booklet = get_object_or_404(Booklet, pk=pk)
+def get_booklet(request, slug):
+    booklet = get_object_or_404(Booklet, slug=slug.lower())
     return render(request, 'website/booklet.html', context={"booklet": booklet})
 
 
@@ -98,9 +100,13 @@ def blog_posts(request, page=1):
     return render(request, "website/blog-posts.html", context=my_dict)
 
 
-def get_booklet_topic(request, slug):
-    booklet_topic = get_object_or_404(BookletTopic , slug=slug.lower())
-    booklets = Booklet.objects.filter(topic__exact=booklet_topic)
-    my_dict = {"booklets" : booklets }
+class BookletTopic(generic.ListView):
+    model = BookletTopic
+    template_name = 'website/booklet-topic.html'
 
-    return render(request, "website/booklet-topic.html", context=my_dict)
+    def get_queryset(self):
+        qs = self.model.objects.all()
+        if self.kwargs.get('slug'):
+            qs = qs.filter(slug__exact=self.kwargs['slug'])
+            associated_booklets = qs[0].booklets.all()
+        return associated_booklets
