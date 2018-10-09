@@ -110,3 +110,4 @@ class BookletTopic(generic.ListView):
             qs = qs.filter(slug__exact=self.kwargs['slug'])
             associated_booklets = qs[0].booklets.all()
         return associated_booklets
+#test
