@@ -103,6 +103,7 @@ def blog_posts(request, page=1):
 class BookletTopic(generic.ListView):
     model = BookletTopic
     template_name = 'website/booklet-topic.html'
+    paginate_by = 1
 
     def get_queryset(self):
         qs = self.model.objects.all()

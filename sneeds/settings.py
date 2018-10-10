@@ -39,21 +39,6 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'discounts',
 
-    # wagtail cms --STARTED--
-    'wagtail.contrib.forms',
-    'wagtail.contrib.redirects',
-    'wagtail.embeds',
-    'wagtail.sites',
-    'wagtail.users',
-    'wagtail.snippets',
-    'wagtail.documents',
-    'wagtail.images',
-    'wagtail.search',
-    'wagtail.admin',
-    'wagtail.core',
-    'modelcluster',
-    'taggit',
-    # wagtail CMS --ENDED--
 ]
 
 MIDDLEWARE = [
@@ -64,8 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'wagtail.core.middleware.SiteMiddleware',
-    'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+
 ]
 
 ROOT_URLCONF = 'sneeds.urls'
@@ -152,4 +136,3 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
-WAGTAIL_SITE_NAME = 'sNeeds'
