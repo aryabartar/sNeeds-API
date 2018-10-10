@@ -107,7 +107,6 @@ class BookletTopic(generic.ListView):
     def get_queryset(self):
         qs = self.model.objects.all()
         if self.kwargs.get('slug'):
-            qs = qs.filter(slug__exact=self.kwargs['slug'])
+            qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
             associated_booklets = qs[0].booklets.all()
         return associated_booklets
-#test
