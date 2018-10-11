@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
-from .models import Post, Booklet, Topic, BookletTopic
+from .models import Post, Booklet, Topic, BookletTopic, BookletField
 
 
 # Create your views here.
@@ -113,4 +113,20 @@ class BookletTopic(generic.ListView):
         if self.kwargs.get('slug'):
             qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
             associated_booklets = qs[0].booklets.all().order_by('title')
+        return associated_booklets
+
+
+class BookletField(generic.ListView):
+    model = BookletField
+    template_name = 'website/booklet-field.html'
+    paginate_by = 4
+
+    def get_queryset(self):
+        qs = self.model.objects.all()
+        if self.kwargs.get('slug'):
+            qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
+            associated_booklets = []
+            for topic in qs[0].topics.all() :
+                for booklet in topic.booklets.all():
+                    associated_booklets.append(booklet)
         return associated_booklets
