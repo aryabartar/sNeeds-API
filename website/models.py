@@ -58,6 +58,10 @@ class BookletField(models.Model):
     subject = models.CharField(max_length=120, blank=False, null=True)
     slug = models.SlugField(null=True, help_text="Lower case")
 
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('website:booklets_field', args=[str(self.slug)])
+
     def __str__(self):
         return self.subject
 

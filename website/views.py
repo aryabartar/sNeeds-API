@@ -125,8 +125,7 @@ class BookletField(generic.ListView):
         qs = self.model.objects.all()
         if self.kwargs.get('slug'):
             qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
-            associated_booklets = []
-            for topic in qs[0].topics.all() :
-                for booklet in topic.booklets.all():
-                    associated_booklets.append(booklet)
-        return associated_booklets
+            associated_topics = []
+            for topic in qs[0].topics.all():
+                associated_topics.append(topic)
+        return associated_topics
