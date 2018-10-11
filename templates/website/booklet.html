@@ -1,0 +1,75 @@
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+{% block main_content %}
+
+    <section class="feature-large switchable">
+        <div class="container">
+            <div class="row justify-content-between">
+                <div class="col-md-6">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="">{{ booklet.topic.field }}</a></li>
+                            <li class="breadcrumb-item"><a href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">{{ booklet.title }}</li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-md-6">
+                    <a class="btn btn--primary" href="{{ booklet.topic.get_absolute_url }}">
+                        <span class="btn__text">بازگشت</span>
+                    </a>
+                </div>
+            </div>
+            <div class="row justify-content-between">
+                <div class="col-md-6">
+                    <div class="boxed boxed--lg boxed--border">
+                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                            <div class="feature__body">
+                                <h5>عنوان</h5>
+                                <p> {{ booklet.title }} </p>
+                            </div>
+                        </div>
+                        <div class="feature feature-2"><i class="icon icon-Duplicate-Window color--primary"></i>
+                            <div class="feature__body">
+                                <h5>موضوع</h5>
+                                <p>
+                                    <stron>{{ booklet.topic }}</stron>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                            <div class="feature__body">
+                                <h5>نویسنده</h5>
+                                <p> {{ booklet.owner }} </p>
+                            </div>
+                        </div>
+                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                            <div class="feature__body">
+                                <h5>حجم جزوه</h5>
+                                <p> {{ booklet.booklet_content.size|filesizeformat }}</p>
+                            </div>
+                        </div>
+                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                            <div class="feature__body">
+                                <h5>تعداد مشاهده</h5>
+                                <p> {{ num_visits }}</p>
+                            </div>
+                        </div>
+                        <div class="feature feature-2"><i class="icon icon-Life-Jacket color--primary"></i>
+                            <div class="feature__body">
+                                <a class="btn btn--primary" href="{{ booklet.booklet_content.url }}">
+                                    <span class="btn__text">دریافت جزوه</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6"><img alt="Image" class="border--round box-shadow-wide"
+                                                    src="{{ booklet.booklet_image.url }}"></div>
+            </div>
+        </div>
+    </section>
+
+{% endblock main_content %}

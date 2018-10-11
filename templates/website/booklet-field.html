@@ -1,0 +1,73 @@
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+{% block main_content %}
+    <div class="main-container">
+        <section class="space--sm">
+            <div class="container">
+                <section>
+                    <div class="container">
+                        <section>
+                            <div class="container">
+                                <div class="col-md-6">
+                                    <nav aria-label="breadcrumb">
+                                        <ol class="breadcrumb">
+                                            <h4>دروس :</h4>
+                                            {% for topic in object_list %}
+                                                <li class="breadcrumb-item"><a
+                                                        href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a>
+                                                </li>
+                                            {% endfor %}
+                                        </ol>
+                                    </nav>
+                                </div>
+                                <div class="row">
+
+                                    {% if object_list %}
+                                        {% for topic in object_list %}
+                                            {% for booklet in topic.booklets.all %}
+                                                <div class="col-md-4">
+                                                    <div class="feature"><img alt="Image"
+                                                                              src="{{ booklet.booklet_image.url }}"
+                                                                              class="border--round">
+                                                        <h4>{{ booklet.title }}</h4>
+                                                        <p> {{ booklet.topic }} </p>
+                                                        <a class="btn btn--primary"
+                                                           href="{{ booklet.get_absolute_url }}">
+                                                            <span class="btn__text">مشاهده و دانلود</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endfor %}
+                                    {% else %}
+                                        No booklet defined yet!
+                                    {% endif %}
+                                </div>
+                                {% if is_paginated %}
+                                    <div class="pagination">
+                                         <span class="page-links">
+                                            {% if page_obj.has_previous %}
+                                                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">قبلی</a>
+                                            {% endif %}
+                                             <span class="page-current">
+                                                 <p>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</p>
+                                                </span>
+                                             {% if page_obj.has_next %}
+                                                 <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">بعدی</a>
+                                             {% endif %}
+                                            </span>
+                                    </div>
+                                {% else %}
+                                {% endif %}
+                            </div>
+                        </section>
+                    </div>
+                </section>                <!--end of row-->
+            </div>
+            <!--end of container-->
+        </section>
+    </div>
+
+{% endblock main_content %}
