@@ -38,7 +38,10 @@ def get_post(request, slug):
 
 def get_booklet(request, slug):
     booklet = get_object_or_404(Booklet, slug=slug.lower())
-    return render(request, 'website/booklet.html', context={"booklet": booklet})
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+    context = {"booklet": booklet, "num_visits": num_visits}
+    return render(request, 'website/booklet.html', context=context)
 
 
 def show_category(request, hierarchy=None):
@@ -103,11 +106,11 @@ def blog_posts(request, page=1):
 class BookletTopic(generic.ListView):
     model = BookletTopic
     template_name = 'website/booklet-topic.html'
-    paginate_by = 1
+    paginate_by = 4
 
     def get_queryset(self):
         qs = self.model.objects.all()
         if self.kwargs.get('slug'):
             qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
-            associated_booklets = qs[0].booklets.all()
+            associated_booklets = qs[0].booklets.all().order_by('title')
         return associated_booklets
