@@ -76,7 +76,7 @@ class BookletTopic(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
-        return reverse('website:booklets_topic', args=[str(self.slug)])
+        return reverse('website:booklets_topic', args=[str(self.field.slug), str(self.slug)])
 
     def __str__(self):
         temp_str = self.subject + " | " + self.field.subject

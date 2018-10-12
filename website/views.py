@@ -111,8 +111,12 @@ class BookletTopicView(generic.ListView):
     def get_queryset(self):
         qs = self.model.objects.all()
         if self.kwargs.get('slug'):
-            qs = qs.filter(slug__exact=self.kwargs['slug'].lower())
-            associated_booklets = qs[0].booklets.all().order_by('title')
+            booklet_topic = \
+                qs.filter(
+                    slug__exact=self.kwargs['slug'].lower(),
+                    field__slug__exact=self.kwargs['field_slug'].lower()
+                )[0]
+            associated_booklets = booklet_topic.booklets.all().order_by('title')
         return associated_booklets
 
 

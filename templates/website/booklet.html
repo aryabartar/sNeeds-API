@@ -9,11 +9,12 @@
             <div class="row justify-content-between">
                 <div class="col-md-6">
                     <nav aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="">{{ booklet.topic.field }}</a></li>
-                            <li class="breadcrumb-item"><a href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{ booklet.title }}</li>
-                        </ol>
+                        <ul class="breadcrumb">
+                            <li class=""><a href="{% url "website:booklets_home" %}">/جزوات</a></li>
+                            <li class=""><a href="{{ booklet.topic.field.get_absolute_url }}">{{ booklet.topic.field }}/</a></li>
+                            <li class="breadcrumb-item"><a href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}/</a></li>
+                            <li class="" aria-current="page">{{ booklet.title }}/</li>
+                        </ul>
                     </nav>
                 </div>
                 <div class="col-md-6">
