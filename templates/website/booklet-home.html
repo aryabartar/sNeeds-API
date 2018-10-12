@@ -1,0 +1,37 @@
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+{% block main_content %}
+    <div class="main-container">
+        <section class="space--sm">
+            <div class="container">
+                <section>
+                    {% if fields %}
+                        <ul class="accordion accordion-1">
+                            {% for field in fields %}
+                                <li class="active">
+                                    <div class="accordion__title">
+                                        <span class="h5">{{ field.subject }}</span>
+                                    </div>
+                                    <div class="accordion__content">
+                                        {% for topic in field.topics.all %}
+                                            <a class="btn btn--primary"
+                                               href="{{ topic.get_absolute_url }}">
+                                                <span class="btn__text">{{ topic.subject }}</span>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </section>
+            </div>
+        </section>                <!--end of row-->
+    </div>
+    <!--end of container-->
+    </section>
+    </div>
+
+{% endblock main_content %}

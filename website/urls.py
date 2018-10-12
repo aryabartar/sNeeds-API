@@ -24,8 +24,8 @@ urlpatterns = [
                   path('posts/<str:slug>', views.get_post, name="posts"),
                   path('booklets/', views.booklet_home, name="booklets_home"),
                   path('booklets/<str:slug>', views.get_booklet, name="booklets"),
-                  path('booklets/topic/<str:slug>', views.BookletTopic.as_view(), name="booklets_topic"),
-                  path('booklets/field/<str:slug>', views.BookletField.as_view(), name="booklets_field"),
+                  path('booklets/topic/<str:slug>', views.BookletTopicView.as_view(), name="booklets_topic"),
+                  path('booklets/field/<str:slug>', views.BookletFieldView.as_view(), name="booklets_field"),
                   re_path(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
                   path('blog/', views.blog_posts),#Automatically goes to first page (default page is 1)
                   path('blog/<int:page>', views.blog_posts, name="blog"),#Goes to specific page of the blog

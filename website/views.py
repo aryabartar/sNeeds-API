@@ -103,7 +103,7 @@ def blog_posts(request, page=1):
     return render(request, "website/blog-posts.html", context=my_dict)
 
 
-class BookletTopic(generic.ListView):
+class BookletTopicView(generic.ListView):
     model = BookletTopic
     template_name = 'website/booklet-topic.html'
     paginate_by = 4
@@ -116,7 +116,7 @@ class BookletTopic(generic.ListView):
         return associated_booklets
 
 
-class BookletField(generic.ListView):
+class BookletFieldView(generic.ListView):
     model = BookletField
     template_name = 'website/booklet-field.html'
     paginate_by = 4
@@ -130,5 +130,7 @@ class BookletField(generic.ListView):
                 associated_topics.append(topic)
         return associated_topics
 
-def booklet_home(request) :
-    return render(request , "website/")
+
+def booklet_home(request):
+    context = {"fields": BookletField.objects.all()}
+    return render(request, "website/booklet-home.html", context=context)
