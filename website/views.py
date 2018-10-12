@@ -129,3 +129,6 @@ class BookletField(generic.ListView):
             for topic in qs[0].topics.all():
                 associated_topics.append(topic)
         return associated_topics
+
+def booklet_home(request) :
+    return render(request , "website/")
