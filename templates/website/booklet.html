@@ -11,8 +11,11 @@
                     <nav aria-label="breadcrumb">
                         <ul class="breadcrumb">
                             <li class=""><a href="{% url "website:booklets_home" %}">/جزوات</a></li>
-                            <li class=""><a href="{{ booklet.topic.field.get_absolute_url }}">{{ booklet.topic.field }}/</a></li>
-                            <li class="breadcrumb-item"><a href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}/</a></li>
+                            <li class=""><a
+                                    href="{{ booklet.topic.field.get_absolute_url }}">{{ booklet.topic.field }}/</a>
+                            </li>
+                            <li class="breadcrumb-item"><a
+                                    href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}/</a></li>
                             <li class="" aria-current="page">{{ booklet.title }}/</li>
                         </ul>
                     </nav>
@@ -54,8 +57,13 @@
                         </div>
                         <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
                             <div class="feature__body">
-                                <h5>تعداد مشاهده</h5>
-                                <p> {{ num_visits }}</p>
+                                {% if is_visited %}
+                                    <div class="alert">
+                                        <div class="alert__body">
+                                            <span>قبلا مشاهده شده</span>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="feature feature-2"><i class="icon icon-Life-Jacket color--primary"></i>

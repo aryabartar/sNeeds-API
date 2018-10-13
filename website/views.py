@@ -36,14 +36,6 @@ def get_post(request, slug):
     return render(request, "website/post.html", {'post': post, 'breadcrumbs': breadcrumbs})
 
 
-def get_booklet(request, slug):
-    booklet = get_object_or_404(Booklet, slug=slug.lower())
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
-    context = {"booklet": booklet, "num_visits": num_visits}
-    return render(request, 'website/booklet.html', context=context)
-
-
 def show_category(request, hierarchy=None):
     category_slug = hierarchy.split('/')
     category_queryset = list(Topic.objects.all())
@@ -101,6 +93,14 @@ def blog_posts(request, page=1):
     post_list = list(zip(all_posts, descriptions_text))  # The first one is post and second is description
     my_dict = {"post_list": post_list, "page_number": get_blog_page_numbers(page)}
     return render(request, "website/blog-posts.html", context=my_dict)
+
+
+def get_booklet(request, slug):
+    booklet = get_object_or_404(Booklet, slug=slug.lower())
+    is_visited = request.session.get('is_visited', False)
+    request.session['is_visited'] = True
+    context = {"booklet": booklet, "is_visited": is_visited}
+    return render(request, 'website/booklet.html', context=context)
 
 
 class BookletTopicView(generic.ListView):
