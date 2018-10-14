@@ -99,3 +99,17 @@ class Booklet(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class UserUploadedBooklet(models.Model):
+    """
+    This model is for the form that user filled and uploaded booklet.
+    This is temporary form and Admin should validate and upload it in Booklet model.
+    """
+
+    title = models.CharField(required=True,label="عنوان" )
+    field = models.CharField(required=True , label="رشته")
+    topic = models.CharField(required=True , label="درس")
+    writer = models.CharField(required=True,label="نویسنده")
+    booklet_file = models.FileField(required=True)
+

@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
 from .models import Post, Booklet, Topic, BookletTopic, BookletField
-
+from .forms import UploadBooklet
 
 # Create your views here.
 def home(request):
@@ -138,3 +138,9 @@ class BookletFieldView(generic.ListView):
 def booklet_home(request):
     context = {"fields": BookletField.objects.all()}
     return render(request, "website/booklet-home.html", context=context)
+
+def upload_booklet (request) :
+    if request.method == 'POST' :
+        upload_booklet = UploadBooklet(request.POST)
+        if upload_booklet.is_valid() :
+            pass
