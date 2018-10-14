@@ -107,9 +107,8 @@ class UserUploadedBooklet(models.Model):
     This is temporary form and Admin should validate and upload it in Booklet model.
     """
 
-    title = models.CharField(required=True,label="عنوان" )
-    field = models.CharField(required=True , label="رشته")
-    topic = models.CharField(required=True , label="درس")
-    writer = models.CharField(required=True,label="نویسنده")
-    booklet_file = models.FileField(required=True)
-
+    title = models.CharField(null=False, blank=False, verbose_name="عنوان", max_length=120)
+    field = models.CharField(null=False, blank=False, verbose_name="رشته", max_length=120)
+    topic = models.CharField(null=False, blank=False, verbose_name="درس", max_length=120)
+    writer = models.CharField(null=False, blank=False, verbose_name="نویسنده", max_length=120)
+    # booklet_file = models.FileField(upload_to="website/tmp_booklet_content")#Admin should remove this after manipulating.

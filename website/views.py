@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 
-from .models import Post, Booklet, Topic, BookletTopic, BookletField
+from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
 from .forms import UploadBooklet
+
 
 # Create your views here.
 def home(request):
@@ -139,8 +140,20 @@ def booklet_home(request):
     context = {"fields": BookletField.objects.all()}
     return render(request, "website/booklet-home.html", context=context)
 
-def upload_booklet (request) :
-    if request.method == 'POST' :
-        upload_booklet = UploadBooklet(request.POST)
-        if upload_booklet.is_valid() :
-            pass
+
+def upload_booklet(request):
+    if request.method == 'POST':
+        upload_booklet_form = UploadBooklet(request.POST)
+        if upload_booklet_form.is_valid():
+            user_uploaded_booklet = UserUploadedBooklet(title=upload_booklet_form.cleaned_data['title'],
+                                                        field=upload_booklet_form.cleaned_data['field'],
+                                                        topic=upload_booklet_form.cleaned_data['topic'],
+                                                        writer=upload_booklet_form.cleaned_data['writer'],
+                                                        )
+            user_uploaded_booklet.save()
+
+    else:
+        upload_booklet_form = UploadBooklet()
+
+    context= {'upload_booklet_form':upload_booklet_form}
+    return render(request , 'website/booklet-upload-by-user.html',context=context)
