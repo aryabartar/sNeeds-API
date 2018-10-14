@@ -11,3 +11,11 @@ class UploadBookletForm(forms.ModelForm):
                   'booklet_content',
                   'booklet_image',
                   ]
+
+class UploadBooklet (forms.Form):
+    title = forms.CharField(required=True,label="عنوان" )
+    field = forms.CharField(required=True , label="رشته")
+    topic = forms.CharField(required=True , label="درس")
+    writer = forms.CharField(required=True,label="نویسنده")
+    booklet_file = forms.FileField(required=True)
+    pass
