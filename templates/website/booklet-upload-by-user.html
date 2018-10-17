@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block main_content %}
-    <form action="" method="post">
+    <form action="" method="post" enctype='multipart/form-data'>
         {% csrf_token %}
         {{ form.non_field_errors }}
         <div class="fieldWrapper">
@@ -26,7 +26,12 @@
             <label for="{{ form.writer.id_for_label }}">نویسنده :</label>
             {{ form.writer }}
         </div>
-        <input type="submit" value="Submit">
+        <div class="fieldWrapper">
+            {{ form.booklet_file.errors }}
+            <label for="{{ form.booklet_file.id_for_label }}">آپلود جزوه:</label>
+            {{ form.booklet_file }}
+        </div>
+        <input type="submit" value="آپلود">
     </form>
 
 
