@@ -101,7 +101,6 @@ class Booklet(models.Model):
         return self.title
 
 
-
 class UserUploadedBooklet(models.Model):
     """
     This model is for the form that user filled and uploaded booklet.
@@ -112,19 +111,26 @@ class UserUploadedBooklet(models.Model):
     field = models.CharField(null=False, blank=False, verbose_name="رشته", max_length=120)
     topic = models.CharField(null=False, blank=False, verbose_name="درس", max_length=120)
     writer = models.CharField(null=False, blank=False, verbose_name="نویسنده", max_length=120)
-    booklet_file = models.FileField(upload_to="website/tmp_booklet_content" , null=True , blank=True)#Admin should remove this after manipulating.
 
-    # BOOKLET_STATUS = (
-    #     ('s', "مشاهده شد"),
-    #     ('p', "در حال انجام"),
-    #     ('f' , "آپلود شد"),
-    #     ('c' , "لغو شد"),
-    # )
-    #
-    # status = models.CharField(
-    #     max_length=1,
-    #     choices=BOOKLET_STATUS,
-    #     blank=True,
-    #     default='s',
-    #     help_text='وضعیت دانلود و آپلود جزوه اصلی',
-    # )
+    # Admin should remove this after manipulating.
+    booklet_file = models.FileField(upload_to="website/tmp_booklet_content", null=True, blank=True)
+
+    BOOKLET_STATUS = (
+        ('seen', "مشاهده شد"),
+        ('pending', "در حال انجام"),
+        ('finished', "انجام شد"),
+        ('canceled', "لغو شد"),
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=BOOKLET_STATUS,
+        blank=True,
+        default='seen',
+        help_text='وضعیت دانلود و آپلود جزوه اصلی',
+    )
+
+    def __str__(self):
+        # changes tuple to dictionary and gets appropriate value
+        farsi_status = dict(self.BOOKLET_STATUS).get(self.status)
+        return self.title + " => " + farsi_status
