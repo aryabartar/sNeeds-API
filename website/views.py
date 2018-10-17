@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.urls import reverse
 from django.views import generic
 
 from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
@@ -151,9 +152,10 @@ def upload_booklet(request):
                                                         writer=upload_booklet_form.cleaned_data['writer'],
                                                         )
             user_uploaded_booklet.save()
+            render(reverse('website:home'))
 
     else:
         upload_booklet_form = UploadBooklet()
 
-    context= {'upload_booklet_form':upload_booklet_form}
+    context= {'form':upload_booklet_form}
     return render(request , 'website/booklet-upload-by-user.html',context=context)
