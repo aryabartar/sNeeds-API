@@ -145,7 +145,7 @@ def booklet_home(request):
 
 def upload_booklet(request):
     if request.method == 'POST':
-        upload_booklet_form = UploadBooklet(request.POST , request.FILES)
+        upload_booklet_form = UploadBooklet(request.POST, request.FILES)
         if upload_booklet_form.is_valid():
             user_uploaded_booklet = UserUploadedBooklet(title=upload_booklet_form.cleaned_data['title'],
                                                         field=upload_booklet_form.cleaned_data['field'],
@@ -154,9 +154,11 @@ def upload_booklet(request):
                                                         booklet_file=upload_booklet_form.cleaned_data['booklet_file'],
                                                         )
             user_uploaded_booklet.save()
-            return HttpResponseRedirect(reverse('website:home'))
+            context = {'form': UploadBooklet() , 'success':True}
+            return render(request, 'website/booklet-upload-by-user.html', context=context)
+
     else:
         upload_booklet_form = UploadBooklet()
 
-    context = {'form': upload_booklet_form}
+    context = {'form': upload_booklet_form , 'success':False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)

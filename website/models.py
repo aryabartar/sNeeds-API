@@ -113,3 +113,18 @@ class UserUploadedBooklet(models.Model):
     topic = models.CharField(null=False, blank=False, verbose_name="درس", max_length=120)
     writer = models.CharField(null=False, blank=False, verbose_name="نویسنده", max_length=120)
     booklet_file = models.FileField(upload_to="website/tmp_booklet_content" , null=True , blank=True)#Admin should remove this after manipulating.
+
+    # BOOKLET_STATUS = (
+    #     ('s', "مشاهده شد"),
+    #     ('p', "در حال انجام"),
+    #     ('f' , "آپلود شد"),
+    #     ('c' , "لغو شد"),
+    # )
+    #
+    # status = models.CharField(
+    #     max_length=1,
+    #     choices=BOOKLET_STATUS,
+    #     blank=True,
+    #     default='s',
+    #     help_text='وضعیت دانلود و آپلود جزوه اصلی',
+    # )

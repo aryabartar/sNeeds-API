@@ -59,6 +59,12 @@
 جزوات
                                 </span> </a>
                         </div>
+                        <div class="bar__module">
+                            <a class="btn btn--sm type--uppercase" href="{% url "website:upload_booklet" %}"> <span
+                                    class="btn__text">
+آپلود جزوه
+                                </span> </a>
+                        </div>
                         {% if not user.is_authenticated %}
                             <div class="bar__module">
                                 <a class="btn btn--sm type--uppercase" href="{% url "account:login" %}"> <span
