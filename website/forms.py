@@ -17,5 +17,5 @@ class UploadBooklet (forms.Form):
     field = forms.CharField(required=True , label="رشته")
     topic = forms.CharField(required=True , label="درس")
     writer = forms.CharField(required=True,label="نویسنده")
-    booklet_file = forms.FileField(required=True)
+    # booklet_file = forms.FileField(required=True)
     pass

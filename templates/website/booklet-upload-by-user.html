@@ -5,18 +5,30 @@
 {% block main_content %}
     <form action="" method="post">
         {% csrf_token %}
-        <tr>
-            <th><label for="id_renewal_date">Renewal date:</label></th>
-            <td>
-                <ul class="errorlist">
-                    <li>Invalid date - renewal in past</li>
-                </ul>
-                <input id="id_renewal_date" name="renewal_date" type="text" value="2015-11-08" required>
-                <br>
-                <span class="helptext">Enter date between now and 4 weeks (default 3 weeks).</span>
-            </td>
-        </tr>
-        {{ form.as_table }}
+        {{ form.non_field_errors }}
+        <div class="fieldWrapper">
+            {{ form.subject.errors }}
+            <label for="{{ form.title.id_for_label }}">عنوان جزوه :</label>
+            {{ form.title }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.field.errors }}
+            <label for="{{ form.field.id_for_label }}">رشته : </label>
+            {{ form.field }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.topic.errors }}
+            <label for="{{ form.topic.id_for_label }}">موضوع : </label>
+            {{ form.topic }}
+        </div>
+        <div class="fieldWrapper">
+            {{ form.writer.errors }}
+            <label for="{{ form.writer.id_for_label }}">نویسنده :</label>
+            {{ form.writer }}
+        </div>
         <input type="submit" value="Submit">
     </form>
+
+
+
 {% endblock main_content %}

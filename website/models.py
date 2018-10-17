@@ -99,6 +99,8 @@ class Booklet(models.Model):
 
     def __str__(self):
         return self.title
+    # booklet_file = models.FileField(upload_to="website/tmp_booklet_content")#Admin should remove this after manipulating.
+
 
 
 class UserUploadedBooklet(models.Model):
@@ -111,4 +113,3 @@ class UserUploadedBooklet(models.Model):
     field = models.CharField(null=False, blank=False, verbose_name="رشته", max_length=120)
     topic = models.CharField(null=False, blank=False, verbose_name="درس", max_length=120)
     writer = models.CharField(null=False, blank=False, verbose_name="نویسنده", max_length=120)
-    # booklet_file = models.FileField(upload_to="website/tmp_booklet_content")#Admin should remove this after manipulating.
