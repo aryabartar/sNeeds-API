@@ -155,7 +155,6 @@ def upload_booklet(request):
                                                         )
             user_uploaded_booklet.save()
             return HttpResponseRedirect(reverse('website:home'))
-        print("HEREEEEEEEEEEEE")
     else:
         upload_booklet_form = UploadBooklet()
 

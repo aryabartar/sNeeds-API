@@ -3,37 +3,44 @@
 {% load static %}
 
 {% block main_content %}
-    <form action="" method="post" enctype='multipart/form-data'>
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <div class="fieldWrapper">
-            {{ form.subject.errors }}
-            <label for="{{ form.title.id_for_label }}">عنوان جزوه :</label>
-            {{ form.title }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.field.errors }}
-            <label for="{{ form.field.id_for_label }}">رشته : </label>
-            {{ form.field }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.topic.errors }}
-            <label for="{{ form.topic.id_for_label }}">موضوع : </label>
-            {{ form.topic }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.writer.errors }}
-            <label for="{{ form.writer.id_for_label }}">نویسنده :</label>
-            {{ form.writer }}
-        </div>
-        <div class="fieldWrapper">
-            {{ form.booklet_file.errors }}
-            <label for="{{ form.booklet_file.id_for_label }}">آپلود جزوه:</label>
-            {{ form.booklet_file }}
-        </div>
-        <input type="submit" value="آپلود">
-    </form>
+    <div class="container">
+        <form action="" method="post" enctype='multipart/form-data' novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="fieldWrapper">
+                <label for="{{ form.title.id_for_label }}">{{ form.title.label }}</label>
+                {{ form.title }}
+                {{ form.subject.errors }}
 
+            </div>
+            <div class="fieldWrapper">
+                <label for="{{ form.field.id_for_label }}">{{ form.field.label }} </label>
+                {{ form.field }}
+                {{ form.field.errors }}
+
+            </div>
+            <div class="fieldWrapper">
+                <label for="{{ form.topic.id_for_label }}">{{ form.topic.label }}</label>
+                {{ form.topic }}
+                {{ form.topic.errors }}
+
+            </div>
+            <div class="fieldWrapper">
+                <label for="{{ form.writer.id_for_label }}">{{ form.writer.label }}</label>
+                {{ form.writer }}
+                {{ form.writer.errors }}
+
+            </div>
+            <div class="fieldWrapper">
+                <label for="{{ form.booklet_file.id_for_label }}"> {{ form.booklet_file.label }}</label>
+                {{ form.booklet_file }}
+                {{ form.booklet_file.errors }}
+
+            </div>
+            <h1><br/></h1>
+            <input type="submit" value="آپلود">
+        </form>
+    </div>
 
 
 {% endblock main_content %}
