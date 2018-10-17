@@ -100,6 +100,8 @@ def blog_posts(request, page=1):
 
 def get_booklet(request, slug):
     booklet = get_object_or_404(Booklet, slug=slug.lower())
+    booklet.number_of_views += 1 #increments view
+    booklet.save()
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
     context = {"booklet": booklet, "is_visited": is_visited}

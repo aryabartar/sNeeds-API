@@ -90,6 +90,9 @@ class Booklet(models.Model):
     # Booklet writer name
     owner = models.CharField(max_length=200, blank=True, default="ناشناس")
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', null=True, blank=True)
+    number_of_views = models.IntegerField (default=0 ,
+                                           help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)" ,
+                                           verbose_name="تعداد بازدید")
     booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
 
