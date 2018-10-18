@@ -22,6 +22,9 @@ class UploadBooklet(forms.Form):
                                    error_messages={'required': 'لطفا فیلد را پر کنید'})
 
 
-
 class SearchBooklet(forms.Form):
-    search_bar = forms.CharField (required=True , error_messages={'required' : 'لطفا عنوان را مشخص کنید'})
+    search_bar = forms.CharField(required=True, error_messages={'required': 'لطفا عنوان را مشخص کنید'})
+
+
+class SearchBar (forms.Form) :
+    search_bar = forms.CharField(required=True , label="جستجو" , error_messages={'required': 'لطفا فرم را پر کنید'}, max_length=120)
