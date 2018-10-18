@@ -100,7 +100,7 @@ def blog_posts(request, page=1):
 
 def get_booklet(request, slug):
     booklet = get_object_or_404(Booklet, slug=slug.lower())
-    booklet.number_of_views += 1 #increments view
+    booklet.number_of_views += 1  # increments view
     booklet.save()
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
@@ -156,12 +156,16 @@ def upload_booklet(request):
                                                         booklet_file=upload_booklet_form.cleaned_data['booklet_file'],
                                                         )
             user_uploaded_booklet.save()
-            context = {'form': UploadBooklet() , 'success':True}
+            context = {'form': UploadBooklet(), 'success': True}
             return render(request, 'website/booklet-upload-by-user.html', context=context)
 
     else:
         upload_booklet_form = UploadBooklet()
 
-    context = {'form': upload_booklet_form , 'success':False}
+    context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
 
+
+def booklet_search(request):
+    print(request.GET.get('q'))
+    return render(request, "website/search_results.html")
