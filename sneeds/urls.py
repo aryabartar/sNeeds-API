@@ -25,5 +25,6 @@ urlpatterns = [
     path('account/', include(account_urls)),
     path('admin/', admin.site.urls),
     path('discounts/', include(discounts_urls)),
+    path('search/', include('haystack.urls')),
 
 ]

@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='booklet',
+            model_name='website',
             name='slug',
             field=models.SlugField(default=None, null=True),
         ),

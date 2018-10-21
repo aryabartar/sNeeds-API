@@ -11,12 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='booklet',
+            model_name='website',
             name='booklet_content',
             field=models.FileField(upload_to='website/booklet_content'),
         ),
         migrations.AlterField(
-            model_name='booklet',
+            model_name='website',
             name='booklet_image',
             field=models.ImageField(upload_to='website/booklet_images'),
         ),

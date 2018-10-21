@@ -11,11 +11,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='booklet',
+            model_name='website',
             name='topic',
         ),
         migrations.AddField(
-            model_name='booklet',
+            model_name='website',
             name='topic',
             field=models.ManyToManyField(related_name='booklets', to='website.BookletTopic'),
         ),

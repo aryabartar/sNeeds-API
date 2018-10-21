@@ -106,7 +106,7 @@ class Booklet(models.Model):
 
 class UserUploadedBooklet(models.Model):
     """
-    This model is for the form that user filled and uploaded booklet.
+    This model is for the form that user filled and uploaded website.
     This is temporary form and Admin should validate and upload it in Booklet model.
     """
 

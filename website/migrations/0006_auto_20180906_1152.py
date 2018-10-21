@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name='booklet',
+            model_name='website',
             name='topic',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='booklets', to='website.BookletTopic'),
         ),
