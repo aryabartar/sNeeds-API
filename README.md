@@ -1,7 +1,6 @@
 # Sneeds booklet using django
-> Short blurb about what your product does.
+>Django implementation of booklet download service.
 
-[![Build Status][travis-image]][travis-url]
 
 This is implementation of new part of sneeeds.ir website using python and Django framework .
 
