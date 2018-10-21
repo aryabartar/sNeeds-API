@@ -24,7 +24,7 @@ Arya Khaligh - bartararya@gmail.com
 Distributed under the Arya license.
 
 
-## Contributing
+## Contributing🍴
 
 1. Fork it (<https://github.com/aryabartar/sneeds-django/fork>)
 2. Create your feature branch (`git checkout -b sneeds-django/yourBar`)
