@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='booklet',
+            model_name='website',
             name='number_of_views',
             field=models.IntegerField(default=0, editable=False, verbose_name='تعداد مشاهده'),
         ),

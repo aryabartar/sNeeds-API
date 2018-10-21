@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='booklet',
+            model_name='website',
             name='booklet_content',
             field=models.FileField(blank=True, upload_to='website/booklet_content'),
         ),

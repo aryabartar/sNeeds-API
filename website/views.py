@@ -103,7 +103,7 @@ def get_booklet(request, slug):
     booklet.save()
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
-    context = {"booklet": booklet, "is_visited": is_visited}
+    context = {"website": booklet, "is_visited": is_visited}
     return render(request, 'website/booklet.html', context=context)
 
 
