@@ -3,5 +3,6 @@ media/*
 static/*
 db.sqlite3
 .idea/
+.pyc/
 static/
 media/

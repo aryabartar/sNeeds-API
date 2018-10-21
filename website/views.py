@@ -6,7 +6,6 @@ from django.views import generic
 from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
 from .forms import UploadBooklet
 
-
 # Create your views here.
 def home(request):
     def shorter_strings(post):
@@ -167,5 +166,7 @@ def upload_booklet(request):
 
 
 def booklet_search(request):
-    print(request.GET.get('q'))
+    search_string = request.GET.get('q')
+    qs = Booklet.objects.all()
+    # fuzzy_search(search_string)
     return render(request, "website/search_results.html")
