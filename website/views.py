@@ -5,7 +5,6 @@ from django.views import generic
 
 from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
 from .forms import UploadBooklet
-from .fuzzy_search import search as fuzzy_search
 
 # Create your views here.
 def home(request):
