@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'discounts',
     'django.contrib.sessions',
+    #whoosh and haystack for searching
+    'whoosh',
+    'haystack',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +137,12 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://127.0.0.1:8000/'
+        # ...or for multicore...
+        # 'URL': 'http://127.0.0.1:8000/solr/mysite',
+    },
+}
