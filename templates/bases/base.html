@@ -48,13 +48,9 @@
                     </div>
                     <div class="col-lg-11 col-md-12 text-right text-left-xs text-left-sm">
                         <div class="bar__module">
-                            <form id="searchform" action="{% url 'website:booklet_search' %}" method="get"
-                                  accept-charset="utf-8">
-                                <input name="q" type="text" placeholder="جستجو کنید ...">
-
-                                <button class="btn" type="submit">
-                                    <i class="fa fa-search">جستجو</i>
-                                </button>
+                            <form action="/search" method="get">
+                                <input name="q" type="text"/>
+                                <input type="submit"/>
                             </form>
 
                         </div>
