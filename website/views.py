@@ -104,7 +104,6 @@ def get_booklet(request, slug):
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
     context = {"booklet": booklet, "is_visited": is_visited}
-    print(context)
     return render(request, 'website/booklet.html', context=context)
 
 
@@ -164,10 +163,3 @@ def upload_booklet(request):
 
     context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
-
-
-def booklet_search(request):
-    search_string = request.GET.get('q')
-    qs = Booklet.objects.all()
-    # fuzzy_search(search_string)
-    return render(request, "website/search_results.html")
