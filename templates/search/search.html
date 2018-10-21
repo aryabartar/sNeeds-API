@@ -1,5 +1,29 @@
-{% for result in page.object_list %}
-           {{ result.object.title }}
-        {% empty %}
-             No results found.
-        {% endfor %}
+<!doctype html>
+{% extends 'website/../bases/base.html' %}
+{% load static %}
+
+{% block main_content %}
+    <section>
+        <div class="container">
+            <div class="row">
+                {% for result in page.object_list %}
+                    <div class="col-md-4">
+                        <div class="feature"><img alt="Image" src="{{ result.object.booklet_image.url }}"
+                                                  class="border--round">
+                            <h4>{{ result.object.title }}</h4>
+                            <a class="btn btn--primary" href="{% url "website:booklets" result.object.pk %}">
+                                <span class="btn__text">دانلود جزوه</span>
+                            </a>
+                        </div>
+                    </div>
+
+                {% empty %}
+                    جزوه ای پیدا نشد
+                {% endfor %}
+            </div>
+
+
+        </div>
+        </div>
+    </section>
+{% endblock main_content %}
