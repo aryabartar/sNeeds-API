@@ -3,8 +3,9 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 
-from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
+from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet, BookletPackage
 from .forms import UploadBooklet
+
 
 # Create your views here.
 def home(request):
@@ -163,3 +164,11 @@ def upload_booklet(request):
 
     context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
+
+
+def booklet_package(request, slug):
+    package = BookletPackage.objects.filter(slug__exact=slug.lower()).first()
+    print(package)
+    print(package.booklets.all())
+
+    return render(request, 'website/booklet-package.html')

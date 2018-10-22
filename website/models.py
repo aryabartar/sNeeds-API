@@ -141,7 +141,8 @@ class UserUploadedBooklet(models.Model):
 
 class BookletPackage(models.Model):
     title = models.CharField(max_length=120, null=False, blank=False , default="")
-    booklets = models.ManyToManyField(Booklet)
+    slug = models.SlugField (unique=True , default="")
+    booklets = models.ManyToManyField(Booklet , related_name='booklets')
 
     def __str__(self):
         return self.title
