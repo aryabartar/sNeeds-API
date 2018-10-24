@@ -2,6 +2,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
+import os
+import zipfile
+from io import StringIO
 
 from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet, BookletPackage
 from .forms import UploadBooklet
@@ -166,9 +169,5 @@ def upload_booklet(request):
     return render(request, 'website/booklet-upload-by-user.html', context=context)
 
 
-def booklet_package(request, slug):
-    package = BookletPackage.objects.filter(slug__exact=slug.lower()).first()
-    print(package)
-    print(package.booklets.all())
 
-    return render(request, 'website/booklet-package.html')
+

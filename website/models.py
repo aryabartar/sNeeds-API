@@ -137,12 +137,3 @@ class UserUploadedBooklet(models.Model):
         # changes tuple to dictionary and gets appropriate value
         farsi_status = dict(self.BOOKLET_STATUS).get(self.status)
         return self.title + " => " + farsi_status
-
-
-class BookletPackage(models.Model):
-    title = models.CharField(max_length=120, null=False, blank=False , default="")
-    slug = models.SlugField (unique=True , default="")
-    booklets = models.ManyToManyField(Booklet , related_name='booklets')
-
-    def __str__(self):
-        return self.title
