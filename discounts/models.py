@@ -15,7 +15,7 @@ class Cafe(models.Model):
 
 
 class Discount(models.Model):
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=True, null=True , related_name="discount")
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=True, null=True , related_name="discounts")
     discount_percent = models.IntegerField(blank=True, null=True)
 
     def string_represent (self) :

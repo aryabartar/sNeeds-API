@@ -11,7 +11,7 @@
                     <div class="col">
                         <div class="slider" data-arrows="true" data-paging="true">
                             <ul class="slides">
-                                {% for image in discount.cafe.images.all %}
+                                {% for image in cafe.images.all %}
                                     <li><img alt="Image" src="{{ image.image.url }}"></li>
                                 {% endfor %}
 
@@ -25,31 +25,43 @@
             <div class="container">
                 <div class="row justify-content-around">
                     <div class="col-lg-5 col-md-6 switchable__text">
-                        <h2>{{ discount.string_represent }}</h2>
-                        <p class="lead"> {{ discount.cafe.information }}</p>
+                        <h2>{{ cafe.name }}</h2>
+                        <p class="lead"> {{ cafe.information }}</p>
 
-                        <div class="modal-instance">
-                            <a class="btn modal-trigger" href="#">
-		<span class="btn__text">
-			مشاهده کد تخفیف
-		</span>
-                            </a>
-                            <div class="modal-container">
-                                <div class="modal-content">
-                                    <div class="boxed boxed--border">
-                                        <p>
-لطفا هنگام سفارش در کافه این کد تخفیف را به متصدی ارائه کنید تا از 10 درسئ تخفیف روی تمامی خدمات استفاده کنید .
-                                        </p>
-                                        <a class="btn btn--primary" href="#">
+                        {% for discount in cafe.discounts.all %}
+                            <div class="alert">
+                                <div class="alert__body">
+                                    <span>   {{ discount }}</span>
+                                </div>
+                                <div class="modal-instance">
+                                    <a class="btn modal-trigger" href="#">
+		                            <span class="btn__text">
+			                                        مشاهده کد تخفیف
+                                    </span>
+                                    </a>
+                                    <div class="modal-container">
+                                        <div class="modal-content">
+                                            <div class="boxed boxed--border">
+                                                <p>
+                                                    لطفا هنگام سفارش در کافه این کد تخفیف را به متصدی ارائه کنید تا از
+                                                    10
+                                                    درسئ
+                                                    تخفیف روی تمامی خدمات استفاده کنید .
+                                                </p>
+                                                <a class="btn btn--primary" href="#">
 		                                    <span class="btn__text">
                                                 LG223DotCode
                                             </span>
-                                        </a>
-                                    </div>
+                                                </a>
+                                            </div>
 
-                                </div>
+                                        </div>
+                                    </div>
+                                </div><!--end of modal instance-->
+
                             </div>
-                        </div><!--end of modal instance-->
+                        {% endfor %}
+
                     </div>
                     <div class="col-lg-4 col-md-6 col-12">
                         <div class="boxed boxed--lg boxed--border box-shadow-wide">
@@ -59,14 +71,14 @@
                                         <div class="feature feature-3 text-center"><i
                                                 class="icon icon--lg icon-Mail-3 color--primary"></i>
                                             <h4>آدرس</h4>
-                                            <p>{{ discount.cafe.address }} </p>
+                                            <p>{{ cafe.address }} </p>
                                         </div>
                                     </li>
                                     <li class="col-12">
                                         <div class="feature feature-3 text-center"><i
                                                 class="icon icon--lg icon-Air-Balloon color--primary"></i>
                                             <h4>شماره تماس</h4>
-                                            <p> {{ discount.cafe.phone_number }} </p>
+                                            <p> {{ cafe.phone_number }} </p>
                                         </div>
                                     </li>
 
