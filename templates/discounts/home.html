@@ -15,7 +15,7 @@
                             <div class="col-md-4 masonry__item">
                                 <div class="card card-2 text-center">
                                     <div class="card__top">
-                                        <a href="{% url "discounts:discount_page" cafe.slug %}"> <img alt="Image" src="{{ cafe.images.all.1.image.url }}"> </a>
+                                        <a href="{% url "discounts:cafe_page" cafe.slug %}"> <img alt="Image" src="{{ cafe.images.all.1.image.url }}"> </a>
                                     </div>
                                     <div class="card__body">
                                         <h4>{{ cafe }}</h4> <span
@@ -24,7 +24,7 @@
                                             شود. توسط </p>
                                     </div>
                                     <div class="card__bottom text-center">
-                                        <a class="btn btn--primary" href="{% url "discounts:discount_page" cafe.slug %}">
+                                        <a class="btn btn--primary" href="{% url "discounts:cafe_page" cafe.slug %}">
                                             <span class="btn__text">مشاهده کافه و دریافت تخفیف</span>
                                         </a>
 

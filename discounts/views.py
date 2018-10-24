@@ -7,9 +7,10 @@ from .models import Discount, Cafe
 def home(request):
     cafes = Cafe.objects.all()
     my_dict = {"cafes": cafes}
-    return render(request, "discounts/home.html" , context=my_dict)
+    return render(request, "discounts/home.html", context=my_dict)
 
-def discount_page(request , slug):
-    discount = get_object_or_404(Discount , slug=slug)
-    my_dict = {"discount": discount}
-    return render(request, "discounts/discount.html" , context=my_dict)
+
+def cafe_page(request, slug):
+    cafe = get_object_or_404(Cafe, slug=slug)
+    context = {"cafe": cafe}
+    return render(request, "discounts/cafe.html", context=context)
