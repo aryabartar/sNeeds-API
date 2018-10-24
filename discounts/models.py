@@ -8,6 +8,7 @@ class Cafe(models.Model):
     information = models.TextField(null=True, blank=True)
     address = models.CharField(max_length=256, blank=False, default="تهران")
     phone_number = models.CharField(max_length=128, blank=True, null=True)
+    slug = models.SlugField(max_length=128 , blank=False , unique=True , default="default")
 
     def __str__(self):
         return self.name

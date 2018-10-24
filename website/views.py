@@ -6,7 +6,7 @@ import os
 import zipfile
 from io import StringIO
 
-from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet, BookletPackage
+from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
 from .forms import UploadBooklet
 
 

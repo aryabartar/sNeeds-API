@@ -9,8 +9,7 @@ def home(request):
     my_dict = {"discounts": discounts}
     return render(request, "discounts/home.html" , context=my_dict)
 
-@login_required(login_url='account:login')
-def discount_page(request , pk):
-    discount = get_object_or_404(Discount , pk=pk)
+def discount_page(request , slug):
+    discount = get_object_or_404(Discount , slug=slug)
     my_dict = {"discount": discount}
     return render(request, "discounts/discount.html" , context=my_dict)
