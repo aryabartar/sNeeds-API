@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -41,4 +42,4 @@ class CafeImage(models.Model):
 
 class UserDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False)
-    user = models.ForeignKey(User, unique=True , on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, unique=True , on_delete=models.CASCADE)
