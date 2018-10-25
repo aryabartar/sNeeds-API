@@ -12,5 +12,11 @@ def home(request):
 
 def cafe_page(request, slug):
     cafe = get_object_or_404(Cafe, slug=slug)
+
+    if request.method == 'GET':
+        discount = cafe.discounts.all().filter(
+            discount_percent__exact=request.GET.get('percent'))
+        print(discount)
+
     context = {"cafe": cafe}
     return render(request, "discounts/cafe.html", context=context)
