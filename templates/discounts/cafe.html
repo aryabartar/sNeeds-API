@@ -28,6 +28,16 @@
                         <h2>{{ cafe.name }}</h2>
                         <p class="lead"> {{ cafe.information }}</p>
 
+                        {% if not_auth %}
+                            <div class="alert">
+                                <div class="alert__body">
+                                    <span>
+                                        لطفا برای دریافت تخفیف وارد سایت شوید
+                                   </span>
+                                </div>
+
+                            </div>
+                        {% endif %}
 
 
                         {% for discount in cafe.discounts.all %}
@@ -37,8 +47,9 @@
                                 </div>
 
                                 <div class="bar__module">
-                                    <a class="btn btn--sm type--uppercase"
-                                       href="{{ cafe.get_absolute_url }}?percent={{ discount.discount_percent }}" methods="get"> <span
+                                    <a class="btn btn--sm type--uppercase" name="{{ discount.discount_percent }}"
+                                       href="{{ cafe.get_absolute_url }}?percent={{ discount.discount_percent }}#{{ discount.discount_percent }}"
+                                       methods="get"> <span
                                             class="btn__text">
 دریافت کد تخفیف
                                         </span>
