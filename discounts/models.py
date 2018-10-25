@@ -1,9 +1,12 @@
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+
 from django.db import models
 
 # Create your models here.
 from django.urls import reverse
 
+User = get_user_model()
 
 class Cafe(models.Model):
     name = models.CharField(max_length=128, null=True, blank=True)
@@ -38,4 +41,4 @@ class CafeImage(models.Model):
 
 class UserDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False)
-    user = models.ForeignKey(User, unique=True)
+    user = models.ForeignKey(User, unique=True , on_delete=models.CASCADE)

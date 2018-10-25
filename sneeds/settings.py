@@ -137,7 +137,6 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
-
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
