@@ -56,6 +56,11 @@
                                         </span>
                                         </a>
                                     </div><!--end of modal instance-->
+                                {% elif discount.user_discount %}
+                                    <div class="bar__module">
+                                    <h6>{{ discount.user_discount.code }}</h6>
+                                    </div><!--end of modal instance-->
+
                                 {% endif %}
                             </div>
                         {% endfor %}

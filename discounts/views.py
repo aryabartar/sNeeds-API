@@ -33,7 +33,8 @@ def cafe_page(request, slug):
                 except:
                     pass
                 if qs is None:
-                    discount_code=''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+                    #6 digit code
+                    discount_code=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)).lower()
                     user_discount = UserDiscount(user=request.user,discount= discount, code=discount_code)
                     user_discount.save()
 
