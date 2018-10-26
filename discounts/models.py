@@ -43,3 +43,9 @@ class CafeImage(models.Model):
 class UserDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False)
     user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        unique_together = (("discount", "user"),)
+
+    def __str__(self):
+        return str(self.discount)
