@@ -17,13 +17,16 @@ def cafe_page(request, slug):
 
     if request.method == 'GET':
         if request.user.is_authenticated:
-            discount = cafe.discounts.all().filter(
-                discount_percent__exact=request.GET.get('percent')).first()
-            user_discount = UserDiscount(user=get_user_model() ,discount= discount)
-            user_discount.save()
-            print("----")
-            print(user_discount)
-            print(discount)
+            if request.GET.get('pk'):
+                discount = get_object_or_404(Discount, pk=request.GET.get('pk'))
+                user_discount = UserDiscount(user=request.user,discount= discount)
+                user_discount.save()
+                print(user_discount)
+                # print("----")
+                # print(user_discount)
+                # print(discount)
+                print("**************")
+                pass
         else:
             context["not_auth"] = True
 
