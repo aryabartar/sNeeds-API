@@ -43,10 +43,13 @@ def cafe_page(request, slug):
 
     def get_user_discounts():
         user_discount_tuple_list = []
+        discount_with_user = []
         qs = UserDiscount.objects.filter(user__exact=request.user, discount__cafe__exact=cafe)
         for user_discount in qs:
             user_discount_tuple_list.append((user_discount.discount, user_discount))
-        return user_discount_tuple_list
+            discount_with_user.append(user_discount.discount)
 
-    context['user_discount'] = get_user_discounts()
+        return user_discount_tuple_list, discount_with_user
+
+    context['user_discounts'], context['discounts_with_user'] = get_user_discounts()
     return render(request, "discounts/cafe.html", context=context)
