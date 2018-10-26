@@ -19,9 +19,14 @@
                             </li>
                             <li>
                                 <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
-                                        class="h5">جزوات آپلود شده</span></div>
+                                        class="h5">تخفیفات گرفته شده</span></div>
                                 <div class="tab__content">
-                                    <p class="lead"> لیست جزوات آپلود شده</p>
+                                    {% for discount in user_discount %}
+                                        <div class="alert__body">
+                                            <span>   {{ discount }}</span>
+                                            <h4>code   {{ discount.code }}</h4>
+                                        </div>
+                                    {% endfor %}
                                 </div>
                             </li>
                             <li>

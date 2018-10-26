@@ -28,10 +28,12 @@ def cafe_page(request, slug):
                 '''
                 discount = get_object_or_404(Discount, pk=request.GET.get('pk'))
                 qs = None
+
                 try:
                     qs = UserDiscount.objects.get(user__exact=request.user, discount__exact=discount)
                 except:
                     pass
+
                 if qs is None:
                     # 6 digit code
                     discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)).lower()
