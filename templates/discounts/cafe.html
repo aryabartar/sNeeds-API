@@ -40,11 +40,13 @@
                         {% endif %}
 
 
+
                         {% for discount in cafe.discounts.all %}
                             <div class="alert">
                                 <div class="alert__body">
                                     <span>   {{ discount }}</span>
                                 </div>
+
 
                                 {% if not discount.user_discount in request.user.user_discounts.all %}
                                     <div class="bar__module">
@@ -60,7 +62,6 @@
                                     <div class="bar__module">
                                     <h6>{{ discount.user_discount.code }}</h6>
                                     </div><!--end of modal instance-->
-
                                 {% endif %}
                             </div>
                         {% endfor %}

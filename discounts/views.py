@@ -29,16 +29,24 @@ def cafe_page(request, slug):
                 discount = get_object_or_404(Discount, pk=request.GET.get('pk'))
                 qs = None
                 try:
-                    qs = UserDiscount.objects.get(user__exact=request.user , discount__exact=discount)
+                    qs = UserDiscount.objects.get(user__exact=request.user, discount__exact=discount)
                 except:
                     pass
                 if qs is None:
-                    #6 digit code
-                    discount_code=''.join(random.choices(string.ascii_uppercase + string.digits, k=6)).lower()
-                    user_discount = UserDiscount(user=request.user,discount= discount, code=discount_code)
+                    # 6 digit code
+                    discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6)).lower()
+                    user_discount = UserDiscount(user=request.user, discount=discount, code=discount_code)
                     user_discount.save()
 
         else:
             context["not_auth"] = True
 
+    def get_user_discounts():
+        user_discount_tuple_list = []
+        qs = UserDiscount.objects.filter(user__exact=request.user, discount__cafe__exact=cafe)
+        for user_discount in qs:
+            user_discount_tuple_list.append((user_discount.discount, user_discount))
+        return user_discount_tuple_list
+
+    context['user_discount'] = get_user_discounts()
     return render(request, "discounts/cafe.html", context=context)
