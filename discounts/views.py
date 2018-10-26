@@ -19,11 +19,20 @@ def cafe_page(request, slug):
         if request.user.is_authenticated:
             if request.GET.get('pk'):
                 discount = get_object_or_404(Discount, pk=request.GET.get('pk'))
-                user_discount = UserDiscount(user=request.user,discount= discount)
-                user_discount.save()
-                print(user_discount)
-                print("**************")
-                pass
+                '''
+                This qs is for preventing from un unique together Discount and User objects . 
+                unique_together constrain was not working so I checked it manually. 
+                Fix this hard code later . 
+                '''
+                qs = None
+                try:
+                    qs = UserDiscount.objects.get(user__exact=request.user , discount__exact=discount)
+                except:
+                    pass
+                if qs is None:
+                    user_discount = UserDiscount(user=request.user,discount= discount)
+                    user_discount.save()
+
         else:
             context["not_auth"] = True
 
