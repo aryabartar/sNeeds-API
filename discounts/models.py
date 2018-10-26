@@ -41,8 +41,8 @@ class CafeImage(models.Model):
 
 
 class UserDiscount(models.Model):
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True)
+    discount = models.OneToOneField(Discount, on_delete=models.CASCADE, blank=False, null=False , related_name="user_discount")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True , related_name="user_discounts")
 
     class Meta:
         unique_together = (("discount", "user"),)

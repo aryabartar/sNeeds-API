@@ -46,16 +46,17 @@
                                     <span>   {{ discount }}</span>
                                 </div>
 
-                                <div class="bar__module">
-                                    <a class="btn btn--sm type--uppercase" name="{{ discount.discount_percent }}"
-                                       href="{{ cafe.get_absolute_url }}?pk={{ discount.pk }}#{{ discount.discount_percent }}"
-                                       methods="get"> <span
-                                            class="btn__text">
+                                {% if not discount.user_discount in request.user.user_discounts.all %}
+                                    <div class="bar__module">
+                                        <a class="btn btn--sm type--uppercase" name="{{ discount.discount_percent }}"
+                                           href="{{ cafe.get_absolute_url }}?pk={{ discount.pk }}#{{ discount.discount_percent }}"
+                                           methods="get"> <span
+                                                class="btn__text">
 دریافت کد تخفیف
                                         </span>
-                                    </a>
-                                </div><!--end of modal instance-->
-
+                                        </a>
+                                    </div><!--end of modal instance-->
+                                {% endif %}
                             </div>
                         {% endfor %}
 

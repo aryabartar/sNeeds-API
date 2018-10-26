@@ -32,7 +32,9 @@ def cafe_page(request, slug):
                 if qs is None:
                     user_discount = UserDiscount(user=request.user,discount= discount)
                     user_discount.save()
-
+            else:
+                discount = get_object_or_404(Discount, pk=request.GET.get('pk'))
+                print(discount.user_discounts)
         else:
             context["not_auth"] = True
 
