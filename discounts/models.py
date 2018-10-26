@@ -42,4 +42,4 @@ class CafeImage(models.Model):
 
 class UserDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True)

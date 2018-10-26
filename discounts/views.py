@@ -22,9 +22,6 @@ def cafe_page(request, slug):
                 user_discount = UserDiscount(user=request.user,discount= discount)
                 user_discount.save()
                 print(user_discount)
-                # print("----")
-                # print(user_discount)
-                # print(discount)
                 print("**************")
                 pass
         else:
