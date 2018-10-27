@@ -9,6 +9,7 @@ from django.urls import reverse
 
 User = get_user_model()
 
+
 class Cafe(models.Model):
     name = models.CharField(max_length=128, null=True, blank=True)
     information = models.TextField(null=True, blank=True)
@@ -41,12 +42,22 @@ class CafeImage(models.Model):
 
 
 class UserDiscount(models.Model):
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False , related_name="user_discounts")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL , on_delete=models.CASCADE, null=True , related_name="user_discounts")
-    code = models.CharField(unique=True , null=False , blank=False , max_length=128 , default="")
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False,
+                                 related_name="user_discounts")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
+                             related_name="user_discounts")
+    code = models.CharField(unique=True, null=False, blank=False, max_length=128, default="")
 
     class Meta:
         unique_together = (("discount", "user"),)
 
     def __str__(self):
         return str(self.discount)
+
+
+class CafeProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user")
+    cafe = models.OneToOneField(Cafe, on_delete=models.CASCADE, related_name="cafe")
+
+    def __str__(self):
+        return self.cafe
