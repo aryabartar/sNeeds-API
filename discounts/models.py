@@ -48,6 +48,19 @@ class UserDiscount(models.Model):
                              related_name="user_discounts")
     code = models.CharField(unique=True, null=False, blank=False, max_length=128, default="")
 
+    DISCOUNT_STATUS = (
+        ('not_used', "استفاده نشده"),
+        ('used', "استفاده شده"),
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=DISCOUNT_STATUS,
+        blank=True,
+        default='not_used',
+        help_text='آیا استفاده شده یا نه ؟!:D',
+    )
+
     class Meta:
         unique_together = (("discount", "user"),)
 
