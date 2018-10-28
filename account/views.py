@@ -44,7 +44,11 @@ def my_account(request):
         booklet_model = UploadBookletForm()
 
     user_discount = UserDiscount.objects.filter(user__exact=request.user)
-    user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+    user_cafe_profile = None
+    try:
+        user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+    except:
+        pass
 
     context = {"form": booklet_model, "user_discount": user_discount}
 
