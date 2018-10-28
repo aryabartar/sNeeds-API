@@ -59,3 +59,10 @@ def my_account(request):
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
 
     return render(request, "account/my_account.html", context=context)
+
+
+@login_required(login_url='account:login')
+def delete_user_discount(request):
+    if request.GET:
+        pk = request.GET.get('pk')
+    return render(request, "account/my_account.html")
