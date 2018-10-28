@@ -9,6 +9,27 @@
                 <div class="col-md-10">
                     <div class="tabs-container tabs--vertical">
                         <ul class="tabs">
+
+
+                            {% if cafe_profile_discounts %}
+                                <li class="active">
+                                    <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
+                                            class="h5">تخفیفات کاربران</span></div>
+                                    <div class="tab__content">
+                                        {% for discount in cafe_profile_discounts %}
+                                            <h4> {{ discount }}</h4>
+
+{#                                            <div class="alert__body">#}
+                                                {% for user_discount in cafe_profile_discounts.discount %}
+                                                    jhhhhhh
+                                                    <span>   {{ user_discount }}</span>
+                                                {% endfor %}
+{#                                            </div>#}
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                            {% endif %}
+
                             <li class="active">
                                 <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span
                                         class="h5">مشخصات من</span></div>
@@ -24,7 +45,7 @@
                                     {% for discount in user_discount %}
                                         <div class="alert__body">
                                             <span>   {{ discount }}</span>
-                                            <h4>code   {{ discount.code }}</h4>
+                                            <h4>code {{ discount.code }}</h4>
                                         </div>
                                     {% endfor %}
                                 </div>

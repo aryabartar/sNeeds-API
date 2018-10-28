@@ -7,6 +7,13 @@ from discounts.models import UserDiscount, CafeProfile
 from account.forms import SignUpForm
 
 
+def give_queryset_get_array(qs):
+    temp_array = []
+    for item in qs:
+        temp_array.append(item)
+    return temp_array
+
+
 def signup_success(request):
     return render(request, "account/signup_success.html")
 
@@ -46,5 +53,10 @@ def my_account(request):
         for discount in user_cafe_profile.cafe.discounts.all():
             temp_cafe_discount_dict[discount] = discount.user_discounts.all()
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
+    # print(context["cafe_profile_discounts"])
+
+    for i in context["cafe_profile_discounts"]:
+        for j in context["cafe_profile_discounts"][i]:
+            print(j)
 
     return render(request, "account/my_account.html", context=context)
