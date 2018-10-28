@@ -58,7 +58,6 @@ class UserDiscount(models.Model):
         choices=DISCOUNT_STATUS,
         blank=True,
         default='not_used',
-        help_text='آیا استفاده شده یا نه ؟!:D',
     )
 
     class Meta:
