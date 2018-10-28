@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login
 from website.forms import UploadBookletForm
-from discounts.models import UserDiscount
+from discounts.models import UserDiscount, CafeProfile
 
 from account.forms import SignUpForm
 
@@ -37,5 +37,14 @@ def my_account(request):
         booklet_model = UploadBookletForm()
 
     user_discount = UserDiscount.objects.filter(user__exact=request.user)
+    user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+
     context = {"form": booklet_model, "user_discount": user_discount}
+
+    if not user_cafe_profile is None:
+        temp_cafe_discount_dict = {}
+        for discount in user_cafe_profile.cafe.discounts.all():
+            temp_cafe_discount_dict[discount] = discount.user_discounts.all()
+        context["cafe_profile_discounts"] = temp_cafe_discount_dict
+
     return render(request, "account/my_account.html", context=context)

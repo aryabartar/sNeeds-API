@@ -60,4 +60,4 @@ class CafeProfile(models.Model):
     cafe = models.OneToOneField(Cafe, on_delete=models.CASCADE, related_name="cafe")
 
     def __str__(self):
-        return self.cafe
+        return self.cafe.name
