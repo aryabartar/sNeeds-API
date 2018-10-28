@@ -16,15 +16,20 @@
                                     <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                             class="h5">تخفیفات کاربران</span></div>
                                     <div class="tab__content">
-                                        {% for discount in cafe_profile_discounts %}
+                                        {% for discount , value in cafe_profile_discounts.items %}
                                             <h4> {{ discount }}</h4>
 
-{#                                            <div class="alert__body">#}
-                                                {% for user_discount in cafe_profile_discounts.discount %}
-                                                    jhhhhhh
-                                                    <span>   {{ user_discount }}</span>
+                                            <div class="alert__body">
+                                                {% for user_discount in value %}
+                                                    <span>   {{ user_discount.code }}</span>
+                                                    <span> | | </span>
+                                                    <span>   {{ user_discount.user.username }}</span>
+
+                                                    <h1>
+
+                                                    </h1>
                                                 {% endfor %}
-{#                                            </div>#}
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </li>

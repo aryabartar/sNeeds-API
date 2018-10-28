@@ -51,12 +51,9 @@ def my_account(request):
     if not user_cafe_profile is None:
         temp_cafe_discount_dict = {}
         for discount in user_cafe_profile.cafe.discounts.all():
-            temp_cafe_discount_dict[discount] = discount.user_discounts.all()
+            temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
-    # print(context["cafe_profile_discounts"])
 
-    for i in context["cafe_profile_discounts"]:
-        for j in context["cafe_profile_discounts"][i]:
-            print(j)
+    print(request.user.username)
 
     return render(request, "account/my_account.html", context=context)
