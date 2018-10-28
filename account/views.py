@@ -68,5 +68,6 @@ def delete_user_discount(request):
         user_discount = get_object_or_404(UserDiscount , pk=pk)
         user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
         if user_discount.discount.cafe == user_cafe_profile.cafe :
-            user_discount.delete()
-    return render(request, "account/my_account.html")
+            user_discount.status = "used"
+            user_discount.save()
+    return redirect("http://127.0.0.1:8000")
