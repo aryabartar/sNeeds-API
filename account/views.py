@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from website.forms import UploadBookletForm
 from discounts.models import UserDiscount, CafeProfile
@@ -65,4 +65,8 @@ def my_account(request):
 def delete_user_discount(request):
     if request.GET:
         pk = request.GET.get('pk')
+        user_discount = get_object_or_404(UserDiscount , pk=pk)
+        user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+        if user_discount.discount.cafe == user_cafe_profile.cafe :
+            user_discount.delete()
     return render(request, "account/my_account.html")
