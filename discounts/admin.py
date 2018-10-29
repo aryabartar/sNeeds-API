@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CafeImage , Cafe,Discount, UserDiscount, CafeProfile
+from .models import CafeImage , Cafe,Discount, UserDiscount, CafeProfile, UserUsedDiscount
 
 # Register your models here.
 class PropertyImageInline(admin.TabularInline):
@@ -13,3 +13,4 @@ admin.site.register(Cafe, PropertyAdmin)
 admin.site.register(Discount)
 admin.site.register(UserDiscount)
 admin.site.register(CafeProfile)
+admin.site.register(UserUsedDiscount)

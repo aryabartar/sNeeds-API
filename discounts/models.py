@@ -80,10 +80,6 @@ class UserUsedDiscount(models.Model):
                                  related_name="user_discounts1")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
                              related_name="user_discounts1")
-    code = models.CharField(unique=True, null=False, blank=False, max_length=128, default="")
-
-    class Meta:
-        unique_together = (("discount", "user"),)
 
     def __str__(self):
         return str(self.discount)

@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from website.forms import UploadBookletForm
-from discounts.models import UserDiscount, CafeProfile
+from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount
 
 from account.forms import SignUpForm
 
@@ -65,9 +65,12 @@ def my_account(request):
 def delete_user_discount(request):
     if request.GET:
         pk = request.GET.get('pk')
-        user_discount = get_object_or_404(UserDiscount , pk=pk)
+        user_discount = get_object_or_404(UserDiscount, pk=pk)
         user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
-        if user_discount.discount.cafe == user_cafe_profile.cafe :
-            user_discount.status = "used"
-            user_discount.save()
+        if user_discount.discount.cafe == user_cafe_profile.cafe:
+            user_used_discount = UserUsedDiscount(discount=user_discount.discount,
+                                                  user = user_discount.user,
+                                                  )
+            user_discount.delete()
+            user_used_discount.save()
     return redirect("http://127.0.0.1:8000")
