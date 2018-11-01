@@ -58,6 +58,8 @@ def my_account(request):
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
 
+        # for discount in user_discount.ca
+
     return render(request, "account/my_account.html", context=context)
 
 
@@ -69,7 +71,8 @@ def delete_user_discount(request):
         user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
         if user_discount.discount.cafe == user_cafe_profile.cafe:
             user_used_discount = UserUsedDiscount(discount=user_discount.discount,
-                                                  user = user_discount.user,
+                                                  cafe=user_discount.discount.cafe,
+                                                  user=user_discount.user,
                                                   )
             user_discount.delete()
             user_used_discount.save()

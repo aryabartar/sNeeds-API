@@ -77,9 +77,11 @@ class CafeProfile(models.Model):
 
 class UserUsedDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False,
-                                 related_name="user_discounts1")
+                                 related_name="user_used_discounts")
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False , null=False,
+                             related_name="used_discounts" )
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
-                             related_name="user_discounts1")
+                             related_name="user_used_discounts")
 
     def __str__(self):
         return str(self.discount)
