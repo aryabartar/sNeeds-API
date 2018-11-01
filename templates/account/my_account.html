@@ -23,7 +23,7 @@
                                                     <span> | | </span>
                                                     <span>   {{ user_discount.user.username }}</span>
                                                     {% if not user_discount.status == "used" %}
-                                                    <span>
+                                                        <span>
                                                     <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
                                                        class="btn btn-secondary btn-lg active" role="button"
                                                        aria-pressed="true">دریافت شد</a>
@@ -35,6 +35,17 @@
                                                     </h1>
                                                 {% endfor %}
                                             </div>
+                                        {% endfor %}
+
+                                        <h2>تخفیفات استفاده شده</h2>
+                                        {% for used_discount in used_discounts %}
+
+                                            <a class="btn btn--sm type--uppercase"
+                                               href=""> <span
+                                                    class="btn__text">
+                                            {{ used_discount.user.username }} || {{ used_discount }}
+                                            </span>
+                                            </a>
                                         {% endfor %}
                                     </div>
                                 </li>

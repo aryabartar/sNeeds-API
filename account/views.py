@@ -58,7 +58,7 @@ def my_account(request):
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
 
-        # for discount in user_discount.ca
+        context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
 
     return render(request, "account/my_account.html", context=context)
 
