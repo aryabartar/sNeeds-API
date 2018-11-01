@@ -76,4 +76,4 @@ def delete_user_discount(request):
                                                   )
             user_discount.delete()
             user_used_discount.save()
-    return redirect("http://127.0.0.1:8000")
+    return redirect("account:my_account")
