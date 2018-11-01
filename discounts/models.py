@@ -1,3 +1,4 @@
+import datetime
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -28,6 +29,7 @@ class Cafe(models.Model):
 class Discount(models.Model):
     cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=True, null=True, related_name="discounts")
     discount_percent = models.IntegerField(blank=True, null=True)
+    date = models.DateField(auto_now=True, blank=False)
 
     def string_represent(self):
         return "تخفیف {}% {}".format(self.discount_percent, self.cafe.name)
@@ -78,10 +80,11 @@ class CafeProfile(models.Model):
 class UserUsedDiscount(models.Model):
     discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False,
                                  related_name="user_used_discounts")
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False , null=False,
-                             related_name="used_discounts" )
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False, null=False,
+                             related_name="used_discounts")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
                              related_name="user_used_discounts")
+    date = models.DateField(auto_now=True, blank=False)
 
     def __str__(self):
         return str(self.discount)
