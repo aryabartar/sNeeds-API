@@ -63,15 +63,17 @@
                                 <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                         class="h5">تخفیفات فعال</span></div>
                                 <div class="tab__content">
-                                    {% for discount in user_active_discounts %}
-                                        <a class="btn btn--sm type--uppercase"
-                                           href=""> <span
-                                                class="btn__text">
+
+                                    {% if request.user.is_superuser %}
+                                        {% for discount in user_active_discounts %}
+                                            <a class="btn btn--sm type--uppercase"
+                                               href=""> <span
+                                                    class="btn__text">
                                         {{ discount.code }} || {{ discount.date }} || {{ discount.discount }}
                                             </span>
-                                        </a>
-                                    {% endfor %}
-
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
                                 </div>
                             </li>
 
