@@ -50,6 +50,8 @@ class UserDiscount(models.Model):
                              related_name="user_discounts")
     code = models.CharField(unique=True, null=False, blank=False, max_length=128, default="")
 
+    date = models.DateField(auto_now=True, blank=False)
+
     DISCOUNT_STATUS = (
         ('not_used', "استفاده نشده"),
         ('used', "استفاده شده"),

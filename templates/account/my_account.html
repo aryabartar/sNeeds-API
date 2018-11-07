@@ -50,7 +50,24 @@
                                         {% endfor %}
                                     </div>
                                 </li>
+
                             {% endif %}
+
+                            <li class="active">
+                                <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
+                                        class="h5">تخفیفات فعال</span></div>
+                                <div class="tab__content">
+                                    {% for discount in user_active_discounts %}
+                                        <a class="btn btn--sm type--uppercase"
+                                           href=""> <span
+                                                class="btn__text">
+                                        {{ discount.code }} || {{ discount.date }} || {{ discount.discount }}
+                                            </span>
+                                        </a>
+                                    {% endfor %}
+
+                                </div>
+                            </li>
 
                             <li class="active">
                                 <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span

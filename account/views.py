@@ -36,6 +36,12 @@ def logout_success(request):
 
 @login_required(login_url='account:login')
 def my_account(request):
+    def get_user_active_discounts():
+        """
+        :return: returns active discounts that user has .
+        """
+        return user_discount.filter(user__exact=request.user)
+
     if request.POST:
         booklet_model = UploadBookletForm(request.POST, request.FILES)
         if booklet_model.is_valid():
@@ -57,8 +63,10 @@ def my_account(request):
         for discount in user_cafe_profile.cafe.discounts.all():
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         context["cafe_profile_discounts"] = temp_cafe_discount_dict
-
         context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
+
+    # This is for active discounts for user panel .
+    context["user_active_discounts"] = get_user_active_discounts()
 
     return render(request, "account/my_account.html", context=context)
 
