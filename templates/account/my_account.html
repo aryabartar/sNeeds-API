@@ -23,12 +23,9 @@
                                                     <span> | | </span>
                                                     <span>   {{ user_discount.user.username }}</span>
                                                     {% if not user_discount.status == "used" %}
-                                                        <a class="btn btn--sm type--uppercase"
-                                                           href=""> <span
-                                                                class="btn__text">
-                                                    دریافت شد
-                                                        </span>
-                                                        </a>
+                                                    <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
+                                                       class="btn btn-secondary btn-lg active" role="button"
+                                                       aria-pressed="true">دریافت شد</a>
                                                     {% endif %}
 
                                                     <h1>
