@@ -23,9 +23,9 @@
                                                     <span> | | </span>
                                                     <span>   {{ user_discount.user.username }}</span>
                                                     {% if not user_discount.status == "used" %}
-                                                    <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
-                                                       class="btn btn-secondary btn-lg active" role="button"
-                                                       aria-pressed="true">دریافت شد</a>
+                                                        <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
+                                                           class="btn btn-secondary btn-lg active" role="button"
+                                                           aria-pressed="true">دریافت شد</a>
                                                     {% endif %}
 
                                                     <h1>
@@ -42,6 +42,15 @@
                                                href=""> <span
                                                     class="btn__text">
                                             {{ used_discount.user.username }} || {{ used_discount }} || {{ used_discount.date }}
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                        <p></p>
+                                        {% for cafe_statistic in admin_statistics %}
+                                            <a class="btn btn--sm type--uppercase"
+                                               href=""> <span
+                                                    class="btn__text">
+                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
                                             </span>
                                             </a>
                                         {% endfor %}

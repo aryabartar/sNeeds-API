@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 from website.forms import UploadBookletForm
-from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount
+from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe
 
 from account.forms import SignUpForm
 
@@ -42,6 +42,18 @@ def my_account(request):
         """
         return user_discount.filter(user__exact=request.user)
 
+    def get_admin_statistics():
+        """
+        :return: The cafe statistics
+        """
+        all_cafes = Cafe.objects.all()
+        all_cafes_list = []
+        for cafe in all_cafes :
+            cafe_active_discount_number = len(UserDiscount.objects.filter(discount__cafe__exact=cafe))
+            cafe_used_discount_number = len(UserUsedDiscount.objects.filter(discount__cafe__exact=cafe))
+            all_cafes_list.append((cafe , cafe_active_discount_number , cafe_used_discount_number))
+        return all_cafes_list
+
     if request.POST:
         booklet_model = UploadBookletForm(request.POST, request.FILES)
         if booklet_model.is_valid():
@@ -67,6 +79,9 @@ def my_account(request):
 
     # This is for active discounts for user panel .
     context["user_active_discounts"] = get_user_active_discounts()
+
+    if request.user.is_superuser:
+        context["admin_statistics"] = get_admin_statistics()
 
     return render(request, "account/my_account.html", context=context)
 
