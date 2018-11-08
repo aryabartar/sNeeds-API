@@ -54,13 +54,6 @@ def my_account(request):
             all_cafes_list.append((cafe , cafe_active_discount_number , cafe_used_discount_number))
         return all_cafes_list
 
-    if request.POST:
-        booklet_model = UploadBookletForm(request.POST, request.FILES)
-        if booklet_model.is_valid():
-            booklet_model.save()
-    else:
-        booklet_model = UploadBookletForm()
-
     user_discount = UserDiscount.objects.filter(user__exact=request.user)
     user_cafe_profile = None
     try:
@@ -68,7 +61,7 @@ def my_account(request):
     except:
         pass
 
-    context = {"form": booklet_model, "user_discount": user_discount}
+    context = {"user_discount": user_discount}
 
     if not user_cafe_profile is None:
         temp_cafe_discount_dict = {}
