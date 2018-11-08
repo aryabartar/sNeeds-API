@@ -40,7 +40,7 @@ def my_account(request):
         """
         :return: returns active discounts that user has .
         """
-        return user_discount.filter(user__exact=request.user)
+        return UserDiscount.objects.filter(user__exact=request.user)
 
     def get_admin_statistics():
         """
@@ -48,34 +48,34 @@ def my_account(request):
         """
         all_cafes = Cafe.objects.all()
         all_cafes_list = []
-        for cafe in all_cafes :
+        for cafe in all_cafes:
             cafe_active_discount_number = len(UserDiscount.objects.filter(discount__cafe__exact=cafe))
             cafe_used_discount_number = len(UserUsedDiscount.objects.filter(discount__cafe__exact=cafe))
-            all_cafes_list.append((cafe , cafe_active_discount_number , cafe_used_discount_number))
+            all_cafes_list.append((cafe, cafe_active_discount_number, cafe_used_discount_number))
         return all_cafes_list
 
-    user_discount = UserDiscount.objects.filter(user__exact=request.user)
-    user_cafe_profile = None
-    try:
-        user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
-    except:
-        pass
-
-    context = {"user_discount": user_discount}
-
-    if not user_cafe_profile is None:
+    def get_all_user_discounts():
+        """
+        :return: user discounts for cafe discount in form of DICT and LIST in it.
+        """
         temp_cafe_discount_dict = {}
         for discount in user_cafe_profile.cafe.discounts.all():
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
-        context["cafe_profile_discounts"] = temp_cafe_discount_dict
-        context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
+        return temp_cafe_discount_dict
 
-    # This is for active discounts for user panel .
-    context["user_active_discounts"] = get_user_active_discounts()
+    context = {}
+
+    user_cafe_profile = CafeProfile.objects.filter(user__exact=request.user)
+    if user_cafe_profile.exists():
+        user_cafe_profile = user_cafe_profile.first()
+        context["cafe_profile_discounts"] = get_all_user_discounts()
+        context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
 
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
+    context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
+    context["user_discount"] = UserDiscount.objects.filter(user__exact=request.user)
     return render(request, "account/my_account.html", context=context)
 
 
