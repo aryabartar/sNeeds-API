@@ -6,3 +6,5 @@ db.sqlite3
 .pyc/
 static/
 media/
+.pyc
+*.pyc
