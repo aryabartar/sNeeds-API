@@ -97,7 +97,7 @@ def delete_user_discount(request):
     return redirect("account:my_account")
 
 
-# @login_required(login_url='account:login')
+@login_required(login_url='account:login')
 @csrf_exempt
 def add_discount_for_cafe(request):
     # This will be true if we have a cafe unless it will return 404 error.
