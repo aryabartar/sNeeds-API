@@ -10,6 +10,7 @@
                     <div class="tabs-container tabs--vertical">
                         <ul class="tabs">
                             {% if cafe_profile_discounts %}
+
                                 <li class="active">
                                     <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                             class="h5">تخفیفات کاربران</span></div>
@@ -54,6 +55,15 @@
                                             </span>
                                             </a>
                                         {% endfor %}
+
+
+
+                                    <h2>اضافه کردن تخفیف کافه</h2>
+                                        <form action="{% url "account:add_discount_for_cafe" %}" method="post">
+                                            مقدار <input type="text" name="discount_percent"><br>
+                                            <input type="submit" value="تایید">
+                                        </form>
+
                                     </div>
                                 </li>
 

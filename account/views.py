@@ -1,10 +1,12 @@
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
-from website.forms import UploadBookletForm
-from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe
 
+from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe
 from account.forms import SignUpForm
+from django.views.decorators.csrf import csrf_exempt
+from django.db import models
 
 
 def give_queryset_get_array(qs):
@@ -93,3 +95,17 @@ def delete_user_discount(request):
             user_discount.delete()
             user_used_discount.save()
     return redirect("account:my_account")
+
+
+# @login_required(login_url='account:login')
+@csrf_exempt
+def add_discount_for_cafe(request):
+    # This will be true if we have a cafe unless it will return 404 error.
+    try:
+        if CafeProfile.objects.get(user__exact=request.user):
+            print(request.POST['discount_percent'])
+    except:
+        return HttpResponseNotFound("404-not found")
+
+    html = "<html><body>It is now %s.</body></html>"
+    return HttpResponse(html)

@@ -17,7 +17,6 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
-
 app_name = "account"
 urlpatterns = [
     path('signup/success/', views.signup_success, name="signup_success"),
@@ -25,9 +24,8 @@ urlpatterns = [
     path('logout/success/', views.logout_success, name="logout_success"),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='account/login_page.html'), name='login'),
-    path('my_account/' , views.my_account , name="my_account"),
-    path('delete/discount/', views.delete_user_discount , name='delete_discount'),
-
+    # TODO: Change _ with -
+    path('my-account/', views.my_account, name="my_account"),
+    path('delete/discount/', views.delete_user_discount, name='delete_discount'),
+    path('add-discount/', views.add_discount_for_cafe, name='add_discount_for_cafe'),
 ]
-
-
