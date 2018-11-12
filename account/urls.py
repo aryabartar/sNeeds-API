@@ -27,5 +27,4 @@ urlpatterns = [
     # TODO: Change _ with -
     path('my-account/', views.my_account, name="my_account"),
     path('delete/discount/', views.delete_user_discount, name='delete_discount'),
-    path('add-discount/', views.add_discount_for_cafe, name='add_discount_for_cafe'),
 ]
