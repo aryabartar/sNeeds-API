@@ -58,10 +58,11 @@
 
 
 
-                                    <h2>اضافه کردن تخفیف کافه</h2>
+                                        <h2>اضافه کردن تخفیف کافه</h2>
                                         <form action="{% url "account:add_discount_for_cafe" %}" method="post">
-                                            مقدار <input type="text" name="discount_percent"><br>
-                                            <input type="submit" value="تایید">
+                                            {% csrf_token %}
+                                            {{ form.as_table }}
+                                            <input type="submit" value="Submit">
                                         </form>
 
                                     </div>
