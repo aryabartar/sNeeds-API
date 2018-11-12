@@ -36,19 +36,16 @@ def logout_success(request):
     return render(request, "account/logout_success")
 
 
-# @login_required(login_url='account:login')
-# def add_discount_for_cafe(request):
-#     if request.method == 'POST':
-#         # This will be true if we have a cafe unless it will return 404 error.
-#         try:
-#             if CafeProfile.objects.get(user__exact=request.user):
-#
-#                 print(type(request.POST['discount_percent']))
-#         except:
-#             return HttpResponseNotFound("404-not found")
-#     # else :
-#     #     print("This is not post")
-#     return HttpResponse("<html><body>It is now %s.</body></html>")
+@login_required(login_url='account:login')
+def delete_cafe_discount(request):
+    if request.method == "GET":
+        discount = get_object_or_404(Discount, pk=int(request.GET['pk']))
+        if discount.cafe == CafeProfile.objects.get(user__exact=request.user).cafe:
+            discount.delete()
+        else:
+            return HttpResponseNotFound("You don't have access to delete discount!")
+
+    return redirect("account:my_account")
 
 
 @login_required(login_url='account:login')
@@ -80,21 +77,26 @@ def my_account(request):
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         return temp_cafe_discount_dict
 
-    def discount_add_form():
+    def discount_add_form(cafe_profile):
+        """Handling all discount add form needs."""
         if request.method == 'POST':
             add_discount_form = AddDiscountForm(request.POST)
 
             if add_discount_form.is_valid():
                 try:
-                    cafe = CafeProfile.objects.get(user__exact=request.user).cafe
+                    cafe = cafe_profile.cafe
                 except:
-                    return HttpResponseNotFound("You do'nt have access to add discount!")
+                    return HttpResponseNotFound("You don't have access to add discount!")
                 discount = Discount(cafe=cafe, discount_percent=int(request.POST['discount_percent']))
                 discount.save()
         else:
             add_discount_form = AddDiscountForm()
 
         return add_discount_form
+
+    def get_all_cafe_discounts(cafe_profile):
+        """returns all cafe discounts (not user discounts)"""
+        return cafe_profile.cafe.discounts.all()
 
     context = {}
 
@@ -103,13 +105,14 @@ def my_account(request):
         user_cafe_profile = user_cafe_profile.first()
         context["cafe_profile_discounts"] = get_all_user_discounts()
         context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
+        context["form"] = discount_add_form(user_cafe_profile)
+        context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
 
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_discount"] = UserDiscount.objects.filter(user__exact=request.user)
-    context["form"] = discount_add_form()
     return render(request, "account/my_account.html", context=context)
 
 

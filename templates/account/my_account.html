@@ -58,12 +58,26 @@
 
 
 
-                                        <h2>اضافه کردن تخفیف کافه</h2>
+                                        <h3> ---- اضافه کردن تخفیف کافه -------</h3>
                                         <form action="" method="post">
                                             {% csrf_token %}
                                             {{ form.as_table }}
-                                            <input type="submit" value="Submit">
+                                            <input type="submit" value="تایید">
                                         </form>
+                                        <h3> --------------------------</h3>
+
+
+                                        <h3> ---- حذف تخفیفات -------</h3>
+                                        {% for discount in all_cafe_discounts %}
+                                            <a class="btn btn--sm type--uppercase"
+                                               href="{% url "account:delete_cafe_discount" %}?pk={{ discount.pk }}"> <span
+                                                    class="btn__text">
+                                            {{ discount }}  حذف ||
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                        <h3> --------------------------</h3>
+
 
                                     </div>
                                 </li>
