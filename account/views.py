@@ -8,6 +8,7 @@ from account.forms import SignUpForm
 from django.views.decorators.csrf import csrf_exempt
 from discounts.forms import AddDiscountForm
 
+
 def give_queryset_get_array(qs):
     temp_array = []
     for item in qs:
@@ -79,8 +80,17 @@ def my_account(request):
             temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
         return temp_cafe_discount_dict
 
-    def check_discount_add_form() :
-        pass
+    def discount_add_form():
+        if request.method == 'POST':
+            add_discount_form = AddDiscountForm(request.POST)
+
+            if add_discount_form.is_valid():
+                print("Valid")
+        else:
+            print("Not valid!")
+            add_discount_form = AddDiscountForm()
+
+        return add_discount_form
 
     context = {}
 
@@ -93,10 +103,9 @@ def my_account(request):
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
-    check_discount_add_form()
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_discount"] = UserDiscount.objects.filter(user__exact=request.user)
-    context["form"] = AddDiscountForm()
+    context["form"] = discount_add_form()
     return render(request, "account/my_account.html", context=context)
 
 
@@ -114,4 +123,3 @@ def delete_user_discount(request):
             user_discount.delete()
             user_used_discount.save()
     return redirect("account:my_account")
-
