@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login as auth_login
 
-from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe
+from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe, Discount
 from account.forms import SignUpForm
 from django.views.decorators.csrf import csrf_exempt
 from discounts.forms import AddDiscountForm
@@ -85,9 +85,13 @@ def my_account(request):
             add_discount_form = AddDiscountForm(request.POST)
 
             if add_discount_form.is_valid():
-                print("Valid")
+                try:
+                    cafe = CafeProfile.objects.get(user__exact=request.user).cafe
+                except:
+                    return HttpResponseNotFound("You do'nt have access to add discount!")
+                discount = Discount(cafe=cafe, discount_percent=int(request.POST['discount_percent']))
+                discount.save()
         else:
-            print("Not valid!")
             add_discount_form = AddDiscountForm()
 
         return add_discount_form
