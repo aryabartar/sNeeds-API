@@ -47,15 +47,17 @@
                                             </a>
                                         {% endfor %}
                                         <p></p>
-                                        {% for cafe_statistic in admin_statistics %}
-                                            <a class="btn btn--sm type--uppercase"
-                                               href=""> <span
-                                                    class="btn__text">
+
+                                        {% if request.user.is_superuser %}
+                                            {% for cafe_statistic in admin_statistics %}
+                                                <a class="btn btn--sm type--uppercase"
+                                                   href=""> <span
+                                                        class="btn__text">
                                             {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
                                             </span>
-                                            </a>
-                                        {% endfor %}
-
+                                                </a>
+                                            {% endfor %}
+                                        {% endif %}
 
 
                                         <h3> ---- اضافه کردن تخفیف کافه -------</h3>
@@ -89,16 +91,14 @@
                                         class="h5">تخفیفات فعال</span></div>
                                 <div class="tab__content">
 
-                                    {% if request.user.is_superuser %}
-                                        {% for discount in user_active_discounts %}
-                                            <a class="btn btn--sm type--uppercase"
-                                               href=""> <span
-                                                    class="btn__text">
+                                    {% for discount in user_active_discounts %}
+                                        <a class="btn btn--sm type--uppercase"
+                                           href=""> <span
+                                                class="btn__text">
                                         {{ discount.code }} || {{ discount.date }} || {{ discount.discount }}
                                             </span>
-                                            </a>
-                                        {% endfor %}
-                                    {% endif %}
+                                        </a>
+                                    {% endfor %}
                                 </div>
                             </li>
 
