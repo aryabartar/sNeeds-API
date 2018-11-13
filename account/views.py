@@ -112,7 +112,7 @@ def my_account(request):
         context["admin_statistics"] = get_admin_statistics()
 
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
-    context["user_discount"] = UserDiscount.objects.filter(user__exact=request.user)
+    context["user_discount"] = UserUsedDiscount.objects.filter(user__exact=request.user)
     return render(request, "account/my_account.html", context=context)
 
 

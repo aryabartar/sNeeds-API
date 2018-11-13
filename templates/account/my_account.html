@@ -116,8 +116,8 @@
                                 <div class="tab__content">
                                     {% for discount in user_discount %}
                                         <div class="alert__body">
-                                            <span>   {{ discount }}</span>
-                                            <h4>code {{ discount.code }}</h4>
+
+                                            <h4>{{ discount.date }} || {{ discount.code }} || {{ discount }}</h4>
                                         </div>
                                     {% endfor %}
                                 </div>
