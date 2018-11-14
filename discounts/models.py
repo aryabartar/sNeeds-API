@@ -96,3 +96,4 @@ class UserUsedDiscount(models.Model):
 
     def __str__(self):
         return str(self.discount)
+    #
