@@ -86,12 +86,13 @@ class UserUsedDiscount(models.Model):
     # When cafe object is present.
     cafe = models.ForeignKey(Cafe, on_delete=models.SET_NULL, null=True,
                              related_name="used_discounts")
-    #Is used for user logs.
-    # used_discount_information_for_user = models.CharField(default="نا مشخص", max_length=128)
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
                              related_name="user_used_discounts")
     date = models.DateField(auto_now=True, blank=False)
+    # Is used for user logs.
+
+    user_log = models.CharField(null=True, max_length=128)
 
     def __str__(self):
         return str(self.discount)
