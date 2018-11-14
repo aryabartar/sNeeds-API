@@ -80,10 +80,15 @@ class CafeProfile(models.Model):
 
 
 class UserUsedDiscount(models.Model):
+    # When discount object is present.
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True,
                                  related_name="user_used_discounts")
+    # When cafe object is present.
     cafe = models.ForeignKey(Cafe, on_delete=models.SET_NULL, null=True,
                              related_name="used_discounts")
+    #Is used for user logs.
+    # used_discount_information_for_user = models.CharField(default="نا مشخص", max_length=128)
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
                              related_name="user_used_discounts")
     date = models.DateField(auto_now=True, blank=False)
