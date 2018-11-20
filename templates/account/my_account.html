@@ -9,12 +9,28 @@
                 <div class="col-md-10">
                     <div class="tabs-container tabs--vertical">
                         <ul class="tabs">
-                            {% if cafe_profile_discounts %}
 
-                                <li class="active">
+                            {% if is_cafe_profile %}
+                            <li class="active">
                                     <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                             class="h5">تخفیفات کاربران</span></div>
                                     <div class="tab__content">
+
+                                                                            <h2>بخش مشاهده اطلاعات کافه ها====</h2>
+
+                                        {% if request.user.is_superuser %}
+                                            {% for cafe_statistic in admin_statistics %}
+                                                <a class="btn btn--sm type--uppercase"
+                                                   href=""> <span
+                                                        class="btn__text">
+                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
+                                            </span>
+                                                </a>
+                                            {% endfor %}
+                                        {% endif %}
+                                    <h2>===========</h2>
+
+
                                         {% for discount , value in cafe_profile_discounts.items %}
                                             <h4> {{ discount }}</h4>
 
@@ -48,16 +64,6 @@
                                         {% endfor %}
                                         <p></p>
 
-                                        {% if request.user.is_superuser %}
-                                            {% for cafe_statistic in admin_statistics %}
-                                                <a class="btn btn--sm type--uppercase"
-                                                   href=""> <span
-                                                        class="btn__text">
-                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
-                                            </span>
-                                                </a>
-                                            {% endfor %}
-                                        {% endif %}
 
 
                                         <h3> ---- اضافه کردن تخفیف کافه -------</h3>
@@ -83,12 +89,11 @@
 
                                     </div>
                                 </li>
-
                             {% endif %}
 
                             <li class="">
                                 <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
-                                        class="h5">تخفیفات فعال</span></div>
+                                        class="h5">بخش تخفیفات</span></div>
                                 <div class="tab__content">
 
                                     {% for discount in user_active_discounts %}

@@ -98,12 +98,19 @@ def my_account(request):
         """returns all cafe discounts (not user discounts)"""
         return cafe_profile.cafe.discounts.all()
 
+    def is_cafe_profile(user_cafe_profile):
+        if user_cafe_profile.exists():
+            return True
+        else:
+            return False
+
     context = {}
 
     user_cafe_profile = CafeProfile.objects.filter(user__exact=request.user)
+    context["is_cafe_profile"] = is_cafe_profile(user_cafe_profile)
+
     if user_cafe_profile.exists():
         user_cafe_profile = user_cafe_profile.first()
-        context["cafe_profile_discounts"] = get_all_user_discounts()
         context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
         context["form"] = discount_add_form(user_cafe_profile)
         context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
