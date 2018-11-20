@@ -10,26 +10,29 @@
                     <div class="tabs-container tabs--vertical">
                         <ul class="tabs">
 
+                            {% if request.user.is_superuser %}
+
+                                <li class="">
+                                    <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span
+                                            class="h5">سوپر ادمین</span></div>
+                                    <div class="tab__content">
+                                        {% for cafe_statistic in admin_statistics %}
+                                            <a class="btn btn--sm type--uppercase"
+                                               href=""> <span
+                                                    class="btn__text">
+                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </li>
+                            {% endif %}
+
                             {% if is_cafe_profile %}
                                 <li class="active">
                                     <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                             class="h5">تخفیفات کاربران</span></div>
                                     <div class="tab__content">
-
-
-                                        {% if request.user.is_superuser %}
-                                            <h2>بخش مشاهده اطلاعات کافه ها====</h2>
-
-                                            {% for cafe_statistic in admin_statistics %}
-                                                <a class="btn btn--sm type--uppercase"
-                                                   href=""> <span
-                                                        class="btn__text">
-                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
-                                            </span>
-                                                </a>
-                                            {% endfor %}
-                                            <h2>===========</h2>
-                                        {% endif %}
 
 
                                         <h2>بخش تخفیفات فعال</h2>
@@ -59,7 +62,6 @@
                                                 </div>
                                             </table>
                                         {% endfor %}
-                                        </table>
 
                                         <h2>تخفیفات استفاده شده</h2>
 
@@ -102,30 +104,39 @@
                                         class="h5">بخش تخفیفات</span></div>
                                 <div class="tab__content">
 
-                                    <h2>=====تخفیفات فعال=====</h2>
-                                    {% for discount in user_active_discounts %}
-                                        <a class="btn btn--sm type--uppercase"
-                                           href=""> <span
-                                                class="btn__text">
-                                        {{ discount.code }} || {{ discount.date }} || {{ discount.discount }}
-                                            </span>
-                                        </a>
-                                    {% endfor %}
-                                    <h2>===============</h2>
-
-                                    <h2>=====آرشیو تخفیفات *استفاده شده=====</h2>
-                                    {% if user_used_discounts_archive %}
-                                        {% for used_discount in user_used_discounts_archive %}
-                                            <a class="btn btn--sm type--uppercase"
-                                               href=""> <span
-                                                    class="btn__text">
-                                                {{ used_discount }}
-                                            </span>
-                                            </a>
+                                    <h4>تخفیفات فعال</h4>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <th>کد تخفیف</th>
+                                            <th>تاریخ ثبت</th>
+                                            <th>توضیح</th>
+                                        </tr>
+                                        {% for discount in user_active_discounts %}
+                                            <tr>
+                                                <td>{{ discount.code }}</td>
+                                                <td>{{ discount.date }}</td>
+                                                <td>{{ discount.discount }}</td>
+                                            </tr>
                                         {% endfor %}
-                                    {% endif %}
+                                    </table>
 
-                                    <h2>===============</h2>
+
+                                    <h4> تخفیفات *استفاده شده </h4>
+                                    <table style="width:100%">
+                                        <tr>
+                                            <th>توضیح</th>
+                                            <th>تاریخ استفاده</th>
+                                        </tr>
+
+                                        {% if user_used_discounts_archive %}
+                                            {% for used_discount in user_used_discounts_archive %}
+                                                <tr>
+                                                    <td>{{ used_discount }}</td>
+                                                    <td>{{ used_discount.date }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </table>
                                 </div>
                             </li>
 
