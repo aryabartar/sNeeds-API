@@ -109,9 +109,16 @@
                                     <h2>===============</h2>
 
                                     <h2>=====آرشیو تخفیفات *استفاده شده=====</h2>
-                                {% if user_used_discounts_archive %}
-
-                                {% endif %}
+                                    {% if user_used_discounts_archive %}
+                                        {% for used_discount in user_used_discounts_archive %}
+                                            <a class="btn btn--sm type--uppercase"
+                                               href=""> <span
+                                                    class="btn__text">
+                                                {{ used_discount }}
+                                            </span>
+                                            </a>
+                                        {% endfor %}
+                                    {% endif %}
 
                                     <h2>===============</h2>
                                 </div>
