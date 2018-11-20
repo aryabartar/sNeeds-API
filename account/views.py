@@ -150,3 +150,4 @@ def delete_user_discount(request):
             user_discount.delete()
             user_used_discount.save()
     return redirect("account:my_account")
+#
