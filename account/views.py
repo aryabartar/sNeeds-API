@@ -118,7 +118,6 @@ def my_account(request):
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
-    context["user_discount"] = UserUsedDiscount.objects.filter(user__exact=request.user)
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_used_discounts_archive"] = get_user_used_discounts_archive()
 

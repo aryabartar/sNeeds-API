@@ -16,14 +16,24 @@
                                     <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span
                                             class="h5">سوپر ادمین</span></div>
                                     <div class="tab__content">
-                                        {% for cafe_statistic in admin_statistics %}
-                                            <a class="btn btn--sm type--uppercase"
-                                               href=""> <span
-                                                    class="btn__text">
-                                            {{ cafe_statistic.0 }} || {{ cafe_statistic.1 }} || {{ cafe_statistic.2 }}
-                                            </span>
-                                            </a>
-                                        {% endfor %}
+
+                                        <table style="width:100%">
+                                            <tr>
+                                                <th>نام کافه</th>
+                                                <th>آمار ۱</th>
+                                                <th>آمار ۲</th>
+                                            </tr>
+
+
+                                            {% for cafe_statistic in admin_statistics %}
+                                                <tr>
+                                                    <td>{{ cafe_statistic.0 }} </td>
+                                                    <td>{{ cafe_statistic.1 }} </td>
+                                                    <td>{{ cafe_statistic.2 }} </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+
                                     </div>
                                 </li>
                             {% endif %}
@@ -80,7 +90,6 @@
                                             {{ form.as_table }}
                                             <input type="submit" value="تایید">
                                         </form>
-                                        <h3> --------------------------</h3>
 
 
                                         <h3> ---- حذف تخفیفات -------</h3>
@@ -92,7 +101,6 @@
                                             </span>
                                             </a>
                                         {% endfor %}
-                                        <h3> --------------------------</h3>
 
 
                                     </div>
@@ -104,7 +112,7 @@
                                         class="h5">بخش تخفیفات</span></div>
                                 <div class="tab__content">
 
-                                    <h4>تخفیفات فعال</h4>
+                                    <h4>تخفیفات کافه</h4>
                                     <table style="width:100%">
                                         <tr>
                                             <th>کد تخفیف</th>
@@ -146,18 +154,6 @@
                                 <div class="tab__content">
                                     <p class="lead">  {{ user.username }}: نام کاربری </p>
                                     <p class="lead"> {{ user.email }}: آدرس ایمیل </p>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
-                                        class="h5">تخفیفات گرفته شده</span></div>
-                                <div class="tab__content">
-                                    {% for discount in user_discount %}
-                                        <div class="alert__body">
-
-                                            <h4>{{ discount.date }} || {{ discount.code }} || {{ discount }}</h4>
-                                        </div>
-                                    {% endfor %}
                                 </div>
                             </li>
                         </ul>
