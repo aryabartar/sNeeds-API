@@ -25,4 +25,7 @@ urlpatterns = [
     path('account/', include(account_urls)),
     path('admin/', admin.site.urls),
     path('discounts/', include(discounts_urls)),
+    # If you're intending to use the browsable API you'll probably also want to add REST framework's
+    # login and logout views.
+    path('^api-auth/', include('rest_framework.urls'))
 ]
