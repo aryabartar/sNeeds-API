@@ -5,7 +5,6 @@ from django.contrib.auth import login as auth_login
 
 from discounts.models import UserDiscount, CafeProfile, UserUsedDiscount, Cafe, Discount
 from account.forms import SignUpForm
-from django.views.decorators.csrf import csrf_exempt
 from discounts.forms import AddDiscountForm
 
 
@@ -125,6 +124,14 @@ def my_account(request):
     context["user_used_discounts_archive"] = get_user_used_discounts_archive()
 
     return render(request, "account/my_account.html", context=context)
+
+
+@login_required(login_url='account:login')
+def all_cafe_archive(request):
+    cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+    all_used_discounts = UserUsedDiscount.objects.filter(cafe__exact=cafe_profile.cafe)
+    return render(request, "account/user_used_discounts_archive.html",
+                  context={"all_used_discounts": all_used_discounts})
 
 
 @login_required(login_url='account:login')
