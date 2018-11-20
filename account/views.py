@@ -127,7 +127,7 @@ def my_account(request):
 @login_required(login_url='account:login')
 def all_cafe_archive(request):
     cafe_profile = CafeProfile.objects.get(user__exact=request.user)
-    all_used_discounts = UserUsedDiscount.objects.filter(cafe__exact=cafe_profile.cafe)
+    all_used_discounts = UserUsedDiscount.objects.filter(cafe__exact=cafe_profile.cafe).order_by('-pk')
     return render(request, "account/user_used_discounts_archive.html",
                   context={"all_used_discounts": all_used_discounts})
 
@@ -144,7 +144,8 @@ def delete_user_discount(request):
                                                   user=user_discount.user,
                                                   archive_string="{} درصد تخفیف {}".format(
                                                       str(user_discount.discount.discount_percent),
-                                                      user_discount.discount.cafe.name, )
+                                                      user_discount.discount.cafe.name, ),
+                                                  used_discount_info="استفاده شد",
                                                   )
             user_discount.delete()
             user_used_discount.save()

@@ -10,6 +10,7 @@
             <th>توضیح تخفیف</th>
             <th>کاربر</th>
             <th>زمان استفاده</th>
+            <th>توضیح وضعیت</th>
         </tr>
         {% for used_discount in all_used_discounts %}
             <tr>
@@ -17,6 +18,7 @@
                 <td>{{ used_discount }}</td>
                 <td>{{ used_discount.user }}</td>
                 <td>{{ used_discount.date }}</td>
+                <td>{{ used_discount.used_discount_info }}</td>
             </tr>
         {% endfor %}
 

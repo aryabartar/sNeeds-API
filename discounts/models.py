@@ -93,6 +93,7 @@ class UserUsedDiscount(models.Model):
     # Is used for user logs.
 
     archive_string = models.CharField(null=True, max_length=128)
+    used_discount_info = models.CharField(null=True, max_length=128)  # Used for indicating "used", "deleted" ...
 
     def __str__(self):
         return str(self.archive_string)
