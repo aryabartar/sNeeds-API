@@ -95,7 +95,4 @@ class UserUsedDiscount(models.Model):
     archive_string = models.CharField(null=True, max_length=128)
 
     def __str__(self):
-        if self.discount == None:
-            return ("ljdokj")
-        else:
-            return ("ddd")
+        return str(self.archive_string)
