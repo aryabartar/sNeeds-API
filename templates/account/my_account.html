@@ -11,14 +11,15 @@
                         <ul class="tabs">
 
                             {% if is_cafe_profile %}
-                            <li class="active">
+                                <li class="active">
                                     <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
                                             class="h5">تخفیفات کاربران</span></div>
                                     <div class="tab__content">
 
-                                                                            <h2>بخش مشاهده اطلاعات کافه ها====</h2>
 
                                         {% if request.user.is_superuser %}
+                                            <h2>بخش مشاهده اطلاعات کافه ها====</h2>
+
                                             {% for cafe_statistic in admin_statistics %}
                                                 <a class="btn btn--sm type--uppercase"
                                                    href=""> <span
@@ -27,10 +28,11 @@
                                             </span>
                                                 </a>
                                             {% endfor %}
+                                            <h2>===========</h2>
                                         {% endif %}
-                                    <h2>===========</h2>
 
 
+                                        <h2>بخش تخفیفات فعال</h2>
                                         {% for discount , value in cafe_profile_discounts.items %}
                                             <h4> {{ discount }}</h4>
 
@@ -65,7 +67,6 @@
                                         <p></p>
 
 
-
                                         <h3> ---- اضافه کردن تخفیف کافه -------</h3>
                                         <form action="" method="post">
                                             {% csrf_token %}
@@ -96,6 +97,7 @@
                                         class="h5">بخش تخفیفات</span></div>
                                 <div class="tab__content">
 
+                                    <h2>=====تخفیفات فعال=====</h2>
                                     {% for discount in user_active_discounts %}
                                         <a class="btn btn--sm type--uppercase"
                                            href=""> <span
@@ -104,6 +106,18 @@
                                             </span>
                                         </a>
                                     {% endfor %}
+                                    <h2>===============</h2>
+
+                                    <h2>=====آرشیو تخفیفات *استفاده شده=====</h2>
+                                    {% for discount in user_active_discounts %}
+                                        <a class="btn btn--sm type--uppercase"
+                                           href=""> <span
+                                                class="btn__text">
+                                        {{ discount.code }} || {{ discount.date }} || {{ discount.discount }}
+                                            </span>
+                                        </a>
+                                    {% endfor %}
+                                    <h2>===============</h2>
                                 </div>
                             </li>
 
