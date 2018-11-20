@@ -106,6 +106,8 @@ def my_account(request):
         context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
         context["form"] = discount_add_form(user_cafe_profile)
         context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
+        context["cafe_profile_discounts"] = get_all_user_discounts()
+
     except CafeProfile.DoesNotExist:
         context["is_cafe_profile"] = False
 
@@ -114,6 +116,7 @@ def my_account(request):
 
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_discount"] = UserUsedDiscount.objects.filter(user__exact=request.user)
+
     return render(request, "account/my_account.html", context=context)
 
 
