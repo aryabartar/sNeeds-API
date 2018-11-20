@@ -94,6 +94,12 @@ def my_account(request):
 
         return add_discount_form
 
+    def get_user_used_discounts_archive():
+        try:
+            return UserUsedDiscount.objects.filter(user__exact=request.user)
+        except UserUsedDiscount.DoesNotExist:
+            return None
+
     def get_all_cafe_discounts(cafe_profile):
         """returns all cafe discounts (not user discounts)"""
         return cafe_profile.cafe.discounts.all()
@@ -114,8 +120,9 @@ def my_account(request):
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
-    context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_discount"] = UserUsedDiscount.objects.filter(user__exact=request.user)
+    context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
+    context["user_used_discounts_archive"] = get_user_used_discounts_archive()
 
     return render(request, "account/my_account.html", context=context)
 
@@ -130,8 +137,9 @@ def delete_user_discount(request):
             user_used_discount = UserUsedDiscount(discount=user_discount.discount,
                                                   cafe=user_discount.discount.cafe,
                                                   user=user_discount.user,
-                                                  archive_string="{} درصد تخفیف {}".format(str(user_discount.discount.discount_percent),
-                                                                                      user_discount.discount.cafe.name, )
+                                                  archive_string="{} درصد تخفیف {}".format(
+                                                      str(user_discount.discount.discount_percent),
+                                                      user_discount.discount.cafe.name, )
                                                   )
             user_discount.delete()
             user_used_discount.save()
