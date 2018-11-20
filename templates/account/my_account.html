@@ -33,35 +33,42 @@
 
 
                                         <h2>بخش تخفیفات فعال</h2>
+
+
                                         {% for discount , value in cafe_profile_discounts.items %}
                                             <h4> {{ discount }}</h4>
-
-                                            <div class="alert__body">
-                                                {% for user_discount in value %}
-                                                    <span>   {{ user_discount.code }}</span>
-                                                    <span> | | </span>
-                                                    <span>   {{ user_discount.user.username }}</span>
-                                                    {% if not user_discount.status == "used" %}
-                                                        <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
-                                                           class="btn btn-secondary btn-lg active" role="button"
-                                                           aria-pressed="true">دریافت شد</a>
-                                                    {% endif %}
-
-                                                    <h1>
-
-                                                    </h1>
-                                                {% endfor %}
-                                            </div>
+                                            <table style="width:100%">
+                                                <tr>
+                                                    <th>عنوان تخفیف</th>
+                                                    <th>کد تخفیف</th>
+                                                    <th>کاربر</th>
+                                                    <th>دریافت</th>
+                                                </tr>
+                                                <div class="alert__body">
+                                                    {% for user_discount in value %}
+                                                        <tr>
+                                                            <td>{{ user_discount }}</td>
+                                                            <td>{{ user_discount.code }}</td>
+                                                            <td>{{ user_discount.user.username }}</td>
+                                                            <td>
+                                                                <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
+                                                                   class="btn btn-secondary btn-lg active" role="button"
+                                                                   aria-pressed="true">دریافت شد</a></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </div>
+                                            </table>
                                         {% endfor %}
+                                        </table>
 
                                         <h2>تخفیفات استفاده شده</h2>
 
-                                            <a class="btn btn--sm type--uppercase"
-                                               href="{% url "account:cafe_discount_archives" %}"> <span
-                                                    class="btn__text">
+                                        <a class="btn btn--sm type--uppercase"
+                                           href="{% url "account:cafe_discount_archives" %}"> <span
+                                                class="btn__text">
                                            برای مشاهده همه کلیک کنید
                                             </span>
-                                            </a>
+                                        </a>
                                         <p></p>
 
 
