@@ -130,6 +130,8 @@ def delete_user_discount(request):
             user_used_discount = UserUsedDiscount(discount=user_discount.discount,
                                                   cafe=user_discount.discount.cafe,
                                                   user=user_discount.user,
+                                                  archive_string="{} تخفیف {}".format(user_discount.discount,
+                                                                                      user_discount.discount.cafe, )
                                                   )
             user_discount.delete()
             user_used_discount.save()

@@ -92,7 +92,10 @@ class UserUsedDiscount(models.Model):
     date = models.DateField(auto_now=True, blank=False)
     # Is used for user logs.
 
-    user_log = models.CharField(null=True, max_length=128)
+    archive_string = models.CharField(null=True, max_length=128)
 
     def __str__(self):
-        return str(self.discount)
+        if self.discount == None:
+            return ("ljdokj")
+        else:
+            return ("ddd")
