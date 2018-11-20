@@ -98,12 +98,6 @@ def my_account(request):
         """returns all cafe discounts (not user discounts)"""
         return cafe_profile.cafe.discounts.all()
 
-    def is_cafe_profile(user_cafe_profile):
-        if user_cafe_profile.exists():
-            return True
-        else:
-            return False
-
     context = {}
 
     try:
@@ -114,8 +108,6 @@ def my_account(request):
         context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
     except CafeProfile.DoesNotExist:
         context["is_cafe_profile"] = False
-
-
 
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()

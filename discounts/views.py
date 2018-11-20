@@ -1,10 +1,8 @@
 import random
 import string
 
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from .models import Discount, Cafe, UserDiscount
-from django.contrib.auth import get_user_model
 
 
 # Create your views here.
