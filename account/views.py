@@ -108,7 +108,6 @@ def my_account(request):
     try:
         user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
         context["is_cafe_profile"] = True
-        context["used_discounts"] = user_cafe_profile.cafe.used_discounts.all()
         context["form"] = discount_add_form(user_cafe_profile)
         context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
         context["cafe_profile_discounts"] = get_all_user_discounts()

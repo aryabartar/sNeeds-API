@@ -55,15 +55,13 @@
                                         {% endfor %}
 
                                         <h2>تخفیفات استفاده شده</h2>
-                                        {% for used_discount in used_discounts %}
 
                                             <a class="btn btn--sm type--uppercase"
-                                               href=""> <span
+                                               href="{% url "account:cafe_discount_archives" %}"> <span
                                                     class="btn__text">
-                                            {{ used_discount.user.username }} || {{ used_discount }} || {{ used_discount.date }}
+                                           برای مشاهده همه کلیک کنید
                                             </span>
                                             </a>
-                                        {% endfor %}
                                         <p></p>
 
 
