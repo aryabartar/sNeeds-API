@@ -40,10 +40,13 @@ def cafe_page(request, slug):
     def get_user_discounts():
         user_discount_tuple_list = []
         discount_with_user = []
-        qs = UserDiscount.objects.filter(user__exact=request.user, discount__cafe__exact=cafe)
-        for user_discount in qs:
-            user_discount_tuple_list.append((user_discount.discount, user_discount))
-            discount_with_user.append(user_discount.discount)
+        try:
+            qs = UserDiscount.objects.filter(user__exact=request.user, discount__cafe__exact=cafe)
+            for user_discount in qs:
+                user_discount_tuple_list.append((user_discount.discount, user_discount))
+                discount_with_user.append(user_discount.discount)
+        except:
+            qs = None
 
         return user_discount_tuple_list, discount_with_user
 

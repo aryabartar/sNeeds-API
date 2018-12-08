@@ -66,15 +66,29 @@
                                     </div>
 
 
-                                    <div class="bar__module">
-                                        <a class="btn btn--sm type--uppercase" name="{{ discount.discount_percent }}"
-                                           href="{{ cafe.get_absolute_url }}?pk={{ discount.pk }}#{{ discount.discount_percent }}"
-                                           methods="get"> <span
-                                                class="btn__text">
+
+                                    {% if not_auth %}
+                                        <div class="alert">
+                                            <div class="alert__body">
+                                    <span>
+                                        لطفا برای دریافت تخفیف وارد سایت شوید
+                                   </span>
+                                            </div>
+
+                                        </div>
+                                    {% else %}
+
+                                        <div class="bar__module">
+                                            <a class="btn btn--sm type--uppercase"
+                                               name="{{ discount.discount_percent }}"
+                                               href="{{ cafe.get_absolute_url }}?pk={{ discount.pk }}#{{ discount.discount_percent }}"
+                                               methods="get"> <span
+                                                    class="btn__text">
 دریافت کد تخفیف
                                         </span>
-                                        </a>
-                                    </div>
+                                            </a>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                         {% endfor %}
