@@ -3,7 +3,8 @@ from .models import Booklet
 
 
 class BookletProblemReportForm(forms.Form):
-    text = forms.Textarea()
+    text = forms.CharField(widget=forms.Textarea, required=True, label="گذارش خرابی",
+                           error_messages={'required': 'لطفا فیلد را پر کنید'})
 
 
 class UploadBookletForm(forms.ModelForm):

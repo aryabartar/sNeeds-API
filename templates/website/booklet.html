@@ -4,81 +4,87 @@
 
 {% block main_content %}
 
-    <section class="feature-large switchable">
-        <div class="container">
-            <div class="row justify-content-between">
-                <div class="col-md-6">
-                    <nav aria-label="breadcrumb">
-                        <ul class="breadcrumb">
-                            <li class=""><a href="{% url "website:booklets_home" %}">/جزوات</a></li>
-                            <li class=""><a
-                                    href="{{ booklet.topic.field.get_absolute_url }}">{{ booklet.topic.field }}/</a>
-                            </li>
-                            <li class="breadcrumb-item"><a
-                                    href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}/</a></li>
-                            <li class="" aria-current="page">{{ booklet.title }}/</li>
-                        </ul>
-                    </nav>
-                </div>
-                <div class="col-md-6">
-                    <a class="btn btn--primary" href="{{ booklet.topic.get_absolute_url }}">
-                        <span class="btn__text">بازگشت</span>
-                    </a>
-                </div>
+<section class="feature-large switchable">
+    <div class="container">
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <nav aria-label="breadcrumb">
+                    <ul class="breadcrumb">
+                        <li class=""><a
+                                href="{{ booklet.topic.field.get_absolute_url }}">{{ booklet.topic.field }}/</a>
+                        </li>
+                        <li class="breadcrumb-item"><a
+                                href="{{ booklet.topic.get_absolute_url }}">{{ booklet.topic.subject }}/</a></li>
+                        <li class="" aria-current="page">{{ booklet.title }}/</li>
+                    </ul>
+                </nav>
             </div>
-            <div class="row justify-content-between">
-                <div class="col-md-6">
-                    <div class="boxed boxed--lg boxed--border">
-                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
-                            <div class="feature__body">
-                                <h5>عنوان</h5>
-                                <p> {{ booklet.title }} </p>
-                            </div>
+            <div class="col-md-6">
+                <a class="btn btn--primary" href="{{ booklet.topic.get_absolute_url }}">
+                    <span class="btn__text">بازگشت</span>
+                </a>
+            </div>
+        </div>
+        <div class="row justify-content-between">
+            <div class="col-md-6">
+                <div class="boxed boxed--lg boxed--border">
+                    <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                        <div class="feature__body">
+                            <h5>عنوان</h5>
+                            <p> {{ booklet.title }} </p>
                         </div>
-                        <div class="feature feature-2"><i class="icon icon-Duplicate-Window color--primary"></i>
-                            <div class="feature__body">
-                                <h5>موضوع</h5>
-                                <p>
-                                    <stron>{{ booklet.topic }}</stron>
-                                </p>
-                            </div>
+                    </div>
+                    <div class="feature feature-2"><i class="icon icon-Duplicate-Window color--primary"></i>
+                        <div class="feature__body">
+                            <h5>موضوع</h5>
+                            <p>
+                                <stron>{{ booklet.topic }}</stron>
+                            </p>
                         </div>
-                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
-                            <div class="feature__body">
-                                <h5>نویسنده</h5>
-                                <p> {{ booklet.owner }} </p>
-                            </div>
+                    </div>
+                    <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                        <div class="feature__body">
+                            <h5>نویسنده</h5>
+                            <p> {{ booklet.owner }} </p>
                         </div>
-                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
-                            <div class="feature__body">
-                                <h5>حجم جزوه</h5>
-                                <p> {{ booklet.booklet_content.size|filesizeformat }}</p>
-                            </div>
+                    </div>
+                    <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                        <div class="feature__body">
+                            <h5>حجم جزوه</h5>
+                            <p> {{ booklet.booklet_content.size|filesizeformat }}</p>
                         </div>
-                        <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
-                            <div class="feature__body">
-                                {% if is_visited %}
-                                    <div class="alert">
-                                        <div class="alert__body">
-                                            <span>! قبلا مشاهده شده</span>
-                                        </div>
-                                    </div>
-                                {% endif %}
+                    </div>
+                    <div class="feature feature-2"><i class="icon icon-Clock-Back color--primary"></i>
+                        <div class="feature__body">
+                            {% if is_visited %}
+                            <div class="alert">
+                                <div class="alert__body">
+                                    <span>! قبلا مشاهده شده</span>
+                                </div>
                             </div>
+                            {% endif %}
                         </div>
-                        <div class="feature feature-2"><i class="icon icon-Life-Jacket color--primary"></i>
-                            <div class="feature__body">
-                                <a class="btn btn--primary" href="{{ booklet.booklet_content.url }}" target="_blank">
-                                    <span class="btn__text">دریافت جزوه</span>
-                                </a>
-                            </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ problem_report_form }}
+                        <button type="submit" class="btn btn-success">گذارش خرابی</button>
+                    </form>
+
+                    <div class="feature feature-2"><i class="icon icon-Life-Jacket color--primary"></i>
+                        <div class="feature__body">
+                            <a class="btn btn--primary" href="{{ booklet.booklet_content.url }}" target="_blank">
+                                <span class="btn__text">دریافت جزوه</span>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6"><img alt="Image" class="border--round box-shadow-wide"
-                                                    src="{{ booklet.booklet_image.url }}"></div>
             </div>
+            <div class="col-lg-6 col-md-6"><img alt="Image" class="border--round box-shadow-wide"
+                                                src="{{ booklet.booklet_image.url }}"></div>
         </div>
-    </section>
+    </div>
+</section>
 
 {% endblock main_content %}

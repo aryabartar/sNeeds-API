@@ -100,9 +100,9 @@ def blog_posts(request, page=1):
     return render(request, "website/blog-posts.html", context=my_dict)
 
 
-@csrf_exempt
 def get_booklet(request, slug):
     if request.method == 'POST':
+        print("REQUEST IS POST")
         problem_report_form = BookletProblemReportForm(request.POST)
         if problem_report_form.is_valid():
             print(problem_report_form.text)
