@@ -54,6 +54,3 @@ def cafe_page(request, slug):
 
     return render(request, "discounts/cafe.html", context=context)
 
-
-def modify_user_discount(request):
-    pass

@@ -137,3 +137,12 @@ class UserUploadedBooklet(models.Model):
         # changes tuple to dictionary and gets appropriate value
         farsi_status = dict(self.BOOKLET_STATUS).get(self.status)
         return self.title + " => " + farsi_status
+
+
+class BookletProblemReport(models.Model):
+    booklet = models.ForeignKey(Booklet, on_delete=models.CASCADE, related_name='problems')
+    text = models.TextField(verbose_name='گذارش خرابی')
+
+    def __str__(self):
+        farsi_text = "گذارش خرابی {}".format(self.booklet.name)
+        return farsi_text
