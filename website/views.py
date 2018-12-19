@@ -1,13 +1,12 @@
-from django.http import HttpResponseRedirect
+import json
+
 from django.shortcuts import render, get_object_or_404
-from django.urls import reverse
 from django.views import generic
-import os
-import zipfile
-from io import StringIO
+
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
-from .forms import UploadBooklet
+from .forms import UploadBooklet, BookletProblemReportForm
 
 
 # Create your views here.
@@ -101,13 +100,22 @@ def blog_posts(request, page=1):
     return render(request, "website/blog-posts.html", context=my_dict)
 
 
+@csrf_exempt
 def get_booklet(request, slug):
+    if request.method == 'POST':
+        problem_report_form = BookletProblemReportForm(request.POST)
+        if problem_report_form.is_valid():
+            print(problem_report_form.text)
+
+    else:
+        problem_report_form = BookletProblemReportForm()
+
     booklet = get_object_or_404(Booklet, slug=slug.lower())
     booklet.number_of_views += 1  # increments view
     booklet.save()
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
-    context = {"booklet": booklet, "is_visited": is_visited}
+    context = {"booklet": booklet, "is_visited": is_visited, "problem_report_form": problem_report_form}
     return render(request, 'website/booklet.html', context=context)
 
 
@@ -167,7 +175,3 @@ def upload_booklet(request):
 
     context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
-
-
-def make_new_booklet_problem(request):
-    if request.method == 'POST' :

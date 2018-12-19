@@ -2,6 +2,10 @@ from django import forms
 from .models import Booklet
 
 
+class BookletProblemReportForm(forms.Form):
+    text = forms.Textarea()
+
+
 class UploadBookletForm(forms.ModelForm):
     class Meta:
         model = Booklet
