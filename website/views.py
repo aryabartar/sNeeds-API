@@ -169,5 +169,5 @@ def upload_booklet(request):
     return render(request, 'website/booklet-upload-by-user.html', context=context)
 
 
-
-
+def make_new_booklet_problem(request):
+    if request.method == 'POST' :
