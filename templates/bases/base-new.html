@@ -1,0 +1,357 @@
+<!doctype html>
+{% load static %}
+<html lang="en" style="height:100%">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" type="image/png" href="{% static "assets/img/sneedsLogo.png" %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+    <title>جزوات اسنیدز، مرجع رفع نیاز های دانشجویی</title>
+
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
+
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"/>
+
+    <!-- CSS Files -->
+    <link href="{% static "assets/css/bootstrap.min.css" %}" rel="stylesheet"/>
+    <link href="{% static "assets/css/material-kit.css?v=1.2.1" %}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{% static "assets/css/sneedsCustom.css" %}">
+</head>
+<body class="product-page">
+<div id="siteTop"></div>
+<!-- Navbar will come here -->
+
+<nav class="navbar navbar-right navbar-default bg-primary navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <a class="navbar-brand serifFont" href="http://www.sneeds.ir" target="_blank">
+                    <span class="serifFont brandName float-right">
+                        اسنیدز
+                    </span>
+                <span class="brandLogo float-left">
+                        <img src="{% static "assets/img/sneedsLogo.png" %}" alt="sneeds logo" class="img-responsive">
+                    </span>
+            </a>
+        </div>
+
+        <div class="collapse navbar-collapse yekanFont" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right text-right">
+                <li class="customHover"><a href="booklet.html" target="_blank">لینک تست 3</a></li>
+                <li class="customHover"><a href="booklet.html" target="_blank">لینک تست 2</a></li>
+                <li class="customHover"><a href="booklet.html" target="_blank">لینک تست 1</a></li>
+                <li class="dropdown customHover">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">&nbspجزوات&nbsp<b
+                            class="caret text-left"></b> </a>
+                    <ul class="dropdown-menu text-center">
+                        <li class="customHover"><a href="#">مهندسی کامپیوتر</a></li>
+                        <li class="customHover"><a href="#">مهندسی برق</a></li>
+                        <li class="customHover"><a href="#">فیزیک</a></li>
+                        <li class="divider"></li>
+                        <li class="customHover"><a href="#">همه دسته ها</a></li>
+                        <li class="divider"></li>
+                        <li class="customHover"><a href="#">دسته خاص</a></li>
+                    </ul>
+                </li>
+
+                <li class="customHover"><a href="#">تماس با ما</a></li>
+
+                <li class="active customHover"><a href="bookletList.html">صفحه اول</a></li>
+            </ul>
+
+            <form class="navbar-form navbar-left bookletSearchForm" role="search">
+                <div class="form-group form-primary">
+                    <input type="text" class="form-control yekanFont" style="width:200px"
+                           value="جستجوی سریع در کل سایت" id="siteFastSearch">
+                </div>
+                <button type="submit" class="btn btn-default btn-sm yekanFont">بگرد</button>
+            </form>
+
+        </div>
+    </div>
+</nav>
+
+
+<div class="page-header header-filter" data-parallax="true" filter-color="primary"
+     style="background-image: url({% static "assets/img/bg3.jpg" %}); transform: translate3d(0px, 0px, 0px);">
+    <div class="container">
+        <div class="row title-row">
+            <div class="col-md-4 col-md-offset-8">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section section-gray">
+    <div class="container">
+        <div class="main main-raised main-product">
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{% static "assets/img/bg3.jpg" %}" alt="booklet image" class="img-responsive"
+                         draggable="false">
+                </div>
+                <div class="col-md-6">
+                    <h2 class="title yekanFont text-right rtl">نام جزوه برای دانلود</h2>
+                    <div id="acordeon">
+
+                        <div class="panel-group" id="accordion">
+
+                            <div class="panel panel-border panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                       aria-expanded="false" aria-controls="collapseOne" class="collapsed">
+                                        <h4 class="panel-title yekanFont rtl text-right">
+                                            توضیحات درسی
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </h4>
+                                    </a>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse" aria-expanded="false"
+                                     style="height: 0px;">
+                                    <div class="panel-body">
+                                        <p class="text-justify yekanFont">
+                                            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از
+                                            طراحان
+                                            گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم
+                                            است و
+                                            برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
+                                            کاربردی
+                                            می باشد.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-border panel-default">
+                                <div class="panel-heading" role="tab" id="headingTwo">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo"
+                                       aria-controls="collapseTwo" class="collapsed" aria-expanded="false">
+                                        <h4 class="panel-title yekanFont text-right rtl">
+                                            توضیحات فایل
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </h4>
+                                    </a>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse" aria-expanded="false"
+                                     style="height: 0px;">
+                                    <div class="panel-body text-justify yekanFont">
+                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                                        گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
+                                        برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای
+                                        کاربردی
+                                        می باشد.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-border panel-default">
+                                <div class="panel-heading" role="tab" id="headingThree">
+                                    <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                       href="#collapseThree" aria-controls="collapseOne" class="collapsed"
+                                       aria-expanded="false">
+                                        <h4 class="panel-title text-danger yekanFont rtl">
+                                            گزارش خرابی / مشکل در جزوه
+                                            <i class="material-icons">keyboard_arrow_down</i>
+                                        </h4>
+                                    </a>
+                                </div>
+
+                                <div id="collapseThree" class="panel-collapse collapse" aria-expanded="false"
+                                     style="height: 0;">
+                                    <div class="panel-body">
+                                        <form class="form" method="" action="">
+                                            <div class="card-content">
+                                                <div class="input-group">
+											<span class="input-group-addon">
+												<i class="material-icons">sync_problem</i>
+											</span>
+                                                    <div class="form-group  form-danger"><textarea
+                                                            class="form-control yekanFont" rows="5"
+                                                            placeholder="مشکل یا ایراد مورد نظر را اینجا توضیح دهید تا پیگیری شود"></textarea><span
+                                                            class="material-input"></span></div>
+                                                </div>
+
+
+                                            </div>
+                                            <div class="footer text-center">
+                                                <input type="submit" class="btn btn-danger yekanFont rtl"
+                                                       value="گزارش خرابی">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="row text-right">
+                        <button class="btn btn-primary yekanFont">
+                            &nbsp; دانلود جزوه &nbsp;
+                            <i class="material-icons">file_download</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<footer class="footer footer-black footer-big">
+    <div class="container">
+        <div class="content">
+            <div class="row rtl text-right">
+                <div class="col-md-4">
+                    <h5 class="yekanFont">آخرین های اینستاگرام اسنیدز</h5>
+                    <div class="gallery-feed">
+                        <img src="{% static "assets/img/faces/card-profile6-square.jpg" %}"
+                             class="img img-raised img-rounded"
+                             alt="img1">
+                        <img src="{% static "assets/img/faces/christian.jpg" %}" class="img img-raised img-rounded"
+                             alt="img2">
+                        <img src="{% static "assets/img/faces/card-profile4-square.jpg" %}"
+                             class="img img-raised img-rounded"
+                             alt="img3">
+                        <img src="{% static "assets/img/faces/card-profile1-square.jpg" %}"
+                             class="img img-raised img-rounded"
+                             alt="img4">
+
+                        <img src="{% static "assets/img/faces/marc.jpg" %}" class="img img-raised img-rounded"
+                             alt="img5">
+                        <img src="{% static "assets/img/faces/kendall.jpg" %}" class="img img-raised img-rounded"
+                             alt="img6">
+                        <img src="{% static "assets/img/faces/card-profile5-square.jpg" %}"
+                             class="img img-raised img-rounded"
+                             alt="img7">
+                        <img src="{% static "assets/img/faces/card-profile2-square.jpg" %}"
+                             class="img img-raised img-rounded"
+                             alt="img8">
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 ">
+                    <h5 class="yekanFont">اسنیدز در رسانه ها</h5>
+                    <div class="social-feed yekanFont rtl text-justify">
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p class="miniRightSpace">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+                                استفاده از طراحان</p>
+                        </div>
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
+                                با استفاده از طراحان</p>
+                        </div>
+                        <div class="feed-line">
+                            <i class="fa fa-facebook-square"></i>
+                            <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
+                                با استفاده از طراحان</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <h5 class="yekanFont">درباره اسنیدز</h5>
+                    <p class="yekanFont text-justify">
+                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                        گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
+                        برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی
+                        می باشد.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+
+        <hr>
+
+        <ul class="pull-right rtl text-right yekanFont normalFontSize">
+            <li>
+                <a href="#">
+                    لینک تست 1
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    لینک تست 2
+
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    لینک تست 3
+
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    لینک تست 4
+
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    لینک تست 5
+                </a>
+            </li>
+        </ul>
+
+        <div class="copyright pull-left">
+            Copyright ©
+            <script>document.write(new Date().getFullYear())</script>
+            Sneeds Co. All Rights Reserved
+        </div>
+
+        <div class="pull-center">
+            <button class="btn btn-fab btn-fab-mini pull-center goUpBtn" id="goUpBtn">
+                <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+        </div>
+    </div>
+</footer>
+
+
+</body>
+<!--   Core JS Files   -->
+<script src="{% static "assets/js/jquery.min.js" %}" type="text/javascript"></script>
+<script src="{% static "assets/js/bootstrap.min.js" %}" type="text/javascript"></script>
+<script src="{% static "assets/js/material.min.js" %}"></script>
+
+<!--    Plugin for Date Time Picker and Full Calendar Plugin   -->
+<script src="{% static "assets/js/moment.min.js" %}"></script>
+
+<!--	Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/   -->
+<script src="{% static "assets/js/nouislider.min.js" %}" type="text/javascript"></script>
+
+<!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker   -->
+<script src="{% static "assets/js/bootstrap-datetimepicker.js" %}" type="text/javascript"></script>
+
+<!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select   -->
+<script src="{% static "assets/js/bootstrap-selectpicker.js" %}" type="text/javascript"></script>
+
+<!--	Plugin for Tags, full documentation here: http://xoxco.com/projects/code/tagsinput/   -->
+<script src="{% static "assets/js/bootstrap-tagsinput.js" %}"></script>
+
+<!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput   -->
+<script src="{% static "assets/js/jasny-bootstrap.min.js" %}"></script>
+
+<!--    Plugin For Google Maps   -->
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+
+
+<!--    Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc    -->
+<script src="{% static "assets/js/material-kit.js?v=1.2.1" %}" type="text/javascript"></script>
+<script src="{% static "assets/js/sneedsCustom.js" %}" type="application/javascript"></script>
+</html>

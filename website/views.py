@@ -175,3 +175,7 @@ def upload_booklet(request):
 
     context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
+
+
+def tmp(request):
+    return render(request, 'bases/base-new.html')

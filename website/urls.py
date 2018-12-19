@@ -22,6 +22,7 @@ app_name = "website"
 urlpatterns = [
                   path('', views.home, name="home"),
                   path('posts/<str:slug>', views.get_post, name="posts"),
+                  path('tmp/', views.tmp, name="tmp"),
                   path('booklets/', views.booklet_home, name="booklets_home"),
                   path('booklets/search/', include('haystack.urls') , name="booklets_search"),
                   path('booklets/user-upload', views.upload_booklet, name="upload_booklet"),

@@ -144,5 +144,5 @@ class BookletProblemReport(models.Model):
     text = models.TextField(verbose_name='گذارش خرابی')
 
     def __str__(self):
-        farsi_text = "گذارش خرابی {}".format(self.booklet.name)
+        farsi_text = "گذارش خرابی {}".format(self.booklet)
         return farsi_text
