@@ -5,7 +5,7 @@ from django.views import generic
 
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet
+from .models import Post, Booklet, Topic, BookletTopic, BookletField, UserUploadedBooklet, BookletProblemReport
 from .forms import UploadBooklet, BookletProblemReportForm
 
 
@@ -101,18 +101,18 @@ def blog_posts(request, page=1):
 
 
 def get_booklet(request, slug):
+    booklet = get_object_or_404(Booklet, slug=slug.lower())
+    booklet.number_of_views += 1  # increments view
+    booklet.save()
+
     if request.method == 'POST':
-        print("REQUEST IS POST")
         problem_report_form = BookletProblemReportForm(request.POST)
         if problem_report_form.is_valid():
-            print(problem_report_form.text)
+            BookletProblemReport.objects.create(text="odkfoei", booklet=booklet)
 
     else:
         problem_report_form = BookletProblemReportForm()
 
-    booklet = get_object_or_404(Booklet, slug=slug.lower())
-    booklet.number_of_views += 1  # increments view
-    booklet.save()
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
     context = {"booklet": booklet, "is_visited": is_visited, "problem_report_form": problem_report_form}
