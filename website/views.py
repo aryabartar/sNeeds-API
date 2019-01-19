@@ -116,7 +116,7 @@ def get_booklet(request, slug):
     is_visited = request.session.get('is_visited', False)
     request.session['is_visited'] = True
     context = {"booklet": booklet, "is_visited": is_visited, "problem_report_form": problem_report_form}
-    return render(request, 'website/booklet.html', context=context)
+    return render(request, 'website/booklet-new-1.html', context=context)
 
 
 class BookletTopicView(generic.ListView):
