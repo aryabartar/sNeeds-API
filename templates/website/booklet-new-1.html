@@ -2,6 +2,10 @@
 {% extends 'website/../bases/base-new.html' %}
 {% load static %}
 
+{% block body-class-block %}
+    <body class="product-page" style="height:100%">
+{% endblock body-class-block %}
+
 {% block main_content %}
 
     <div class="page-header header-filter" data-parallax="true" filter-color="primary"
@@ -99,4 +103,5 @@
             </div>
         </div>
     </div>
+
 {% endblock main_content %}

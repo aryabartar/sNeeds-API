@@ -20,7 +20,10 @@
     <link href="{% static "assets/css/material-kit.css" %}" rel="stylesheet"/>
     <link rel="stylesheet" href="{% static "assets/css/sneedsCustom.css" %}">
 </head>
+
+{% block body-class-block %}
 <body style="height:100%">
+{% endblock %}
 
 
 <div id="siteTop"></div>
@@ -88,6 +91,7 @@
 <!-- end navbar -->
 
 {% block main_content %}
+
 {% endblock main_content %}
 
 
@@ -201,7 +205,6 @@
             </div>
         </div>
     </footer>
-
 
 
 </body>
