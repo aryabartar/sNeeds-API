@@ -135,6 +135,22 @@ class BookletTopicView(generic.ListView):
             associated_booklets = booklet_topic.booklets.all().order_by('title')
         return associated_booklets
 
+class BookletTopicView1(generic.ListView):
+    model = BookletTopic
+    template_name = 'website/booklet-topic-new-1.html'
+    paginate_by = 4
+
+    def get_queryset(self):
+        qs = self.model.objects.all()
+        if self.kwargs.get('slug'):
+            booklet_topic = \
+                qs.filter(
+                    slug__exact=self.kwargs['slug'].lower(),
+                    field__slug__exact=self.kwargs['field_slug'].lower()
+                )[0]
+            associated_booklets = booklet_topic.booklets.all().order_by('title')
+        return associated_booklets
+
 
 class BookletFieldView(generic.ListView):
     model = BookletField

@@ -28,7 +28,7 @@ urlpatterns = [
                   path('booklets/user-upload', views.upload_booklet, name="upload_booklet"),
                   path('booklets/<str:slug>', views.BookletFieldView.as_view(), name="booklets_field"),
                   path('booklets/download/new/<str:slug>', views.get_booklet, name="booklets"),
-                  path('booklets/<str:field_slug>/<str:slug>', views.BookletTopicView.as_view(), name="booklets_topic"),
+                  path('booklets/<str:field_slug>/<str:slug>', views.BookletTopicView1.as_view(), name="booklets_topic-new-1"),
                   re_path(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
                   path('blog/', views.blog_posts),#Automatically goes to first page (default page is 1)
                   path('blog/<int:page>', views.blog_posts, name="blog"),#Goes to specific page of the blog
