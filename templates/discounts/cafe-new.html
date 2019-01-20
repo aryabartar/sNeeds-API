@@ -1,0 +1,291 @@
+<!doctype html>
+{% extends 'website/../bases/base-new.html' %}
+{% load static %}
+
+{% block body-class-block %}
+    <body class="product-page">
+{% endblock body-class-block %}
+
+{% block main_content %}
+    <div class="page-header header-filter" data-parallax="true" filter-color="primary"
+         style="background-image: url('assets/img/cafe.jpg'); transform: translate3d(0px, 0px, 0px);">
+        <div class="container">
+            <div class="row title-row">
+                <div class="col-md-4 col-md-offset-8">
+                    <!--<button class="btn btn-white pull-right"><i class="material-icons">shopping_cart</i> 0 Items</button>-->
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb yekanFont">
+                            <li class="breadcrumb-item"><a href="#">صفحه اول</a></li>
+                            <li class="breadcrumb-item"><a href="#">کافه ها</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">کافه اسنیدز</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section section-gray">
+        <div class="container">
+            <div class="main main-raised main-product">
+
+                <div class="row">
+                    <div class="col-md-6 col-sm-6">
+
+                        <div class="product-slider">
+                            <div id="carousel" class="carousel slide" data-ride="carousel">
+                                <div class="carousel-inner">
+                                    <div class="item active"><img src="assets/img/cafe1.jpg"></div>
+                                    <div class="item"><img src="assets/img/cafe2.jpg"></div>
+                                    <div class="item"><img src="assets/img/cafe3.jpg"></div>
+                                    <div class="item"><img src="assets/img/cafe4.jpg"></div>
+                                    <!--<div class="item"><img src="assets/img/cafe.jpg"></div>-->
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                <div id="thumbcarousel" class="carousel slide" data-interval="false">
+                                    <div class="carousel-inner">
+                                        <div class="item active">
+                                            <div data-target="#carousel" data-slide-to="0" class="thumb"><img
+                                                    src="assets/img/cafe1.jpg"></div>
+                                            <div data-target="#carousel" data-slide-to="1" class="thumb"><img
+                                                    src="assets/img/cafe2.jpg"></div>
+                                            <div data-target="#carousel" data-slide-to="2" class="thumb"><img
+                                                    src="assets/img/cafe3.jpg"></div>
+                                            <div data-target="#carousel" data-slide-to="3" class="thumb"><img
+                                                    src="assets/img/cafe4.jpg"></div>
+                                            <!--<div data-target="#carousel" data-slide-to="4" class="thumb"><img-->
+                                            <!--src="assets/img/cafe.jpg"></div>-->
+                                        </div>
+                                    </div>
+                                    <!-- /carousel-inner -->
+                                    <!--<a class="left carousel-control" href="#thumbcarousel" role="button" data-slide="prev">-->
+                                    <!--<i class="fa fa-angle-left" aria-hidden="true"></i> -->
+                                    <!--</a>-->
+                                    <!--<a class="right carousel-control" href="#thumbcarousel" role="button"-->
+                                    <!--data-slide="next"><i class="fa fa-angle-right" aria-hidden="true"></i>-->
+                                    <!--</a>-->
+                                </div>
+                                <!-- /thumbcarousel -->
+
+                            </div>
+                        </div>
+
+                        <!--
+                        <div class="tab-content">
+                            <div class="tab-pane" id="product-page1">
+                                <img src="../assets/img/examples/product1.jpg">
+                            </div>
+                            <div class="tab-pane" id="product-page2">
+                                <img src="../assets/img/examples/product2.jpg">
+                            </div>
+                            <div class="tab-pane" id="product-page3">
+                                <img src="../assets/img/examples/product3.jpg">
+                            </div>
+                            <div class="tab-pane active" id="product-page4">
+                                <img src="../assets/img/examples/product4.jpg">
+                            </div>
+                        </div>
+                        <div class="nbs-flexisel-container">
+                            <div class="nbs-flexisel-inner">
+                                <ul class="nav flexi-nav nbs-flexisel-ul" role="tablist" id="flexiselDemo1"
+                                    style="left: -622.5px;">
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product3.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page4" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <img src="../assets/img/examples/product4.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product1.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product2.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product3.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page4" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <img src="../assets/img/examples/product4.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item index" style="width: 103.75px;">
+                                        <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product1.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product2.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page3" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product3.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item active" style="width: 103.75px;">
+                                        <a href="#product-page4" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <img src="../assets/img/examples/product4.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page1" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product1.jpg">
+                                        </a>
+                                    </li>
+                                    <li class="nbs-flexisel-item" style="width: 103.75px;">
+                                        <a href="#product-page2" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <img src="../assets/img/examples/product2.jpg">
+                                        </a>
+                                    </li>
+
+
+                                </ul>
+                                <div class="nbs-flexisel-nav-left"></div>
+                                <div class="nbs-flexisel-nav-right"><i class="material-icons">chevron_right</i></div>
+                            </div>
+                        </div>
+                        -->
+                    </div>
+                    <div class="col-md-6 col-sm-6">
+                        <h2 class="title yekanFont"> کافه اسنیدز </h2>
+                        <!--<h3 class="main-price">$335</h3>-->
+                        <div id="acordeon">
+                            <hr>
+                            <p class="text-justify yekanFont">
+                                اگر اطراف انقلاب هستید و بعد از یک گذروندن یک روز سخت دنبال جایی برای قهوه نوشیدن و
+                                سرحال
+                                شدن میگردین٬ کافه پیکسل منتظر شماست 🙂
+                            </p>
+                            <hr>
+
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-border panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                           href="#collapseTwo"
+                                           aria-controls="collapseOne">
+                                            <h4 class="panel-title yekanFont normalFontSize">
+                                                اطلاعات تماس
+                                                <i class="material-icons">keyboard_arrow_down</i>
+                                            </h4>
+                                        </a>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="info info-horizontal"
+                                                 style="margin-right:0 !important;padding:0 !important;">
+                                                <div class="icon icon-primary pull-right"
+                                                     style="margin-left:5px !important;">
+                                                    <i class="material-icons">party_mode</i>
+                                                </div>
+                                                <div class="description">
+                                                    <h4 class="info-title yekanFont">کافه در اینستاگرام :</h4>
+                                                    <a href="#">
+                                                        <p class="gadugiFont normalFontSize text-right "
+                                                           style="direction:ltr !important;"> @cafe_instaId
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="info info-horizontal"
+                                                 style="margin-right:0 !important;padding:0 !important;">
+                                                <div class="icon icon-primary pull-right"
+                                                     style="margin-left:5px !important;">
+                                                    <i class="material-icons">pin_drop</i>
+                                                </div>
+                                                <div class="description">
+                                                    <h4 class="info-title yekanFont">آدرس کافه : </h4>
+                                                    <p class="yekanFont normalFontSize text-justify"> تهران ، خیابان
+                                                        انقلاب
+                                                        پلاک ۱۰۸۶
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2258.193255557023!2d51.401726116832!3d35.701150220371105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010ef2425581%3A0x3e2947621f383c44!2sPixel+Caf%C3%A9!5e0!3m2!1sen!2s!4v1546327376147"
+                                                    width="400" height="300" frameborder="0" style="border:0"
+                                                    allowfullscreen></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-border panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                           href="#collapseThree" aria-controls="collapseOne">
+                                            <h4 class="panel-title yekanFont normalFontSize">
+                                                اطلاعات تخفیف کافه
+                                                <i class="material-icons">keyboard_arrow_down</i>
+                                            </h4>
+                                        </a>
+                                    </div>
+                                    <div id="collapseThree" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="info info-horizontal"
+                                                 style="margin-right:0 !important;padding:0 !important;">
+                                                <div class="icon icon-primary pull-right"
+                                                     style="margin-left:5px !important;">
+                                                    <i class="material-icons">monetization_on</i>
+                                                </div>
+                                                <div class="description">
+                                                    <h4 class="info-title yekanFont">مقدار :</h4>
+                                                    <p class="yekanFont normalFontSize text-justify">15 درصد روی کل منو
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--  end acordeon -->
+
+                        <div class="alert alert-info">
+                            <!--<div class="container-fluid">-->
+                            <div class="alert-icon pull-right"
+                                 style="margin-right:5px !important;margin-left:15px !important;">
+                                <i class="material-icons">info_outline</i>
+                            </div>
+                            <button type="button" class="close pull-left" data-dismiss="alert" aria-label="Close"
+                                    style="margin-right:15px !important;margin-left:5px !important;">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                            </button>
+                            <p class="text-justify yekanFont normalFontSize">توجه : برای دریافت کد تخفیف باید حتما در
+                                حساب
+                                خود وارد شده باشید. </p>
+                            <!--</div>-->
+                        </div>
+
+                        <div class="row text-right">
+                            <button class="btn btn-primary yekanFont normalFontSize">
+                                &nbsp; دریافت کد تخفیف &nbsp;
+                                <i class="material-icons">shopping_cart</i>
+                            </button>
+                            <a class="btn btn-danger yekanFont normalFontSize pull-left" href="cafeList.html">
+                                بازگشت
+                                <i class="material-icons">arrow_back_ios</i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock main_content %}
+

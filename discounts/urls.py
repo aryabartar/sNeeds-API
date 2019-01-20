@@ -21,6 +21,7 @@ app_name = "discounts"
 urlpatterns = [
     path('', views.home, name="home"),
     path('cafe/<str:slug>', views.cafe_page, name="cafe_page"),
+    path('cafe-new/<str:slug>', views.cafe_page1, name="cafe_page1"),
 ]
 
 
