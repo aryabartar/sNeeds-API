@@ -5,14 +5,8 @@ from django.shortcuts import render, get_object_or_404
 from .models import Discount, Cafe, UserDiscount
 
 
-# Create your views here.
-def home(request):
-    cafes = Cafe.objects.all()
-    my_dict = {"cafes": cafes}
-    return render(request, "discounts/home.html", context=my_dict)
 
-
-def home_new (request):
+def home (request):
     cafes = Cafe.objects.all()
     my_dict = {"cafes": cafes}
     return render(request, "discounts/home-new-p-1.html", context=my_dict)
