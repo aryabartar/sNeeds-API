@@ -12,7 +12,6 @@
         <div class="container">
             <div class="row title-row">
                 <div class="col-md-4 col-md-offset-8">
-                    <!--<button class="btn btn-white pull-right"><i class="material-icons">shopping_cart</i> 0 Items</button>-->
                 </div>
             </div>
 
@@ -78,6 +77,29 @@
                             <h4 class="text-right yekanFont normalFontSize">اطلاعات تخفیف کافه :‌</h4>
                         </div>
 
+                        {% if not_auth %}
+                            <div class="alert">
+                                <div class="alert__body">
+                                    <span>
+                        <div class="alert alert-info">
+                            <!--<div class="container-fluid">-->
+                            <div class="alert-icon pull-right"
+                                 style="margin-right:5px !important;margin-left:15px !important;">
+                                <i class="material-icons">info_outline</i>
+                            </div>
+                            <button type="button" class="close pull-left" data-dismiss="alert" aria-label="Close"
+                                    style="margin-right:15px !important;margin-left:5px !important;">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                            </button>
+                            <p class="text-justify yekanFont normalFontSize">توجه : برای دریافت کد تخفیف باید حتما در
+                                حساب
+                                خود وارد شده باشید. </p>
+                            <!--</div>-->
+                        </div>                                   </span>
+                                </div>
+
+                            </div>
+                        {% endif %}
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12">
@@ -91,26 +113,40 @@
                                             </tr>
                                             </thead>
                                             <tbody>
+
+
                                             <tr>
-                                                <td >۱۵ درصد</td>
-                                                <td >هر دو منو</td>
+                                                <td>۱۵ درصد</td>
+                                                <td>هر دو منو</td>
                                                 <td class="td-actions">
-                                                    <a href="#" class="btn btn-success yekanFont">
-                                                        <i class="material-icons">shopping_cart</i>
-                                                        دریافت کد تخفیف
-                                                    </a>
+                                                    {% if not_auth %}
+
+                                                        <button type="button" class="btn btn-default"
+                                                                data-toggle="popover"
+                                                                data-placement="left" title=""
+                                                                data-content="برای دریافت کد تخفیف باید وارد حساب خود شوید."
+                                                                data-container="body"
+                                                                data-original-title="ابتدا وارد شوید">
+                                                            <i class="material-icons">shopping_cart</i>
+
+                                                            دریافت کد تخفیف
+                                                            <div class="ripple-container"></div>
+                                                        </button>
+
+
+                                                    {% else %}
+
+
+                                                        <a href="#" class="btn btn-success yekanFont">
+                                                            <i class="material-icons">shopping_cart</i>
+                                                            دریافت کد تخفیف
+                                                        </a>
+                                                    {% endif %}
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td class="text-center">۲۰ درصد</td>
-                                                <td class="text-center">منو سرد</td>
-                                                <td class="td-actions text-center">
-                                                    <a href="#" class="btn btn-success yekanFont">
-                                                        <i class="material-icons">shopping_cart</i>
-                                                        دریافت کد تخفیف
-                                                    </a>
-                                                </td>
-                                            </tr>
+
+
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -135,21 +171,21 @@
                                     </div>
                                     <div id="collapseTwo" class="panel-collapse collapse">
                                         <div class="panel-body">
+
                                             <div class="info info-horizontal"
                                                  style="margin-right:0 !important;padding:0 !important;">
                                                 <div class="icon icon-primary pull-right"
                                                      style="margin-left:5px !important;">
-                                                    <i class="material-icons">party_mode</i>
+                                                    <i class="material-icons">phone</i>
                                                 </div>
                                                 <div class="description">
-                                                    <h4 class="info-title yekanFont">کافه در اینستاگرام :</h4>
-                                                    <a href="#">
-                                                        <p class="gadugiFont normalFontSize text-right "
-                                                           style="direction:ltr !important;"> @cafe_instaId
-                                                        </p>
-                                                    </a>
+                                                    <h4 class="info-title yekanFont rtl text-right">
+                                                        شماره تماس : ‌
+                                                        <span class="yekanFont">{{ cafe.phone_number }}</span>
+                                                    </h4>
                                                 </div>
                                             </div>
+
                                             <div class="info info-horizontal"
                                                  style="margin-right:0 !important;padding:0 !important;">
                                                 <div class="icon icon-primary pull-right"
@@ -163,34 +199,17 @@
                                                     </p>
                                                 </div>
                                             </div>
-                                            <iframe class="w-100"
-                                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2258.193255557023!2d51.401726116832!3d35.701150220371105!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3f8e010ef2425581%3A0x3e2947621f383c44!2sPixel+Caf%C3%A9!5e0!3m2!1sen!2s!4v1546327376147"
-                                                    height="300" frameborder="0" style="border:0"
-                                                    allowfullscreen></iframe>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div><!--  end acordeon -->
 
-                        <div class="alert alert-info">
-                            <!--<div class="container-fluid">-->
-                            <div class="alert-icon pull-right"
-                                 style="margin-right:5px !important;margin-left:15px !important;">
-                                <i class="material-icons">info_outline</i>
-                            </div>
-                            <button type="button" class="close pull-left" data-dismiss="alert" aria-label="Close"
-                                    style="margin-right:15px !important;margin-left:5px !important;">
-                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
-                            </button>
-                            <p class="text-justify yekanFont normalFontSize">توجه : برای دریافت کد تخفیف باید حتما در
-                                حساب
-                                خود وارد شده باشید. </p>
-                            <!--</div>-->
-                        </div>
 
                         <div class="row text-right">
-                            <a class="btn btn-danger yekanFont normalFontSize pull-left" style="margin-left:15px;" href="cafeList.html">
+                            <a class="btn btn-danger yekanFont normalFontSize pull-left" style="margin-left:15px;"
+                               href="cafeList.html">
                                 بازگشت
                                 <i class="material-icons">arrow_back_ios</i>
                             </a>
