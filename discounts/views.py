@@ -9,7 +9,7 @@ from .models import Discount, Cafe, UserDiscount
 def home (request):
     cafes = Cafe.objects.all()
     my_dict = {"cafes": cafes}
-    return render(request, "discounts/home-new-p-1.html", context=my_dict)
+    return render(request, "discounts/home.html", context=my_dict)
 
 
 def cafe_page(request, slug):
