@@ -54,11 +54,9 @@
                         {% for booklet in object_list %}
                             <div class="col-md-3">
 
-
                                 <div class="rotating-card-container" style="height: 302px; margin-bottom: 30px;">
                                     <div class="card card-rotate card-background">
-                                        <div class="front front-background"
-                                             style="background-image: url({{ booklet.booklet_image.url }}); height: 302px; width: 360px;">
+                                        <div class="front front-background" style="background-image: url({{ booklet.booklet_image.url }});">
                                             <div class="card-content">
                                                 <!--<h6 class="category text-info yekanFont">کافه تست</h6>-->
                                                 <a href="#pablo">
@@ -71,7 +69,7 @@
                                         </div>
                                         <!-- background-image: url(assets/img/cafe4.jpg) in style with back-background class -->
                                         <div class="back back-background"
-                                             style="background-image:url({{ booklet.booklet_image.url }}); height: 302px; width: 360px;">
+                                             style="background-image:url({{ booklet.booklet_image.url }});">
                                             <div class="card-content">
                                                 <h5 class="card-title yekanFont">
                                                     استاد : {{ booklet.teacher }}
@@ -118,6 +116,5 @@
 
         </div>
     </div>
-
 {% endblock main_content %}
 
