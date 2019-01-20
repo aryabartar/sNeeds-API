@@ -12,6 +12,12 @@ def home(request):
     return render(request, "discounts/home.html", context=my_dict)
 
 
+def home_new (request):
+    cafes = Cafe.objects.all()
+    my_dict = {"cafes": cafes}
+    return render(request, "discounts/home-new-p-1.html", context=my_dict)
+
+
 def cafe_page(request, slug):
     cafe = get_object_or_404(Cafe, slug=slug)
     context = {"cafe": cafe}
