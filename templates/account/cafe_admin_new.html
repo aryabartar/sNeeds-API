@@ -5,8 +5,218 @@
 
 {% block main_content %}
 
+    <div class="page-header header-filter header-small" data-parallax="true"
+         style="background-image: url('{% static "assets/img/cafe.jpg" %}'); transform: translate3d(0px, 0px, 0px);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        <h1 class="title yekanFont rtl">مدیریت گرامی کافه تست، خوش آمدید</h1>
+                        <h3 class="yekanFont rtl">
+                            با اسنیدز همراه باشید...
+                        </h3>
+                    </div>
+                </div>
+            </div>
 
 
+        </div>
+    </div>
+
+    <div class="main main-raised">
+        <div class="section">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb yekanFont">
+                                <li class="breadcrumb-item"><a href="{% url 'website:home' %}">صفحه اول</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">پنل ادمین کافه</li>
+                                <!--<li class="breadcrumb-item active" aria-current="page">کافه اسنیدز</li>-->
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="profile-tabs">
+                            <div class="nav-align-center">
+
+                                <ul class="nav nav-pills nav-pills-info nav-pills-icons yekanFont" role="tablist">
+                                    <li class="">
+                                        <a href="#editCafeProfile" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <i class="material-icons">local_cafe</i>
+                                            ویرایش پروفایل کافه
+                                        </a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="#cafeDiscounts" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <i class="material-icons">local_offer</i>
+                                            تخفیفات کافه
+                                        </a>
+                                    </li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        <div class="tab-content" style="margin-top:30px;">
+                            <!---->
+                            <div class="tab-pane active" id="cafeDiscounts">
+
+                                <div class="row">
+                                    <h2 class="text-right yekanFont">تخفیفات کافه شما</h2>
+                                    <hr>
+                                    <div class="input-group">
+		                        <span class="input-group-addon">
+			                        <i class="material-icons">search</i>
+		                        </span>
+                                        <input id="myInput" type="text" class="form-control yekanFont"
+                                               placeholder="جستجو در جدول زیر ...">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped yekanFont">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">شماره</th>
+                                                <!--<th class="tex  t-right">اسم کافه</th>-->
+                                                <th class="text-center">کاربر</th>
+                                                <th class="text-center">درصد تخفیف</th>
+                                                <th class="text-center">کد تخفیف</th>
+                                                <th class="text-center">تاریخ ایجاد کد</th>
+                                                <th class="text-center">وضعیت کد</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="myTable">
+                                            {% for discount , value in cafe_profile_discounts.items %}
+
+                                                {% for user_discount in value %}
+
+                                                    <tr>
+                                                        <td class="text-center">{{ user_discount.pk }}</td>
+                                                        <!--<td>کافه اسنیدز</td>-->
+                                                        <td>{{ user_discount.user.username }}</td>
+                                                        <td>{{ user_discount }}</td>
+                                                        <td>{{ user_discount.code }}</td>
+                                                        <td>{{ user_discount.date }}</td>
+                                                        <td class="td-actions text-center">
+                                                            <a type="button" rel="tooltip"
+                                                               href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
+                                                               class="btn btn-warning yekanFont"
+                                                               data-original-title="" title="">
+                                                                <i class="material-icons">edit</i>
+                                                                تایید نشده، برای تایید کلیک کنید
+                                                                <div class="ripple-container"></div>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="alert alert-info">
+                                        <!--<div class="container-fluid">-->
+                                        <div class="alert-icon pull-right"
+                                             style="margin-right:5px !important;margin-left:15px !important;">
+                                            <i class="material-icons">info_outline</i>
+                                        </div>
+                                        <button type="button" class="close pull-left" data-dismiss="alert"
+                                                aria-label="Close"
+                                                style="margin-right:15px !important;margin-left:5px !important;">
+                                            <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                                        </button>
+                                        <p class="text-justify yekanFont normalFontSize">
+                                            توجه : بعد اعمال کد تخفیفتان در محل کافه برای مشتری، حتما آن را در جدول بالا
+                                            تایید کنید
+                                        </p>
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="editCafeProfile">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2 class="text-right yekanFont">ویرایش اطلاعات پروفایل کافه</h2>
+                                        <form class="form" method="" action="">
+                                            <div class="card-content">
+                                                <div class="input-group">
+											<span class="input-group-addon">
+												<i class="material-icons">local_cafe</i>
+											</span>
+                                                    <div class="form-group"><input type="text"
+                                                                                   class="form-control yekanFont"
+                                                                                   value="نام کافه از سرور..."><span
+                                                            class="material-input"></span></div>
+                                                </div>
+
+                                                <div class="input-group">
+											    <span class="input-group-addon">
+												    <i class="material-icons">place</i>
+											    </span>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control yekanFont"
+                                                               value="آدرس کافه از سرور...">
+                                                        <span class="material-input"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="input-group">
+											    <span class="input-group-addon">
+												    <i class="material-icons">camera_alt</i>
+											    </span>
+                                                    <div class="form-group">
+                                                        <input type="text" class="form-control yekanFont"
+                                                               value="آیدی اینستا کافه از سرور...">
+                                                        <span class="material-input"></span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="input-group">
+											    <span class="input-group-addon">
+												    <i class="material-icons">assignment</i>
+											    </span>
+                                                    <div class="form-group">
+                                                        <textarea name="" id="" cols="30" rows="10"
+                                                                  class="form-control yekanFont">بخش توضیحات کافه ...</textarea>
+                                                        <span class="material-input"></span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="footer text-left" style="margin-left:30px;">
+                                                <button class="btn btn-success yekanFont normalFontSize">
+                                                    <i class="material-icons">done</i>
+                                                    ذخیره تغییرات
+                                                    <div class="ripple-container"></div>
+
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div class="text-left row" style="margin-left:30px;">
+                                            <button class="btn btn-warning yekanFont normalFontSize" data-toggle="modal"
+                                                    data-target="#loginModal">
+                                                <i class="material-icons">lock</i>
+                                                تغییر رمز عبور
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- section -->
+    </div>
 
 {% endblock main_content %}
 
