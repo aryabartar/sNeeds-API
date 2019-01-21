@@ -6,7 +6,11 @@ from django.utils.translation import ugettext_lazy as _
 class AddDiscountForm(forms.Form):
     discount_percent = forms.IntegerField(min_value=1, max_value=100,
                                           label="",
-                                          widget=forms.TextInput(attrs={'placeholder': 'Search'}))
+                                          widget=forms.TextInput(
+                                              attrs={'placeholder': 'درصد تخفیف را وارد کنید (عدد بین 1 تا 100)',
+                                                     'type': 'number',
+                                                     'max': '100',
+                                                     'min': '1'}))
 
     def clean_discount_percent(self):
         percent = self.cleaned_data['discount_percent']
