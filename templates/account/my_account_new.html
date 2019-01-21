@@ -168,7 +168,6 @@
                                         <table class="table table-striped yekanFont">
                                             <thead>
                                             <tr>
-                                                <th class="text-center">#</th>
                                                 <th class="text-center">اسم کافه</th>
                                                 <th class="text-center">کد تخفیف</th>
                                                 <th class="text-center">تاریخ ایجاد کد</th>
@@ -180,7 +179,6 @@
                                             {% for discount in user_active_discounts %}
 
                                                 <tr>
-                                                    <td class="text-center">1</td>
                                                     <td>{{ discount.discount }}</td>
                                                     <td>{{ discount.code }}</td>
                                                     <td>{{ discount.date }}</td>
@@ -203,9 +201,8 @@
                                             {% for used_discount in user_used_discounts_archive %}
 
                                                 <tr>
-                                                    <td class="text-center">3</td>
                                                     <td>{{ used_discount }}</td>
-                                                    <td>398753cafe5897</td>
+                                                    <td>استفاده شد</td>
                                                     <td>{{ used_discount.date }}</td>
                                                     <td class="td-actions text-right">
                                                         <button type="button" rel="tooltip"

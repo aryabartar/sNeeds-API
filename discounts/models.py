@@ -35,7 +35,7 @@ class Discount(models.Model):
         return "تخفیف {}% {}".format(self.discount_percent, self.cafe.name)
 
     def __str__(self):
-        return self.cafe.name + " %" + str(self.discount_percent) + "تخفیف"
+        return "{} درصد تخفیف {}".format(self.discount_percent,self.cafe.name )
 
 
 class CafeImage(models.Model):
@@ -87,8 +87,9 @@ class UserUsedDiscount(models.Model):
     cafe = models.ForeignKey(Cafe, on_delete=models.SET_NULL, null=True,
                              related_name="used_discounts")
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
                              related_name="user_used_discounts")
+
     date = models.DateField(auto_now=True, blank=False)
     # Is used for user logs.
 
