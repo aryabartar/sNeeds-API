@@ -40,7 +40,6 @@
                 </div>
 
 
-
                 <div class="row">
                     <div class="col-md-12 text-center">
                         <div class="profile-tabs">
@@ -59,6 +58,12 @@
                                             تخفیفات کافه
                                         </a>
                                     </li>
+                                    <li class="">
+                                        <a href="#editCafeDiscounts" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <i class="material-icons">settings</i>
+                                            ویرایش تخفیفات کافه
+                                        </a>
+                                    </li>
                                 </ul>
 
 
@@ -68,8 +73,17 @@
                             <!---->
                             <div class="tab-pane active" id="cafeDiscounts">
 
+
                                 <div class="row">
-                                    <h2 class="text-right yekanFont">تخفیفات کافه شما</h2>
+                                    <div class="col-md-12">
+                                        <div class="pull-right">
+                                            <h2 class="text-right yekanFont" >تخفیفات کافه شما</h2>
+                                        </div>
+                                        <div class="pull-left" style="margin-top:20px !important;">
+                                            <a href="#" class="btn btn-success yekanFont  normalFontSize2">آرشیو تخفیفات</a>
+                                        </div>
+                                    </div>
+
                                     <hr>
                                     <div class="input-group">
 		                        <span class="input-group-addon">
@@ -209,6 +223,111 @@
                                         </div>
 
                                     </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="editCafeDiscounts">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2 class="text-right yekanFont">ویرایش تخفیفات کافه شما</h2>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-6" style="margin:0 auto !important;float:none !important;">
+                                        <h5 class="yekanFont text-right">اضافه کردن تخفیف جدید:</h5>
+                                        <form action="" method="">
+                                            <div class="card card-form-horizontal"
+                                                 style="box-shadow:0 0px 5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)">
+                                                <div class="card-content">
+                                                    <form method="" action="">
+                                                        <div class="row">
+
+
+                                                            <div class="col-sm-4">
+                                                                <button type="button"
+                                                                        class="btn btn-info btn-block yekanFont">اضافه
+                                                                    کردن
+                                                                    تخفیف
+                                                                </button>
+                                                            </div>
+
+                                                            <div class="col-sm-8">
+                                                                <div class="input-group">
+                                <span class="input-group-addon">
+                                  <i class="material-icons">shopping_cart</i>
+                                </span>
+                                                                    <div class="form-group form-info">
+                                                                        <input type="number" value=""
+                                                                               placeholder="درصد تخفیف را وارد کنید : 1 تا 100"
+                                                                               class="form-control yekanFont">
+                                                                        <span class="material-input"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-6" style="margin:0 auto !important;float:none !important;">
+                                        <h5 class="yekanFont text-right">
+                                            لیست تخفیفات موجود :
+                                        </h5>
+                                        <div class="card"
+                                             style="box-shadow:0 0px 5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped yekanFont">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="text-center">#</th>
+
+                                                        <!--<th class="tex  t-right">اسم کافه</th>-->
+                                                        <th class="text-center">میزان تخفیف</th>
+                                                        <th class="text-center">عملیات</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="myTable">
+                                                    <tr>
+                                                        <td class="text-center">1</td>
+                                                        <!--<td>کافه اسنیدز</td>-->
+                                                        <td>20 درصد</td>
+                                                        <td class="td-actions text-center">
+                                                            <a href="#" type="button" rel="tooltip"
+                                                               class="btn btn-danger yekanFont" data-original-title=""
+                                                               title="">
+                                                                <i class="material-icons">clear</i>
+                                                                حذف تخفیف
+                                                                <div class="ripple-container"></div>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class="text-center">2</td>
+                                                        <!--<td>کافه اسنیدز</td>-->
+                                                        <td>15 درصد</td>
+                                                        <td class="td-actions text-center">
+                                                            <a href="#" type="button" rel="tooltip"
+                                                               class="btn btn-danger yekanFont"
+                                                               data-original-title="" title="">
+                                                                <i class="material-icons">clear</i>
+                                                                حذف تخفیف
+                                                                <div class="ripple-container"></div>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
