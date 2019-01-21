@@ -125,6 +125,83 @@ def my_account(request):
 
 
 @login_required(login_url='account:login')
+def my_account1(request):
+    def get_user_active_discounts():
+        """
+        :return: returns active discounts that user has .
+        """
+        return UserDiscount.objects.filter(user__exact=request.user)
+
+    def get_admin_statistics():
+        """
+        :return: The cafe statistics
+        """
+        all_cafes = Cafe.objects.all()
+        all_cafes_list = []
+        for cafe in all_cafes:
+            cafe_active_discount_number = len(UserDiscount.objects.filter(discount__cafe__exact=cafe))
+            cafe_used_discount_number = len(UserUsedDiscount.objects.filter(discount__cafe__exact=cafe))
+            all_cafes_list.append((cafe, cafe_active_discount_number, cafe_used_discount_number))
+        return all_cafes_list
+
+    def get_all_user_discounts():
+        """
+        :return: user discounts for cafe discount in form of DICT and LIST in it.
+        """
+        temp_cafe_discount_dict = {}
+        for discount in user_cafe_profile.cafe.discounts.all():
+            temp_cafe_discount_dict[discount] = give_queryset_get_array(discount.user_discounts.all())
+        return temp_cafe_discount_dict
+
+    def discount_add_form(cafe_profile):
+        """Handling all discount add form needs."""
+        if request.method == 'POST':
+            add_discount_form = AddDiscountForm(request.POST)
+
+            if add_discount_form.is_valid():
+                try:
+                    cafe = cafe_profile.cafe
+                except:
+                    return HttpResponseNotFound("You don't have access to add discount!")
+                discount = Discount(cafe=cafe, discount_percent=int(request.POST['discount_percent']))
+                discount.save()
+        else:
+            add_discount_form = AddDiscountForm()
+
+        return add_discount_form
+
+    def get_user_used_discounts_archive():
+        try:
+            return UserUsedDiscount.objects.filter(user__exact=request.user)
+        except UserUsedDiscount.DoesNotExist:
+            return None
+
+    def get_all_cafe_discounts(cafe_profile):
+        """returns all cafe discounts (not user discounts)"""
+        return cafe_profile.cafe.discounts.all()
+
+    context = {}
+
+    try:
+        user_cafe_profile = CafeProfile.objects.get(user__exact=request.user)
+        context["is_cafe_profile"] = True
+        context["form"] = discount_add_form(user_cafe_profile)
+        context["all_cafe_discounts"] = get_all_cafe_discounts(user_cafe_profile)
+        context["cafe_profile_discounts"] = get_all_user_discounts()
+
+    except CafeProfile.DoesNotExist:
+        context["is_cafe_profile"] = False
+
+    if request.user.is_superuser:
+        context["admin_statistics"] = get_admin_statistics()
+
+    context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
+    context["user_used_discounts_archive"] = get_user_used_discounts_archive()
+
+    return render(request, "account/my_account_new.html", context=context)
+
+
+@login_required(login_url='account:login')
 def all_cafe_archive(request):
     cafe_profile = CafeProfile.objects.get(user__exact=request.user)
     all_used_discounts = UserUsedDiscount.objects.filter(cafe__exact=cafe_profile.cafe).order_by('-pk')

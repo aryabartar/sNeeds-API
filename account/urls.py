@@ -26,6 +26,7 @@ urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='account/login_page.html'), name='login'),
     # TODO: Change _ with -
     path('my-account/', views.my_account, name="my_account"),
+    path('my-account-new/', views.my_account1, name="my_account1"),
     path('my-account/discount-archive/', views.all_cafe_archive, name='cafe_discount_archives'),
     path('delete/discount/', views.delete_user_discount, name='delete_discount'),
     path('delete/cafe-discount/', views.delete_cafe_discount, name='delete_cafe_discount'),
