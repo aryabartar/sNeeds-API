@@ -169,8 +169,11 @@ class BookletFieldView(generic.ListView):
 
 def booklet_home(request):
     context = {"fields": BookletField.objects.all()}
-    print("skkk")
     return render(request, "website/booklet-home.html", context=context)
+
+def booklet_home1(request):
+    context = {"fields": BookletField.objects.all()}
+    return render(request, "website/booklet-home-new.html", context=context)
 
 
 def upload_booklet(request):
