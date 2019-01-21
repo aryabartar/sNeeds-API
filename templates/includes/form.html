@@ -1,9 +1,7 @@
 {% load widget_tweaks %}
 
 {% for field in form %}
-  <div class="form-group">
-    {{ field.label_tag }}
-
+  <div class="form-group form-info">
     {% if form.is_bound %}
       {% if field.errors %}
         {% render_field field class="form-control is-invalid" %}

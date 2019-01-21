@@ -1,6 +1,7 @@
 <!doctype html>
 {% extends 'website/../bases/base-new.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 
 {% block main_content %}
@@ -72,15 +73,14 @@
                         <div class="tab-content" style="margin-top:30px;">
                             <!---->
                             <div class="tab-pane active" id="cafeDiscounts">
-
-
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="pull-right">
-                                            <h2 class="text-right yekanFont" >تخفیفات کافه شما</h2>
+                                            <h2 class="text-right yekanFont">تخفیفات کافه شما</h2>
                                         </div>
                                         <div class="pull-left" style="margin-top:20px !important;">
-                                            <a href="#" class="btn btn-success yekanFont  normalFontSize2">آرشیو تخفیفات</a>
+                                            <a href="#" class="btn btn-success yekanFont  normalFontSize2">آرشیو
+                                                تخفیفات</a>
                                         </div>
                                     </div>
 
@@ -237,32 +237,23 @@
                                     <div class="col-md-6" style="margin:0 auto !important;float:none !important;">
                                         <h5 class="yekanFont text-right">اضافه کردن تخفیف جدید:</h5>
                                         <form action="" method="">
-                                            <div class="card card-form-horizontal"
-                                                 style="box-shadow:0 0px 5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)">
+                                            <div class="card card-form-horizontal customCafeAdminBox">
                                                 <div class="card-content">
                                                     <form method="" action="">
+                                                        {% csrf_token %}
                                                         <div class="row">
-
-
                                                             <div class="col-sm-4">
-                                                                <button type="button"
-                                                                        class="btn btn-info btn-block yekanFont">اضافه
+                                                                <input type="submit" value="اضافه
                                                                     کردن
-                                                                    تخفیف
-                                                                </button>
+                                                                    تخفیف" class="btn btn-info btn-block yekanFont">
                                                             </div>
 
                                                             <div class="col-sm-8">
                                                                 <div class="input-group">
-                                <span class="input-group-addon">
-                                  <i class="material-icons">shopping_cart</i>
-                                </span>
-                                                                    <div class="form-group form-info">
-                                                                        <input type="number" value=""
-                                                                               placeholder="درصد تخفیف را وارد کنید : 1 تا 100"
-                                                                               class="form-control yekanFont">
-                                                                        <span class="material-input"></span>
-                                                                    </div>
+                                                                        <span class="input-group-addon">
+                                                                          <i class="material-icons">shopping_cart</i>
+                                                                        </span>
+                                                                        {% include 'includes/form.html' %}
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -270,6 +261,7 @@
                                                 </div>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                                 <div class="row">
@@ -278,8 +270,7 @@
                                         <h5 class="yekanFont text-right">
                                             لیست تخفیفات موجود :
                                         </h5>
-                                        <div class="card"
-                                             style="box-shadow:0 0px 5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)">
+                                        <div class="card customCafeAdminBox">
                                             <div class="table-responsive">
                                                 <table class="table table-striped yekanFont">
                                                     <thead>
@@ -292,35 +283,29 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody id="myTable">
-                                                    <tr>
-                                                        <td class="text-center">1</td>
-                                                        <!--<td>کافه اسنیدز</td>-->
-                                                        <td>20 درصد</td>
-                                                        <td class="td-actions text-center">
-                                                            <a href="#" type="button" rel="tooltip"
-                                                               class="btn btn-danger yekanFont" data-original-title=""
-                                                               title="">
-                                                                <i class="material-icons">clear</i>
-                                                                حذف تخفیف
-                                                                <div class="ripple-container"></div>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
 
-                                                    <tr>
-                                                        <td class="text-center">2</td>
-                                                        <!--<td>کافه اسنیدز</td>-->
-                                                        <td>15 درصد</td>
-                                                        <td class="td-actions text-center">
-                                                            <a href="#" type="button" rel="tooltip"
-                                                               class="btn btn-danger yekanFont"
-                                                               data-original-title="" title="">
-                                                                <i class="material-icons">clear</i>
-                                                                حذف تخفیف
-                                                                <div class="ripple-container"></div>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+                                                    {% for discount in all_cafe_discounts %}
+
+
+                                                        <tr>
+                                                            <td class="text-center">{{ discount.pk }}</td>
+                                                            <!--<td>کافه اسنیدز</td>-->
+                                                            <td>{{ discount }} </td>
+                                                            <td class="td-actions text-center">
+                                                                <a href="{% url "account:delete_cafe_discount" %}?pk={{ discount.pk }}"
+                                                                   type="button" rel="tooltip"
+                                                                   class="btn btn-danger yekanFont"
+                                                                   data-original-title=""
+                                                                   title="">
+                                                                    <i class="material-icons">clear</i>
+                                                                    حذف تخفیف
+                                                                    <div class="ripple-container"></div>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+
+
+                                                    {% endfor %}
 
                                                     </tbody>
                                                 </table>
