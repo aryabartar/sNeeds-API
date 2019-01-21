@@ -1,37 +1,184 @@
 <!doctype html>
-{% extends 'website/../bases/base.html' %}
+{% extends 'website/../bases/base-new.html' %}
 {% load static %}
 
+{% block body-class-block %}
+    <body class="ecommerce-page" style="height:100%">
+{% endblock body-class-block %}
+
 {% block main_content %}
-    <div class="main-container">
-        <section class="space--sm">
-            <div class="container">
-                <section>
-                    {% if fields %}
-                        <ul class="accordion accordion-1">
-                            {% for field in fields %}
-                                <li class="active">
-                                    <div class="accordion__title">
-                                        <span class="h5">{{ field.subject }}</span>
-                                    </div>
-                                    <div class="accordion__content">
-                                        {% for topic in field.topics.all %}
-                                            <a class="btn btn--primary"
-                                               href="{{ topic.get_absolute_url }}">
-                                                <span class="btn__text">{{ topic.subject }}</span>
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    {% endif %}
-                </section>
+
+    <div class="page-header header-filter header-small" data-parallax="true"
+         style="background-image: url('{% static "assets/img/note.jpg" %}'); transform: translate3d(0px, 0px, 0px);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        <h1 class="title yekanFont rtl">مخرن جزوات دانشگاهی اسنیدز</h1>
+                        <h3 class="yekanFont rtl">
+                            دیتابیسی به روز و در حال تکمیل از جزوات و نمونه سوالات دانشگاهی از اساتید و دانشگاه های برتر
+                            کشور
+                        </h3>
+                    </div>
+                </div>
             </div>
-        </section>                <!--end of row-->
+        </div>
     </div>
-    <!--end of container-->
-    </section>
+
+    <!-- end navbar -->
+    <div id="sneedsBookletListFirst"></div>
+    <div class="wrapper">
+        <!-- you can use the class main-raised if you want the main area to be as a page with shadows -->
+        <div class="main main-raised">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="margin-top:20px;">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb yekanFont">
+                                <li class="breadcrumb-item"><a href="{% url "website:home" %}">صفحه اول</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">جزوات</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <h2 class="section-title yekanFont rtl text-right">دسته بندی جزوات</h2>
+                <hr>
+                <div class="row">
+
+                    {% for field in fields %}
+
+
+                        <div class="col-md-3">
+                            <div class="dropdown">
+                                <button href="#pablo"
+                                        class="dropdown-toggle btn btn-primary btn-block yekanFont normalFontSize2"
+                                        data-toggle="dropdown" aria-expanded="false">{{ field.subject }} <b
+                                        class="caret"></b>
+                                    <div class="ripple-container"></div>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right yekanFont normalFontSize2 text-right w-100">
+                                    {% for topic in field.topics.all %}
+
+
+                                        <li><a href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a></li>
+
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+
+                    {% endfor %}
+                </div>
+                <hr>
+            </div>
+        </div>
+
+        <footer class="footer footer-black footer-big">
+            <div class="container">
+                <div class="content">
+                    <div class="row rtl text-right">
+                        <div class="col-md-4">
+                            <h5 class="yekanFont">آخرین های اینستاگرام اسنیدز</h5>
+                            <div class="gallery-feed">
+                                <img src="assets/img/faces/card-profile6-square.jpg" class="img img-raised img-rounded"
+                                     alt="img1">
+                                <img src="assets/img/faces/christian.jpg" class="img img-raised img-rounded" alt="img2">
+                                <img src="assets/img/faces/card-profile4-square.jpg" class="img img-raised img-rounded"
+                                     alt="img3">
+                                <img src="assets/img/faces/card-profile1-square.jpg" class="img img-raised img-rounded"
+                                     alt="img4">
+
+                                <img src="assets/img/faces/marc.jpg" class="img img-raised img-rounded" alt="img5">
+                                <img src="assets/img/faces/kendall.jpg" class="img img-raised img-rounded" alt="img6">
+                                <img src="assets/img/faces/card-profile5-square.jpg" class="img img-raised img-rounded"
+                                     alt="img7">
+                                <img src="assets/img/faces/card-profile2-square.jpg" class="img img-raised img-rounded"
+                                     alt="img8">
+                            </div>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5 class="yekanFont">اسنیدز در رسانه ها</h5>
+                            <div class="social-feed yekanFont rtl text-justify">
+                                <div class="feed-line">
+                                    <i class="fa fa-twitter"></i>
+                                    <p class="miniRightSpace">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                        و با
+                                        استفاده از طراحان</p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-twitter"></i>
+                                    <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                        و
+                                        با استفاده از طراحان
+                                    </p>
+                                </div>
+                                <div class="feed-line">
+                                    <i class="fa fa-facebook-square"></i>
+                                    <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ
+                                        و
+                                        با استفاده از طراحان</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h5 class="yekanFont">درباره اسنیدز</h5>
+                            <p class="yekanFont text-justify">
+                                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
+                                گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
+                                برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی
+                                می باشد.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <hr>
+
+                <ul class="pull-right rtl text-right yekanFont normalFontSize">
+                    <li>
+                        <a href="#">
+                            لینک تست 1
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            لینک تست 2
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            لینک تست 3
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            لینک تست 4
+
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            لینک تست 5
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="copyright pull-left">
+                    Copyright ©
+                    <script>document.write(new Date().getFullYear())</script>
+                    Sneeds Co. All Rights Reserved
+                </div>
+            </div>
+        </footer>
+
     </div>
 
 {% endblock main_content %}
