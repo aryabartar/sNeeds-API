@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="brand">
-                        <h1 class="title yekanFont rtl">هادی گرامی، خوش آمدید</h1>
+                        <h1 class="title yekanFont rtl">{{ user.username }} گرامی، خوش آمدید</h1>
                         <h3 class="yekanFont rtl">
                             با اسنیدز همراه باشید...
                         </h3>
@@ -31,7 +31,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb yekanFont">
                                 <li class="breadcrumb-item"><a href="#">صفحه اول</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">پروفایل کاربر</li>
+                                <li class="breadcrumb-item active" aria-current="page">پروفایل شخصی</li>
                                 <!--<li class="breadcrumb-item active" aria-current="page">کافه اسنیدز</li>-->
                             </ol>
                         </nav>
@@ -44,7 +44,7 @@
                         <div class="profile-tabs">
                             <div class="nav-align-center">
                                 <div class="text-left">
-                                    <a href="landing.html" class="btn btn-bg btn-danger yekanFont">
+                                    <a href="{% url "account:logout" %}" class="btn btn-bg btn-danger yekanFont">
                                         خروج
                                         <i class="material-icons" style="transform: rotate(180deg);">exit_to_app</i>
                                     </a>
