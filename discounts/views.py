@@ -51,4 +51,4 @@ def cafe_page(request, slug):
 
     context['user_discounts'], context['discounts_with_user'] = get_user_discounts()
 
-    return render(request, "discounts/cafe-new.html", context=context)
+    return render(request, "discounts/cafe.html", context=context)
