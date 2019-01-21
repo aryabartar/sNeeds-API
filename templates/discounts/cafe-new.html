@@ -20,7 +20,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb yekanFont">
                             <li class="breadcrumb-item"><a href="#">صفحه اول</a></li>
-                            <li class="breadcrumb-item"><a href="#">کافه ها</a></li>
+                            <li class="breadcrumb-item"><a href="{% url "discounts:home" %}">کافه ها</a></li>
                             <li class="breadcrumb-item active" aria-current="page">کافه اسنیدز</li>
                         </ol>
                     </nav>
@@ -35,37 +35,38 @@
             <div class="main main-raised main-product">
                 <div class="row">
                     <div class="col-md-6 col-sm-6">
-                        <div class="product-slider">
-                            <div id="carousel" class="carousel slide" data-ride="carousel">
-                                <div class="carousel-inner">
-                                    <div class="item active"><img src="assets/img/cafe1.jpg"></div>
-                                    <div class="item"><img src="assets/img/cafe2.jpg"></div>
-                                    <div class="item"><img src="assets/img/cafe3.jpg"></div>
-                                    <div class="item"><img src="assets/img/cafe4.jpg"></div>
-                                    <!--<div class="item"><img src="assets/img/cafe.jpg"></div>-->
-                                </div>
-                            </div>
-                            <div class="clearfix">
-                                <div id="thumbcarousel" class="carousel slide" data-interval="false">
-                                    <div class="carousel-inner">
-                                        <div class="item active">
-                                            <div data-target="#carousel" data-slide-to="0" class="thumb"><img
-                                                    src="assets/img/cafe1.jpg"></div>
-                                            <div data-target="#carousel" data-slide-to="1" class="thumb"><img
-                                                    src="assets/img/cafe2.jpg"></div>
-                                            <div data-target="#carousel" data-slide-to="2" class="thumb"><img
-                                                    src="assets/img/cafe3.jpg"></div>
-                                            <div data-target="#carousel" data-slide-to="3" class="thumb"><img
-                                                    src="assets/img/cafe4.jpg"></div>
-                                            <!--<div data-target="#carousel" data-slide-to="4" class="thumb"><img-->
-                                            <!--src="assets/img/cafe.jpg"></div>-->
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- /thumbcarousel -->
+                        <div class="card card-raised card-carousel">
+                            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                                <div class="carousel slide" data-ride="carousel">
 
+                                    <!-- Indicators -->
+                                    <ol class="carousel-indicators">
+                                        <li data-target="#carousel-example-generic" data-slide-to="0" class=""></li>
+                                        <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                                        <li data-target="#carousel-example-generic" data-slide-to="2"
+                                            class="active"></li>
+                                    </ol>
+
+                                    <!-- Wrapper for slides -->
+                                    <div class="carousel-inner">
+
+                                        {% for image in cafe.images.all %}
+
+                                            <div class="item {% if image == cafe.images.all.0 %} active {% endif %}">
+                                                <img src="{{ image.image.url }}" alt="Awesome Image">
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                    <!-- Controls -->
+
+                                </div>
                             </div>
                         </div>
+
+
                     </div>
                     <div class="col-md-6 col-sm-6">
                         <h2 class="title yekanFont"> {{ cafe.name }} </h2>
@@ -115,36 +116,54 @@
                                             <tbody>
 
 
-                                            <tr>
-                                                <td>۱۵ درصد</td>
-                                                <td>هر دو منو</td>
-                                                <td class="td-actions">
-                                                    {% if not_auth %}
-
-                                                        <button type="button" class="btn btn-default"
-                                                                data-toggle="popover"
-                                                                data-placement="left" title=""
-                                                                data-content="برای دریافت کد تخفیف باید وارد حساب خود شوید."
-                                                                data-container="body"
-                                                                data-original-title="ابتدا وارد شوید">
-                                                            <i class="material-icons">shopping_cart</i>
-
-                                                            دریافت کد تخفیف
-                                                            <div class="ripple-container"></div>
-                                                        </button>
+                                            {% for discount in cafe.discounts.all %}
+                                                <tr>
 
 
-                                                    {% else %}
+                                                    <td>  {{ discount.discount_percent }}٪ تخفیف</td>
+                                                    <td>هر دو منو</td>
+                                                    <td class="td-actions">
+                                                        {% if not_auth %}
 
 
-                                                        <a href="#" class="btn btn-success yekanFont">
-                                                            <i class="material-icons">shopping_cart</i>
-                                                            دریافت کد تخفیف
-                                                        </a>
-                                                    {% endif %}
-                                                </td>
-                                            </tr>
 
+                                                            <button type="button" class="btn btn-default"
+                                                                    data-toggle="popover"
+                                                                    data-placement="left" title=""
+                                                                    data-content="برای دریافت کد تخفیف باید وارد حساب خود شوید."
+                                                                    data-container="body"
+                                                                    data-original-title="ابتدا وارد شوید">
+                                                                <i class="material-icons">shopping_cart</i>
+
+                                                                دریافت کد تخفیف
+                                                                <div class="ripple-container"></div>
+                                                            </button>
+
+
+
+                                                        {% elif not discount in discounts_with_user %}
+
+                                                            <a href="{{ cafe.get_absolute_url }}?pk={{ discount.pk }}#{{ discount.discount_percent }}"
+                                                               class="btn btn-success yekanFont">
+                                                                <i class="material-icons">shopping_cart</i>
+                                                                دریافت کد تخفیف
+                                                            </a>
+
+
+                                                        {% else %}
+                                                            <button style="cursor:default"
+                                                                    class="btn yekanFont">
+                                                                <i class="material-icons">done</i>
+                                                                دریافت شد. برای مشاهده به پروفایل خود مراجعه کنید.
+                                                            </button>
+
+                                                        {% endif %}
+                                                    </td>
+
+
+                                                </tr>
+
+                                            {% endfor %}
 
 
                                             </tbody>
