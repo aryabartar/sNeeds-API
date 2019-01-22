@@ -40,11 +40,16 @@
                 <!--<h2 class="section-title yekanFont rtl text-right">لیست کافه ها</h2>-->
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <div class="pull-left">
-                            <a href="{% url "account:cafe_profile"  %}" class="btn btn-primary yekanFont normalFontSize2">
-                                پنل مدیریت
-                            </a>
-                        </div>
+
+                        {% if is_cafe_profile %}
+                            <div class="pull-left">
+                                <a href="{% url "account:cafe_profile" %}"
+                                   class="btn btn-primary yekanFont normalFontSize2">
+                                    پنل مدیریت
+                                </a>
+                            </div>
+                        {% endif %}
+
                         <div class="profile-tabs pull-center">
                             <div class="nav-align-center">
                                 <ul class="nav nav-pills nav-pills-info nav-pills-icons yekanFont" role="tablist">
@@ -286,6 +291,7 @@
         </div>
     </div>
 
-
+    <br/>
+    <br/>
 {% endblock main_content %}
 
