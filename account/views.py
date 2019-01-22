@@ -45,7 +45,7 @@ def signup1(request):
 
 
 def logout_success(request):
-    return render(request, "account/logout_success")
+    return render(request, "account/logout_success.html")
 
 
 @login_required(login_url='account:login')
