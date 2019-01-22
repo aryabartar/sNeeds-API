@@ -1,165 +1,285 @@
 <!doctype html>
-{% extends 'website/../bases/base.html' %}
+{% extends 'website/../bases/base-new.html' %}
 {% load static %}
 
+
 {% block main_content %}
-    <section class="space--md text-right">
+    <div class="page-header header-filter header-small" data-parallax="true"
+         style="background-image: url('{% static "assets/img/userbg.jpg" %}'); transform: translate3d(0px, 0px, 0px);">
         <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div class="tabs-container tabs--vertical">
-                        <ul class="tabs">
-
-                            {% if request.user.is_superuser %}
-
-                                <li class="">
-                                    <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span
-                                            class="h5">سوپر ادمین</span></div>
-                                    <div class="tab__content">
-
-                                        <table style="width:100%">
-                                            <tr>
-                                                <th>نام کافه</th>
-                                                <th>آمار ۱</th>
-                                                <th>آمار ۲</th>
-                                            </tr>
-
-
-                                            {% for cafe_statistic in admin_statistics %}
-                                                <tr>
-                                                    <td>{{ cafe_statistic.0 }} </td>
-                                                    <td>{{ cafe_statistic.1 }} </td>
-                                                    <td>{{ cafe_statistic.2 }} </td>
-                                                </tr>
-                                            {% endfor %}
-                                        </table>
-
-                                    </div>
-                                </li>
-                            {% endif %}
-
-                            {% if is_cafe_profile %}
-                                <li class="active">
-                                    <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
-                                            class="h5">تخفیفات کاربران</span></div>
-                                    <div class="tab__content">
-
-
-                                        <h2>بخش تخفیفات فعال</h2>
-
-
-                                        {% for discount , value in cafe_profile_discounts.items %}
-                                            <h4> {{ discount }}</h4>
-                                            <table style="width:100%">
-                                                <tr>
-                                                    <th>عنوان تخفیف</th>
-                                                    <th>کد تخفیف</th>
-                                                    <th>کاربر</th>
-                                                    <th>دریافت</th>
-                                                </tr>
-                                                <div class="alert__body">
-                                                    {% for user_discount in value %}
-                                                        <tr>
-                                                            <td>{{ user_discount }}</td>
-                                                            <td>{{ user_discount.code }}</td>
-                                                            <td>{{ user_discount.user.username }}</td>
-                                                            <td>
-                                                                <a href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
-                                                                   class="btn btn-secondary btn-lg active" role="button"
-                                                                   aria-pressed="true">دریافت شد</a></td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                </div>
-                                            </table>
-                                        {% endfor %}
-
-                                        <h2>تخفیفات استفاده شده</h2>
-
-                                        <a class="btn btn--sm type--uppercase"
-                                           href="{% url "account:cafe_discount_archives" %}"> <span
-                                                class="btn__text">
-                                           برای مشاهده همه کلیک کنید
-                                            </span>
-                                        </a>
-                                        <p></p>
-
-
-                                        <h3> ---- اضافه کردن تخفیف کافه -------</h3>
-                                        <form action="" method="post">
-                                            {% csrf_token %}
-                                            {{ form.as_table }}
-                                            <input type="submit" value="تایید">
-                                        </form>
-
-
-                                        <h3> ---- حذف تخفیفات -------</h3>
-                                        {% for discount in all_cafe_discounts %}
-                                            <a class="btn btn--sm type--uppercase"
-                                               href="{% url "account:delete_cafe_discount" %}?pk={{ discount.pk }}"> <span
-                                                    class="btn__text">
-                                            {{ discount }}  حذف ||
-                                            </span>
-                                            </a>
-                                        {% endfor %}
-
-
-                                    </div>
-                                </li>
-                            {% endif %}
-
-                            <li class="">
-                                <div class="tab__title"><i class="icon icon--sm block icon-Text-Effect"></i> <span
-                                        class="h5">بخش تخفیفات</span></div>
-                                <div class="tab__content">
-
-                                    <h4>تخفیفات کافه</h4>
-                                    <table style="width:100%">
-                                        <tr>
-                                            <th>کد تخفیف</th>
-                                            <th>تاریخ ثبت</th>
-                                            <th>توضیح</th>
-                                        </tr>
-                                        {% for discount in user_active_discounts %}
-                                            <tr>
-                                                <td>{{ discount.code }}</td>
-                                                <td>{{ discount.date }}</td>
-                                                <td>{{ discount.discount }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-
-
-                                    <h4> تخفیفات *استفاده شده </h4>
-                                    <table style="width:100%">
-                                        <tr>
-                                            <th>توضیح</th>
-                                            <th>تاریخ استفاده</th>
-                                        </tr>
-
-                                        {% if user_used_discounts_archive %}
-                                            {% for used_discount in user_used_discounts_archive %}
-                                                <tr>
-                                                    <td>{{ used_discount }}</td>
-                                                    <td>{{ used_discount.date }}</td>
-                                                </tr>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </table>
-                                </div>
-                            </li>
-
-                            <li class="">
-                                <div class="tab__title"><i class="icon icon--sm block icon-Target-Market"></i> <span
-                                        class="h5">مشخصات من</span></div>
-                                <div class="tab__content">
-                                    <p class="lead">  {{ user.username }}: نام کاربری </p>
-                                    <p class="lead"> {{ user.email }}: آدرس ایمیل </p>
-                                </div>
-                            </li>
-                        </ul>
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        <h1 class="title yekanFont rtl">{{ user.username }} گرامی، خوش آمدید</h1>
+                        <h3 class="yekanFont rtl">
+                            با اسنیدز همراه باشید...
+                        </h3>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+
+
+    <div class="main main-raised">
+
+        <div class="section">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb yekanFont">
+                                <li class="breadcrumb-item"><a href="#">صفحه اول</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">پروفایل شخصی</li>
+                                <!--<li class="breadcrumb-item active" aria-current="page">کافه اسنیدز</li>-->
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+                <!--<h2 class="section-title yekanFont rtl text-right">لیست کافه ها</h2>-->
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <div class="profile-tabs">
+                            <div class="nav-align-center">
+
+
+                                <ul class="nav nav-pills nav-pills-info nav-pills-icons yekanFont" role="tablist">
+
+                                    <li class="">
+                                        <a href="#editProfile" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <i class="material-icons">edit</i>
+                                            ویرایش پروفایل
+                                        </a>
+                                    </li>
+
+                                    <li class="active">
+                                        <a href="#cafeDiscounts" role="tab" data-toggle="tab" aria-expanded="false">
+                                            <i class="material-icons">local_cafe</i>
+                                            تخفیف کافه‌ها
+                                        </a>
+                                    </li>
+
+                                    <li class="">
+                                        <a href="#visitedBooklets" role="tab" data-toggle="tab" aria-expanded="true">
+                                            <i class="material-icons">note</i>
+                                            جزوات مشاهده شده
+                                        </a>
+                                    </li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        <div class="tab-content" style="margin-top:30px;">
+                            <div class="tab-pane " id="visitedBooklets">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2 class="text-right yekanFont">لیست جزوات مشاهده شده</h2>
+                                        <div class="table-responsive">
+                                            <table class="table table-striped yekanFont">
+                                                <thead>
+                                                <tr>
+                                                    <th class="text-center">#</th>
+                                                    <th class="text-center">اسم جزوه</th>
+                                                    <th class="text-center">موضوع</th>
+                                                    <th class="text-center">نویسنده</th>
+                                                    <th class="text-right">لینک مشاهده</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td class="text-center">1</td>
+                                                    <td>معادلات دکتر واعظ پور</td>
+                                                    <td>معادلات دیفرانسیل</td>
+                                                    <td>آقای هادی</td>
+                                                    <td class="td-actions text-right">
+                                                        <a href="#" class="btn btn-success yekanFont">
+                                                            <i class="material-icons">developer_board</i>
+                                                            مشاهده جزوه
+                                                        </a>
+                                                        <!--<button type="button" rel="tooltip" class="btn btn-success yekanFont"-->
+                                                        <!--data-original-title="" title="">-->
+                                                        <!--قابل استفاده-->
+                                                        <!--&lt;!&ndash;<i class="material-icons">edit</i>&ndash;&gt;-->
+                                                        <!--</button>-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">1</td>
+                                                    <td>معادلات دکتر واعظ پور</td>
+                                                    <td>معادلات دیفرانسیل</td>
+                                                    <td>آقای هادی</td>
+                                                    <td class="td-actions text-right">
+                                                        <a href="#" class="btn btn-success yekanFont">
+                                                            <i class="material-icons">developer_board</i>
+                                                            مشاهده جزوه
+                                                        </a>
+                                                        <!--<button type="button" rel="tooltip" class="btn btn-success yekanFont"-->
+                                                        <!--data-original-title="" title="">-->
+                                                        <!--قابل استفاده-->
+                                                        <!--&lt;!&ndash;<i class="material-icons">edit</i>&ndash;&gt;-->
+                                                        <!--</button>-->
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center">1</td>
+                                                    <td>معادلات دکتر واعظ پور</td>
+                                                    <td>معادلات دیفرانسیل</td>
+                                                    <td>آقای هادی</td>
+                                                    <td class="td-actions text-right">
+                                                        <a href="#" class="btn btn-success yekanFont">
+                                                            <i class="material-icons">developer_board</i>
+                                                            مشاهده جزوه
+                                                        </a>
+                                                        <!--<button type="button" rel="tooltip" class="btn btn-success yekanFont"-->
+                                                        <!--data-original-title="" title="">-->
+                                                        <!--قابل استفاده-->
+                                                        <!--&lt;!&ndash;<i class="material-icons">edit</i>&ndash;&gt;-->
+                                                        <!--</button>-->
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane active" id="cafeDiscounts">
+                                <div class="row">
+                                    <h2 class="text-right yekanFont">لیست تخفیفات کافه ها</h2>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped yekanFont">
+                                            <thead>
+                                            <tr>
+                                                <th class="text-center">اسم کافه</th>
+                                                <th class="text-center">کد تخفیف</th>
+                                                <th class="text-center">تاریخ ایجاد کد</th>
+                                                <th class="text-right">وضعیت کد</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            {% for discount in user_active_discounts %}
+
+                                                <tr>
+                                                    <td>{{ discount.discount }}</td>
+                                                    <td>{{ discount.code }}</td>
+                                                    <td>{{ discount.date }}</td>
+                                                    <td class="td-actions text-right">
+                                                        <button type="button" rel="tooltip"
+                                                                class="btn btn-success yekanFont"
+                                                                data-original-title="" title="">
+                                                            <i class="material-icons">done</i>
+                                                            قابل استفاده
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+
+
+                                            {% endfor %}
+
+
+
+                                            {% for used_discount in user_used_discounts_archive %}
+
+                                                <tr>
+                                                    <td>{{ used_discount }}</td>
+                                                    <td>استفاده شد</td>
+                                                    <td>{{ used_discount.date }}</td>
+                                                    <td class="td-actions text-right">
+                                                        <button type="button" rel="tooltip"
+                                                                class="btn btn-danger yekanFont"
+                                                                data-original-title="" title="">
+                                                            <i class="material-icons">close</i>
+                                                            مصرف شده
+                                                        </button>
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="alert alert-info">
+                                        <!--<div class="container-fluid">-->
+                                        <div class="alert-icon pull-right"
+                                             style="margin-right:5px !important;margin-left:15px !important;">
+                                            <i class="material-icons">info_outline</i>
+                                        </div>
+                                        <button type="button" class="close pull-left" data-dismiss="alert"
+                                                aria-label="Close"
+                                                style="margin-right:15px !important;margin-left:5px !important;">
+                                            <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                                        </button>
+                                        <p class="text-justify yekanFont normalFontSize">
+                                            توجه : فقط تخفیفاتی که استفاده نشده اند قابلیت استفاده دارند، برای دریافت کد
+                                            تخفیف به صفحه کافه ها مراجعه کنید
+                                        </p>
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="editProfile">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h2 class="text-right yekanFont">ویرایش اطلاعات پروفایل</h2>
+                                        <form class="form" method="" action="">
+                                            <div class="card-content">
+                                                <div class="input-group">
+											<span class="input-group-addon">
+												<i class="material-icons">face</i>
+											</span>
+                                                    <div class="form-group"><input type="text"
+                                                                                   class="form-control yekanFont"
+                                                                                   value="نام و نام خانوادگی از سرور"><span
+                                                            class="material-input"></span></div>
+                                                </div>
+
+                                                <div class="input-group">
+											<span class="input-group-addon">
+												<i class="material-icons">email</i>
+											</span>
+                                                    <div class="form-group"><input type="text"
+                                                                                   class="form-control yekanFont"
+                                                                                   value="ایمیل از سرور"><span
+                                                            class="material-input"></span></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="footer text-left" style="margin-left:30px;">
+                                                <button class="btn btn-success yekanFont normalFontSize">
+                                                    <i class="material-icons">done</i>
+                                                    ذخیره تغییرات
+                                                    <div class="ripple-container"></div>
+
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <div class="text-left row" style="margin-left:30px;">
+                                            <button class="btn btn-warning yekanFont normalFontSize" data-toggle="modal"
+                                                    data-target="#loginModal">
+                                                <i class="material-icons">lock</i>
+                                                تغییر رمز عبور
+                                                <div class="ripple-container"></div>
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- section -->
+            </div>
+        </div>
+    </div>
+
+
 {% endblock main_content %}
+
