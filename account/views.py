@@ -282,7 +282,7 @@ def cafe_profile(request):
 def all_cafe_archive(request):
     cafe_profile = CafeProfile.objects.get(user__exact=request.user)
     all_used_discounts = UserUsedDiscount.objects.filter(cafe__exact=cafe_profile.cafe).order_by('-pk')
-    return render(request, "account/user_used_discounts_archive.html",
+    return render(request, "account/cafe_discount_archive.html",
                   context={"all_used_discounts": all_used_discounts})
 
 

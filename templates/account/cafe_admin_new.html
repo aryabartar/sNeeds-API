@@ -79,11 +79,10 @@
                                             <h2 class="text-right yekanFont">تخفیفات کافه شما</h2>
                                         </div>
                                         <div class="pull-left" style="margin-top:20px !important;">
-                                            <a href="#" class="btn btn-success yekanFont  normalFontSize2">آرشیو
+                                            <a href="{% url "account:cafe_discount_archives" %}" class="btn btn-success yekanFont  normalFontSize2">آرشیو
                                                 تخفیفات</a>
                                         </div>
                                     </div>
-
                                     <hr>
                                     <div class="input-group">
 		                        <span class="input-group-addon">
@@ -123,7 +122,7 @@
                                                                class="btn btn-warning yekanFont"
                                                                data-original-title="" title="">
                                                                 <i class="material-icons">edit</i>
-                                                                تایید نشده، برای تایید کلیک کنید
+                                                                برای تایید کلیک کنید
                                                                 <div class="ripple-container"></div>
                                                             </a>
                                                         </td>
@@ -236,11 +235,9 @@
                                     <div class="col-md-6"></div>
                                     <div class="col-md-6" style="margin:0 auto !important;float:none !important;">
                                         <h5 class="yekanFont text-right">اضافه کردن تخفیف جدید:</h5>
-                                        <form action="" method="">
                                             <div class="card card-form-horizontal customCafeAdminBox">
                                                 <div class="card-content">
-                                                    <form method="" action="">
-                                                        {% csrf_token %}
+                                                    <form method="post" action="">
                                                         <div class="row">
                                                             <div class="col-sm-4">
                                                                 <input type="submit" value="اضافه
@@ -253,14 +250,14 @@
                                                                         <span class="input-group-addon">
                                                                           <i class="material-icons">shopping_cart</i>
                                                                         </span>
-                                                                        {% include 'includes/form.html' %}
+                                                                    {% csrf_token %}
+                                                                    {% include 'includes/form.html' %}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
-                                        </form>
 
                                     </div>
                                 </div>
