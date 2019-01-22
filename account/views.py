@@ -31,17 +31,6 @@ def signup(request):
     return render(request, "account/signup_page.html", {"form": form})
 
 
-def signup1(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            return redirect('account:signup_success')
-    else:
-        form = SignUpForm()
-
-    return render(request, "account/signup_page_new.html", {"form": form})
 
 
 def logout_success(request):

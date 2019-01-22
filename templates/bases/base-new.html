@@ -41,7 +41,7 @@
                 <span class="icon-bar"></span>
             </button>
 
-            <a class="navbar-brand serifFont" href="http://www.sneeds.ir" target="_blank">
+            <a class="navbar-brand serifFont" href="{% url "website:home" %}" target="">
                     <span class="serifFont brandName float-right">
                         اسنیدز
                     </span>
@@ -64,7 +64,13 @@
                     <li class="pull-right"><a href="{% url "account:login" %}"
                                               class="normalFontSize2 text-right rtl btn btn-round btn-primary">
                         <i class="fas fa-sign-in-alt"></i>
-                        ورود / عضویت
+                        ورود
+                    </a></li>
+
+                    <li class="pull-right"><a href="{% url "account:signup" %}"
+                                              class="normalFontSize2 text-right rtl btn btn-round btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                         عضویت
                     </a></li>
 
                 {% else %}

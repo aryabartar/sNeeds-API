@@ -1,28 +1,41 @@
 <!doctype html>
-{% extends 'website/../bases/base.html' %}
+{% extends 'website/../bases/base-new.html' %}
 {% load static %}
 
 
 {% block main_content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10 col-sm-12">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="alert">
-                            <div class="alert__body">
-                                <span>عضویت با موفقیت انجام شد</span>
+    <div class="page-header header-filter"
+         style="background-size: cover;
+                 background: url('{% static  "assets/img/bg3.jpg" %}') top center;">
+        <div class="container">
+
+            <div class="row" style="margin-top:30px;">
+                <!--<div class="col-md-1"></div>-->
+                <div class="col-md-12">
+                    <div class="card"
+                         style="box-shadow:none !important;background:none !important;margin-bottom:0 !important;width:100% !important;  ">
+                        <div class="alert alert-success " style="border-radius:10px !important;">
+                            <!--<div class="container-fluid">-->
+                            <div class="alert-icon pull-right"
+                                 style="margin-right:5px !important;margin-left:15px !important;">
+                                <i class="material-icons">done</i>
                             </div>
-                            <div class="alert__close">
-                                ×
-                            </div>
+                            <button type="button" class="close pull-left" data-dismiss="alert" aria-label="Close"
+                                    style="margin-right:15px !important;margin-left:5px !important;">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                            </button>
+                            <p class="text-justify yekanFont normalFontSize">
+                            با موفقیت ثبت‌نام کردید
+                            </p>
+                            <!--</div>-->
                         </div>
-                        <a class="btn btn--primary" href="{% url "website:home" %}">
-                            <span class="btn__text">بازگشت به صفحه اصلی</span>
-                        </a></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
 {% endblock main_content %}
 
