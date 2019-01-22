@@ -1,52 +1,108 @@
 <!doctype html>
-{% extends 'website/../bases/base.html' %}
+{% extends 'website/../bases/base-new.html' %}
 {% load static %}
 
-{% block main_content %}
-    <div class="main-container">
-        <section class="space--sm">
-            <div class="container">
-                <section>
-                    <div class="container">
-                        <section>
-                            <div class="container">
-                                <div class="col-md-6">
-                                    <nav aria-label="breadcrumb">
-                                        <ol class="breadcrumb">
-                                            <h4>دروس :</h4>
-                                            {% for topic in object_list %}
-                                                <li class="breadcrumb-item"><a
-                                                        href="{{ topic.get_absolute_url }}">{{ topic.subject }}</a>
-                                                </li>
-                                            {% endfor %}
-                                        </ol>
-                                    </nav>
-                                </div>
-                                <div class="row">
+{% block body-class-block %}
+    <body class="ecommerce-page" style="height:100%">
+{% endblock body-class-block %}
 
-                                    {% if object_list %}
-                                        {% for topic in object_list %}
-                                            {% for booklet in topic.booklets.all %}
-                                                <div class="col-md-4">
-                                                    <div class="feature"><img alt="Image"
-                                                                              src="{{ booklet.booklet_image.url }}"
-                                                                              class="border--round">
-                                                        <h4>{{ booklet.title }}</h4>
-                                                        <p> {{ booklet.topic }} </p>
-                                                        <a class="btn btn--primary"
-                                                           href="{{ booklet.get_absolute_url }}">
-                                                            <span class="btn__text">مشاهده و دانلود</span>
+{% block main_content %}
+
+    <!-- end navbar -->
+
+    <div class="page-header header-filter header-small" data-parallax="true"
+         style="background-image: url('{% static "assets/img/note.jpg" %}'); transform: translate3d(0px, 0px, 0px);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="brand">
+                        <h1 class="title yekanFont rtl">جزوات رشته {{ object_list.0.topic.field.subject }} </h1>
+                        <h3 class="yekanFont rtl">
+                            دیتابیسی به روز و در حال تکمیل از جزوات و نمونه سوالات دانشگاهی از اساتید و دانشگاه های برتر
+                            کشور
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="main main-raised">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12" style="margin-top:20px;">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb yekanFont">
+                                <li class="breadcrumb-item"><a href="{% url "website:home" %}">صفحه اول</a></li>
+                                <li class="breadcrumb-item"><a href="{% url "website:booklets_home" %}">جزوات</a></li>
+                                <li class="breadcrumb-item">
+                                    {{ object_list.0.field }}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+
+                <div class="row">
+
+                </div>
+
+                <div class="row">
+
+                    {% if object_list %}
+                        {% for topic in object_list %}
+                            <div class="row">
+                                <h4 class="section-title yekanFont rtl text-right">    {{ topic.subject }}    </h4>
+                                <hr>
+
+                                {% for booklet in topic.booklets.all %}
+                                    <div class="col-md-3">
+
+                                        <div class="rotating-card-container"
+                                             style="height: 302px; margin-bottom: 30px;">
+                                            <div class="card card-rotate card-background">
+                                                <div class="front front-background"
+                                                     style="background-image: url({{ booklet.booklet_image.url }});">
+                                                    <div class="card-content">
+                                                        <!--<h6 class="category text-info yekanFont">کافه تست</h6>-->
+                                                        <a href="#pablo">
+                                                            <h3 class="card-title yekanFont">{{ booklet.title }}</h3>
                                                         </a>
+                                                        <p class="card-description yekanFont text-center normalFontSize2">
+                                                            {{ booklet.topic }}
+                                                        </p>
                                                     </div>
                                                 </div>
-                                            {% endfor %}
-                                        {% endfor %}
-                                    {% else %}
-                                        No booklet defined yet!
-                                    {% endif %}
-                                </div>
-                                {% if is_paginated %}
-                                    <div class="pagination">
+                                                <!-- background-image: url(assets/img/cafe4.jpg) in style with back-background class -->
+                                                <div class="back back-background"
+                                                     style="background-image:url({{ booklet.booklet_image.url }});">
+                                                    <div class="card-content">
+                                                        <h5 class="card-title yekanFont">
+                                                            استاد : {{ booklet.teacher }}
+                                                        </h5>
+                                                        <p class="card-description yekanFont text-center">
+                                                            نویسنده : {{ booklet.owner }}
+                                                        </p>
+                                                        <div class="footer text-center">
+                                                            <a href="{{ booklet.get_absolute_url }}"
+                                                               class="btn btn-success btn-fill btn-wd yekanFont normalFontSize2">
+                                                                <i class="material-icons">note</i>
+                                                                دریافت جزوه
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        جزوه ای وجود ندارد
+                    {% endif %}
+                    {% if is_paginated %}
+                        <div class="pagination">
                                          <span class="page-links">
                                             {% if page_obj.has_previous %}
                                                 <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">قبلی</a>
@@ -58,16 +114,17 @@
                                                  <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">بعدی</a>
                                              {% endif %}
                                             </span>
-                                    </div>
-                                {% else %}
-                                {% endif %}
-                            </div>
-                        </section>
-                    </div>
-                </section>                <!--end of row-->
-            </div>
-            <!--end of container-->
-        </section>
-    </div>
+                        </div>
+                    {% else %}
+                    {% endif %}
 
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <br/>
+    <br/>
 {% endblock main_content %}
+
