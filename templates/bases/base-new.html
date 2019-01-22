@@ -70,7 +70,7 @@
                     <li class="pull-right"><a href="{% url "account:signup" %}"
                                               class="normalFontSize2 text-right rtl btn btn-round btn-primary">
                         <i class="fas fa-sign-in-alt"></i>
-                         عضویت
+                        عضویت
                     </a></li>
 
                 {% else %}
@@ -85,7 +85,7 @@
                     <li class="pull-right"><a href="{% url "account:logout" %}"
                                               class="normalFontSize2 text-right rtl btn btn-round btn-info">
                         <i class="fas fa-sign-in-alt"></i>
-                       خروج
+                        خروج
                     </a></li>
 
 
@@ -151,30 +151,32 @@
                     <div class="social-feed yekanFont rtl text-justify">
                         <div class="feed-line">
                             <i class="fa fa-twitter"></i>
-                            <p class="miniRightSpace">لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-                                استفاده از طراحان</p>
-                        </div>
-                        <div class="feed-line">
-                            <i class="fa fa-twitter"></i>
-                            <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
-                                با استفاده از طراحان
-                            </p>
+                            <p class="miniRightSpace">تخفیف کافه لیبستروپاپ به اسنیدز اضافه شد و میتونین ۴۰ درصد ازش
+                                تخفیف بگیرین.</p>
                         </div>
                         <div class="feed-line">
                             <i class="fa fa-facebook-square"></i>
-                            <p class="miniRightSpace"> لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و
-                                با استفاده از طراحان</p>
+                            <p class="miniRightSpace"> تو این هوای بارونی یه کاپوچینو تو کافه هنر میچسبه. با کد تخفیف اسنیدز ۲۰ درصد تخفیف بگیرین.
+
+                            </p>
                         </div>
+                        <div class="feed-line">
+                            <i class="fa fa-twitter"></i>
+                            <p class="miniRightSpace">جزوات کامل دروس سرویس شامل ریاضی، فیزیک، معادلات، برنامه نویسی،
+                                دروس عمومی، اخلاق مهندسی در وبسایت قرار داده شد.
+                            </p>
+                        </div>
+
                     </div>
                 </div>
 
                 <div class="col-md-4">
                     <h5 class="yekanFont">درباره اسنیدز</h5>
                     <p class="yekanFont text-justify">
-                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان
-                        گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است و
-                        برای شرایط فعلی تکنولوژی مورد نیاز و کاربردهای متنوع با هدف بهبود ابزارهای کاربردی
-                        می باشد.
+                        اسنیدز یک گروه دانشجویی متشکل از دانشجویان دانشگاه صنعتی امیرکبیر است. هدف ما ارائه خدمات آموزشی
+                        برای دانشجویان و آگاهی بخشی در مورد اپلای از طریق مصاحبه با دانشجویان پذیرش گرفته می‌باشد.</br>
+                        ما همواره سعی کرده‌ایم بهترین کیفیت خدمات را عرضه کنیم و با استفاده از بخش کافه‌های اسنیدز و
+                        استفاده از تخفیفات آن می‌توانید در هزینه‌های خود به شدت صرفه‌جویی کنید.
                     </p>
                 </div>
 
@@ -186,31 +188,31 @@
 
         <ul class="pull-right rtl text-right yekanFont normalFontSize">
             <li>
-                <a href="#">
-                    لینک تست 1
+                <a href="{% url "website:home" %}">
+                    صفحه اصلی
                 </a>
             </li>
             <li>
-                <a href="#">
-                    لینک تست 2
+                <a href="{% url "discounts:home" %}">
+                    تخفیف کافه‌ها
+
+                </a>
+            </li>
+            <li>
+                <a href="{% url "website:booklets_home" %}">
+                    جزوات دانشگاهی
 
                 </a>
             </li>
             <li>
                 <a href="#">
-                    لینک تست 3
+                    وبلاگ
 
                 </a>
             </li>
             <li>
                 <a href="#">
-                    لینک تست 4
-
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    لینک تست 5
+                    قوانین و مقررات
                 </a>
             </li>
         </ul>
