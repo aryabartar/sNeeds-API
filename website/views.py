@@ -28,7 +28,7 @@ def home(request):
                "first_three_posts_images": first_three_posts_images,
                "first_three_booklets": Booklet.objects.all()[booklet_size - 3:booklet_size]}
 
-    return render(request, 'website/home.html', context=my_dict)
+    return render(request, 'website/home-new.html', context=my_dict)
 
 
 def get_post(request, slug):
