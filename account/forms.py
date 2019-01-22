@@ -29,15 +29,12 @@ class SignUpForm(UserCreationForm):
             'username': TextInput(attrs={'class': 'form-control', 'placeholder': 'نام کاربری'}),
         }
 
-
         fields = ('username',
                   'email',
                   'password1',
                   'password2',
                   'phone_number_field',
                   )
-
-
 
     def save(self, commit=True):
         user = super(SignUpForm, self).save(commit=False)
