@@ -40,12 +40,14 @@
                 <!--<h2 class="section-title yekanFont rtl text-right">لیست کافه ها</h2>-->
                 <div class="row">
                     <div class="col-md-12 text-center">
-                        <div class="profile-tabs">
+                        <div class="pull-left">
+                            <a href="{% url "account:cafe_profile"  %}" class="btn btn-primary yekanFont normalFontSize2">
+                                پنل مدیریت
+                            </a>
+                        </div>
+                        <div class="profile-tabs pull-center">
                             <div class="nav-align-center">
-
-
                                 <ul class="nav nav-pills nav-pills-info nav-pills-icons yekanFont" role="tablist">
-
                                     <li class="">
                                         <a href="#editProfile" role="tab" data-toggle="tab" aria-expanded="false">
                                             <i class="material-icons">edit</i>
@@ -66,11 +68,16 @@
                                             جزوات مشاهده شده
                                         </a>
                                     </li>
+
                                 </ul>
 
 
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="tab-content" style="margin-top:30px;">
                             <div class="tab-pane " id="visitedBooklets">
                                 <div class="row">
@@ -145,6 +152,9 @@
                                     </div>
                                 </div>
                             </div>
+                            {% if is_cafe_profile %}
+                                ;owkdpowkepodkpoewkdop
+                            {% endif %}
 
                             <div class="tab-pane active" id="cafeDiscounts">
                                 <div class="row">
@@ -272,7 +282,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <!-- section -->

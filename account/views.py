@@ -211,7 +211,7 @@ def cafe_profile(request):
     context["user_active_discounts"] = get_user_active_discounts()  # This is for active discounts for user panel .
     context["user_used_discounts_archive"] = get_user_used_discounts_archive()
 
-    return render(request, "account/cafe_admin_new.html", context=context)
+    return render(request, "account/cafe_admin.html", context=context)
 
 
 @login_required(login_url='account:login')

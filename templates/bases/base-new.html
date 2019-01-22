@@ -30,7 +30,6 @@
 
 
 <!-- Navbar will come here -->
-
 <nav class="navbar navbar-right navbar-transparent navbar-fixed-top" role="navigation">
     <div class="container-fluid">
         <div class="navbar-header pull-right">
@@ -71,21 +70,20 @@
                 {% else %}
 
 
-                    <li class="pull-right"><a href="userProfile.html"
+                    <li class="pull-right"><a href="{% url "account:my_account" %}"
                                               class="normalFontSize2 text-right rtl btn btn-round btn-rose">
                         <i class="fas fa-sign-in-alt"></i>
                         پروفایل کاربری
                     </a></li>
 
+                    <li class="pull-right"><a href="{% url "account:logout" %}"
+                                              class="normalFontSize2 text-right rtl btn btn-round btn-info">
+                        <i class="fas fa-sign-in-alt"></i>
+                       خروج
+                    </a></li>
+
+
                 {% endif %}
-
-
-
-                <li class="pull-right"><a href="cafeAdmin.html"
-                                          class="normalFontSize2 text-right rtl btn btn-round btn-info">
-                    <i class="fas fa-sign-in-alt"></i>
-                    پروفایل ادمین کافه
-                </a></li>
 
 
             </ul>
@@ -139,7 +137,6 @@
                              class="img img-raised img-rounded"
                              alt="img8">
                     </div>
-
                 </div>
 
                 <div class="col-md-4">
