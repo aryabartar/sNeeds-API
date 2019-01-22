@@ -7,21 +7,9 @@
 {% endblock body-class-block %}
 
 {% block main_content %}
-
     <div class="page-header header-filter"
-         style="background-image: url('assets/img/bg3.jpg'); background-size: cover; background-position: top center;">
+         style="background-image: url('{% static "assets/img/bg3.jpg" %}'); background-size: cover; background-position: top center;">
         <div class="container">
-
-            <!--<div class="row">-->
-            <!--<div class="col-md-12" style="margin-bottom:30px;">-->
-            <!--<nav aria-label="breadcrumb">-->
-            <!--<ol class="breadcrumb yekanFont">-->
-            <!--<li class="breadcrumb-item"><a href="#">صفحه اول</a></li>-->
-            <!--<li class="breadcrumb-item active" aria-current="page">ورود-ثبت نام</li>-->
-            <!--</ol>-->
-            <!--</nav>-->
-            <!--</div>-->
-            <!--</div>-->
 
             <div class="row" style="margin-top:30px;">
                 <!--<div class="col-md-1"></div>-->
@@ -29,30 +17,9 @@
                     <div class="card card-signup" style="margin-bottom:0 !important;">
                         <form class="form" method="" action="">
                             <div class="header header-primary text-center">
-                                <h4 class="card-title yekanFont">ورود کاربر / کافه</h4>
-                                <div class="social-line">
-                                    <!--<a href="" class="btn btn-just-icon btn-simple">-->
-                                    <!--<i class="fa fa-facebook-square"></i>-->
-                                    <!--</a>-->
-                                    <!--<a href="" class="btn btn-just-icon btn-simple">-->
-                                    <!--<i class="fa fa-twitter"></i>-->
-                                    <!--</a>-->
-                                    <!--<a href="" class="btn btn-just-icon btn-simple">-->
-                                    <!--<i class="fa fa-google-plus"></i>-->
-                                    <!--</a>-->
-                                </div>
+                                <h4 class="card-title yekanFont">ورود به سایت</h4>
                             </div>
-                            <!--<p class="description text-center">Or Be Classical</p>-->
                             <div class="card-content">
-
-                                <!--<div class="input-group">-->
-                                <!--<span class="input-group-addon">-->
-                                <!--<i class="material-icons">face</i>-->
-                                <!--</span>-->
-                                <!--<div class="form-group"><input type="text" class="form-control yekanFont"-->
-                                <!--placeholder="نام کاربری..."><span-->
-                                <!--class="material-input"></span></div>-->
-                                <!--</div>-->
 
                                 <div class="input-group">
 									<span class="input-group-addon">
@@ -73,21 +40,15 @@
                                     </div>
                                 </div>
 
-                                <!-- If you want to add a checkbox to this form, uncomment this code
-
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="optionsCheckboxes" checked>
-                                        Subscribe to newsletter
-                                    </label>
-                                </div> -->
                             </div>
                             <div class="footer text-center">
-                                <a href="" class="btn btn-primary btn-simple btn-wd btn-lg yekanFont normalFontSize">ورود</a>
+                                <a href="registerAuth.html" class="btn btn-secondary btn-wd btn-lg yekanFont">ورود</a>
+                                ‍‍ <br/>
+                                <a href="" class="btn btn-primary btn-simple btn-wd btn-lg yekanFont ">ثبت نام</a>
+
                                 <a href="" class="btn btn-primary btn-simple btn-wd btn-lg yekanFont">فراموشی / بازیابی
                                     رمز عبور</a>
-                                <a href="registerAuth.html" class="btn btn-secondary btn-wd btn-lg yekanFont">برای ثبت
-                                    نام کلیک کنید</a>
+
                             </div>
                         </form>
                     </div>
