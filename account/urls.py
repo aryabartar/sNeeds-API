@@ -24,6 +24,7 @@ urlpatterns = [
     path('logout/success/', views.logout_success, name="logout_success"),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='account/login_page.html'), name='login'),
+    path('login-new/', auth_views.LoginView.as_view(template_name='account/login_page_new.html'), name='login1'),
 
     # TODO: Change _ with -
     path('my-account/', views.my_account, name="my_account"),
