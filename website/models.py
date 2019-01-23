@@ -9,7 +9,6 @@ from django.utils import timezone
 class Topic(models.Model):
     subject = models.CharField(max_length=120)
     parent = models.ForeignKey('self', blank=True, null=True, related_name='children', on_delete=models.CASCADE)
-    hello = models.CharField(default="dd", max_length=120)
     slug = models.SlugField(unique=True, default=subject)
 
     def __str__(self):  # __str__ method elaborated later in
@@ -70,7 +69,11 @@ class BookletTopic(models.Model):
     """
     For example AP, DS, Environment, ...
     """
-    field = models.ForeignKey(BookletField, on_delete=models.CASCADE, related_name='topics', blank=False, null=True)
+    field = models.ForeignKey(BookletField,
+                              on_delete=models.CASCADE,
+                              related_name='topics',
+                              blank=False,
+                              null=True)
     subject = models.CharField(max_length=120, blank=False, help_text="Booklet topic", verbose_name="عنوان")
     slug = models.SlugField(null=True, help_text="Lower case")
 
@@ -90,7 +93,7 @@ class Booklet(models.Model):
     # Booklet writer name
     owner = models.CharField(max_length=200, blank=True, default="ناشناس")
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', null=True, blank=True)
-    teacher = models.CharField(max_length=200, blank=True,  default="ناشناس")
+    teacher = models.CharField(max_length=200, blank=True, default="ناشناس")
     number_of_views = models.IntegerField(default=0,
                                           help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)",
                                           verbose_name="تعداد بازدید")

@@ -28,7 +28,29 @@ def home(request):
                "first_three_posts_images": first_three_posts_images,
                "first_three_booklets": Booklet.objects.all()[booklet_size - 3:booklet_size]}
 
-    return render(request, 'website/home-new.html', context=my_dict)
+    return render(request, 'website/home.html', context=my_dict)
+
+
+# Create your views here.
+def home_old(request):
+    def shorter_strings(post):
+        return post.text[0:140]
+
+    def get_post_images_urls(post):
+        return post.post_image.url
+
+    posts_size = int(len(Post.objects.all()))
+    booklet_size = int(len(Booklet.objects.all()))
+    first_three_posts_bodies = Post.objects.all().reverse()[posts_size - 3:posts_size]
+    first_three_posts_bodies = list(map(shorter_strings, first_three_posts_bodies))
+    first_three_posts_images = list(map(get_post_images_urls, Post.objects.all().reverse()[posts_size - 3:posts_size]))
+
+    my_dict = {"first_three_posts": Post.objects.all().reverse()[posts_size - 3:posts_size],
+               "first_three_posts_bodies": first_three_posts_bodies,
+               "first_three_posts_images": first_three_posts_images,
+               "first_three_booklets": Booklet.objects.all()[booklet_size - 3:booklet_size]}
+
+    return render(request, 'website/home-old.html', context=my_dict)
 
 
 def get_post(request, slug):
@@ -119,7 +141,6 @@ def get_booklet(request, slug):
     return render(request, 'website/booklet-new-1.html', context=context)
 
 
-
 class BookletTopicView(generic.ListView):
     model = BookletTopic
     template_name = 'website/booklet-topic.html'
@@ -152,7 +173,6 @@ class BookletFieldView(generic.ListView):
         return associated_topics
 
 
-
 def booklet_home(request):
     context = {"fields": BookletField.objects.all()}
     return render(request, "website/booklet-home.html", context=context)
@@ -177,7 +197,3 @@ def upload_booklet(request):
 
     context = {'form': upload_booklet_form, 'success': False}
     return render(request, 'website/booklet-upload-by-user.html', context=context)
-
-
-def tmp(request):
-    return render(request, 'bases/base-new.html')
