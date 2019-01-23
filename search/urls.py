@@ -13,22 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path, include, re_path
+from . import views
 
-from website import urls as website_urls
-from discounts import urls as discounts_urls
-from account import urls as account_urls
-from search import urls as search_urls
-
-
+app_name = "search"
 urlpatterns = [
-    path('', include(website_urls)),
-    path('account/', include(account_urls)),
-    path('admin/', admin.site.urls),
-    path('discounts/', include(discounts_urls)),
-    path('search/', include(search_urls)),
-    # If you're intending to use the browsable API you'll probably also want to add REST framework's
-    # login and logout views.
-    path('^api-auth/', include('rest_framework.urls'))
+    path('search/<str:search_text>', views.search_booklet, name="search_booklet")
 ]
