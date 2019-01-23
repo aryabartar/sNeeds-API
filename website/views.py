@@ -152,7 +152,8 @@ class BookletTopicView(generic.ListView):
             booklet_topic = \
                 qs.filter(
                     slug__exact=self.kwargs['slug'].lower(),
-                    field__slug__exact=self.kwargs['field_slug'].lower()
+                    field__slug__exact=self.kwargs['field_slug'].lower(),
+
                 )[0]
             associated_booklets = booklet_topic.booklets.all().order_by('title')
         return associated_booklets

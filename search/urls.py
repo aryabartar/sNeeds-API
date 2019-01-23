@@ -20,5 +20,5 @@ from . import views
 
 app_name = "search"
 urlpatterns = [
-    path('search/<str:search_text>', views.search_booklet, name="search_booklet")
+    path('search-booklet/<str:search_text>', views.search_booklet, name="search_booklet")
 ]
