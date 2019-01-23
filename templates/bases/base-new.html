@@ -94,9 +94,10 @@
 
             </ul>
 
-            <form class="navbar-form navbar-left bookletSearchForm" role="search">
+            <form class="navbar-form navbar-left bookletSearchForm" method="get"
+                  action="{% url "search:search_booklet" %}" role="search">
                 <div class="form-group form-primary">
-                    <input type="text" class="form-control yekanFont" style="width:200px"
+                    <input name="value" type="text" class="form-control yekanFont" style="width:200px"
                            value="جستجوی سریع در کل سایت" id="siteFastSearch">
                 </div>
                 <button type="submit" class="btn btn-default btn-sm yekanFont">بگرد</button>
@@ -156,7 +157,8 @@
                         </div>
                         <div class="feed-line">
                             <i class="fa fa-facebook-square"></i>
-                            <p class="miniRightSpace"> تو این هوای بارونی یه کاپوچینو تو کافه هنر میچسبه. با کد تخفیف اسنیدز ۲۰ درصد تخفیف بگیرین.
+                            <p class="miniRightSpace"> تو این هوای بارونی یه کاپوچینو تو کافه هنر میچسبه. با کد تخفیف
+                                اسنیدز ۲۰ درصد تخفیف بگیرین.
 
                             </p>
                         </div>
