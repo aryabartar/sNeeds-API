@@ -158,7 +158,6 @@ class BookletTopicView(generic.ListView):
         return associated_booklets
 
 
-
 class BookletFieldView(generic.ListView):
     model = BookletField
     template_name = 'website/booklet-field.html'

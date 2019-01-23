@@ -125,6 +125,26 @@ def my_account(request):
 
     return render(request, "account/my_account.html", context=context)
 
+@login_required(login_url='account:login')
+def admin_account(request):
+    def get_admin_statistics():
+        """
+        :return: The cafe statistics
+        """
+        all_cafes = Cafe.objects.all()
+        all_cafes_list = []
+        for cafe in all_cafes:
+            cafe_active_discount_number = len(UserDiscount.objects.filter(discount__cafe__exact=cafe))
+            cafe_used_discount_number = len(UserUsedDiscount.objects.filter(discount__cafe__exact=cafe))
+            all_cafes_list.append((cafe, cafe_active_discount_number, cafe_used_discount_number))
+        return all_cafes_list
+
+    context = {}
+    if request.user.is_superuser:
+        context["admin_statistics"] = get_admin_statistics()
+
+    return render(request, "account/my_account.html", context=context)
+
 
 @login_required(login_url='account:login')
 def cafe_profile(request):
