@@ -143,7 +143,7 @@ def admin_account(request):
     if request.user.is_superuser:
         context["admin_statistics"] = get_admin_statistics()
 
-    return render(request, "account/my_account.html", context=context)
+    return render(request, "account/admin-statistics.html", context=context)
 
 
 @login_required(login_url='account:login')
