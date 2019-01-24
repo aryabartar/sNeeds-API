@@ -46,7 +46,7 @@ def delete_cafe_discount(request):
         else:
             return HttpResponseNotFound("You don't have access to delete discount!")
 
-    return redirect("account:my_account")
+    return redirect("account:cafe_profile")
 
 
 @login_required(login_url='account:login')

@@ -66,7 +66,57 @@
                             </div>
                         </div>
 
+                                                <div id="acordeon">
 
+
+                            <div class="panel-group" id="accordion">
+                                <div class="panel panel-border panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion"
+                                           href="#collapseTwo"
+                                           aria-controls="collapseOne">
+                                            <h4 class="panel-title yekanFont normalFontSize">
+                                                اطلاعات تماس
+                                                <i class="material-icons">keyboard_arrow_down</i>
+                                            </h4>
+                                        </a>
+                                    </div>
+                                    <div id="collapseTwo" class="panel-collapse collapse">
+                                        <div class="panel-body">
+
+                                            <div class="info info-horizontal"
+                                                 style="margin-right:0 !important;padding:0 !important;">
+                                                <div class="icon icon-primary pull-right"
+                                                     style="margin-left:5px !important;">
+                                                    <i class="material-icons">phone</i>
+                                                </div>
+                                                <div class="description">
+                                                    <h4 class="info-title yekanFont rtl text-right">
+                                                        شماره تماس : ‌
+                                                        <span class="yekanFont">{{ cafe.phone_number }}</span>
+                                                    </h4>
+                                                </div>
+                                            </div>
+
+                                            <div class="info info-horizontal"
+                                                 style="margin-right:0 !important;padding:0 !important;">
+                                                <div class="icon icon-primary pull-right"
+                                                     style="margin-left:5px !important;">
+                                                    <i class="material-icons">pin_drop</i>
+                                                </div>
+                                                <div class="description">
+                                                    <h4 class="info-title yekanFont">آدرس کافه : </h4>
+                                                    <p class="yekanFont normalFontSize text-justify">
+                                                        {{ cafe.address }}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!--  end acordeon -->
                     </div>
                     <div class="col-md-6 col-sm-6">
                         <h2 class="title yekanFont"> {{ cafe.name }} </h2>
@@ -121,7 +171,7 @@
 
 
                                                     <td>  {{ discount.discount_percent }}٪ تخفیف</td>
-                                                    <td>هر دو منو</td>
+                                                    <td>تمامی منو</td>
                                                     <td class="td-actions">
                                                         {% if not_auth %}
 
@@ -173,57 +223,7 @@
                             </div>
                         </div>
 
-                        <div id="acordeon">
 
-
-                            <div class="panel-group" id="accordion">
-                                <div class="panel panel-border panel-default">
-                                    <div class="panel-heading" role="tab" id="headingOne">
-                                        <a role="button" data-toggle="collapse" data-parent="#accordion"
-                                           href="#collapseTwo"
-                                           aria-controls="collapseOne">
-                                            <h4 class="panel-title yekanFont normalFontSize">
-                                                اطلاعات تماس
-                                                <i class="material-icons">keyboard_arrow_down</i>
-                                            </h4>
-                                        </a>
-                                    </div>
-                                    <div id="collapseTwo" class="panel-collapse collapse">
-                                        <div class="panel-body">
-
-                                            <div class="info info-horizontal"
-                                                 style="margin-right:0 !important;padding:0 !important;">
-                                                <div class="icon icon-primary pull-right"
-                                                     style="margin-left:5px !important;">
-                                                    <i class="material-icons">phone</i>
-                                                </div>
-                                                <div class="description">
-                                                    <h4 class="info-title yekanFont rtl text-right">
-                                                        شماره تماس : ‌
-                                                        <span class="yekanFont">{{ cafe.phone_number }}</span>
-                                                    </h4>
-                                                </div>
-                                            </div>
-
-                                            <div class="info info-horizontal"
-                                                 style="margin-right:0 !important;padding:0 !important;">
-                                                <div class="icon icon-primary pull-right"
-                                                     style="margin-left:5px !important;">
-                                                    <i class="material-icons">pin_drop</i>
-                                                </div>
-                                                <div class="description">
-                                                    <h4 class="info-title yekanFont">آدرس کافه : </h4>
-                                                    <p class="yekanFont normalFontSize text-justify">
-                                                        {{ cafe.address }}
-                                                    </p>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!--  end acordeon -->
 
 
                         <div class="row text-right">

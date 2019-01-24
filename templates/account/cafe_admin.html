@@ -106,16 +106,15 @@
                                             </thead>
                                             <tbody id="myTable">
                                             {% for discount , value in cafe_profile_discounts.items %}
-
                                                 {% for user_discount in value %}
 
                                                     <tr>
                                                         <td class="text-center">{{ user_discount.pk }}</td>
                                                         <!--<td>کافه اسنیدز</td>-->
-                                                        <td>{{ user_discount.user.username }}</td>
-                                                        <td>{{ user_discount }}</td>
-                                                        <td>{{ user_discount.code }}</td>
-                                                        <td>{{ user_discount.date }}</td>
+                                                        <td class="text-center">{{ user_discount.user.username }}</td>
+                                                        <td class="text-center">{{ user_discount }}</td>
+                                                        <td class="text-center">{{ user_discount.code }}</td>
+                                                        <td class="text-center">{{ user_discount.date }}</td>
                                                         <td class="td-actions text-center">
                                                             <a type="button" rel="tooltip"
                                                                href="{% url "account:delete_discount" %}?pk={{ user_discount.pk }}"
@@ -319,5 +318,7 @@
         </div><!-- section -->
     </div>
 
+    <br/>
+    <br/>
 {% endblock main_content %}
 

@@ -10,7 +10,7 @@
             <div class="row">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="brand">
-                        <h1 class="title yekanFont rtl">{{ user.username }} گرامی، خوش آمدید</h1>
+                        <h1 class="title yekanFont rtl">پروفایل کاربری</h1>
                         <h3 class="yekanFont rtl">
                             با اسنیدز همراه باشید...
                         </h3>
@@ -185,9 +185,9 @@
                                             {% for discount in user_active_discounts %}
 
                                                 <tr>
-                                                    <td>{{ discount.discount }}</td>
-                                                    <td>{{ discount.code }}</td>
-                                                    <td>{{ discount.date }}</td>
+                                                    <td class="text-center">{{ discount.discount }}</td>
+                                                    <td class="text-center">{{ discount.code }}</td>
+                                                    <td class="text-center" >{{ discount.date }}</td>
                                                     <td class="td-actions text-right">
                                                         <button type="button" rel="tooltip"
                                                                 class="btn btn-success yekanFont"
@@ -207,9 +207,9 @@
                                             {% for used_discount in user_used_discounts_archive %}
 
                                                 <tr>
-                                                    <td>{{ used_discount }}</td>
-                                                    <td>استفاده شد</td>
-                                                    <td>{{ used_discount.date }}</td>
+                                                    <td class="text-center">{{ used_discount }}</td>
+                                                    <td class="text-center">استفاده شد</td>
+                                                    <td class="text-center">{{ used_discount.date }}</td>
                                                     <td class="td-actions text-right">
                                                         <button type="button" rel="tooltip"
                                                                 class="btn btn-danger yekanFont"
