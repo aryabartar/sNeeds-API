@@ -1,6 +1,13 @@
 from django.contrib import admin
-from .models import Topic , Post
+from .models import Topic, Post
+from .forms import PostForm
 
-# Register your models here.
 admin.site.register(Topic)
-admin.site.register(Post)
+
+
+class PostAdmin(admin.ModelAdmin):
+    list_display = ['title', 'topic', 'updated', 'timestamp']
+    form = PostForm
+
+
+admin.site.register(Post, PostAdmin)
