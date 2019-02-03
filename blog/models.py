@@ -9,6 +9,15 @@ class Topic(models.Model):
         return self.title
 
 
+class PostQuerySet(models.QuerySet):
+    pass
+
+
+class PostManager(models.Manager):
+    def get_queryset(self):
+        return PostQuerySet(self.model, using=self._db)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     content = models.TextField(null=False, blank=False)
@@ -16,3 +25,7 @@ class Post(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+    class Meta:
+        verbose_name = "Post title"
+        verbose_name_plural = "Post titles"

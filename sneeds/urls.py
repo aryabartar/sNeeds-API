@@ -30,5 +30,5 @@ urlpatterns = [
     path('search/', include(search_urls)),
     # If you're intending to use the browsable API you'll probably also want to add REST framework's
     # login and logout views.
-    path('^api-auth/', include('rest_framework.urls'))
+    re_path('^api-auth/', include('rest_framework.urls'))
 ]
