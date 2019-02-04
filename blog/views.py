@@ -40,7 +40,7 @@ class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostSerializer
 
     # Override get method(default returns 'id')
-    def get_object(self, *args, **kwargs):
+    def get_object(self):
         """
         Returns post according to 'slug' and 'topic_slug'
         """
@@ -50,9 +50,12 @@ class PostDetail(generics.RetrieveAPIView):
         return Post.objects.get(slug=slug, topic__slug=topic_slug)
 
 
-class TopicDetail(generics.RetrieveAPIView):
+class TopicDetail(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
-    queryset = Topic.objects.all()
-    serializer_class = TopicSerializer
-    lookup_field = 'slug'
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        topic_slug = self.kwargs['topic_slug']
+        qs = Post.objects.filter(topic__slug=topic_slug)
+        return qs
