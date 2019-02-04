@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, UserComment
+from .models import Post, UserComment, Topic
 
 
 # serializes Post objects
@@ -12,6 +12,15 @@ class PostSerializer(serializers.ModelSerializer):
             'topic',
             'updated',
             'timestamp',
+        ]
+
+
+class TopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = [
+            'title',
+            'slug',
         ]
 
 

@@ -2,9 +2,16 @@ from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Post, UserComment
-from .serializers import PostSerializer, \
-    UserCommentSerializer
+from .models import (
+    Post,
+    UserComment,
+    Topic,
+)
+
+from .serializers import (
+    PostSerializer,
+    UserCommentSerializer,
+)
 
 
 # Create your views here.
@@ -40,3 +47,10 @@ class PostDetail(generics.RetrieveAPIView):
         slug = kwargs.get('slug')
         topic_slug = kwargs.get('topic_slug')
         return Post.objects.get(slug=slug, topic__slug=topic_slug)
+
+
+class TopicDetail(generics.RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Topic.objects.all()
+    serializer_class = PostSerializer
