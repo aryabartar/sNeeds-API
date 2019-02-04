@@ -22,8 +22,10 @@ class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     content = models.TextField(null=False, blank=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
-    updated = models.DateTimeField(auto_now=True , null=True)
-    timestamp = models.DateTimeField(auto_now_add=True , null=True)
+    updated = models.DateTimeField(auto_now=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True, null=True)
+
+    objects = PostManager()
 
     def __str__(self):
         return "{}".format(self.title)
