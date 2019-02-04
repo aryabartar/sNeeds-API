@@ -17,14 +17,22 @@ from .serializers import (
 
 
 # Create your views here.
-class FirstPage(APIView):
+class FirstPage(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
 
-    def get(self, request):
-        qs = Post.objects.all()
-        serializer = PostSerializer(qs, many=True)
-        return Response(serializer.data)
+
+class TopicDetail(generics.ListAPIView):
+    permission_classes = []
+    authentication_classes = []
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        topic_slug = self.kwargs['topic_slug']
+        qs = Post.objects.filter(topic__slug=topic_slug)
+        return qs
 
 
 class PostDetail(generics.RetrieveAPIView):
@@ -42,17 +50,6 @@ class PostDetail(generics.RetrieveAPIView):
         slug = kwargs.get('post_slug')
         topic_slug = kwargs.get('topic_slug')
         return Post.objects.get(slug=slug, topic__slug=topic_slug)
-
-
-class TopicDetail(generics.ListAPIView):
-    permission_classes = []
-    authentication_classes = []
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        topic_slug = self.kwargs['topic_slug']
-        qs = Post.objects.filter(topic__slug=topic_slug)
-        return qs
 
 
 class CreateUserComment(generics.CreateAPIView):
