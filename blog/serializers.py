@@ -22,3 +22,9 @@ class UserCommentSerializer(serializers.ModelSerializer):
             'user',
             'content',
         ]
+
+    # validates content data
+    def validate_content(self, value):
+        if len(value) > 200:
+            raise serializers.ValidationError("This comment is long!")
+        return value
