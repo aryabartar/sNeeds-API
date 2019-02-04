@@ -1,13 +1,14 @@
 from django.contrib import admin
 from .models import Topic, Post, UserComment
-from .forms import PostForm
 
 admin.site.register(Topic)
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['title', 'topic', 'updated', 'timestamp']
-    form = PostForm
+    list_display = ['title', 'topic', 'slug', 'updated', 'timestamp']
+
+    class Meta:
+        model = Post
 
 
 class UserCommentAdmin(admin.ModelAdmin):
