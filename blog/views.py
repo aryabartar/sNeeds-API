@@ -26,13 +26,6 @@ class FirstPage(APIView):
         return Response(serializer.data)
 
 
-class CreateUserComment(generics.CreateAPIView):
-    permission_classes = []
-    authentication_classes = []
-    queryset = UserComment.objects.all()
-    serializer_class = UserCommentSerializer
-
-
 class PostDetail(generics.RetrieveAPIView):
     permission_classes = []
     authentication_classes = []
@@ -60,3 +53,19 @@ class TopicDetail(generics.ListAPIView):
         qs = Post.objects.filter(topic__slug=topic_slug)
         return qs
 
+
+class CreateUserComment(generics.CreateAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = UserComment.objects.all()
+    serializer_class = UserCommentSerializer
+
+
+class GetPostComments(APIView):
+    def get(self, request,  *args, **kwargs):
+        post_slug = kwargs['post_slug']
+        post = Post.objects.get(slug=post_slug)
+        user_comments = post.commnets
+
+        serializer = UserCommentSerializer(user_comments, many=True)
+        return Response(serializer.data)
