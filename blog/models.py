@@ -33,7 +33,7 @@ class Post(models.Model):
 class UserComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     content = models.TextField(null=False, blank=False, max_length=400)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="commnets")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
 
     def __str__(self):
         return "{}".format(self.content)
@@ -42,7 +42,7 @@ class UserComment(models.Model):
 class AdminComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     content = models.TextField(null=False, blank=False, max_length=400)
-    user_comment = models.ForeignKey(UserComment, on_delete=models.CASCADE, related_name="admin_comment")
+    user_comment = models.OneToOneField(UserComment, on_delete=models.CASCADE, related_name="admin_comment")
 
     def __str__(self):
         return "{}".format(self.content)

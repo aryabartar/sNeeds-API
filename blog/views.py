@@ -12,6 +12,7 @@ from .serializers import (
     PostSerializer,
     UserCommentSerializer,
     TopicSerializer,
+    PostCommentsSerializer,
 )
 
 
@@ -62,10 +63,25 @@ class CreateUserComment(generics.CreateAPIView):
 
 
 class GetPostComments(APIView):
-    def get(self, request,  *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         post_slug = kwargs['post_slug']
         post = Post.objects.get(slug=post_slug)
-        user_comments = post.commnets
+        user_comments = post.comments.all()
 
-        serializer = UserCommentSerializer(user_comments, many=True)
+        context = []
+        for comment in user_comments:
+            admin_comment = None
+            try:
+                admin_comment = comment.admin_comment.content
+            except:
+                pass
+
+            dict = {"username": comment.user.username,
+                    "comment": comment.content,
+                    "admin_name": "اسنیدز",
+                    "admin_answer": admin_comment
+                    }
+            context.append(dict)
+
+        serializer = PostCommentsSerializer(context, many=True)
         return Response(serializer.data)

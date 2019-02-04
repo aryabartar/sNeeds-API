@@ -40,7 +40,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
         return value
 
 
-class PostCommentSerializer(serializers.Serializer):
+class PostCommentsSerializer(serializers.Serializer):
     """
     This serializer is used to serialize comments for a post.
     In other words UserComment and AdminComments are combined together.
