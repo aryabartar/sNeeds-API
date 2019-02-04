@@ -1,10 +1,14 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 
 
 class Topic(models.Model):
     title = models.CharField(max_length=100, blank=False, unique=True)
     slug = models.SlugField(null=True, unique=True)
+
+    def get_absolute_url(self):
+        return reverse('blog:topic', kwargs={"topic_slug": self.slug})
 
     def __str__(self):
         return self.title
@@ -29,6 +33,9 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
 
     objects = PostManager()
+
+    def get_absolute_url(self):
+        return reverse('blog:post', kwargs={"topic_slug": self.topic.slug, "post_slug": self.slug})
 
     def __str__(self):
         return "{}".format(self.title)

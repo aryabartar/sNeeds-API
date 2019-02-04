@@ -45,7 +45,7 @@ class PostDetail(generics.RetrieveAPIView):
         Returns post according to 'slug' and 'topic_slug'
         """
         kwargs = self.kwargs
-        slug = kwargs.get('slug')
+        slug = kwargs.get('post_slug')
         topic_slug = kwargs.get('topic_slug')
         return Post.objects.get(slug=slug, topic__slug=topic_slug)
 
