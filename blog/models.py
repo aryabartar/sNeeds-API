@@ -37,3 +37,12 @@ class UserComment(models.Model):
 
     def __str__(self):
         return "{}".format(self.content)
+
+
+class AdminComment(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    content = models.TextField(null=False, blank=False, max_length=400)
+    user_comment = models.ForeignKey(UserComment, on_delete=models.CASCADE, related_name="admin_comment")
+
+    def __str__(self):
+        return "{}".format(self.content)

@@ -59,3 +59,4 @@ class TopicDetail(generics.ListAPIView):
         topic_slug = self.kwargs['topic_slug']
         qs = Post.objects.filter(topic__slug=topic_slug)
         return qs
+
