@@ -4,15 +4,11 @@ from .models import Post, UserComment, Topic
 
 # serializes Post objects
 class PostSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Post
-        fields = [
-            'title',
-            'content',
-            'topic',
-            'updated',
-            'timestamp',
-        ]
+        fields = '__all__'
+
 
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -49,3 +45,4 @@ class PostCommentsSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=1000)
     admin_name = serializers.CharField(max_length=80)
     admin_answer = serializers.CharField(max_length=1000)
+

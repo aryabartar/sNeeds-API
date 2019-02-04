@@ -85,3 +85,10 @@ class GetPostComments(APIView):
 
         serializer = PostCommentsSerializer(context, many=True)
         return Response(serializer.data)
+
+
+class TopicList(generics.ListAPIView):
+    pagination_class = []
+    authentication_classes = []
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
