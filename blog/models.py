@@ -21,8 +21,10 @@ class PostManager(models.Manager):
 
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
-    content = models.TextField(null=False, blank=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
+    content = models.TextField(null=False, blank=False)
+    slug = models.SlugField(null=False, default="", unique=True)
+
     updated = models.DateTimeField(auto_now=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
 

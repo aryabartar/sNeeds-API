@@ -19,7 +19,7 @@ from . import views
 app_name = "blog"
 urlpatterns = [
     path('', views.FirstPage.as_view()),
-    # path('all-posts', views.PostListView.as_view()),
     path('comment/create', views.CreateUserComment.as_view()),
+    path('post/<str:slug>', views.PostDetail.as_view()),
     # path('comment/create', views.PostCreate.as_view()),
 ]
