@@ -25,6 +25,7 @@ class PostPages(generics.ListAPIView):
     queryset = Post.objects.all()
     pagination_class = LimitOffsetPagination
 
+
 class TopicDetail(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []

@@ -18,6 +18,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
     content = models.TextField(null=False, blank=False)
+    tags = models.CharField(max_length=200, null=True, blank=True, help_text="Sample form : آریا، آمریکا، اپلای")
     slug = models.SlugField(null=False, default="", unique=True)
 
     updated = models.DateTimeField(auto_now=True, null=True)
@@ -28,6 +29,10 @@ class Post(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+
+class PostTag(models.Model):
+    tag = models.CharField(max_length=120)
 
 
 class UserComment(models.Model):
