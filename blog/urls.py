@@ -18,7 +18,7 @@ from . import views
 
 app_name = "blog"
 urlpatterns = [
-    path('', views.FirstPage.as_view()),
+    path('', views.PostPages.as_view()),
     path('comment/create', views.CreateUserComment.as_view()),
     path('comment/<str:post_slug>', views.GetPostComments.as_view()),
     path('post/<str:topic_slug>', views.TopicDetail.as_view(), name="topic"),  # Topic

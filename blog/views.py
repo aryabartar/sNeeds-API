@@ -1,6 +1,7 @@
 from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.pagination import LimitOffsetPagination
 
 from .models import (
     Post,
@@ -17,17 +18,18 @@ from .serializers import (
 
 
 # Create your views here.
-class FirstPage(generics.ListAPIView):
+class PostPages(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
     serializer_class = PostSerializer
     queryset = Post.objects.all()
-
+    pagination_class = LimitOffsetPagination
 
 class TopicDetail(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
     serializer_class = PostSerializer
+    pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
         topic_slug = self.kwargs['topic_slug']
