@@ -35,6 +35,7 @@ class Post(models.Model):
 class UserComment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     content = models.TextField(null=False, blank=False, max_length=400)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="commnets")
 
     def __str__(self):
         return "{}".format(self.content)

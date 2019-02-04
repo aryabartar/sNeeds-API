@@ -30,6 +30,4 @@ urlpatterns = [
                   path('booklets/download/new/<str:slug>', views.get_booklet, name="booklets"),
                   path('booklets/<str:field_slug>/<str:slug>', views.BookletTopicView.as_view(), name="booklets_topic"),
                   re_path(r'^category/(?P<hierarchy>.+)/$', views.show_category, name='category'),
-                  path('blog/', views.blog_posts),#Automatically goes to first page (default page is 1)
-                  path('blog/<int:page>', views.blog_posts, name="blog"),#Goes to specific page of the blog
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

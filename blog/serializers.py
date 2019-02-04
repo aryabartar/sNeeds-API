@@ -21,6 +21,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
         fields = [
             'user',
             'content',
+            'post',
         ]
 
     # validates content data
