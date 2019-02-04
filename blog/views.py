@@ -11,6 +11,7 @@ from .models import (
 from .serializers import (
     PostSerializer,
     UserCommentSerializer,
+    TopicSerializer,
 )
 
 
@@ -53,4 +54,5 @@ class TopicDetail(generics.RetrieveAPIView):
     permission_classes = []
     authentication_classes = []
     queryset = Topic.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = TopicSerializer
+    lookup_field = 'slug'
