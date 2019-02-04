@@ -30,4 +30,13 @@ class PostDetail(generics.RetrieveAPIView):
     authentication_classes = []
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    lookup_field = 'slug'
+
+    # Override get method(default returns 'id')
+    def get_object(self, *args, **kwargs):
+        """
+        Returns post according to 'slug' and 'topic_slug'
+        """
+        kwargs = self.kwargs
+        slug = kwargs.get('slug')
+        topic_slug = kwargs.get('topic_slug')
+        return Post.objects.get(slug=slug, topic__slug=topic_slug)
