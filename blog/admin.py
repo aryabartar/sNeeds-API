@@ -11,7 +11,7 @@ class PostAdmin(admin.ModelAdmin):
 
 
 class UserCommentAdmin(admin.ModelAdmin):
-    list_display = ['content', 'user']
+    list_display = ['content', 'post', 'user']
 
     class Meta:
         model = UserComment

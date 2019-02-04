@@ -24,10 +24,10 @@ class CreateUserComment(generics.CreateAPIView):
     queryset = UserComment.objects.all()
     serializer_class = UserCommentSerializer
 
-# class PostListView(generics.ListAPIView):
-#     permission_classes = []
-#     authentication_classes = []
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#
-#     def get_queryset(self):
+
+class PostDetail(generics.RetrieveAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    lookup_field = 'slug'
