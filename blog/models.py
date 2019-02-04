@@ -14,15 +14,6 @@ class Topic(models.Model):
         return self.title
 
 
-class PostQuerySet(models.QuerySet):
-    pass
-
-
-class PostManager(models.Manager):
-    def get_queryset(self):
-        return PostQuerySet(self.model, using=self._db)
-
-
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
@@ -31,8 +22,6 @@ class Post(models.Model):
 
     updated = models.DateTimeField(auto_now=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
-
-    objects = PostManager()
 
     def get_absolute_url(self):
         return reverse('blog:post', kwargs={"topic_slug": self.topic.slug, "post_slug": self.slug})
