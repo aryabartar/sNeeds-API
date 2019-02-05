@@ -4,6 +4,16 @@ from .models import Post, UserComment, Topic
 
 # serializes Post objects
 class PostSerializer(serializers.ModelSerializer):
+    post_url = serializers.SerializerMethodField()
+
+    def get_post_url(self, post):
+        """
+        This method returns a complete url for a topic.
+        """
+        request = self.context.get('request')
+        topic_url = post.get_absolute_url()
+        return request.build_absolute_uri(topic_url)
+
     class Meta:
         model = Post
         fields = '__all__'
@@ -13,7 +23,9 @@ class TopicSerializer(serializers.ModelSerializer):
     topic_url = serializers.SerializerMethodField()  # Will use get_'get_topic_url' method
 
     def get_topic_url(self, topic):
-        """This method returns a complete url for a topic."""
+        """
+        This method returns a complete url for a topic.
+        """
         request = self.context.get('request')
         topic_url = topic.get_absolute_url()
         return request.build_absolute_uri(topic_url)

@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -34,13 +34,18 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sessions',
+
+    # apps
     'website',
     'widget_tweaks',
     'discounts',
-    'django.contrib.sessions',
-    #whoosh_index and haystack for searching
-    'whoosh',
-    'haystack',
+    'search',
+    'blog',
+
+    # 3rd party packages
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [
