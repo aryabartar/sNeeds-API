@@ -24,7 +24,7 @@ SECRET_KEY = '!-d4b-f(-i7#6mqx1^618-+e2axkjkpgjb6xr=ptp4mx-q&3_$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['193.176.243.12', '127.0.0.1']
 
 # Application definition
 
@@ -140,8 +140,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
-
-
 
 CORS_REPLACE_HTTPS_REFERER = False
 HOST_SCHEME = "http://"
