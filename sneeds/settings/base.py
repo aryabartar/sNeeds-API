@@ -141,12 +141,7 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
-HAYSTACK_CONNECTIONS = {
-    'default': {
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-    },
-}
+
 
 CORS_REPLACE_HTTPS_REFERER = False
 HOST_SCHEME = "http://"

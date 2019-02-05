@@ -24,7 +24,6 @@ urlpatterns = [
                   path('old', views.home_old, name="home_old"),
                   path('posts/<str:slug>', views.get_post, name="posts"),
                   path('booklets/', views.booklet_home, name="booklets_home"),
-                  path('booklets/search/', include('haystack.urls') , name="booklets_search"),
                   path('booklets/user-upload', views.upload_booklet, name="upload_booklet"),
                   path('booklets/<str:slug>', views.BookletFieldView.as_view(), name="booklets_field"),
                   path('booklets/download/new/<str:slug>', views.get_booklet, name="booklets"),
