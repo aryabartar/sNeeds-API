@@ -88,7 +88,11 @@ class GetPostComments(APIView):
 
 
 class TopicList(generics.ListAPIView):
-    pagination_class = []
+    """
+    Returns all topics as a list
+    """
+    permission_classes = []
     authentication_classes = []
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
+
