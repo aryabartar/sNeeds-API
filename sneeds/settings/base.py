@@ -38,7 +38,6 @@ INSTALLED_APPS = [
 
     # apps
     'website',
-    'widget_tweaks',
     'discounts',
     'search',
     'blog',
