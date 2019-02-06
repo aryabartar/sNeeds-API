@@ -1,9 +1,10 @@
-from .base import *
+# from .base import *
 
 from .production import *
 
 try:
-   from .local import *
+    from .local import *
+    print("akbar")
 except:
-   pass
-
+    print("asghar")
+pass
