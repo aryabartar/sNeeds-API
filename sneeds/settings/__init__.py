@@ -1,6 +1,8 @@
 try:
-    print("Running local")
     from .local import *
+    print("Running local")
+
 except:
-    print("Running production")
     from .production import *
+    print("Running production")
+
