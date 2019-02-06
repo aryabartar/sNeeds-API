@@ -1,0 +1,13 @@
+LOGIN PAGE: http://193.176.243.12:8000/admin
+USERNAME: admin
+PASS: Sneeds@203040
+
+-- blog -- 
+http://193.176.243.12:8000/blog/ => Returns blog post
+http://193.176.243.12:8000/blog/?limit=2 => Pagination(limit determins number of posts
+http://193.176.243.12:8000/blog/?limit=2&offset=2 => offset determins page number
+http://193.176.243.12:8000/blog/comment/create => Creates new comment
+http://193.176.243.12:8000/blog/comment/test1-iran => Get comments of a post with "test1-iran" slug
+http://193.176.243.12:8000/blog/topics-list/ => Get all topics list
+http://193.176.243.12:8000/blog/post/iran => Get all posts of a topic with "iran" slug
+http://193.176.243.12:8000/blog/post/iran/test1-iran => Get a post with "test1-iran" slug NOTE: The post's topic's slug should be same as "iran" (only for SEO purposes)
