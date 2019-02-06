@@ -1,7 +1,9 @@
 *.xml
 media/*
+static/*
 db.sqlite3
 .idea/
+static/
 media/
 
 *.egg-info
