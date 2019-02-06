@@ -1,10 +1,9 @@
 *.xml
 media/*
-static/*
 db.sqlite3
 .idea/
-static/
 media/
+settings/local.py
 
 *.egg-info
 *.pot
