@@ -1,0 +1,275 @@
+@font-face {
+    font-family: yekan;
+    src: url("../font/Yekan.ttf");
+}
+
+@font-face {
+    font-family: gadugi;
+    src: url("../font/gadugi.ttf");
+}
+
+@font-face {
+    font-family: iserif;
+    src: url("../font/is.ttf");
+}
+
+* {
+    direction: rtl !important;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    direction: rtl !important;
+}
+
+.rtl {
+    direction: rtl !important;
+}
+
+.d-block {
+    display: block !important;
+}
+
+.clearfix {
+    clear: both;
+}
+
+.topSpace {
+    margin-top: 10px;
+}
+
+.yekanFont {
+    font-family: yekan !important;
+}
+
+.gadugiFont {
+    font-family: gadugi !important;
+}
+
+.serifFont {
+    font-family: iserif !important;
+}
+
+.navbar-brand span.brandName {
+    font-size: 20px;
+}
+
+.navbar-brand span.brandLogo img {
+    max-width: 50px;
+    max-height: 50px;
+    margin-top: -10px;
+    margin-right: 10px;
+}
+
+.float-right {
+    float: right;
+}
+
+.float-left {
+    float: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.miniRightSpace {
+    padding-right: 5px !important;
+}
+
+.bookletSearchForm {
+    margin-top: 10px !important;
+}
+
+.bookletSearchForm input[type="text"] {
+}
+
+.colorWhite {
+    color: white !important;
+}
+
+.customHover {
+    transition: all 0.2s ease-in-out;
+    border-radius: 2px;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.miniTopSpace {
+    margin-top: 5px !important;
+}
+
+.customHover a {
+    transition: all 0.3s ease-in-out;
+}
+
+.customHover:hover > a {
+    color: white !important;
+    background-color: #9c27b0 !important;
+}
+
+.customCard {
+    transition: all 0.3s ease-in-out;
+    border: 1px solid white;
+    border-radius: 3px;
+    padding: 5px;
+}
+
+.customCard:hover {
+    border: 1px solid gray;
+}
+
+#sneedsAdvancedSearchModal button.btn-info {
+    margin-right: 10px;
+}
+
+.goUpBtn {
+    transition: all 0.3s ease-in-out;
+}
+
+.goUpBtn:hover {
+    background-color: #9c27b0 !important;
+}
+
+.customHoverButton {
+    transition: all 0.3s ease-in-out;
+    font-size: 18px;
+}
+
+.customHoverButton:hover {
+    opacity: 0.8;
+}
+
+ul.nav li a {
+    font-size: 17px !important;
+}
+
+.normalFontSize {
+    font-size: 20px !important;
+}
+
+.normalFontSize2 {
+    font-size: 18px !important;
+}
+
+.cafeCard {
+    transition: all 0.1s ease-in-out;
+}
+
+.cafeCard:hover {
+    /*border-radius: 200px;*/
+    border: 1px solid gray;
+}
+
+.activeLinkNewBgColor {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.activeLinkOldBgColor {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.fixTopMarginForRegister {
+    margin-top: 50px !important;
+}
+
+.normalFontSize > button {
+    font-size: 17px !important;
+}
+
+/*** Cafe self slider ****/
+
+.product-slider {
+    padding: 45px;
+}
+
+.product-slider #carousel {
+    border: 4px solid #1089c0;
+    margin: 0;
+}
+
+.product-slider #thumbcarousel {
+    margin: 12px 0 0;
+    /*padding: 0 45px;*/
+}
+
+.product-slider #thumbcarousel .item {
+    text-align: center;
+}
+
+.product-slider #thumbcarousel .item .thumb {
+    border: 4px solid #cecece;
+    width: 20%;
+    margin: 0 2%;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+    max-width: 98px;
+}
+
+.product-slider #thumbcarousel .item .thumb:hover {
+    border-color: #1089c0;
+}
+
+.product-slider .item img {
+    width: 100%;
+    height: auto;
+}
+
+.carousel-control {
+    color: #0284b8;
+    text-align: center;
+    text-shadow: none;
+    font-size: 30px;
+    width: 30px;
+    height: 30px;
+    line-height: 20px;
+    top: 23%;
+}
+
+.carousel-control:hover, .carousel-control:focus, .carousel-control:active {
+    color: #333;
+}
+
+.carousel-caption, .carousel-control .fa {
+    font: normal normal normal 30px/26px FontAwesome;
+}
+
+.carousel-control {
+    background-color: rgba(0, 0, 0, 0);
+    bottom: auto;
+    font-size: 20px;
+    left: 0;
+    position: absolute;
+    top: 30%;
+    width: auto;
+}
+
+.carousel-control.right, .carousel-control.left {
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+}
+
+.carousel-control.right {
+    margin-left: 10px;
+}
+
+.carousel-control.left {
+    margin-right: 10px;
+}
+.customCafeAdminBox{
+    box-shadow:0 0 5px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12)
+}
