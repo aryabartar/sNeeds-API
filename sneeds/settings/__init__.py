@@ -1,8 +1,10 @@
+# from .base import *
+
+from .production import *
+
 try:
-    from .local import *
     print("Running local")
-
+    from .local import *
 except:
-    from .production import *
-    print("Running production")
-
+    print("asghar")
+pass
