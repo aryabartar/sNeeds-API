@@ -3,7 +3,7 @@ from .models import Post, UserComment, Topic, HelloModel
 
 
 class PostSerializer(serializers.ModelSerializer):
-    """Serializes Post objects and associated comments"""
+    """Serializes Post objects and associated comments. """
     post_url = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
 
@@ -14,13 +14,40 @@ class PostSerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(topic_url)
 
     def get_comments(self, post):
-        """Used to get all post comments"""
+        """Used to get all post comments. """
         comments = post.comments.all()
         return UserCommentSerializer(comments, many=True, context=self.context).data
 
     class Meta:
         model = Post
         fields = '__all__'
+
+
+class UserCommentSerializer(serializers.ModelSerializer):
+    admin_answer = serializers.SerializerMethodField()
+
+    def get_admin_answer(self , user_comment):
+        try:
+            admin_answer_content = user_comment.admin_comment.content
+        except :
+            admin_answer_content = None
+
+        return admin_answer_content
+
+    # validates content data
+    def validate_content(self, value):
+        if len(value) > 200:
+            raise serializers.ValidationError("This comment is long!")
+        return value
+
+    class Meta:
+        model = UserComment
+        fields = [
+            'user',
+            'content',
+            'post',
+            'admin_answer',
+        ]
 
 
 class TopicSerializer(serializers.ModelSerializer):
@@ -41,22 +68,6 @@ class TopicSerializer(serializers.ModelSerializer):
             'slug',
             'topic_url',
         ]
-
-
-class UserCommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserComment
-        fields = [
-            'user',
-            'content',
-            'post',
-        ]
-
-    # validates content data
-    def validate_content(self, value):
-        if len(value) > 200:
-            raise serializers.ValidationError("This comment is long!")
-        return value
 
 
 class PostCommentsSerializer(serializers.Serializer):
