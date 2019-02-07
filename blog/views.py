@@ -56,7 +56,7 @@ class PostPages(generics.ListAPIView):
                 )
                 new_post.save()
 
-        # populate_topic()
+        populate_topic()
         populate_post()
 
     permission_classes = []
