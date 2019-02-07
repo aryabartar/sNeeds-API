@@ -42,14 +42,10 @@ INSTALLED_APPS = [
     'discounts',
     'search',
     'blog',
-    'sneeds',
-    'sneeds.settings',
 
     # 3rd party packages
     'rest_framework',
     'corsheaders',
-    'faker',
-    'scripts',
 
 ]
 
@@ -150,4 +146,3 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
 CORS_ORIGIN_ALLOW_ALL = True
-
