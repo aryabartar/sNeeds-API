@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'search',
     'blog',
     'sneeds',
+    'sneeds.settings',
 
     # 3rd party packages
     'rest_framework',
