@@ -2,17 +2,21 @@ from rest_framework import serializers
 from .models import Post, UserComment, Topic, HelloModel
 
 
-# serializes Post objects
 class PostSerializer(serializers.ModelSerializer):
-    # post_url = serializers.SerializerMethodField()
-    #
-    # def get_post_url(self, post):
-    #     """
-    #     This method returns a complete url for a topic.
-    #     """
-    #     request = self.context.get('request')
-    #     topic_url = post.get_absolute_url()
-    #     return request.build_absolute_uri(topic_url)
+    """Serializes Post objects and associated comments"""
+    post_url = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+
+    def get_post_url(self, post):
+        """ This method returns a complete url for a topic. """
+        request = self.context.get('request')
+        topic_url = post.get_absolute_url()
+        return request.build_absolute_uri(topic_url)
+
+    def get_comments(self, post):
+        """Used to get all post comments"""
+        comments = post.comments.all()
+        return UserCommentSerializer(comments, many=True, context=self.context).data
 
     class Meta:
         model = Post

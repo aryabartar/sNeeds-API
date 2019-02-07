@@ -67,17 +67,9 @@ class CreateUserComment(generics.CreateAPIView):
 
 class PostDetail(APIView):
     def get(self, request, post_slug, topic_slug):
-        # TODO:Add url - 404
-        # -- getting post --
         post = Post.objects.get(slug=post_slug, topic__slug=topic_slug)
-        post_serialize = PostSerializer(post)
-
-        # --getting comments --
-        user_comments = post.comments.all()
-        comment_serialize = UserCommentSerializer(user_comments , many=True)
-        print(comment_serialize.data)
-        print(post_serialize.data)
-        return Response(post_serialize.data)
+        post_serialize = PostSerializer(post, context={"request": request})
+        return Response(data=post_serialize.data)
 
 
 class GetPostComments(generics.CreateAPIView, APIView):
