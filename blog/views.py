@@ -29,6 +29,13 @@ class PostPages(generics.ListAPIView):
     pagination_class = LimitOffsetPagination
 
 
+class CreateUserComment(generics.CreateAPIView):
+    permission_classes = []
+    authentication_classes = []
+    queryset = UserComment.objects.all()
+    serializer_class = UserCommentSerializer
+
+
 class TopicDetail(generics.ListAPIView):
     permission_classes = []
     authentication_classes = []
