@@ -2,6 +2,7 @@ import os
 import django
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings'
+
 django.setup()
 
 from blog.models import Topic, Post
