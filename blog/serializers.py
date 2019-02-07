@@ -26,10 +26,10 @@ class PostSerializer(serializers.ModelSerializer):
 class UserCommentSerializer(serializers.ModelSerializer):
     admin_answer = serializers.SerializerMethodField()
 
-    def get_admin_answer(self , user_comment):
+    def get_admin_answer(self, user_comment):
         try:
             admin_answer_content = user_comment.admin_comment.content
-        except :
+        except:
             admin_answer_content = None
 
         return admin_answer_content
@@ -48,6 +48,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
             'post',
             'admin_answer',
         ]
+
 
 
 class TopicSerializer(serializers.ModelSerializer):

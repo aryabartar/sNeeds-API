@@ -14,6 +14,7 @@ from .models import (
 from .serializers import (
     PostSerializer,
     UserCommentSerializer,
+    UserCommentSerializer11,
     TopicSerializer,
     PostCommentsSerializer,
     HelloSerializer,
@@ -41,23 +42,6 @@ class TopicDetail(generics.ListAPIView):
         return qs
 
 
-# class PostDetail(APIView):
-#     permission_classes = []
-#     authentication_classes = []
-#     queryset = Post.objects.all()
-#     serializer_class = PostSerializer
-#
-#     # Override get method(default returns 'id')
-#     def get_object(self):
-#         """
-#         Returns post according to 'slug' and 'topic_slug'
-#         """
-#         kwargs = self.kwargs
-#         slug = kwargs.get('post_slug')
-#         topic_slug = kwargs.get('topic_slug')
-#         return Post.objects.get(slug=slug, topic__slug=topic_slug)
-
-
 class CreateUserComment(generics.CreateAPIView):
     permission_classes = []
     authentication_classes = []
@@ -66,10 +50,20 @@ class CreateUserComment(generics.CreateAPIView):
 
 
 class PostDetail(APIView):
+    serializer_class = UserCommentSerializer
+
     def get(self, request, post_slug, topic_slug):
         post = Post.objects.get(slug=post_slug, topic__slug=topic_slug)
         post_serialize = PostSerializer(post, context={"request": request})
         return Response(data=post_serialize.data)
+
+    def post(self, request, post_slug, topic_slug):
+        comment_serialize = UserCommentSerializer(data=request.data)
+        if comment_serialize.is_valid():
+            comment_serialize.save()
+            return Response(comment_serialize.data)
+        else:
+            return Response(comment_serialize.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class GetPostComments(generics.CreateAPIView, APIView):
