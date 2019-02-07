@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     # 3rd party packages
     'rest_framework',
     'corsheaders',
+    'faker',
+    'scripts',
 
 ]
 

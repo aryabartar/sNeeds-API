@@ -41,7 +41,6 @@ class TopicDetail(generics.ListAPIView):
         return qs
 
 
-
 class PostDetail(APIView):
     serializer_class = UserCommentSerializer
 
