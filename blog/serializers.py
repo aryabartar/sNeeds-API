@@ -64,3 +64,7 @@ class PostCommentsSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=1000)
     admin_name = serializers.CharField(max_length=80)
     admin_answer = serializers.CharField(max_length=1000)
+
+
+class HelloSerializer(serializers.Serializer):
+    name = serializers.CharField(max_length=10)

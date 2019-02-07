@@ -1,7 +1,8 @@
-from rest_framework import generics
+from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
+from .serializers import HelloSerializer
 
 from .models import (
     Post,
@@ -62,7 +63,7 @@ class CreateUserComment(generics.CreateAPIView):
     serializer_class = UserCommentSerializer
 
 
-class GetPostComments(APIView):
+class GetPostComments(generics.CreateAPIView, APIView):
     def get(self, request, *args, **kwargs):
         post_slug = kwargs['post_slug']
         post = Post.objects.get(slug=post_slug)
@@ -86,6 +87,11 @@ class GetPostComments(APIView):
         serializer = PostCommentsSerializer(context, many=True)
         return Response(serializer.data)
 
+    permission_classes = []
+    authentication_classes = []
+    queryset = UserComment.objects.all()
+    serializer_class = UserCommentSerializer
+
 
 class TopicList(generics.ListAPIView):
     """
@@ -96,3 +102,21 @@ class TopicList(generics.ListAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
+
+class Hello(APIView):
+    serializer_class = HelloSerializer
+
+    def get(self, request, format=None):
+        an_api = ['a1', 'a2', 'a3']
+        return Response({"message": "say hello", "an_api": an_api})
+
+    def post(self, request):
+        serilize = HelloSerializer(data=request.data)
+        if serilize.is_valid():
+            return Response({"valid": "hey"})
+        else:
+            return Response(serilize.errors)
+        # return Response(status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, pk=None):
+        return Response({"method": "post"})
