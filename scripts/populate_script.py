@@ -1,7 +1,7 @@
 import os
 import django
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings.production'
 
 django.setup()
 
