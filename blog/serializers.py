@@ -4,15 +4,15 @@ from .models import Post, UserComment, Topic, HelloModel
 
 # serializes Post objects
 class PostSerializer(serializers.ModelSerializer):
-    post_url = serializers.SerializerMethodField()
-
-    def get_post_url(self, post):
-        """
-        This method returns a complete url for a topic.
-        """
-        request = self.context.get('request')
-        topic_url = post.get_absolute_url()
-        return request.build_absolute_uri(topic_url)
+    # post_url = serializers.SerializerMethodField()
+    #
+    # def get_post_url(self, post):
+    #     """
+    #     This method returns a complete url for a topic.
+    #     """
+    #     request = self.context.get('request')
+    #     topic_url = post.get_absolute_url()
+    #     return request.build_absolute_uri(topic_url)
 
     class Meta:
         model = Post
@@ -66,7 +66,7 @@ class PostCommentsSerializer(serializers.Serializer):
     admin_answer = serializers.CharField(max_length=1000)
 
 
-class HelloSerializer(serializers.Serializer):
+class HelloSerializer(serializers.ModelSerializer):
     class Meta:
         model = HelloModel
         fields = '__all__'

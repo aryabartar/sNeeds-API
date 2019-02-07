@@ -1,6 +1,4 @@
 LOGIN PAGE: http://193.176.243.12:8000/admin
-USERNAME: admin
-PASS: Sneeds@203040
 
 -- blog -- 
 http://193.176.243.12:8000/blog/ => Retrieve all blog posts

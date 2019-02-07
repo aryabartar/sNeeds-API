@@ -2,7 +2,7 @@ from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
-from .serializers import HelloSerializer
+from django import http
 
 from .models import (
     Post,
@@ -41,21 +41,21 @@ class TopicDetail(generics.ListAPIView):
         return qs
 
 
-class PostDetail(generics.RetrieveAPIView):
-    permission_classes = []
-    authentication_classes = []
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
-    # Override get method(default returns 'id')
-    def get_object(self):
-        """
-        Returns post according to 'slug' and 'topic_slug'
-        """
-        kwargs = self.kwargs
-        slug = kwargs.get('post_slug')
-        topic_slug = kwargs.get('topic_slug')
-        return Post.objects.get(slug=slug, topic__slug=topic_slug)
+# class PostDetail(APIView):
+#     permission_classes = []
+#     authentication_classes = []
+#     queryset = Post.objects.all()
+#     serializer_class = PostSerializer
+#
+#     # Override get method(default returns 'id')
+#     def get_object(self):
+#         """
+#         Returns post according to 'slug' and 'topic_slug'
+#         """
+#         kwargs = self.kwargs
+#         slug = kwargs.get('post_slug')
+#         topic_slug = kwargs.get('topic_slug')
+#         return Post.objects.get(slug=slug, topic__slug=topic_slug)
 
 
 class CreateUserComment(generics.CreateAPIView):
@@ -63,6 +63,21 @@ class CreateUserComment(generics.CreateAPIView):
     authentication_classes = []
     queryset = UserComment.objects.all()
     serializer_class = UserCommentSerializer
+
+
+class PostDetail(APIView):
+    def get(self, request, post_slug, topic_slug):
+        # TODO:Add url - 404
+        # -- getting post --
+        post = Post.objects.get(slug=post_slug, topic__slug=topic_slug)
+        post_serialize = PostSerializer(post)
+
+        # --getting comments --
+        user_comments = post.comments.all()
+        comment_serialize = UserCommentSerializer(user_comments , many=True)
+        print(comment_serialize.data)
+        print(post_serialize.data)
+        return Response(post_serialize.data)
 
 
 class GetPostComments(generics.CreateAPIView, APIView):
@@ -105,22 +120,41 @@ class TopicList(generics.ListAPIView):
     serializer_class = TopicSerializer
 
 
-class HelloView(APIView):
-    serializer_class = HelloSerializer
-
+class HelloListView(APIView):
     def get(self, request, format=None):
         all_hellos = HelloModel.objects.all()
-        print(all_hellos)
         serializer = HelloSerializer(all_hellos, many=True)
         return Response(serializer.data)
 
     def post(self, request):
-        serilize = HelloSerializer(data=request.data)
-        if serilize.is_valid():
-            return Response({"valid": "hey"})
+        serializer = HelloSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serilize.errors)
-        # return Response(status.HTTP_204_NO_CONTENT)
+            return Response(serializer.errors, status=status.HTTP_204_NO_CONTENT)
 
-    def put(self, request, pk=None):
-        return Response({"method": "post"})
+
+class HelloDetailView(APIView):
+    def get_object(self, pk):
+        try:
+            return HelloModel.objects.get(pk=pk)
+        except HelloModel.DoesNotExist:
+            raise http.Http404
+
+    def get(self, request, pk, format=None):
+        hello = self.get_object(pk)
+        serializer = HelloSerializer(hello)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        serializer = HelloSerializer(request.data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_403_FORBIDDEN)
+
+    # def delete(self, requset, pk, format=None):
+    #     obj = self.get_object(pk)
+    #     obj.delete()
+    #     return Response(status=status.HTTP_204_NO_CONTENT)
