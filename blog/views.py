@@ -8,6 +8,7 @@ from .models import (
     Post,
     UserComment,
     Topic,
+    HelloModel,
 )
 
 from .serializers import (
@@ -15,6 +16,7 @@ from .serializers import (
     UserCommentSerializer,
     TopicSerializer,
     PostCommentsSerializer,
+    HelloSerializer,
 )
 
 
@@ -103,12 +105,14 @@ class TopicList(generics.ListAPIView):
     serializer_class = TopicSerializer
 
 
-class Hello(APIView):
+class HelloView(APIView):
     serializer_class = HelloSerializer
 
     def get(self, request, format=None):
-        an_api = ['a1', 'a2', 'a3']
-        return Response({"message": "say hello", "an_api": an_api})
+        all_hellos = HelloModel.objects.all()
+        print(all_hellos)
+        serializer = HelloSerializer(all_hellos, many=True)
+        return Response(serializer.data)
 
     def post(self, request):
         serilize = HelloSerializer(data=request.data)

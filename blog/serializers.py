@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, UserComment, Topic
+from .models import Post, UserComment, Topic, HelloModel
 
 
 # serializes Post objects
@@ -20,7 +20,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class TopicSerializer(serializers.ModelSerializer):
-    topic_url = serializers.SerializerMethodField()  # Will use get_'get_topic_url' method
+    topic_url = serializers.SerializerMethodField()  # Will use 'get_topic_url' method
 
     def get_topic_url(self, topic):
         """
@@ -67,4 +67,6 @@ class PostCommentsSerializer(serializers.Serializer):
 
 
 class HelloSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=10)
+    class Meta:
+        model = HelloModel
+        fields = '__all__'

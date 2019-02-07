@@ -24,6 +24,6 @@ urlpatterns = [
     path('post/<str:topic_slug>', views.TopicDetail.as_view(), name="topic"),  # Topic
     path('post/<str:topic_slug>/<str:post_slug>', views.PostDetail.as_view(), name='post'),  # Post
     path('topics-list/', views.TopicList.as_view(), name='topic_list'),  # Returns all topics as a list
-    path('hello/', views.Hello.as_view(), name='hello'),  # Returns all topics as a list
+    path('hello/', views.HelloView.as_view(), name='hello'),  # Returns all topics as a list
 
 ]
