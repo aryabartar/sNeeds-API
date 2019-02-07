@@ -37,4 +37,4 @@
 # populate_post()
 
 
-from sneeds.settings import local
+import sneeds
