@@ -14,7 +14,6 @@ from .models import (
 from .serializers import (
     PostSerializer,
     UserCommentSerializer,
-    UserCommentSerializer11,
     TopicSerializer,
     PostCommentsSerializer,
     HelloSerializer,
@@ -42,12 +41,6 @@ class TopicDetail(generics.ListAPIView):
         return qs
 
 
-class CreateUserComment(generics.CreateAPIView):
-    permission_classes = []
-    authentication_classes = []
-    queryset = UserComment.objects.all()
-    serializer_class = UserCommentSerializer
-
 
 class PostDetail(APIView):
     serializer_class = UserCommentSerializer
@@ -64,36 +57,6 @@ class PostDetail(APIView):
             return Response(comment_serialize.data)
         else:
             return Response(comment_serialize.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class GetPostComments(generics.CreateAPIView, APIView):
-    def get(self, request, *args, **kwargs):
-        post_slug = kwargs['post_slug']
-        post = Post.objects.get(slug=post_slug)
-        user_comments = post.comments.all()
-
-        context = []
-        for comment in user_comments:
-            admin_comment = None
-            try:
-                admin_comment = comment.admin_comment.content
-            except:
-                pass
-
-            dict = {"username": comment.user.username,
-                    "comment": comment.content,
-                    "admin_name": "اسنیدز",
-                    "admin_answer": admin_comment
-                    }
-            context.append(dict)
-
-        serializer = PostCommentsSerializer(context, many=True)
-        return Response(serializer.data)
-
-    permission_classes = []
-    authentication_classes = []
-    queryset = UserComment.objects.all()
-    serializer_class = UserCommentSerializer
 
 
 class TopicList(generics.ListAPIView):
