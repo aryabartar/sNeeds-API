@@ -30,7 +30,8 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'post_main_image',
+                  'content', 'aparat_link', 'youtube_link', 'tags', 'timestamp_jalali']
 
 
 class UserCommentSerializer(serializers.ModelSerializer):

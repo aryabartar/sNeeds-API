@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django_jalali.db import models as jmodels
+
 
 
 class Topic(models.Model):
@@ -38,6 +40,7 @@ class Post(models.Model):
 
     updated = models.DateTimeField(auto_now=True, null=True)
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
+    timestamp_jalali = jmodels.jDateField(auto_now_add=True, null=True)
 
     def get_absolute_url(self):
         return reverse('blog:post', kwargs={"topic_slug": self.topic.slug, "post_slug": self.slug})
