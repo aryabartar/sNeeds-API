@@ -19,6 +19,19 @@ from .serializers import (
 # Create your views here.
 class PostPages(generics.ListAPIView):
     def __init__(self):
+        import os
+        import django
+
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings.production'
+
+        django.setup()
+
+        from blog.models import Topic, Post, UserComment
+        from faker import Faker
+        from random import randint
+
+        fake = Faker()
+
         all_posts = Post.objects.all()
         all_posts_number = len(all_posts)
         first_comment = UserComment.objects.first()
