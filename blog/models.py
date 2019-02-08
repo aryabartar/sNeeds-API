@@ -23,8 +23,16 @@ class Post(models.Model):
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
     post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
     content = models.TextField(null=False, blank=False)
-    aparat_link = models.URLField(null=True, blank=True)
-    youtube_link = models.URLField(null=True, blank=True)
+    aparat_link = models.URLField(null=True,
+                                  blank=True,
+                                  help_text="Don't fill this if this post has no "
+                                            "video.\nSapmle: https://www.aparat.com/v/4Y7PV "
+                                  )
+    youtube_link = models.URLField(null=True,
+                                   blank=True,
+                                   help_text="Don't fill this if this post has no "
+                                             "video.\nSample: https://www.youtube.com/watch?v=h1QkGnI4P6g "
+                                   )
     tags = models.CharField(max_length=200, null=True, blank=True, help_text="Sample form : آریا، آمریکا، اپلای")
     slug = models.SlugField(null=False, default="", unique=True)
 
@@ -54,11 +62,3 @@ class AdminComment(models.Model):
 
     def __str__(self):
         return "{}".format(self.content)
-
-
-class HelloModel(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.CharField(max_length=1000)
-
-    def __str__(self):
-        return str(self.title) + str(self.content)
