@@ -42,6 +42,7 @@ class BookletTopic(models.Model):
 
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)
+    information = models.TextField(max_length=10000 , null=True)
     slug = models.SlugField(unique=True, null=False, blank=False)
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE, related_name='booklets', null=False, blank=False)
     teacher = models.CharField(max_length=200, default=None)
