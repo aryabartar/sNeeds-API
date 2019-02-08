@@ -18,30 +18,6 @@ from .serializers import (
 
 # Create your views here.
 class PostPages(generics.ListAPIView):
-    def __init__(self):
-        import os
-        import django
-
-        os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings.production'
-
-        django.setup()
-
-        from blog.models import Topic, Post, UserComment
-        from faker import Faker
-        from random import randint
-
-        fake = Faker()
-
-        all_posts = Post.objects.all()
-        all_posts_number = len(all_posts)
-        first_comment = UserComment.objects.first()
-
-        for i in range(1, 300):
-            content = fake.text()
-            user = first_comment.user
-            post = all_posts[randint(0, all_posts_number - 1)]
-            obj = UserComment(user=user, post=post, content=content)
-            obj.save()
 
     permission_classes = []
     authentication_classes = []
