@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'discounts',
     'search',
     'blog',
+    'booklet',
 
     # 3rd party packages
     'rest_framework',
