@@ -8,6 +8,24 @@ class PostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     topic_name = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
+    jalali_timestamp_string = serializers.SerializerMethodField()
+
+    def get_jalali_timestamp_string(self, post):
+        jalali = str(post.timestamp_jalali).split('-')
+        months = {"1": "فروردین",
+                  "2": "اردیبهشت",
+                  "3": "خرداد",
+                  "4": "تیر",
+                  "5": "مرداد",
+                  "6": "شهریور",
+                  "7": "مهر",
+                  "8": "آبان",
+                  "9": "آذر",
+                  "10": "دی",
+                  "11": "بهمن",
+                  "12": "اسفند",
+                  }
+        return {"day": str(jalali[2]), "month": str(months[jalali[1]]), "year": jalali[0][2:]}
 
     def get_topic_url(self, post):
         request = self.context.get('request')
@@ -31,7 +49,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'post_main_image',
-                  'content', 'aparat_link', 'youtube_link', 'tags', 'timestamp_jalali']
+                  'content', 'aparat_link', 'youtube_link', 'tags', 'jalali_timestamp_string']
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
