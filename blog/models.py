@@ -4,7 +4,6 @@ from django.urls import reverse
 from django_jalali.db import models as jmodels
 
 
-
 class Topic(models.Model):
     title = models.CharField(max_length=100, blank=False, unique=True)
     slug = models.SlugField(null=True, unique=True)
@@ -24,7 +23,8 @@ class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
     post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
-    content = models.TextField(null=False, blank=False)
+    short_description = models.TextField(null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
     aparat_link = models.URLField(null=True,
                                   blank=True,
                                   help_text="Don't fill this if this post has no "
