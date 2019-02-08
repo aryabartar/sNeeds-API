@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Topic, Post, UserComment, AdminComment, HelloModel
+from .models import Topic, Post, UserComment, AdminComment
 
 admin.site.register(Topic)
 
@@ -21,4 +21,3 @@ class UserCommentAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(UserComment, UserCommentAdmin)
 admin.site.register(AdminComment)
-admin.site.register(HelloModel)

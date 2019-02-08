@@ -1,11 +1,22 @@
 LOGIN PAGE: http://193.176.243.12:8000/admin
 
 -- blog -- 
-http://193.176.243.12:8000/blog/ => Retrieve all blog posts
-http://193.176.243.12:8000/blog/?limit=2 => Pagination(limit determins number of posts)
-http://193.176.243.12:8000/blog/?limit=2&offset=2 => offset determins page number
-http://193.176.243.12:8000/blog/comment/create => Creates new comment
-http://193.176.243.12:8000/blog/comment/test1-iran => Retrieve comments of a post with "test1-iran" slug
-http://193.176.243.12:8000/blog/topics-list/ => Retrieve all topics list
-http://193.176.243.12:8000/blog/post/iran => Retrieve all posts of a topic with "iran" slug
-http://193.176.243.12:8000/blog/post/iran/test1-iran => Retrieve a post with "test1-iran" slug NOTE: The post's topic's slug should be same as "iran" (only for SEO purposes)
+http://hostname/blog/ => Retrieve all blog posts
+http://hostname/blog/?limit=2 => Retrieve post with Pagination(limit determines number of posts)
+http://hostname/blog/?limit=2&offset=4 => Retrieve post with Pagination(offset stands for current page,current page in this example is 5)
+
+http://hostname/blog/topics-list/ => Retrieve all topics (Pagination is not implemented yet because topics number is limited)
+
+http://hostname/blog/post/test-topic-1/ => Retrieve all posts with topic that it's slug is "test-topic-1"
+http://hostname/blog/post/test-topic-1/?limit=2 => Retrieve with pagination (page limit is 2)
+http://hostname/blog/post/test-topic-1/?limit=2&offset=4  => Retrieve with pagination(page limit is 2 and current page is 5)
+
+http://hostname/blog/post/usa/is-amirkabir-good/ => Retrieve post which its topic's slug is "usa" and post slug is "is-amirkabir-good"
+This endpoint also returns post comments and also admin reply to that comment.
+http://hostname/blog/post/usa/is-amirkabir-good/ => Post request to add comment to this post.
+sample Post request:
+        {
+            "user": 2,
+            "content": "THIS POST IS GREAT!",
+            "post": 3
+        }

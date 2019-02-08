@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post, UserComment, Topic, HelloModel
+from .models import Post, UserComment, Topic
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -50,7 +50,6 @@ class UserCommentSerializer(serializers.ModelSerializer):
         ]
 
 
-
 class TopicSerializer(serializers.ModelSerializer):
     topic_url = serializers.SerializerMethodField()  # Will use 'get_topic_url' method
 
@@ -81,4 +80,3 @@ class PostCommentsSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=1000)
     admin_name = serializers.CharField(max_length=80)
     admin_answer = serializers.CharField(max_length=1000)
-

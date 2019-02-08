@@ -2,21 +2,17 @@ from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
-from django import http
 
 from .models import (
     Post,
     UserComment,
     Topic,
-    HelloModel,
 )
 
 from .serializers import (
     PostSerializer,
     UserCommentSerializer,
     TopicSerializer,
-    PostCommentsSerializer,
-    HelloSerializer,
 )
 
 
