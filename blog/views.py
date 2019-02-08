@@ -63,8 +63,8 @@ class PostPages(generics.ListAPIView):
                 )
                 new_post.save()
 
-        populate_topic()
-        # populate_post()
+        # populate_topic()
+        populate_post()
 
     permission_classes = []
     authentication_classes = []
