@@ -18,7 +18,11 @@ from .serializers import (
 
 # Create your views here.
 class PostPages(generics.ListAPIView):
-
+    def __init__(self):
+        all_posts = Post.objects.all()
+        for post in all_posts:
+            post.short_description = "فیلم Widows به کارگردانی استیو مک‌کویین بعد از «ماموریت غیرممکن: فال‌اوت»، بهترین بلاک‌باسترِ اولد-اسکول سال ۲۰۱۸ است. همراه نقد آریا برتر باشید."
+            post.save()
 
     permission_classes = []
     authentication_classes = []

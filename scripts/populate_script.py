@@ -70,6 +70,11 @@ def populate_admin_answer():
         except:
             pass
 
+def populate_short_description_field() :
+    all_posts = Post.objects.all()
+    for post in all_posts :
+        post.short_description = "فیلم Widows به کارگردانی استیو مک‌کویین بعد از «ماموریت غیرممکن: فال‌اوت»، بهترین بلاک‌باسترِ اولد-اسکول سال ۲۰۱۸ است. همراه نقد آریا برتر باشید."
+        post.save()
 
 # populate_topic()
 # populate_post()
