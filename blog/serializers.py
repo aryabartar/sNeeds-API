@@ -54,6 +54,16 @@ class PostSerializer(serializers.ModelSerializer):
 
 class UserCommentSerializer(serializers.ModelSerializer):
     admin_answer = serializers.SerializerMethodField()
+    username = serializers.SerializerMethodField()
+    post = serializers.SerializerMethodField()
+
+    def get_post(self , user_comment):
+        request = self.context.get('request')
+        post_url = user_comment.post.get_absolute_url()
+        return request.build_absolute_uri(post_url)
+
+    def get_username(self, user_comment):
+        return user_comment.user.username
 
     def get_admin_answer(self, user_comment):
         try:
@@ -72,7 +82,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserComment
         fields = [
-            'user',
+            'username',
             'content',
             'post',
             'admin_answer',
