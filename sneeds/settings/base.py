@@ -145,5 +145,5 @@ LOGOUT_REDIRECT_URL = 'account:logout_success'
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
 CORS_ORIGIN_ALLOW_ALL = True
-# CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_CREDENTIALS = False
 
