@@ -18,6 +18,12 @@ from .serializers import (
 
 # Create your views here.
 class PostPages(generics.ListAPIView):
+    def __init__(self):
+        all_user_comments = UserComment.objects.all()
+        for obj in all_user_comments :
+            obj.content = "این یه کامنت تسته. این کامنت خیلی خوشگله و سایت خوشگل‌تر. خسته نباشی رفیق ایام به کام :))"
+            obj.save()
+
 
     permission_classes = []
     authentication_classes = []
