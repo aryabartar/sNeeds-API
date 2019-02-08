@@ -19,10 +19,32 @@ from .serializers import (
 # Create your views here.
 class PostPages(generics.ListAPIView):
     def __init__(self):
-        all_user_comments = UserComment.objects.all()
-        for obj in all_user_comments :
-            obj.content = "این یه کامنت تسته. این کامنت خیلی خوشگله و سایت خوشگل‌تر. خسته نباشی رفیق ایام به کام :))"
-            obj.save()
+        import os
+        import django
+
+        os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings.production'
+
+        django.setup()
+
+        from blog.models import Topic, Post, UserComment, AdminComment
+        from faker import Faker
+        from random import randint
+
+        fake = Faker()
+
+
+
+        all_comments = UserComment.objects.all()
+        all_comments_number = len(all_comments)
+
+        for i in range(0, all_comments_number // 2):
+            try:
+                content = "من ادمینم و مثلا بهت یه جواب دادم. ایول که اومدی کامنت گذاشتی. خیلی حال دادی"
+                comment = all_comments[randint(0, all_comments_number - 1)]
+                obj = AdminComment(content=content, user_comment=comment)
+                obj.save()
+            except:
+                pass
 
 
     permission_classes = []

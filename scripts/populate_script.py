@@ -5,7 +5,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'sneeds.settings.production'
 
 django.setup()
 
-from blog.models import Topic, Post, UserComment
+from blog.models import Topic, Post, UserComment, AdminComment
 from faker import Faker
 from random import randint
 
@@ -50,13 +50,28 @@ def populate_comments():
     first_comment = UserComment.objects.first()
 
     for i in range(1, 300):
-        content = fake.text()
+        content = "این یه کامنت تسته. این کامنت خیلی خوشگله و سایت خوشگل‌تر. خسته نباشی رفیق ایام به کام :))"
         user = first_comment.user
         post = all_posts[randint(0, all_posts_number - 1)]
         obj = UserComment(user=user, post=post, content=content)
         obj.save()
 
 
+def populate_admin_answer():
+    all_comments = UserComment.objects.all()
+    all_comments_number = len(all_comments)
+
+    for i in range(0, all_comments_number // 2):
+        try:
+            content = "من ادمینم و مثلا بهت یه جواب دادم. ایول که اومدی کامنت گذاشتی. خیلی حال دادی"
+            comment = all_comments[randint(0, all_comments_number - 1)]
+            obj = AdminComment(content=content,user_comment=comment)
+            obj.save()
+        except:
+            pass
+
+
 # populate_topic()
 # populate_post()
-populate_comments()
+# populate_comments()
+populate_admin_answer()
