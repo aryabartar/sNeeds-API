@@ -14,10 +14,17 @@ class Topic(models.Model):
         return self.title
 
 
+def upload_post_image(instance, filename):
+    return "status/{slug}/{filename}".format(slug=instance.slug, filename=filename)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
+    post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
     content = models.TextField(null=False, blank=False)
+    aparat_link = models.URLField(null=True, blank=True)
+    youtube_link = models.URLField(null=True, blank=True)
     tags = models.CharField(max_length=200, null=True, blank=True, help_text="Sample form : آریا، آمریکا، اپلای")
     slug = models.SlugField(null=False, default="", unique=True)
 
