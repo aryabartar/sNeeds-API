@@ -56,6 +56,13 @@ class TopicSerializer(TopicSerializerWhitNoBooklet):
         topic_booklets_serialize = BookletSerializer(topic_booklets, many=True, context=self.context)
         return topic_booklets_serialize.data
 
+    # TODO: Make this more flexible later
+    class Meta:
+        model = BookletTopic
+        fields = [
+            'title', 'topic_url', 'field', 'field_url', 'slug', 'topic_booklets',
+        ]
+
 
 class BookletSerializer(serializers.ModelSerializer):
     topic = serializers.SerializerMethodField()
@@ -91,7 +98,7 @@ class BookletSerializer(serializers.ModelSerializer):
         model = Booklet
         fields = [
             'title', 'information', 'teacher', 'slug',
-            'booklet_content', 'booklet_image', 'topic',
-            'topic_slug', 'topic_url', 'field', 'field_slug',
+            'booklet_content', 'booklet_image', 'number_of_likes', 'number_of_dislikes',
+            'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
             'field_url',
         ]
