@@ -50,7 +50,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'post_main_image', 'short_description',
-                  'content', 'aparat_link', 'youtube_link', 'tags', 'jalali_timestamp_string', 'slug']
+                  'aparat_link', 'youtube_link', 'tags', 'jalali_timestamp_string', 'slug']
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
@@ -58,7 +58,7 @@ class UserCommentSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField()
     post = serializers.SerializerMethodField()
 
-    def get_post(self , user_comment):
+    def get_post(self, user_comment):
         request = self.context.get('request')
         post_url = user_comment.post.get_absolute_url()
         return request.build_absolute_uri(post_url)

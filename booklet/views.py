@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import BookletField, BookletTopic, Booklet
-from .serializers import FieldSerializer, TopicSerializer, BookletSerializer
+from .serializers import FieldSerializerWithNoBookletShow ,FieldSerializer, TopicSerializer, BookletSerializer
 
 
 class GetFieldsList(APIView):
     def get(self, request):
         all_fields = BookletField.objects.all()
-        serialize_fields = FieldSerializer(all_fields, many=True, context={'request': request})
+        serialize_fields = FieldSerializerWithNoBookletShow(all_fields, many=True, context={'request': request})
         return Response(serialize_fields.data)
 
 

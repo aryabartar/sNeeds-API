@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import BookletField, BookletTopic, Booklet
 
 
-class FieldSerializer(serializers.ModelSerializer):
+class FieldSerializerWithNoBookletShow(serializers.ModelSerializer):
     topics = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
 
@@ -14,13 +14,19 @@ class FieldSerializer(serializers.ModelSerializer):
 
     def get_topics(self, field):
         all_field_topics = field.topics.all()
-        return TopicSerializer(all_field_topics, many=True, context=self.context).data
+        return TopicSerializerWithNoBooklet(all_field_topics, many=True, context=self.context).data
 
     class Meta:
         model = BookletField
         fields = [
             'title', 'field_url', 'slug', 'topics'
         ]
+
+
+class FieldSerializer(FieldSerializerWithNoBookletShow):
+    def get_topics(self, field):
+        all_field_topics = field.topics.all()
+        return TopicSerializer(all_field_topics, many=True, context=self.context).data
 
 
 class TopicSerializerWithNoBooklet(serializers.ModelSerializer):

@@ -24,7 +24,6 @@ class Post(models.Model):
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
     post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
     short_description = models.TextField(null=True, blank=True)
-    content = models.TextField(null=True, blank=True)
     aparat_link = models.URLField(null=True,
                                   blank=True,
                                   help_text="Don't fill this if this post has no "
