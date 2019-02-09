@@ -22,6 +22,6 @@ app_name = "booklet"
 urlpatterns = [
     path('', views.GetFieldsList.as_view(), name='get_fields_list'),
     path('<str:field_slug>/', views.GetField.as_view(), name='get_field'),
-    path('<str:field_slug>/<str:topic_slug>', views.GetTopic.as_view(), name='get_topic'),
+    path('<str:field_slug>/<str:topic_slug>/', views.GetTopic.as_view(), name='get_topic'),
 
 ]

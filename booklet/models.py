@@ -12,7 +12,6 @@ class BookletField(models.Model):
     slug = models.SlugField(null=True, help_text="Lower case")
 
     def get_absolute_url(self):
-        """Returns the url to access a detail record for this book."""
         return reverse('booklet:get_field', kwargs={"field_slug": self.slug})
 
     def __str__(self):
@@ -33,11 +32,10 @@ class BookletTopic(models.Model):
                              null=False,
                              help_text="Sample: برنامه‌نویسی پیشرفته"
                              )
-    slug = models.SlugField(null=True, help_text="Lower case |Sample: advanced-programming")
+    slug = models.SlugField(null=False, help_text="Lower case |Sample: advanced-programming")
 
-    # def get_absolute_url(self):
-    #     """Returns the url to access a detail record for this book."""
-    #     return reverse('booklet:booklets_topic', args=[str(self.field.slug), str(self.slug)])
+    def get_absolute_url(self):
+        return reverse('booklet:get_topic', kwargs={'field_slug': self.field.slug, 'topic_slug': self.slug})
 
     def __str__(self):
         temp_str = self.title + " | " + self.field.title

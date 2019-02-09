@@ -28,7 +28,7 @@ class TopicSerializer(serializers.ModelSerializer):
     topic_url = serializers.SerializerMethodField()
 
     def get_topic_url(self, topic):
-        request = self.context.get('requst')
+        request = self.context.get('request')
         topic_url = topic.get_absolute_url()
         return request.build_absolute_uri(topic_url)
 
