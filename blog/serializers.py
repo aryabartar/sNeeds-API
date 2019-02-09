@@ -1,15 +1,19 @@
 from rest_framework import serializers
-from .models import Post, UserComment, Topic
+from .models import Post, UserComment, Topic, PostQuestionAndAnswer
 
 
 class PostSerializer(serializers.ModelSerializer):
     """Serializes Post objects and associated comments. """
     post_url = serializers.SerializerMethodField()
+    questions_and_answers = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     topic_name = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
     jalali_timestamp_string = serializers.SerializerMethodField()
+
+    def get_questions_and_answers(self, post):
+        return PostQuestionAndAnswerSerializer(post.questions_and_answers, many=True).data
 
     def get_jalali_timestamp_string(self, post):
         jalali = str(post.timestamp_jalali).split('-')
@@ -50,7 +54,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'post_main_image', 'short_description',
-                  'aparat_link', 'youtube_link', 'tags', 'jalali_timestamp_string', 'slug']
+                  'questions_and_answers', 'aparat_link', 'youtube_link', 'tags', 'jalali_timestamp_string', 'slug']
 
 
 class UserCommentSerializer(serializers.ModelSerializer):
@@ -120,3 +124,9 @@ class PostCommentsSerializer(serializers.Serializer):
     comment = serializers.CharField(max_length=1000)
     admin_name = serializers.CharField(max_length=80)
     admin_answer = serializers.CharField(max_length=1000)
+
+
+class PostQuestionAndAnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PostQuestionAndAnswer
+        fields = ['question' , 'answer']
