@@ -14,7 +14,7 @@ class FieldSerializer(serializers.ModelSerializer):
 
     def get_topics(self, field):
         all_field_topics = field.topics.all()
-        return TopicSerializerWhitNoBooklet(all_field_topics, many=True, context=self.context).data
+        return TopicSerializer(all_field_topics, many=True, context=self.context).data
 
     class Meta:
         model = BookletField
@@ -23,7 +23,7 @@ class FieldSerializer(serializers.ModelSerializer):
         ]
 
 
-class TopicSerializerWhitNoBooklet(serializers.ModelSerializer):
+class TopicSerializerWithNoBooklet(serializers.ModelSerializer):
     topic_url = serializers.SerializerMethodField()
 
     def get_topic_url(self, topic):
@@ -38,7 +38,7 @@ class TopicSerializerWhitNoBooklet(serializers.ModelSerializer):
         ]
 
 
-class TopicSerializer(TopicSerializerWhitNoBooklet):
+class TopicSerializer(TopicSerializerWithNoBooklet):
     field = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
 
@@ -67,12 +67,18 @@ class TopicSerializer(TopicSerializerWhitNoBooklet):
 
 
 class BookletSerializer(serializers.ModelSerializer):
+    booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
     topic_slug = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
     field = serializers.SerializerMethodField()
     field_slug = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
+
+    def get_booklet_url(self, booklet):
+        request = self.context.get('request')
+        booklet_url = booklet.get_absolute_url()
+        return request.build_absolute_uri(booklet_url)
 
     def get_topic(self, booklet):
         return booklet.topic.title
@@ -82,8 +88,8 @@ class BookletSerializer(serializers.ModelSerializer):
 
     def get_topic_url(self, booklet):
         request = self.context.get('request')
-        booklet_url = booklet.topic.get_absolute_url()
-        return request.build_absolute_uri(booklet_url)
+        topic_url = booklet.topic.get_absolute_url()
+        return request.build_absolute_uri(topic_url)
 
     def get_field(self, booklet):
         return booklet.topic.field.title
@@ -99,8 +105,8 @@ class BookletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booklet
         fields = [
-            'title', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
-            'booklet_content', 'booklet_image', 'number_of_likes', 'number_of_dislikes',
+            'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
+            'booklet_content', 'booklet_image', 'number_of_likes',
             'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
             'field_url',
         ]

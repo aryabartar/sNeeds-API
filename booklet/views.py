@@ -33,9 +33,13 @@ class GetBooklet(APIView):
         booklet = Booklet.objects.get(slug__exact=booklet_slug,
                                       topic__slug__exact=topic_slug,
                                       topic__field__slug__exact=field_slug, )
-        if request.GET['like'] == 'true':
-            booklet.number_of_likes += 1
-            booklet.save()
+        # TODO: Better way
+        try:
+            if request.GET['like'] == 'true':
+                booklet.number_of_likes += 1
+                booklet.save()
+        except:
+            pass
 
         booklet_serialize = BookletSerializer(booklet, context={'request': request})
         return Response(booklet_serialize.data)
