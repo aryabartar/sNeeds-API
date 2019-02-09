@@ -15,6 +15,14 @@ class Topic(models.Model):
         return self.title
 
 
+class PostQuestionAndAnswer(models.Model):
+    question = models.TextField(default=None)
+    answer = models.TextField(default=None)
+
+    def __str__(self):
+        return self.content
+
+
 def upload_post_image(instance, filename):
     return "status/{slug}/{filename}".format(slug=instance.slug, filename=filename)
 
@@ -29,6 +37,7 @@ class Post(models.Model):
     )
     post_type = models.CharField(choices=POST_TYPE, default='Q&A', null=False, blank=False, max_length=50)
     short_description = models.TextField(null=True, blank=True)
+    questions = models.ManyToManyField(PostQuestionAndAnswer)
     aparat_link = models.URLField(null=True,
                                   blank=True,
                                   help_text="Don't fill this if this post has no "
@@ -51,15 +60,6 @@ class Post(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
-
-
-class PostQuestionAnswer(models.Model):
-    content = models.TextField()
-
-
-class PostQuestion(models.Model):
-    content = models.TextField()
-    answer = models.OneToOneField(PostQuestionAnswer , on_delete=models.CASCADE)
 
 
 class UserComment(models.Model):
