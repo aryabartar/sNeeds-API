@@ -10,7 +10,7 @@ from .serializers import FieldSerializer, TopicSerializer
 class GetFieldsList(APIView):
     def get(self, request):
         all_fields = BookletField.objects.all()
-        serialize_fields = FieldSerializer(all_fields, many=True)
+        serialize_fields = FieldSerializer(all_fields, many=True, context={'request': request})
         return Response(serialize_fields.data)
 
 
@@ -19,3 +19,10 @@ class GetField(APIView):
         field = BookletField.objects.get(slug__exact=field_slug)
         field_serialize = FieldSerializer(field, context={"request": request})
         return Response(field_serialize.data)
+
+
+class GetTopic(APIView):
+    def get(self, request, field_slug, topic_slug):
+        topic = BookletTopic.objects.get(slug__exact=topic_slug, field__slug__exact=field_slug)
+        topic_serialize = TopicSerializer(topic, context={'request': request})
+        return Response(topic_serialize.data)
