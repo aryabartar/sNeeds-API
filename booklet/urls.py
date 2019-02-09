@@ -20,5 +20,5 @@ from . import views
 
 app_name = "booklet"
 urlpatterns = [
-
-              ]
+    path('fields/', views.GetFieldsList.as_view(), name='get_fields_list')
+]

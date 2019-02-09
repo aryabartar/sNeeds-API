@@ -8,6 +8,7 @@ class PostSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     topic_name = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
+    topic_url = serializers.SerializerMethodField()
     jalali_timestamp_string = serializers.SerializerMethodField()
 
     def get_jalali_timestamp_string(self, post):

@@ -21,6 +21,7 @@ from discounts import urls as discounts_urls
 from account import urls as account_urls
 from search import urls as search_urls
 from blog import urls as blog_urls
+from booklet import urls as booklet_urls
 
 
 urlpatterns = [
@@ -30,6 +31,7 @@ urlpatterns = [
     path('discounts/', include(discounts_urls)),
     path('search/', include(search_urls)),
     path('blog/', include(blog_urls)),
+    path('booklet/', include(booklet_urls)),
 
     re_path('^api-auth/', include('rest_framework.urls'))
 ]
