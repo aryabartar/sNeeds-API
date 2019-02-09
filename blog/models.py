@@ -23,6 +23,11 @@ class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
     post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
+    POST_TYPE = (
+        ('Q&A', 'Question and Answer'),
+        ('interview', 'Interview'),
+    )
+    post_type = models.CharField(choices=POST_TYPE, default='Q&A', null=False, blank=False, max_length=50)
     short_description = models.TextField(null=True, blank=True)
     aparat_link = models.URLField(null=True,
                                   blank=True,
@@ -46,6 +51,15 @@ class Post(models.Model):
 
     def __str__(self):
         return "{}".format(self.title)
+
+
+class PostQuestionAnswer(models.Model):
+    content = models.TextField()
+
+
+class PostQuestion(models.Model):
+    content = models.TextField()
+    answer = models.OneToOneField(PostQuestionAnswer , on_delete=models.CASCADE)
 
 
 class UserComment(models.Model):
