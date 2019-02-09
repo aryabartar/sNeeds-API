@@ -48,7 +48,9 @@ class TopicSerializer(serializers.ModelSerializer):
         ]
 
 
-class BookletSerializer(serializers.Serializer):
+class BookletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booklet
-        fields = '__all__'
+        fields = [
+            'title',
+        ]

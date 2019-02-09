@@ -34,4 +34,5 @@ class GetBooklet(APIView):
                                       topic__slug__exact=topic_slug,
                                       topic__field__slug__exact=field_slug, )
         booklet_serialize = BookletSerializer(booklet, context={'request': request})
+        print(booklet_serialize.data)
         return Response(booklet_serialize.data)

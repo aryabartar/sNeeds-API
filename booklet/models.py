@@ -61,9 +61,10 @@ class Booklet(models.Model):
     booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
 
-    # def get_absolute_url(self):
-    #     """Returns the url to access a detail record for this book."""
-    #     return reverse('website:booklets', args=[str(self.slug)])
+    def get_absolute_url(self):
+        return reverse('booklet:get_booklet', kwargs={'booklet_slug': self.slug,
+                                                      'field_slug': self.topic.field.slug,
+                                                      'topic_slug': self.topic.slug})
 
     def __str__(self):
         return self.title
