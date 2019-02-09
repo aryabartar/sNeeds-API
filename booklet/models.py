@@ -11,9 +11,9 @@ class BookletField(models.Model):
     title = models.CharField(max_length=120, blank=False, null=False, unique=True)
     slug = models.SlugField(null=True, help_text="Lower case")
 
-    # def get_absolute_url(self):
-    #     """Returns the url to access a detail record for this book."""
-    #     return reverse('booklet:booklets_field', args=[str(self.slug)])
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('booklet:get_field', kwargs={"field_slug": self.slug})
 
     def __str__(self):
         return self.title

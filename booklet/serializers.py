@@ -4,6 +4,13 @@ from .models import BookletField, BookletTopic, Booklet
 
 class FieldSerializer(serializers.ModelSerializer):
     topics = serializers.SerializerMethodField()
+    field_url = serializers.SerializerMethodField()
+
+    def get_field_url(self, field):
+        """ This method returns a complete url for a field. """
+        request = self.context.get('request')
+        field_url = field.get_absolute_url()
+        return request.build_absolute_uri(field_url)
 
     def get_topics(self, field):
         all_field_topics = field.topics.all()
@@ -12,12 +19,13 @@ class FieldSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookletField
         fields = [
-            'title', 'slug', 'topics'
+            'title', 'field_url', 'slug', 'topics'
         ]
 
 
 class TopicSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
+
     # field_url = serializers.SerializerMethodField()
 
     def get_field(self, topic):

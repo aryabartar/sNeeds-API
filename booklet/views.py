@@ -17,4 +17,5 @@ class GetFieldsList(APIView):
 class GetField(APIView):
     def get(self, request, field_slug):
         field = BookletField.objects.get(slug__exact=field_slug)
-        return Response(FieldSerializer(field).data)
+        field_serialize = FieldSerializer(field, context={"request": request})
+        return Response(field_serialize.data)
