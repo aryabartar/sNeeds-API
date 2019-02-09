@@ -49,8 +49,13 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class BookletSerializer(serializers.ModelSerializer):
+    topic = serializers.SerializerMethodField()
+
+    def get_topic(self, booklet):
+        return TopicSerializer(booklet.topic , context=self.context).data
+
     class Meta:
         model = Booklet
         fields = [
-            'title',
+            'title', 'information', 'topic', 'teacher', 'slug', 'booklet_content', 'booklet_image',
         ]
