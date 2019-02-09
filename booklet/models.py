@@ -52,13 +52,21 @@ class Booklet(models.Model):
                               )
 
     teacher = models.CharField(max_length=200, default=None)
+    number_of_pages = models.IntegerField(default=0, null=False, blank=False, help_text="حتما دقیق نوشته شود")
+    format = models.CharField(max_length=40, default="PDF", null=False, blank=False)
+
+    BOOKLET_LANGUAGE = (
+        ('farsi', "فارسی"),
+        ('english', "انگلیسی"),
+    )
+
+    language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False , max_length=50)
     slug = models.SlugField(unique=True, null=False, blank=False)
 
     number_of_views = models.IntegerField(default=0,
                                           help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)",
                                           verbose_name="تعداد بازدید")
     number_of_likes = models.IntegerField(default=0)
-    number_of_dislikes = models.IntegerField(default=0)
     booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
 
@@ -69,3 +77,6 @@ class Booklet(models.Model):
 
     def __str__(self):
         return self.title
+
+# class Tag(models.Model):
+#     title = models.CharField(max_length=30 , null=False , )

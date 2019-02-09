@@ -61,7 +61,8 @@ class TopicSerializer(TopicSerializerWhitNoBooklet):
     class Meta:
         model = BookletTopic
         fields = [
-            'title', 'topic_url', 'field', 'field_url', 'slug', 'topic_booklets',
+            'title', 'topic_url', 'field', 'field_url', 'slug',
+            'topic_booklets',
         ]
 
 
@@ -98,7 +99,7 @@ class BookletSerializer(serializers.ModelSerializer):
     class Meta:
         model = Booklet
         fields = [
-            'title', 'information', 'teacher', 'slug',
+            'title', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
             'booklet_content', 'booklet_image', 'number_of_likes', 'number_of_dislikes',
             'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
             'field_url',
