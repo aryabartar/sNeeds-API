@@ -5,9 +5,6 @@ from django.contrib.auth import get_user_model
 
 from django.db import models
 
-# Create your models here.
-from django.urls import reverse
-
 User = get_user_model()
 
 
@@ -90,7 +87,7 @@ class UserUsedDiscount(models.Model):
                                  related_name="user_used_discounts")
     # When cafe object is present.
     cafe = models.ForeignKey(Cafe, on_delete=models.SET_NULL, null=True,
-                             related_name="used_discounts")
+                             related_name="user_used_discounts")
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True,
                              related_name="user_used_discounts")
