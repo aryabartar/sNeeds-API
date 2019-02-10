@@ -21,6 +21,7 @@ sample Post request:
             "post": 3
         }
 
+
 -- booklet --
 http://127.0.0.1:8000/booklet/ => Retrieve all fields + topics associated with that fields (No Pagination)
 http://127.0.0.1:8000/booklet/computer-engineering/ => Retrieve field with "computer-engineering" slug (This page includes that field topics and posts)
