@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
 from django.db import models
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -15,9 +16,9 @@ class Cafe(models.Model):
     phone_number = models.CharField(max_length=128, blank=False, null=False)
     slug = models.SlugField(max_length=128, blank=False, unique=True)
 
-    # def get_absolute_url(self):
-    #     """Returns the url to access a detail record for this book."""
-    #     return reverse('discounts:cafe_page', args=[str(self.slug)])
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('cafe:cafe_page', kwargs={"cafe_slug": str(self.slug)})
 
     def __str__(self):
         return self.name

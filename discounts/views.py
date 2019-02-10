@@ -14,6 +14,12 @@ from .serializers import CafeSerializer
 class CafeList(APIView):
     def get(self, requset):
         all_cafes = Cafe.objects.all()
-        print("ss\n\n\n\n ;lskd ;lsak d;lksa ;dlk;salk")
         serialize_cafe = CafeSerializer(all_cafes, many=True)
         return Response(serialize_cafe.data)
+
+
+class CafePage(APIView):
+    def get(self, request, cafe_slug):
+        cafe = Cafe.objects.get(slug__exact=cafe_slug)
+        cafe_serialize = CafeSerializer(cafe)
+        return Response(cafe_serialize.data)

@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include(website_urls)),
     path('account/', include(account_urls)),
     path('admin/', admin.site.urls),
-    path('discounts/', include(discounts_urls)),
+    path('cafe/', include(discounts_urls)),
     path('search/', include(search_urls)),
     path('blog/', include(blog_urls)),
     path('booklet/', include(booklet_urls)),

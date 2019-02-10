@@ -12,6 +12,12 @@ class CafeImageSerializer(serializers.ModelSerializer):
 
 class CafeSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, cafe):
+        request = self.context.get('request')
+        cafe_url = cafe.get_absolute_url()
+        return request.build_absolute_uri(cafe_url)
 
     def get_images(self, cafe):
         all_images = cafe.images

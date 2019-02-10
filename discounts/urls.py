@@ -16,7 +16,8 @@ Including another URLconf
 from django.urls import path
 from . import views
 
-app_name = "discounts"
+app_name = "cafe"
 urlpatterns = [
     path('', views.CafeList.as_view(), name="home"),
+    path('<str:cafe_slug>', views.CafePage.as_view(), name="cafe_page"),
 ]
