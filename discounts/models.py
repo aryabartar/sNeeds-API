@@ -48,23 +48,24 @@ class CafeImage(models.Model):
 
 
 class UserDiscount(models.Model):
-    discount = models.ForeignKey(Discount, on_delete=models.CASCADE, blank=False, null=False,
+    discount = models.ForeignKey(Discount, on_delete=models.CASCADE,
+                                 blank=False, null=False,
                                  related_name="user_discounts")
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True,
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE, null=False,
                              related_name="user_discounts")
-    code = models.CharField(unique=True, null=False, blank=False, max_length=128, default="")
+
+    code = models.CharField(unique=True, null=False, blank=False,
+                            max_length=10)
 
     date = models.DateField(auto_now=True, blank=False)
 
-    DISCOUNT_STATUS = (
-        ('not_used', "استفاده نشده"),
-        ('used', "استفاده شده"),
-    )
-
+    DISCOUNT_STATUS = (('not_used', "استفاده نشده"), ('used', "استفاده شده"),)
     status = models.CharField(
-        max_length=20,
+        max_length=50,
         choices=DISCOUNT_STATUS,
-        blank=True,
+        blank=False,
         default='not_used',
     )
 
