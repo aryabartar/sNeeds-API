@@ -139,6 +139,6 @@ def booklet():
 # populate_comments()
 # populate_admin_answer()
 
-# booklet_field()
-# booklet_topic()
+booklet_field()
+booklet_topic()
 booklet()
