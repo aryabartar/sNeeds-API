@@ -12,14 +12,14 @@ from .serializers import CafeSerializer
 
 
 class CafeList(APIView):
-    def get(self, requset):
+    def get(self, request):
         all_cafes = Cafe.objects.all()
-        serialize_cafe = CafeSerializer(all_cafes, many=True)
+        serialize_cafe = CafeSerializer(all_cafes, many=True, context={'request': request})
         return Response(serialize_cafe.data)
 
 
 class CafePage(APIView):
     def get(self, request, cafe_slug):
         cafe = Cafe.objects.get(slug__exact=cafe_slug)
-        cafe_serialize = CafeSerializer(cafe)
+        cafe_serialize = CafeSerializer(cafe, context={'request': request})
         return Response(cafe_serialize.data)
