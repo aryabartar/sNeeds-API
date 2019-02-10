@@ -27,20 +27,24 @@ class Cafe(models.Model):
 
 
 class Discount(models.Model):
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=True, null=True, related_name="discounts")
-    discount_percent = models.IntegerField(blank=True, null=True)
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False, null=False, related_name="discounts")
+    discount_percent = models.IntegerField(blank=False, null=False)
     date = models.DateField(auto_now=True, blank=False)
 
     def string_represent(self):
         return "تخفیف {}% {}".format(self.discount_percent, self.cafe.name)
 
     def __str__(self):
-        return "{} درصد تخفیف {}".format(self.discount_percent,self.cafe.name )
+        return "{} درصد تخفیف {}".format(self.discount_percent, self.cafe.name)
+
+
+def upload_post_image(instance, filename):
+    return "cafe_images/{filename}".format(filename=filename)
 
 
 class CafeImage(models.Model):
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=True, null=True, related_name="images")
-    image = models.ImageField(upload_to="website/cafe_images", blank=True, null=True)
+    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False, null=False, related_name="images")
+    image = models.ImageField(upload_to=upload_post_image, blank=False, null=False)
 
 
 class UserDiscount(models.Model):

@@ -23,7 +23,7 @@ class PostQuestionAndAnswer(models.Model):
 
 
 def upload_post_image(instance, filename):
-    return "status/{slug}/{filename}".format(slug=instance.slug, filename=filename)
+    return "post_images/{slug}/{filename}".format(slug=instance.slug, filename=filename)
 
 
 class Post(models.Model):
