@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cafe, CafeImage
+from .models import Cafe, CafeImage, Discount
 
 
 class CafeImageSerializer(serializers.ModelSerializer):
@@ -20,6 +20,11 @@ class CafeImageSerializer(serializers.ModelSerializer):
 class CafeSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
+    discounts = serializers.SerializerMethodField()
+
+    def get_discounts(self, cafe):
+        all_cafe_discounts = cafe.discounts
+        return DiscountSerializer(all_cafe_discounts, many=True).data
 
     def get_url(self, cafe):
         request = self.context.get('request')
@@ -28,11 +33,19 @@ class CafeSerializer(serializers.ModelSerializer):
 
     def get_images(self, cafe):
         all_images = cafe.images
-        return CafeImageSerializer(all_images, many=True , context=self.context).data
+        return CafeImageSerializer(all_images, many=True, context=self.context).data
 
     class Meta:
         model = Cafe
         fields = [
             'name', 'information', 'address', 'phone_number',
-            'url', 'slug', 'images',
+            'url', 'slug', 'images', 'discounts'
+        ]
+
+
+class DiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = [
+            'discount_percent'
         ]
