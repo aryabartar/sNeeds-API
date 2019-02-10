@@ -18,7 +18,6 @@ class Topic(models.Model):
 class PostQuestionAndAnswer(models.Model):
     question = models.TextField(default=None)
     answer = models.TextField(default=None)
-
     def __str__(self):
         return self.question + " | " + self.answer
 
