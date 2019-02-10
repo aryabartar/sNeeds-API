@@ -20,5 +20,6 @@ class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
         fields = [
-            'name', 'information', 'address', 'phone_number', 'slug'
+            'name', 'information', 'address', 'phone_number', 'slug',
+            'images',
         ]
