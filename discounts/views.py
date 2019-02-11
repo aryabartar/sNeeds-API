@@ -1,12 +1,8 @@
 import random
 import string
-from django.shortcuts import render, get_object_or_404
-from django.http import Http404
-
-from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.authentication import SessionAuthentication
 
 from .models import Discount, Cafe, UserDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
@@ -32,21 +28,31 @@ class DiscountList(APIView):
 
 
 class UserDiscountList(APIView):
-    def post(self, request):
-        data = request.data
+    permission_classes = []
+    authentication_classes = [SessionAuthentication]
 
+    def generate_discount_code(self):
         # Generates 5 digit random code
         discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
         # To avoid same code generation
         while len(UserDiscount.objects.filter(code__exact=discount_code)) != 0:
             discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+        return discount_code
+
+    def post(self, request):
+        data = request.data
+
+        discount_code = self.generate_discount_code()
 
         data['code'] = discount_code
+        data['user'] = request.user
+
         user_discount_serializer = UserDiscountSerializer(data=data)
 
         if user_discount_serializer.is_valid():
             user_discount_serializer.save()
             return Response(user_discount_serializer.data)
+
         else:
             try:
                 error_checker = user_discount_serializer.errors['non_field_errors']
