@@ -4,7 +4,6 @@ import string
 from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authentication import SessionAuthentication
 
 from .models import Discount, Cafe, UserDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
@@ -31,8 +30,6 @@ class DiscountList(APIView):
 
 class UserDiscountList(mixins.CreateModelMixin,
                        generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    authentication_classes = [SessionAuthentication]
     serializer_class = UserDiscountSerializer
     passed_id = None
 
@@ -47,7 +44,6 @@ class UserDiscountList(mixins.CreateModelMixin,
 
 
 class CafePage(APIView):
-
     def get(self, request, cafe_slug):
         cafe = Cafe.objects.get(slug__exact=cafe_slug)
         cafe_serialize = CafeSerializer(cafe, context={'request': request})
