@@ -27,7 +27,7 @@ class Cafe(models.Model):
 class Discount(models.Model):
     cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False, null=False, related_name="discounts")
     discount_percent = models.IntegerField(blank=False, null=False)
-    discount_info = models.CharField(max_length=220, blank=False, null=False)
+    discount_info = models.CharField(max_length=220, blank=True, null=True)
     date = models.DateField(auto_now=True, blank=False)
 
     def string_represent(self):

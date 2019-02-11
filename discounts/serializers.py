@@ -47,7 +47,7 @@ class DiscountSerializerInfo(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = [
-            'id', 'discount_percent',
+            'id', 'discount_percent', 'discount_info',
         ]
 
 

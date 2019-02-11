@@ -19,7 +19,7 @@ class CafeList(APIView):
         return Response(serialize_cafe.data)
 
 
-class DiscountDetail(APIView):
+class DiscountList(APIView):
     serializer_class = DiscountSerializer
 
     def post(self, request):
