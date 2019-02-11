@@ -9,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import Discount, Cafe, UserDiscount
-from .serializers import CafeSerializer, DiscountSerializer
+from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
 
 
 class CafeList(APIView):
@@ -29,6 +29,37 @@ class DiscountList(APIView):
             return Response(discount_serializer.data)
         else:
             return Response(discount_serializer.errors)
+
+
+class UserDiscountList(APIView):
+    serializer_class = UserDiscountSerializer
+
+    def post(self, request):
+        data = request.data
+
+        # Generates 5 digit random code
+        discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+        while not UserDiscount.objects.get(code__exact=discount_code) == []:
+            discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+
+        data['code'] = discount_code
+        user_discount_serializer = UserDiscountSerializer(data=data)
+        if user_discount_serializer.is_valid():
+            user_discount_serializer.save()
+            return Response(user_discount_serializer.data)
+        else:
+            try:
+                error_checker = user_discount_serializer.errors['non_field_errors']
+                custom_error = {
+                    'Developer Notes': 'If you are getting "The fields discount, user must make a unique set." error, '
+                                       'Note that each user can only get one unique code on one discount. (No more than 1)'
+                }
+                errors = user_discount_serializer.errors
+                errors['custom_error'] = custom_error
+
+                return Response(errors)
+            except:
+                return Response(user_discount_serializer.errors)
 
 
 class CafePage(APIView):

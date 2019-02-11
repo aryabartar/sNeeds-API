@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cafe, CafeImage, Discount
+from .models import Cafe, CafeImage, Discount, UserDiscount
 
 
 class CafeImageSerializer(serializers.ModelSerializer):
@@ -54,4 +54,10 @@ class DiscountSerializerInfo(serializers.ModelSerializer):
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
+        fields = '__all__'
+
+
+class UserDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserDiscount
         fields = '__all__'
