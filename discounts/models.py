@@ -51,7 +51,7 @@ class UserDiscount(models.Model):
                                  blank=False, null=False,
                                  related_name="user_discounts")
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+    user = models.ForeignKey('auth.User',
                              on_delete=models.CASCADE, null=False,
                              related_name="user_discounts")
 

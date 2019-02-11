@@ -45,8 +45,9 @@ class UserDiscountList(APIView):
         discount_code = self.generate_discount_code()
 
         data['code'] = discount_code
-        data['user'] = request.user
-
+        data['user'] = self.request.user.id
+        print(";leksdf;e wkf;ok ew;lfk e;l kf")
+        print(data)
         user_discount_serializer = UserDiscountSerializer(data=data)
 
         if user_discount_serializer.is_valid():

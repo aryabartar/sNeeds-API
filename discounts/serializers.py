@@ -60,4 +60,9 @@ class DiscountSerializer(serializers.ModelSerializer):
 class UserDiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserDiscount
-        fields = '__all__'
+        fields = [
+            'discount', 'user', 'code',
+        ]
+        # read_only_fields = [
+        #     'user',
+        # ]
