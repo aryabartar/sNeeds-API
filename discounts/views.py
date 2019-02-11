@@ -32,18 +32,18 @@ class DiscountList(APIView):
 
 
 class UserDiscountList(APIView):
-    serializer_class = UserDiscountSerializer
-
     def post(self, request):
         data = request.data
 
         # Generates 5 digit random code
         discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
-        while not UserDiscount.objects.get(code__exact=discount_code) == []:
+        # To avoid same code generation
+        while len(UserDiscount.objects.filter(code__exact=discount_code)) != 0:
             discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
 
         data['code'] = discount_code
         user_discount_serializer = UserDiscountSerializer(data=data)
+
         if user_discount_serializer.is_valid():
             user_discount_serializer.save()
             return Response(user_discount_serializer.data)
