@@ -1,11 +1,12 @@
 import random
 import string
+
+from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
 
 from .models import Discount, Cafe, UserDiscount
-from rest_framework import generics, mixins, status
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
 
 
@@ -30,7 +31,7 @@ class DiscountList(APIView):
 
 class UserDiscountList(mixins.CreateModelMixin,
                        generics.ListAPIView):
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     authentication_classes = [SessionAuthentication]
     serializer_class = UserDiscountSerializer
     passed_id = None
