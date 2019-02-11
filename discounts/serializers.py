@@ -63,6 +63,6 @@ class UserDiscountSerializer(serializers.ModelSerializer):
         fields = [
             'discount', 'user', 'code',
         ]
-        # read_only_fields = [
-        #     'user',
-        # ]
+        read_only_fields =[
+            'user',
+        ]
