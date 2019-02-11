@@ -31,23 +31,10 @@ class UserDiscountList(APIView):
     permission_classes = []
     authentication_classes = [SessionAuthentication]
 
-    def generate_discount_code(self):
-        # Generates 5 digit random code
-        discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
-        # To avoid same code generation
-        while len(UserDiscount.objects.filter(code__exact=discount_code)) != 0:
-            discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
-        return discount_code
-
     def post(self, request):
         data = request.data
 
-        discount_code = self.generate_discount_code()
-
-        data['code'] = discount_code
         data['user'] = self.request.user.id
-        print(";leksdf;e wkf;ok ew;lfk e;l kf")
-        print(data)
         user_discount_serializer = UserDiscountSerializer(data=data)
 
         if user_discount_serializer.is_valid():

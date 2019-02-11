@@ -1,4 +1,7 @@
 import datetime
+import random
+import string
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -55,7 +58,7 @@ class UserDiscount(models.Model):
                              on_delete=models.CASCADE, null=False,
                              related_name="user_discounts")
 
-    code = models.CharField(unique=True, null=False, blank=False,
+    code = models.CharField(unique=True, null=True, blank=True,
                             max_length=10)
 
     date = models.DateField(auto_now=True, blank=False)
@@ -70,6 +73,18 @@ class UserDiscount(models.Model):
 
     class Meta:
         unique_together = (("discount", "user"),)
+
+    def generate_discount_code(self):
+        # Generates 5 digit random code
+        discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+        # To avoid same code generation
+        while len(UserDiscount.objects.filter(code__exact=discount_code)) != 0:
+            discount_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=5)).lower()
+        return discount_code
+
+    def save(self, *args, **kwargs):
+        self.code = self.generate_discount_code()
+        super(UserDiscount, self).save(*args, **kwargs)
 
     def __str__(self):
         return str(self.discount)
