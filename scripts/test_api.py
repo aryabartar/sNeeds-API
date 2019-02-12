@@ -17,9 +17,9 @@ headers = {
 }
 
 r = requests.post(AUTH_ENDPOINT, data=json.dumps(account_data), headers=headers)
-token = r.json()#['token']
-
-print(token)
+# token = r.json()#['token']
+print(r.text)
+# print(token)
 
 # headers = {
 #     "Content-Type": "application/json",
