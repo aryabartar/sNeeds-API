@@ -7,14 +7,14 @@ REFRESH_ENDPOINT = AUTH_ENDPOINT + "refresh/"
 ENDPOINT = "http://127.0.0.1:8000/cafe/user-discounts/"
 
 account_data = {
-    "username": "testapi",
+    "username": "testapi@gmail.com",
     "password": "Sneeds@203040",
 
 }
 
 headers = {
     "Content-Type": "application/json",
-    "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5LCJ1c2VybmFtZSI6InRlc3RhcGkiLCJleHAiOjE1NDk5OTc1MTEsImVtYWlsIjoiIiwib3JpZ19pYXQiOjE1NDk5OTcyMTF9.WzzutV_0FzkM5r3GiYuRg1e991M_TqN8BxbGUOswJKs"
+    # "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5LCJ1c2VybmFtZSI6InRlc3RhcGkiLCJleHAiOjE1NDk5OTc1MTEsImVtYWlsIjoiIiwib3JpZ19pYXQiOjE1NDk5OTcyMTF9.WzzutV_0FzkM5r3GiYuRg1e991M_TqN8BxbGUOswJKs"
 }
 
 r = requests.post(AUTH_ENDPOINT, data=json.dumps(account_data), headers=headers)

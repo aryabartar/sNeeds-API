@@ -18,25 +18,57 @@ class AuthView(APIView):
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return Response({"detail": "You are already authenticater"}, status=400)
+            return Response({"detail": "You are already authenticated"}, status=400)
 
         data = request.data
         username = data.get('username')
         password = data.get('password')
-        user = authenticate(username=username, password=password)
 
         qs = User.objects.filter(
-            Q(username__exact=username)|
+            Q(username__exact=username) |
             Q(email__exact=username)
         )
+
         if len(qs) == 1:
             user_obj = qs.first()
             if user_obj.check_password(password):
                 user = user_obj
-
                 payload = jwt_payload_handler(user)
                 token = jwt_encode_handler(payload)
                 response = jwt_response_payload_handler(token, user, request=request)
                 return Response(response)
 
-        return Response({"detail": "Invalid credentails!"}, status=401)
+        return Response({"detail": "Invalid credentials!"}, status=401)
+
+
+class RegisterView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return Response({"detail": "You are already authenticated"}, status=400)
+
+        data = request.data
+        username = data.get('username')
+        email = data.get('email')
+        password = data.get('password')
+        password2 = data.get('password2')
+
+        qs = User.objects.filter(
+            Q(username__exact=username) |
+            Q(email__exact=username)
+        )
+        if password != password2:
+            return Response({"detail": "Passwords must be match!"})
+
+        if qs.exists():
+            return Response({"detail": "This user already exists!"}, status=401)
+        else:
+            user = User.objects.create(username=username, email=email)
+            user.set_password(password)
+            user.save()
+            payload = jwt_payload_handler(user)
+            token = jwt_encode_handler(payload)
+            response = jwt_response_payload_handler(token, user, request=request)
+            return Response(response)
+
