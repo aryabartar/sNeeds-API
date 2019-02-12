@@ -16,12 +16,13 @@ Including another URLconf
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
-from rest_framework_jwt.views import obtain_jwt_token
-
+from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 app_name = "account"
 urlpatterns = [
     path('jwt/', obtain_jwt_token),
+    path('jwt/refresh/', refresh_jwt_token),
+
     path('signup/success/', views.signup_success, name="signup_success"),
     path('signup/', views.signup, name="signup"),
     path('logout/success/', views.logout_success, name="logout_success"),
