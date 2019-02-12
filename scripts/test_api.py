@@ -13,16 +13,25 @@ account_data = {
 }
 
 headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
 }
 
 r = requests.post(AUTH_ENDPOINT, data=json.dumps(account_data), headers=headers)
 token = r.json()['token']
-# print(token)
 
-refresh_data = {
-    'token': token
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "JWT " + token,
 }
-new_r = requests.post(REFRESH_ENDPOINT, data=json.dumps(refresh_data), headers=headers)
-new_token = new_r.json()#['token']
-print(new_token)
+
+print(token)
+post_data = json.dumps({"discount": 34})
+posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
+print(posted_response.text)
+
+# refresh_data = {
+#     'token': token
+# }
+# new_r = requests.post(REFRESH_ENDPOINT, data=json.dumps(refresh_data), headers=headers)
+# new_token = new_r.json()['token']
+# print(new_token)
