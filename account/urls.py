@@ -20,6 +20,7 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 app_name = "account"
 urlpatterns = [
+    path('', views.AuthView.as_view()),
     path('jwt/', obtain_jwt_token),
     path('jwt/refresh/', refresh_jwt_token),
 
@@ -28,14 +29,4 @@ urlpatterns = [
     path('logout/success/', views.logout_success, name="logout_success"),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('login/', auth_views.LoginView.as_view(template_name='account/login_page.html'), name='login'),
-
-    # TODO: Change _ with -
-    path('my-account/', views.my_account, name="my_account"),
-
-    path('cafe-profile/', views.cafe_profile, name="cafe_profile"),
-    path('cafe-profile/discount-archive/', views.all_cafe_archive, name='cafe_discount_archives'),
-
-    path('admin-account/', views.admin_account, name="admin_account"),
-    path('delete/discount/', views.delete_user_discount, name='delete_discount'),
-    path('delete/cafe-discount/', views.delete_cafe_discount, name='delete_cafe_discount'),
 ]
