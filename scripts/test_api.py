@@ -2,13 +2,15 @@ import json
 import requests
 import os
 
-AUTH_ENDPOINT = "http://127.0.0.1:8000/account/"
+AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/register/"
 REFRESH_ENDPOINT = AUTH_ENDPOINT + "refresh/"
 ENDPOINT = "http://127.0.0.1:8000/cafe/user-discounts/"
 
 account_data = {
-    "username": "testapi@gmail.com",
-    "password": "Sneeds@203040",
+    "username": "testapi1",
+    "email": "testapi1@gmail.com",
+    "password": "Sneed s@203040",
+    "password2": "Sneeds@203040",
 
 }
 
@@ -19,7 +21,7 @@ headers = {
 
 r = requests.post(AUTH_ENDPOINT, data=json.dumps(account_data), headers=headers)
 # token = r.json()#['token']
-print(r.json())
+print(r.text)
 # print(token)
 
 # headers = {
