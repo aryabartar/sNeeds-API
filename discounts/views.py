@@ -36,11 +36,11 @@ class UserDiscountList(mixins.CreateModelMixin,
     def get_queryset(self):
         return UserDiscount.objects.all()
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
 
 class CafePage(APIView):
