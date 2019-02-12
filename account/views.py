@@ -23,4 +23,5 @@ class AuthView(APIView):
         user = authenticate(username=username, password=password)
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
-        return Response({'token': token})
+        response = jwt_response_payload_handler(token, user, request=request)
+        return Response(response)
