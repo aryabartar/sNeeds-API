@@ -11,7 +11,7 @@ account_data = {
     "password": "Sneeds@203040",
 
 }
-
+ 
 headers = {
     "Content-Type": "application/json",
 }
@@ -25,7 +25,7 @@ headers = {
 }
 
 print(token)
-post_data = json.dumps({"discount": 34})
+post_data = json.dumps({"discount": 33})
 posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
 print(posted_response.text)
 
