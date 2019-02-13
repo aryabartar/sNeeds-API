@@ -7,8 +7,8 @@ REFRESH_ENDPOINT = AUTH_ENDPOINT + "refresh/"
 ENDPOINT = "http://127.0.0.1:8000/cafe/user-discounts/"
 
 account_data = {
-    "username": "testapi322",
-    "email": "testapi322@gmail.com",
+    "username": "testapi4",
+    "email": "testapi4@gmail.com",
     "password": "Sneeds@203040",
     "password2": "Sneeds@203040",
 
