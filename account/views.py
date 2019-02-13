@@ -48,34 +48,3 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [permissions.AllowAny]
 
-#
-# class RegisterView(APIView):
-#     permission_classes = [permissions.AllowAny]
-#
-#     def post(self, request, *args, **kwargs):
-#         if request.user.is_authenticated:
-#             return Response({"detail": "You are already authenticated"}, status=400)
-#
-#         data = request.data
-#         username = data.get('username')
-#         email = data.get('email')
-#         password = data.get('password')
-#         password2 = data.get('password2')
-#
-#         qs = User.objects.filter(
-#             Q(username__exact=username) |
-#             Q(email__exact=username)
-#         )
-#         if password != password2:
-#             return Response({"detail": "Passwords must be match!"})
-#
-#         if qs.exists():
-#             return Response({"detail": "This user already exists!"}, status=401)
-#         else:
-#             user = User.objects.create(username=username, email=email)
-#             user.set_password(password)
-#             user.save()
-#             payload = jwt_payload_handler(user)
-#             token = jwt_encode_handler(payload)
-#             response = jwt_response_payload_handler(token, user, request=request)
-#             return Response(response)
