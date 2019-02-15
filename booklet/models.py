@@ -107,7 +107,9 @@ class Booklet(models.Model):
                                                       'topic_slug': self.topic.slug})
 
     def get_tags_array(self):
-        return self.tags_str.split("|")
+        if self.tags_str is not None:
+            return self.tags_str.split("|")
+        return []
 
     def save(self, *args, **kwargs):
         tags = self.get_tags_array()
@@ -116,8 +118,9 @@ class Booklet(models.Model):
             if len(qs) == 0:
                 new_tag = Tag(title=tag)
                 new_tag.save()
-                self.tags.add(new_tag)
-
+            else:
+                qs[0].save()
+            self.tags.add(Tag.objects.filter(slug__exact=get_automated_slug(tag))[0])
         super(Booklet, self).save(*args, **kwargs)
 
     def __str__(self):
