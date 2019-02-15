@@ -80,5 +80,11 @@ class Booklet(models.Model):
     def __str__(self):
         return self.title
 
-# class Tag(models.Model):
-#     title = models.CharField(max_length=30 , null=False , )
+
+class Tag(models.Model):
+    title = models.CharField(max_length=40, null=False, blank=False)
+    slug = models.SlugField(unique=False ,  null=False , blank= False )
+
+    def save(self, *args, **kwargs):
+        self.code = self.generate_discount_code()
+        super(UserDiscount, self).save(*args, **kwargs)
