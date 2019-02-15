@@ -1,14 +1,13 @@
 from rest_framework import permissions
 
-class BlacklistPermission(permissions.BasePermission):
+
+class AnonPermissionOnly(permissions.BasePermission):
     """
-    Global permission check for blacklisted IPs.
+    For not logged in people!
     """
 
     def has_permission(self, request, view):
-        ip_addr = request.META['REMOTE_ADDR']
-        blacklisted = Blacklist.objects.filter(ip_addr=ip_addr).exists()
-        return not blacklisted
+        return not request.user.is_authenticated
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
