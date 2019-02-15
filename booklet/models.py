@@ -52,6 +52,20 @@ class BookletTopic(models.Model):
         return temp_str
 
 
+class Tag(models.Model):
+    title = models.CharField(max_length=40, null=False, blank=False)
+    slug = models.SlugField(max_length=2000, unique=True,
+                            help_text="If you are adding this tag for first time, leave this field blank."
+                                      "Only change this field if there is a mistake or for other purposes ...")
+
+    def save(self, *args, **kwargs):
+        self.slug = get_automated_slug(self.title)
+        super(Tag, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)
     information = models.TextField(max_length=10000, null=True)
@@ -74,9 +88,12 @@ class Booklet(models.Model):
 
     language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False, max_length=50)
     slug = models.SlugField(unique=True, null=False, blank=False)
-    tags = models.CharField(max_length=2000, blank=True, null=True,
-                            help_text="به این صورت وارد کنید : <br/>"
-                                      "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
+    tags_str = models.CharField(max_length=2000, blank=True, null=True,
+                                help_text="به این صورت وارد کنید : <br/>"
+                                          "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
+    tags = models.ManyToManyField(Tag, null=True, blank=True,
+                                  help_text="Don't change this if you are creating new booklet. Only change this if "
+                                            "it is necessary.")
     number_of_views = models.IntegerField(default=0,
                                           help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)",
                                           verbose_name="تعداد بازدید")
@@ -90,7 +107,7 @@ class Booklet(models.Model):
                                                       'topic_slug': self.topic.slug})
 
     def get_tags_array(self):
-        return self.tags.split("|")
+        return self.tags_str.split("|")
 
     def save(self, *args, **kwargs):
         tags = self.get_tags_array()
@@ -99,22 +116,9 @@ class Booklet(models.Model):
             if len(qs) == 0:
                 new_tag = Tag(title=tag)
                 new_tag.save()
+                self.tags.add(new_tag)
 
         super(Booklet, self).save(*args, **kwargs)
-
-    def __str__(self):
-        return self.title
-
-
-class Tag(models.Model):
-    title = models.CharField(max_length=40, null=False, blank=False)
-    slug = models.SlugField(max_length=2000, unique=False, null=True, blank=True,
-                            help_text="If you are adding this tag for first time, leave this field blank."
-                                      "Only change this field if there is a mistake or for other purposes ...")
-
-    def save(self, *args, **kwargs):
-        self.slug = get_automated_slug(self.title)
-        super(Tag, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
