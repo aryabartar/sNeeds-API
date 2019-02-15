@@ -1,6 +1,8 @@
 import random
 import string
 
+from django.shortcuts import get_object_or_404
+
 from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -44,7 +46,7 @@ class UserDiscountList(mixins.CreateModelMixin,
 
 
 class CafePage(APIView):
-    def get(self, request, cafe_slug):
-        cafe = Cafe.objects.get(slug__exact=cafe_slug)
+    def get(self, request, cafe_pk):
+        cafe = get_object_or_404(Cafe, pk=cafe_pk)
         cafe_serialize = CafeSerializer(cafe, context={'request': request})
         return Response(cafe_serialize.data)

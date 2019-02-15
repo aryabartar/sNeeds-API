@@ -21,7 +21,7 @@ class Cafe(models.Model):
 
     def get_absolute_url(self):
         """Returns the url to access a detail record for this book."""
-        return reverse('cafe:cafe_detail', kwargs={"cafe_slug": str(self.slug)})
+        return reverse('cafe:cafe_detail', kwargs={"cafe_pk": str(self.pk)})
 
     def __str__(self):
         return self.name

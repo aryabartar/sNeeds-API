@@ -38,7 +38,7 @@ class CafeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cafe
         fields = [
-            'name', 'information', 'address', 'phone_number',
+            'id', 'name', 'information', 'address', 'phone_number',
             'url', 'slug', 'images', 'discounts'
         ]
 
@@ -63,6 +63,6 @@ class UserDiscountSerializer(serializers.ModelSerializer):
         fields = [
             'discount', 'user', 'code',
         ]
-        read_only_fields =[
+        read_only_fields = [
             'user', 'code',
         ]
