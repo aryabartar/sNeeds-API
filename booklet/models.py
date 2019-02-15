@@ -83,7 +83,7 @@ class Booklet(models.Model):
 
 class Tag(models.Model):
     title = models.CharField(max_length=40, null=False, blank=False)
-    slug = models.CharField(max_length=2000, unique=False, null=False, blank=False)
+    slug = models.SlugField(max_length=2000, unique=False, null=True, blank=True)
 
     def get_automated_slug(self, str):
         "I write this function because slugify is not working for persian characters!"
@@ -97,3 +97,6 @@ class Tag(models.Model):
     def save(self, *args, **kwargs):
         self.slug = self.get_automated_slug(self.title)
         super(Tag, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
