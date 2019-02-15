@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.Booklet)
 admin.site.register(models.BookletTopic)
 admin.site.register(models.BookletField)
+admin.site.register(models.Tag)

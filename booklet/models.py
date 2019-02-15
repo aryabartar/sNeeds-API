@@ -1,7 +1,7 @@
 from django.db import models
-
 from django.urls import reverse
 from django.utils import timezone
+from django.template.defaultfilters import slugify
 
 
 class BookletField(models.Model):
@@ -51,11 +51,11 @@ class Booklet(models.Model):
                               blank=False
                               )
 
-    year = models.IntegerField(help_text="In 1997 format.", null=True, blank=True)
-    writer = models.CharField(max_length=120, null=True, blank=True)
     teacher = models.CharField(max_length=200, default=None)
     number_of_pages = models.IntegerField(default=0, null=False, blank=False, help_text="حتما دقیق نوشته شود")
     format = models.CharField(max_length=40, default="PDF", null=False, blank=False)
+    year = models.IntegerField(help_text="In 1397 format.", null=True, blank=True)
+    writer = models.CharField(max_length=120, null=True, blank=True)
 
     BOOKLET_LANGUAGE = (
         ('farsi', "فارسی"),
@@ -83,8 +83,17 @@ class Booklet(models.Model):
 
 class Tag(models.Model):
     title = models.CharField(max_length=40, null=False, blank=False)
-    slug = models.SlugField(unique=False ,  null=False , blank= False )
+    slug = models.CharField(max_length=2000, unique=False, null=False, blank=False)
+
+    def get_automated_slug(self, str):
+        "I write this function because slugify is not working for persian characters!"
+        str = str.replace(" ", "-")
+        str = str.replace(",", "-")
+        str = str.replace("(", "-")
+        str = str.replace(")", "")
+        str = str.replace("؟", "")
+        return str
 
     def save(self, *args, **kwargs):
-        self.code = self.generate_discount_code()
-        super(UserDiscount, self).save(*args, **kwargs)
+        self.slug = self.get_automated_slug(self.title)
+        super(Tag, self).save(*args, **kwargs)

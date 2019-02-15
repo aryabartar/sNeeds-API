@@ -151,3 +151,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
 
 from sneeds.settings.restconf.main import *
+ALLOW_UNICODE_SLUGS = True
