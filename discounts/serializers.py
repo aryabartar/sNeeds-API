@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cafe, CafeImage, Discount, UserDiscount
+from .models import Cafe, CafeImage, Discount, UserDiscount, CafeProfile
 
 
 class CafeImageSerializer(serializers.ModelSerializer):
@@ -55,6 +55,19 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = '__all__'
+
+    def validate(self, data):
+        cafe = data['cafe']
+
+        try:
+            cafe_profile = CafeProfile.objects.get(cafe__exact=cafe)
+        except:
+            raise serializers.ValidationError("You can not add discount to this cafe!")
+
+        user = self.context['request']
+        if not user == cafe_profile.user:
+            raise serializers.ValidationError("You can not add discount to this cafe!")
+        return data
 
 
 class UserDiscountSerializer(serializers.ModelSerializer):

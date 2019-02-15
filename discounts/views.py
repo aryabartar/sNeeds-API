@@ -25,12 +25,15 @@ class DiscountList(APIView):
     serializer_class = DiscountSerializer
 
     def post(self, request):
-        discount_serializer = DiscountSerializer(data=request.data)
+        discount_serializer = DiscountSerializer(data=request.data, context={"request": self.request})
         if discount_serializer.is_valid():
             discount_serializer.save()
             return Response(discount_serializer.data)
         else:
             return Response(discount_serializer.errors)
+
+    def get_serializer_context(self, *args, **kwargs):
+        return {"request": self.request}
 
 
 class UserDiscountList(mixins.CreateModelMixin,
