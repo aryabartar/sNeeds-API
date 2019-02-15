@@ -1,10 +1,13 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
-from .models import BookletField, BookletTopic, Booklet
-from .serializers import FieldSerializerWithNoBookletShow ,FieldSerializer, TopicSerializer, BookletSerializer
+from .models import BookletField, BookletTopic, Booklet, Tag
+from .serializers import FieldSerializerWithNoBookletShow, FieldSerializer, TopicSerializer, BookletSerializer, \
+    TagSerializer
 
 
 class GetFieldsList(APIView):
@@ -44,3 +47,10 @@ class GetBooklet(APIView):
 
         booklet_serialize = BookletSerializer(booklet, context={'request': request})
         return Response(booklet_serialize.data)
+
+
+class TagsDetail(APIView):
+    def get(self, request, tag_slug):
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        tag_serialize = TagSerializer(tag)
+        return Response(tag_serialize.data)

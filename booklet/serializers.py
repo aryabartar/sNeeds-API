@@ -75,11 +75,10 @@ class TopicSerializer(TopicSerializerWithNoBooklet):
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-
         fields = "__all__"
 
 
-class BookletSerializer(serializers.ModelSerializer):
+class BookletSerializerWithoutTags(serializers.ModelSerializer):
     booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
     topic_slug = serializers.SerializerMethodField()
@@ -87,11 +86,6 @@ class BookletSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     field_slug = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
-    tags = serializers.SerializerMethodField()
-
-    def get_tags(self, booklet):
-        tags = booklet.tags.all()
-        return TagSerializer(tags, many=True).data
 
     def get_booklet_url(self, booklet):
         request = self.context.get('request')
@@ -126,5 +120,29 @@ class BookletSerializer(serializers.ModelSerializer):
             'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
             'booklet_content', 'booklet_image', 'number_of_likes',
             'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
-            'field_url', 'tags'
+            'field_url'
         ]
+
+
+class BookletSerializer(BookletSerializerWithoutTags):
+    tags = serializers.SerializerMethodField()
+
+    def get_tags(self, booklet):
+        tags = booklet.tags.all()
+        return TagSerializer(tags, many=True).data
+
+    class Meta:
+        model = Booklet
+        fields = [
+            'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
+            'booklet_content', 'booklet_image', 'number_of_likes',
+            'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
+            'field_url', 'tags',
+        ]
+
+
+class TagAndBookletsSerializer(serializers.ModelSerializer):
+    booklets = serializers.SerializerMethodField()
+
+    def get_booklets(self):
+        pass
