@@ -65,6 +65,9 @@ class Tag(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('booklet:tags', kwargs={"tag_slug": self.slug})
+
 
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)

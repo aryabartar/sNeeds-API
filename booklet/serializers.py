@@ -80,12 +80,19 @@ class TopicSerializer(TopicSerializerWithNoBooklet):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    url = serializers.SerializerMethodField()
+
+    def get_url(self, tag):
+        request = self.context.get('request')
+        tag_url = tag.get_absolute_url()
+        return request.build_absolute_uri(tag_url)
+
     class Meta:
         model = Tag
         fields = "__all__"
 
 
-class TagAndBookletsSerializer(serializers.ModelSerializer):
+class TagAndBookletsSerializer(TagSerializer):
     booklets = serializers.SerializerMethodField()
 
     def get_booklets(self, tag):
@@ -110,7 +117,7 @@ class BookletSerializer(serializers.ModelSerializer):
 
     def get_tags(self, booklet):
         tags = booklet.tags.all()
-        return TagSerializer(tags, many=True).data
+        return TagSerializer(tags, context=self.context, many=True).data
 
     def get_booklet_url(self, booklet):
         request = self.context.get('request')
