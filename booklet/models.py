@@ -51,6 +51,8 @@ class Booklet(models.Model):
                               blank=False
                               )
 
+    year = models.IntegerField(help_text="In 1997 format.", null=True, blank=True)
+    writer = models.CharField(max_length=120, null=True, blank=True)
     teacher = models.CharField(max_length=200, default=None)
     number_of_pages = models.IntegerField(default=0, null=False, blank=False, help_text="حتما دقیق نوشته شود")
     format = models.CharField(max_length=40, default="PDF", null=False, blank=False)
@@ -60,7 +62,7 @@ class Booklet(models.Model):
         ('english', "انگلیسی"),
     )
 
-    language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False , max_length=50)
+    language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False, max_length=50)
     slug = models.SlugField(unique=True, null=False, blank=False)
 
     number_of_views = models.IntegerField(default=0,

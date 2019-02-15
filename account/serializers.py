@@ -44,9 +44,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         }
 
     def get_response(self, user):
+        context = self.context
+        request = context['request']
         payload = jwt_payload_handler(user)
         token = jwt_encode_handler(payload)
-        response = jwt_response_payload_handler(token, user, request=None)
+        response = jwt_response_payload_handler(token, user, request=request)
         return response
 
     def get_token_expires(self, user):
