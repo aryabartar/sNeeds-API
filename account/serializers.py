@@ -25,7 +25,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     token = serializers.SerializerMethodField(read_only=True)
     token_expires = serializers.SerializerMethodField(read_only=True)
-    response = serializers.SerializerMethodField(read_only=True)
+    message = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -36,20 +36,15 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password2',
             'token',
             'token_expires',
-            'response',
+            'message',
         ]
 
         extra_kwargs = {
             'password': {'write_only': True}
         }
 
-    def get_response(self, user):
-        context = self.context
-        request = context['request']
-        payload = jwt_payload_handler(user)
-        token = jwt_encode_handler(payload)
-        response = jwt_response_payload_handler(token, user, request=request)
-        return response
+    def get_message(self, user):
+        return "Success!"
 
     def get_token_expires(self, user):
         return timezone.now() + \
@@ -89,5 +84,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             email=validated_data['email'],
         )
         user.set_password(validated_data['password'])
+        # user.is_active=False #Enable this for email verification
         user.save()
+
         return user
