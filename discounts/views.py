@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from .models import Discount, Cafe, UserDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
+from account.permissions import CafeAdminAllowOnly
 
 
 class CafeList(APIView):
@@ -19,6 +20,8 @@ class CafeList(APIView):
 
 
 class DiscountList(APIView):
+    permission_classes = [CafeAdminAllowOnly]
+
     serializer_class = DiscountSerializer
 
     def post(self, request):

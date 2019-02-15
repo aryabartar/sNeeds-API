@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from discounts.models import CafeProfile
 
 
 class AnonPermissionOnly(permissions.BasePermission):
@@ -8,6 +9,19 @@ class AnonPermissionOnly(permissions.BasePermission):
 
     def has_permission(self, request, view):
         return not request.user.is_authenticated
+
+
+class CafeAdminAllowOnly(permissions.BasePermission):
+    """
+    For not logged in people!
+    """
+
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated :
+            return False
+
+        qs = CafeProfile.objects.filter(user__exact=request.user)
+        return qs.exists()
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
