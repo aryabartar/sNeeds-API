@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from .models import BookletField, BookletTopic, Booklet, Tag
 
+BOOKLET_SERIALIZER_FIELDS = [
+    'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
+    'booklet_content', 'booklet_image', 'number_of_likes',
+    'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
+    'field_url', 'tags',
+]
+
 
 class FieldSerializerWithNoBookletShow(serializers.ModelSerializer):
     topics = serializers.SerializerMethodField()
@@ -84,14 +91,15 @@ class TagAndBookletsSerializer(serializers.ModelSerializer):
     def get_booklets(self, tag):
         booklets = tag.booklets.all()
         request = self.context["request"]
-        return BookletSerializerWithoutTags(booklets, context={"request": request}, many=True).data
+        return BookletSerializer(booklets, context={"request": request}, many=True).data
 
     class Meta:
         model = Tag
         fields = "__all__"
 
 
-class BookletSerializerWithoutTags(serializers.ModelSerializer):
+class BookletSerializer(serializers.ModelSerializer):
+    tags = serializers.SerializerMethodField()
     booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
     topic_slug = serializers.SerializerMethodField()
@@ -99,6 +107,10 @@ class BookletSerializerWithoutTags(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     field_slug = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
+
+    def get_tags(self, booklet):
+        tags = booklet.tags.all()
+        return TagSerializer(tags, many=True).data
 
     def get_booklet_url(self, booklet):
         request = self.context.get('request')
@@ -126,23 +138,6 @@ class BookletSerializerWithoutTags(serializers.ModelSerializer):
         request = self.context.get('request')
         field_url = booklet.topic.field.get_absolute_url()
         return request.build_absolute_uri(field_url)
-
-    class Meta:
-        model = Booklet
-        fields = [
-            'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
-            'booklet_content', 'booklet_image', 'number_of_likes',
-            'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
-            'field_url'
-        ]
-
-
-class BookletSerializer(BookletSerializerWithoutTags):
-    tags = serializers.SerializerMethodField()
-
-    def get_tags(self, booklet):
-        tags = booklet.tags.all()
-        return TagSerializer(tags, many=True).data
 
     class Meta:
         model = Booklet
