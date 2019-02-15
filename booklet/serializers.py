@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BookletField, BookletTopic, Booklet
+from .models import BookletField, BookletTopic, Booklet, Tag
 
 
 class FieldSerializerWithNoBookletShow(serializers.ModelSerializer):
@@ -72,6 +72,13 @@ class TopicSerializer(TopicSerializerWithNoBooklet):
         ]
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+
+        fields = "__all__"
+
+
 class BookletSerializer(serializers.ModelSerializer):
     booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
@@ -80,6 +87,11 @@ class BookletSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     field_slug = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+
+    def get_tags(self, booklet):
+        tags = booklet.tags.all()
+        return TagSerializer(tags, many=True).data
 
     def get_booklet_url(self, booklet):
         request = self.context.get('request')
@@ -114,5 +126,5 @@ class BookletSerializer(serializers.ModelSerializer):
             'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
             'booklet_content', 'booklet_image', 'number_of_likes',
             'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
-            'field_url',
+            'field_url', 'tags'
         ]
