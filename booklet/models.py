@@ -4,6 +4,16 @@ from django.utils import timezone
 from django.template.defaultfilters import slugify
 
 
+def get_automated_slug(str):
+    "I write this function because slugify is not working for persian characters!"
+    str = str.replace(" ", "-")
+    str = str.replace(",", "-")
+    str = str.replace("(", "-")
+    str = str.replace(")", "")
+    str = str.replace("؟", "")
+    return str
+
+
 class BookletField(models.Model):
     """
     For example Civil Eng, Computer Eng, ...
@@ -64,7 +74,9 @@ class Booklet(models.Model):
 
     language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False, max_length=50)
     slug = models.SlugField(unique=True, null=False, blank=False)
-
+    tags = models.CharField(max_length=2000, blank=True, null=True,
+                            help_text="به این صورت وارد کنید : <br/>"
+                                      "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
     number_of_views = models.IntegerField(default=0,
                                           help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)",
                                           verbose_name="تعداد بازدید")
@@ -77,25 +89,31 @@ class Booklet(models.Model):
                                                       'field_slug': self.topic.field.slug,
                                                       'topic_slug': self.topic.slug})
 
+    def get_tags_array(self):
+        return self.tags.split("|")
+
+    def save(self, *args, **kwargs):
+        tags = self.get_tags_array()
+        for tag in tags:
+            qs = Tag.objects.filter(slug__exact=get_automated_slug(tag))
+            if len(qs) == 0:
+                new_tag = Tag(title=tag)
+                new_tag.save()
+
+        super(Booklet, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
 
 class Tag(models.Model):
     title = models.CharField(max_length=40, null=False, blank=False)
-    slug = models.SlugField(max_length=2000, unique=False, null=True, blank=True)
-
-    def get_automated_slug(self, str):
-        "I write this function because slugify is not working for persian characters!"
-        str = str.replace(" ", "-")
-        str = str.replace(",", "-")
-        str = str.replace("(", "-")
-        str = str.replace(")", "")
-        str = str.replace("؟", "")
-        return str
+    slug = models.SlugField(max_length=2000, unique=False, null=True, blank=True,
+                            help_text="If you are adding this tag for first time, leave this field blank."
+                                      "Only change this field if there is a mistake or for other purposes ...")
 
     def save(self, *args, **kwargs):
-        self.slug = self.get_automated_slug(self.title)
+        self.slug = get_automated_slug(self.title)
         super(Tag, self).save(*args, **kwargs)
 
     def __str__(self):
