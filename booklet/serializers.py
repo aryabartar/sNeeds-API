@@ -78,6 +78,19 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class TagAndBookletsSerializer(serializers.ModelSerializer):
+    booklets = serializers.SerializerMethodField()
+
+    def get_booklets(self, tag):
+        booklets = tag.booklets.all()
+        request = self.context["request"]
+        return BookletSerializerWithoutTags(booklets, context={"request": request}, many=True).data
+
+    class Meta:
+        model = Tag
+        fields = "__all__"
+
+
 class BookletSerializerWithoutTags(serializers.ModelSerializer):
     booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
@@ -139,10 +152,3 @@ class BookletSerializer(BookletSerializerWithoutTags):
             'topic', 'topic_slug', 'topic_url', 'field', 'field_slug',
             'field_url', 'tags',
         ]
-
-
-class TagAndBookletsSerializer(serializers.ModelSerializer):
-    booklets = serializers.SerializerMethodField()
-
-    def get_booklets(self):
-        pass
