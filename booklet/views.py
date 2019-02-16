@@ -50,7 +50,7 @@ class GetBooklet(APIView):
 
 
 class TagsDetail(APIView):
-    def get(self, request, tag_slug):
-        tag = get_object_or_404(Tag, slug=tag_slug)
+    def get(self, request, tag_pk):
+        tag = get_object_or_404(Tag, id=tag_pk)
         tag_serialize = TagAndBookletsSerializer(tag, context={"request": request})
         return Response(tag_serialize.data)

@@ -66,7 +66,7 @@ class Tag(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('booklet:tags', kwargs={"tag_slug": self.slug})
+        return reverse('booklet:tags', kwargs={"tag_pk": self.pk})
 
 
 class Booklet(models.Model):

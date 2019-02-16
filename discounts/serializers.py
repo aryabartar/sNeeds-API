@@ -62,9 +62,9 @@ class DiscountSerializer(serializers.ModelSerializer):
         try:
             cafe_profile = CafeProfile.objects.get(cafe__exact=cafe)
         except:
-            raise serializers.ValidationError("You can not add discount to this cafe!")
+            raise serializers.ValidationError("You can not add discount to this cafe! Set CafeProfile for this cafe.")
 
-        user = self.context['request']
+        user = self.context['request'].user
         if not user == cafe_profile.user:
             raise serializers.ValidationError("You can not add discount to this cafe!")
         return data
