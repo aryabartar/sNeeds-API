@@ -29,3 +29,6 @@ http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/ => Retr
 
 http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/deitel-java/ => Retrieve a booklet with 'deitel' slug. Also checks field and topic slug to be true!
 http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/deitel-java/?like=true => Increments number of likes (I will implement session validation later)
+
+http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
+http://127.0.0.1:8000/booklet/tags/34 => Retrieve a tag with id=34
