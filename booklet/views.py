@@ -49,10 +49,11 @@ class GetBooklet(APIView):
         return Response(booklet_serialize.data)
 
 
-class TagsList(generics.ListAPIView):
-    serializer_class = TagSerializer
-    queryset = Tag.objects.all()
-    pagination_class = LimitOffsetPagination
+class TagsList(APIView):
+    def get(self, request):
+        tags = Tag.objects.all()
+        tags_serialize = TagSerializer(tags, many=True, context={"request": request})
+        return Response(tags_serialize.data)
 
 
 class TagsDetail(APIView):
