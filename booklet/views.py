@@ -7,7 +7,7 @@ from rest_framework.pagination import LimitOffsetPagination
 
 from .models import BookletField, BookletTopic, Booklet, Tag
 from .serializers import FieldSerializerWithNoBookletShow, FieldSerializer, TopicSerializer, BookletSerializer, \
-    TagAndBookletsSerializer , TagSerializer
+    TagAndBookletsSerializer, TagSerializer
 
 
 class GetFieldsList(APIView):
@@ -49,11 +49,10 @@ class GetBooklet(APIView):
         return Response(booklet_serialize.data)
 
 
-class TagsList(APIView):
-    def get(self, request):
-        tags = Tag.objects.all()
-        tags_serialize = TagSerializer(tags, many=True, context={"request": request})
-        return Response(tags_serialize.data)
+class TagsList(generics.ListAPIView):
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+    pagination_class = LimitOffsetPagination
 
 
 class TagsDetail(APIView):
