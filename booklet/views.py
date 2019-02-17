@@ -59,7 +59,7 @@ class TagsList(APIView):
 class TagsDetail(APIView):
     def get(self, request, tag_slug):
         tag = get_object_or_404(Tag, slug=tag_slug)
-        tag_serialize = TagAndBookletsSerializer(tag, context={"request": request})
+        tag_serialize = TagSerializer(tag, context={"request": request})
         return Response(tag_serialize.data)
 
 
