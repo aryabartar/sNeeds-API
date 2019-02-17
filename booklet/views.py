@@ -61,3 +61,15 @@ class TagsDetail(APIView):
         tag = get_object_or_404(Tag, slug=tag_slug)
         tag_serialize = TagAndBookletsSerializer(tag, context={"request": request})
         return Response(tag_serialize.data)
+
+
+class TagsPostsList(generics.ListAPIView):
+    serializer_class = BookletSerializer
+    queryset = Booklet.objects.all()
+    pagination_class = LimitOffsetPagination
+
+    def get_queryset(self):
+        tag_slug = self.kwargs["tag_slug"]
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        booklets = tag.booklets.all()
+        return booklets
