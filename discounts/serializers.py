@@ -27,7 +27,7 @@ class CafeSerializer(serializers.ModelSerializer):
         return request.build_absolute_uri(cafe_url)
 
     def get_images(self, cafe):
-        all_images = cafe.images
+        all_images = cafe.images.all()
         return CafeImageSerializer(all_images, many=True, context=self.context).data
 
     class Meta:

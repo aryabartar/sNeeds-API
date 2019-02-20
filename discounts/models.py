@@ -45,7 +45,11 @@ def upload_post_image(instance, filename):
 
 
 class CafeImage(models.Model):
-    cafe = models.ForeignKey(Cafe, on_delete=models.CASCADE, blank=False, null=False, related_name="images")
+    cafe = models.ForeignKey(Cafe,
+                             on_delete=models.CASCADE,
+                             blank=False,
+                             null=False,
+                             related_name="images")
     image = models.ImageField(upload_to=upload_post_image, blank=False, null=False)
 
 
