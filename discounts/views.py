@@ -9,7 +9,6 @@ from rest_framework.response import Response
 
 from .models import Discount, Cafe, UserDiscount, UserUsedDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
-from account.permissions import CafeAdminAllowOnly
 
 
 class CafeList(APIView):
@@ -19,11 +18,20 @@ class CafeList(APIView):
         return Response(serialize_cafe.data)
 
 
-class DiscountDetail(APIView):
-    def get(self, request, discount_pk):
+class DiscountDetail(APIView,
+                     mixins.DestroyModelMixin):
+
+    def get_object(self):
+        discount_pk = self.kwargs['discount_pk']
         discount = get_object_or_404(Discount, pk=discount_pk)
-        discount_serialize = DiscountSerializer(discount)
+        return discount
+
+    def get(self, request, *args, **kwargs):
+        discount_serialize = DiscountSerializer(self.get_object())
         return Response(discount_serialize.data)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class DiscountList(APIView):
