@@ -58,6 +58,10 @@ class UserDiscountList(mixins.CreateModelMixin,
         serializer.save(user=self.request.user)
 
     def post(self, request, *args, **kwargs):
+        """Unique code validation"""
+        qs = UserDiscount.objects.filter(user__exact=request.user, discount__pk__exact=request.data['discount'])
+        if qs.exists():
+            return Response({"message": "This user already has an active code."})
         return self.create(request, *args, **kwargs)
 
 
