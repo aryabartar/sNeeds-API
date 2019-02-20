@@ -96,7 +96,10 @@ class UserDiscountDetail(APIView,
         return self.retrieve(request, *args, **kwargs)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        user_discount = self.get_object()
+        if self.request.user == user_discount.user:
+            return self.destroy(request, *args, **kwargs)
+        return Response({"message": "Only user can delete its active discount. "})
 
 
 class CafePage(APIView):

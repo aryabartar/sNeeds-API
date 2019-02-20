@@ -90,6 +90,7 @@ class UserDiscount(models.Model):
         return str(self.discount)
 
     def delete(self, *args, **kwargs):
+        """This method is used to archive discount in UserUsedDiscount object."""
         user_used_discount = UserUsedDiscount(discount=self.discount, cafe=self.discount.cafe,
                                               user=self.user, archive_string="Used")
         user_used_discount.save()
