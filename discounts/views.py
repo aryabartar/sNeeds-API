@@ -77,19 +77,24 @@ class UserDiscountList(mixins.CreateModelMixin,
         return self.create(request, *args, **kwargs)
 
 
-class UserDiscountDetail(generics.GenericAPIView,
-                         mixins.DestroyModelMixin):
+class UserDiscountDetail(APIView,
+                         mixins.DestroyModelMixin,):
+    # serializer_class = UserDiscountSerializer
+    # queryset = UserDiscount.objects.all()
+    # def get_object(self):
+    #     print("ss")
+    #     return UserDiscount.objects.first()
 
-    def get_queryset(self):
-        print("ss")
-        print(self.request)
-        return UserDiscount.objects.first()
+    def get(self, request, *args , **kwargs):
+        user_discount_pk = kwargs['user_discount_pk']
+        user_discount = get_object_or_404(UserDiscount,
+                                          pk=user_discount_pk)
+        user_discount_serialize = UserDiscountSerializer(user_discount)
+        return Response(user_discount_serialize.data)
 
-    def destroy(self, request, *args, **kwargs):
-        return self.destroy(request , *args , **kwargs)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
-    def get(self, request, *args, **kwargs):
-        return Response({"s":"S"})
 
 class CafePage(APIView):
     def get(self, request, cafe_pk):
