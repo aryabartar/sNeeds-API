@@ -35,3 +35,4 @@ http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="be
 http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of a tag with slug="best-booklet" (pagination included!)
 
 -- discount --
+http://127.0.0.1:8000/cafe/cafes/ => Retrieve all cafes (No pagination)

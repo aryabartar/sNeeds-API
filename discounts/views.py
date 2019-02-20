@@ -124,3 +124,14 @@ class CafePage(APIView):
         cafe = get_object_or_404(Cafe, pk=cafe_pk)
         cafe_serialize = CafeSerializer(cafe, context={'request': request})
         return Response(cafe_serialize.data)
+
+
+class CafeDiscountsPage(APIView):
+    def get(self, request, *args, **kwargs):
+        cafe_slug = kwargs['cafe_slug']
+        cafe = Cafe.objects.filter(slug__iexact=cafe_slug)
+        if cafe.exists():
+            discounts = cafe[0].discounts
+            discounts_serialize = DiscountSerializer(discounts, many=True)
+            return Response(discounts_serialize.data)
+        return Response({"message": "No cafe found!"})
