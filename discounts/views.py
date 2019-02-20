@@ -30,8 +30,12 @@ class DiscountDetail(APIView,
         discount_serialize = DiscountSerializer(self.get_object())
         return Response(discount_serialize.data)
 
+    # TODO:Check bugs
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        discount = self.get_object()
+        if request.user == discount.cafe.cafe_profile.user:
+            return self.destroy(request, *args, **kwargs)
+        return Response({"message": "You have to log in as cafe admin."})
 
 
 class DiscountList(APIView):

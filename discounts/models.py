@@ -99,7 +99,7 @@ class UserDiscount(models.Model):
 
 class CafeProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cafe_profile")
-    cafe = models.OneToOneField(Cafe, on_delete=models.CASCADE, related_name="cafe")
+    cafe = models.OneToOneField(Cafe, on_delete=models.CASCADE, related_name="cafe_profile")
 
     def __str__(self):
         return self.cafe.name
