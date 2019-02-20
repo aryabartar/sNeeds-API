@@ -20,9 +20,12 @@ class CafeList(APIView):
 
 
 class DiscountList(APIView):
-    permission_classes = [CafeAdminAllowOnly]
-
     serializer_class = DiscountSerializer
+
+    def get(self, request):
+        all_discounts = Discount.objects.all()
+        discounts_serialize = DiscountSerializer(all_discounts, many=True)
+        return Response(discounts_serialize.data)
 
     def post(self, request):
         discount_serializer = DiscountSerializer(data=request.data, context={"request": self.request})
