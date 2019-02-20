@@ -120,8 +120,9 @@ class UserDiscountDetail(APIView,
 
 
 class CafePage(APIView):
-    def get(self, request, cafe_pk):
-        cafe = get_object_or_404(Cafe, pk=cafe_pk)
+    def get(self, request, *args , **kwargs):
+        cafe_slug = kwargs['cafe_slug']
+        cafe = get_object_or_404(Cafe, slug=cafe_slug)
         cafe_serialize = CafeSerializer(cafe, context={'request': request})
         return Response(cafe_serialize.data)
 

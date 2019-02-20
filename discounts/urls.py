@@ -23,6 +23,6 @@ urlpatterns = [
     path('user-discounts/', views.UserDiscountList.as_view(), name="user_discount_list"),
     path('user-discounts/<int:user_discount_pk>', views.UserDiscountDetail.as_view(), name="user_discount_detail"),
     path('cafes/', views.CafeList.as_view(), name="cafe_list"),
-    path('cafes/<str:cafe_pk>/', views.CafePage.as_view(), name="cafe_detail"),
+    path('cafes/<str:cafe_slug>/', views.CafePage.as_view(), name="cafe_detail"),
     path('cafes/<str:cafe_slug>/discounts', views.CafeDiscountsPage.as_view(), name="cafe_discounts_list"),
 ]
