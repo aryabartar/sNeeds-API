@@ -20,6 +20,7 @@ class CafeList(APIView):
 
 class DiscountDetail(APIView,
                      mixins.DestroyModelMixin):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_object(self):
         discount_pk = self.kwargs['discount_pk']
@@ -30,7 +31,6 @@ class DiscountDetail(APIView,
         discount_serialize = DiscountSerializer(self.get_object())
         return Response(discount_serialize.data)
 
-    # TODO:Check bugs
     def delete(self, request, *args, **kwargs):
         discount = self.get_object()
         if request.user == discount.cafe.cafe_profile.user:
@@ -40,6 +40,7 @@ class DiscountDetail(APIView,
 
 class DiscountList(APIView):
     serializer_class = DiscountSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         all_discounts = Discount.objects.all()
@@ -47,12 +48,7 @@ class DiscountList(APIView):
         return Response(discounts_serialize.data)
 
     def post(self, request):
-
         data = request.data
-        # data['cafe'] = ['3']
-        # print("\n\n\n\n\n\n")
-        # print(data)
-        # print("\n\n\n\n\n\n")
         discount_serializer = DiscountSerializer(data=data, context={"request": self.request})
         if discount_serializer.is_valid():
             discount_serializer.save()
@@ -66,6 +62,7 @@ class DiscountList(APIView):
 
 class UserDiscountList(mixins.CreateModelMixin,
                        generics.ListAPIView):
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     serializer_class = UserDiscountSerializer
     passed_id = None
 
@@ -100,6 +97,8 @@ class UserDiscountDetail(APIView,
                          mixins.RetrieveModelMixin):
     serializer_class = UserDiscountSerializer
 
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
     def get_object(self):
         user_discount_pk = self.kwargs['user_discount_pk']
         user_discount = get_object_or_404(UserDiscount,
@@ -115,7 +114,7 @@ class UserDiscountDetail(APIView,
 
     def delete(self, request, *args, **kwargs):
         user_discount = self.get_object()
-        if self.request.user == user_discount.user:
+        if self.request.user == user_discount.user:  # Check permission
             return self.destroy(request, *args, **kwargs)
         return Response({"message": "Only user can delete its active discount. "})
 
