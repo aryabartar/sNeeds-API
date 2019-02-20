@@ -20,11 +20,6 @@ class CafeImageSerializer(serializers.ModelSerializer):
 class CafeSerializer(serializers.ModelSerializer):
     images = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
-    discounts = serializers.SerializerMethodField()
-
-    def get_discounts(self, cafe):
-        all_cafe_discounts = cafe.discounts
-        return DiscountSerializerInfo(all_cafe_discounts, many=True).data
 
     def get_url(self, cafe):
         request = self.context.get('request')
@@ -39,7 +34,7 @@ class CafeSerializer(serializers.ModelSerializer):
         model = Cafe
         fields = [
             'id', 'name', 'information', 'address', 'phone_number',
-            'url', 'slug', 'images', 'discounts'
+            'url', 'slug', 'images',
         ]
 
 

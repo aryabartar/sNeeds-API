@@ -33,3 +33,5 @@ http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/deitel-j
 http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
 http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="best-booklet"
 http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of a tag with slug="best-booklet" (pagination included!)
+
+-- discount --
