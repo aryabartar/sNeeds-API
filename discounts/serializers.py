@@ -55,19 +55,27 @@ class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = '__all__'
+        read_only_fields = [
+            'cafe',
+        ]
 
-    def validate(self, data):
-        cafe = data['cafe']
-
-        try:
-            cafe_profile = CafeProfile.objects.get(cafe__exact=cafe)
-        except:
-            raise serializers.ValidationError("You can not add discount to this cafe! Set CafeProfile for this cafe.")
-
+    def validate(self, attrs):
         user = self.context['request'].user
-        if not user == cafe_profile.user:
-            raise serializers.ValidationError("You can not add discount to this cafe!")
-        return data
+        cafe_profile = CafeProfile.objects.filter(user__exact=user)
+        if not cafe_profile.exists():
+            raise serializers.ValidationError("User is not cafe admin.")
+        return attrs
+
+    def create(self, validated_data):
+        # print(self.context['request'])
+        user = self.context['request'].user
+        cafe_profile = CafeProfile.objects.filter(user__exact=user)
+        if not cafe_profile.exists():
+            raise serializers.ValidationError("User is not cafe admin.")
+        cafe = cafe_profile[0].cafe
+        validated_data['cafe'] = cafe
+        print(validated_data)
+        return Discount.objects.create(**validated_data)
 
 
 class UserDiscountSerializer(serializers.ModelSerializer):

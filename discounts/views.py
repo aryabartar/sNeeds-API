@@ -47,7 +47,13 @@ class DiscountList(APIView):
         return Response(discounts_serialize.data)
 
     def post(self, request):
-        discount_serializer = DiscountSerializer(data=request.data, context={"request": self.request})
+
+        data = request.data
+        # data['cafe'] = ['3']
+        # print("\n\n\n\n\n\n")
+        # print(data)
+        # print("\n\n\n\n\n\n")
+        discount_serializer = DiscountSerializer(data=data, context={"request": self.request})
         if discount_serializer.is_valid():
             discount_serializer.save()
             return Response(discount_serializer.data)
