@@ -18,7 +18,6 @@ from . import views
 
 app_name = "cafe"
 urlpatterns = [
-    path('', views.CafeList.as_view(), name="home"),
     path('discounts/', views.DiscountList.as_view(), name="discount_list"),
     path('discounts/<int:discount_pk>', views.DiscountDetail.as_view(), name="discount_detail"),
     path('user-discounts/', views.UserDiscountList.as_view(), name="user_discount_list"),
