@@ -19,6 +19,13 @@ class CafeList(APIView):
         return Response(serialize_cafe.data)
 
 
+class DiscountDetail(APIView):
+    def get(self, request, discount_pk):
+        discount = get_object_or_404(Discount, pk=discount_pk)
+        discount_serialize = DiscountSerializer(discount)
+        return Response(discount_serialize.data)
+
+
 class DiscountList(APIView):
     serializer_class = DiscountSerializer
 
