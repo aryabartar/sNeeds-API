@@ -89,6 +89,12 @@ class UserDiscount(models.Model):
     def __str__(self):
         return str(self.discount)
 
+    def delete(self, *args, **kwargs):
+        user_used_discount = UserUsedDiscount(discount=self.discount, cafe=self.discount.cafe,
+                                              user=self.user, archive_string="Used")
+        user_used_discount.save()
+        super(UserDiscount, self).delete(*args, **kwargs)
+
 
 class CafeProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cafe_profile")

@@ -92,12 +92,6 @@ class UserDiscountDetail(APIView,
         serialize = self.serializer_class(instance)
         return serialize
 
-    def perform_destroy(self, instance):
-        user_used_discount = UserUsedDiscount(discount=instance.discount, cafe=instance.discount.cafe,
-                                              user=self.request.user, archive_string="Used")
-        user_used_discount.save()
-        instance.delete()
-
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
