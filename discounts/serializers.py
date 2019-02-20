@@ -67,14 +67,10 @@ class DiscountSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        # print(self.context['request'])
         user = self.context['request'].user
-        cafe_profile = CafeProfile.objects.filter(user__exact=user)
-        if not cafe_profile.exists():
-            raise serializers.ValidationError("User is not cafe admin.")
-        cafe = cafe_profile[0].cafe
+        cafe_profile = CafeProfile.objects.get(user__exact=user)
+        cafe = cafe_profile.cafe
         validated_data['cafe'] = cafe
-        print(validated_data)
         return Discount.objects.create(**validated_data)
 
 
