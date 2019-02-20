@@ -7,7 +7,7 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Discount, Cafe, UserDiscount
+from .models import Discount, Cafe, UserDiscount, UserUsedDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
 from account.permissions import CafeAdminAllowOnly
 
@@ -82,16 +82,21 @@ class UserDiscountDetail(APIView,
                          mixins.RetrieveModelMixin):
     serializer_class = UserDiscountSerializer
 
-    # queryset = UserDiscount.objects.all()
     def get_object(self):
         user_discount_pk = self.kwargs['user_discount_pk']
         user_discount = get_object_or_404(UserDiscount,
                                           pk=user_discount_pk)
         return user_discount
 
-    def get_serializer(self, obj):
-        serialize = self.serializer_class(obj)
+    def get_serializer(self, instance):
+        serialize = self.serializer_class(instance)
         return serialize
+
+    def perform_destroy(self, instance):
+        user_used_discount = UserUsedDiscount(discount=instance.discount, cafe=instance.discount.cafe,
+                                              user=self.request.user, archive_string="Used")
+        user_used_discount.save()
+        instance.delete()
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
