@@ -52,7 +52,19 @@ class UserDiscountList(mixins.CreateModelMixin,
     passed_id = None
 
     def get_queryset(self):
-        return UserDiscount.objects.all()
+        """Returns all UserDiscount objects for admin and UserDiscount of a certain cafe for a cafe admin."""
+        user = self.request.user
+
+        if not user.is_authenticated:
+            return None
+        elif user.is_superuser:
+            return UserDiscount.objects.all()
+        elif user.cafe_profile is not None:
+            cafe = user.cafe_profile.cafe
+            user_discounts = UserDiscount.objects.filter(discount__cafe__exact=cafe)
+            return user_discounts
+
+        return None
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
