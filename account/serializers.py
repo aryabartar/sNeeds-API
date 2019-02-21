@@ -44,7 +44,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-
     def get_message(self, user):
         return "Success!"
 
@@ -94,5 +93,4 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # Save user information here
         phone = validated_data['phone']
         UserInformation.objects.create(user=user, phone=phone)
-        print("--------------------------------")
         return user

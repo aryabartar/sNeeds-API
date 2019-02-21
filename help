@@ -73,20 +73,26 @@ Register:
   register endpoint: http://127.0.0.1:8000/account/jwt/register/
   Sample post request:
     {
-        "username": "testapi125",
-        "email": "testapi125@gmail.com",
-        "password": "TestApi125",
-        "password2": "TestApi125"
+        "username": "ali",
+        "email": "ali@gmail.com",
+        "first_name": "arya",
+        "last_name": "bartar",
+        "phone": "09011353909",
+        "password": "sneeds@203040",
+        "password2": "sneeds@203040"
     }
   Returns this json data:
     {
-        "username": "testapi125",
-        "email": "testapi125@gmail.com",
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMSwidXNlcm5hbWUiOiJ0ZXN0YXBpMTIyNSIsImV4cCI6MTU1MDc3MDQ2MSwiZW1haWwiOiJ0ZXN0YXBpMTIyNUBnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1MDc3MDE2MX0.1llyvsE7jMvWDFXH4hQNEwksebqo_VZPDgJwgqhaaNg",
-        "token_expires": "2019-03-08T17:26:01.278792Z",
+        "username": "ali",
+        "email": "ali@gmail.com",
+        "first_name": "arya",
+        "last_name": "bartar",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozOSwidXNlcm5hbWUiOiJhbGkxMSIsImV4cCI6MTU1MDc3NzQxNywiZW1haWwiOiJhbGkxMUBnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1MDc3NzExN30.hCjGTB_9D0DvewMhgc6t5C5Xr8flFizCBPTk4SF5PHA",
+        "token_expires": "2019-03-08T19:21:57.551613Z",
         "message": "Success!"
     }
 
+Login is NOT COMPLETED
 Login:
   login endpoint: http://127.0.0.1:8000/account/jwt/login/
   User can login with either username or email. (I prefer email)
