@@ -20,7 +20,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={
         "input_type": 'password'
     }, write_only=True)
-    phone = serializers.CharField(max_length=11, min_length=11)
+    phone = serializers.CharField(max_length=11, min_length=11, write_only=True)
     token = serializers.SerializerMethodField(read_only=True)
     token_expires = serializers.SerializerMethodField(read_only=True)
     message = serializers.SerializerMethodField(read_only=True)
@@ -44,8 +44,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
 
-    def get_phone(self, user):
-        return "22"
 
     def get_message(self, user):
         return "Success!"
@@ -86,6 +84,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user = User(
             username=validated_data['username'],
             email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
         )
         user.set_password(validated_data['password'])
         # user.is_active=False #Enable this for email verification
@@ -94,5 +94,5 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # Save user information here
         phone = validated_data['phone']
         UserInformation.objects.create(user=user, phone=phone)
-
+        print("--------------------------------")
         return user
