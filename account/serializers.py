@@ -28,6 +28,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = [
             'username',
             'email',
+            'first_name',
+            'last_name',
             'password',
             'password2',
             'token',
