@@ -1,93 +1,0 @@
-<!doctype html>
-{% extends 'website/../bases/base-new.html' %}
-{% load static %}
-
-{% block body-class-block %}
-    <body class="ecommerce-page" style="height:100%">
-{% endblock body-class-block %}
-
-{% block main_content %}
-    <div class="page-header header-filter header-small" data-parallax="true"
-         style="background-image: url('{% static "assets/img/cafe.jpg" %}'); transform: translate3d(0px, 0px, 0px);">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-8 col-md-offset-2">
-                    <div class="brand">
-                        <h1 class="title yekanFont rtl">کافه به سبک اسنیدز</h1>
-                        <h3 class="yekanFont rtl"> لیست کافه‌هایی که باهاشون همکاری میکنیم و به اسنیدزیا تا <b>50
-                            درصد </b>تخفیف
-                            میدن! </h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="main main-raised">
-        <div class="section" style="padding:20px 0 !important;">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb yekanFont">
-                                <li class="breadcrumb-item"><a href="#">صفحه اول</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">کافه‌ها</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-                <h2 class="section-title yekanFont rtl text-right">لیست کافه‌ها</h2>
-                <hr>
-                <div class="row">
-
-                    {% for cafe in cafes %}
-                        <div class="col-md-3">
-                            <div class="rotating-card-container" style="height: 302px; margin-bottom: 30px;">
-                                <div class="card card-rotate card-background">
-                                    <div class="front front-background"
-                                         style="background-image: url({{ cafe.images.all.1.image.url }}); ">
-                                        <div class="card-content">
-                                            <!--<h6 class="category text-info yekanFont">کافه تست</h6>-->
-                                            <a href="#pablo">
-                                                <h3 class="card-title yekanFont">{{ cafe }}</h3>
-                                            </a>
-                                            <p class="card-description yekanFont text-center normalFontSize2">
-                                                روی تمامی خدمات و منو</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="back back-background"
-                                         style="background-image: url({{ cafe.images.all.1.image.url }}); ">
-                                        <div class="card-content">
-                                            <h5 class="card-title yekanFont">
-                                                {{ cafe }}
-                                            </h5>
-                                            <p class="card-description yekanFont text-justify">
-                                                اگر اطراف انقلاب هستید و بعد از یک گذروندن یک روز سخت دنبال جایی برای
-                                                قهوه نوشیدن و سرحال شدن میگردین٬ کافه پیکسل منتظر شماست 🙂
-                                            </p>
-                                            <div class="footer text-center">
-                                                <a href="{% url "discounts:cafe_page" cafe.slug %}"
-                                                   class="btn btn-success btn-fill btn-wd yekanFont normalFontSize2">
-                                                    <i class="material-icons">local_cafe</i>
-                                                    دریافت تخفیف این کافه
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                </div>
-
-            </div>
-        </div><!-- section -->
-
-    </div>
-    <br/>
-    <br/>
-{% endblock main_content %}
-
