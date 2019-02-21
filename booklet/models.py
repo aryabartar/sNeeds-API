@@ -94,7 +94,7 @@ class Booklet(models.Model):
     tags_str = models.CharField(max_length=2000, blank=True, null=True,
                                 help_text="به این صورت وارد کنید : <br/>"
                                           "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
-    tags = models.ManyToManyField(Tag, null=True, blank=True, related_name="booklets",
+    tags = models.ManyToManyField(Tag,  blank=True, related_name="booklets",
                                   help_text="Don't change this if you are creating new booklet. Only change this if "
                                             "it is necessary.")
     number_of_views = models.IntegerField(default=0,

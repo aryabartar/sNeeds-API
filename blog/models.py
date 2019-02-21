@@ -36,7 +36,7 @@ class Post(models.Model):
     )
     post_type = models.CharField(choices=POST_TYPE, default='Q&A', null=False, blank=False, max_length=50)
     short_description = models.TextField(null=True, blank=True)
-    questions_and_answers = models.ManyToManyField(PostQuestionAndAnswer, null=True, blank=True)
+    questions_and_answers = models.ManyToManyField(PostQuestionAndAnswer, blank=True)
     aparat_link = models.URLField(null=True,
                                   blank=True,
                                   help_text="Don't fill this if this post has no "
