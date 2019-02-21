@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
 
+from .models import UserInformation
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
@@ -18,7 +20,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={
         "input_type": 'password'
     }, write_only=True)
-
+    phone = serializers.CharField(max_length=11, min_length=11)
     token = serializers.SerializerMethodField(read_only=True)
     token_expires = serializers.SerializerMethodField(read_only=True)
     message = serializers.SerializerMethodField(read_only=True)
@@ -30,6 +32,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'phone',
             'password',
             'password2',
             'token',
@@ -40,6 +43,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True}
         }
+
+    def get_phone(self, user):
+        return "22"
 
     def get_message(self, user):
         return "Success!"
@@ -84,5 +90,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         # user.is_active=False #Enable this for email verification
         user.save()
+
+        # Save user information here
+        phone = validated_data['phone']
+        UserInformation.objects.create(user=user, phone=phone)
 
         return user
