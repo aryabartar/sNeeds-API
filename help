@@ -35,19 +35,35 @@ http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="be
 http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of a tag with slug="best-booklet" (pagination included!)
 
 -- discount --
-http://127.0.0.1:8000/cafe/cafes/ => Retrieve all cafes (No pagination)
+http://127.0.0.1:8000/cafe/cafes/ => Retrieve all cafes (No pagination included)
 http://127.0.0.1:8000/cafe/cafes/ehsan-va-shoraka/ => Retrieves a cafe with "ehsan-va-shoraka" slug
 http://127.0.0.1:8000/cafe/cafes/ehsan-va-shoraka/discounts => Retrieves all discounts of "ehsan-va-shoraka" cafe
-http://127.0.0.1:8000/cafe/discounts/ => Retrieves all discounts.
-http://127.0.0.1:8000/cafe/user-discounts/ => For Retrieve and Post.
-  This is different for 3 type of users:
+
+http://127.0.0.1:8000/cafe/discounts/ => Retrieve and Post. Retrieve all discounts.
+  Post format:
+    {
+        "discount_percent": 35,
+        "discount_info": "Only on main course."
+    }
+    Note: Only cafe admin have post permission.
+
+http://127.0.0.1:8000/cafe/discounts/119 => Retrieve and Delete.
+  Retrieves discount with 119 id.
+  Deletes discount with 119 id.
+
+http://127.0.0.1:8000/cafe/user-discounts/ => Retrieve and Post.
+  Retrieve is different for 3 type of users:
     1) Super Admin can retrieve all user-discounts.
     2) Cafe Admin can retrieve all user-discounts of a cafe.
-    3) Simple User can not access any data.
+    3) Simple User retrieve its own data.
+
   Post format:
     {
         "discount": 12
     }
     Note: This will create a user-discount instance for logged in user.
 
+http://127.0.0.1:8000/cafe/user-discounts/125 => Retrieve and Delete.
+  Retrieves user-discount with 125 id.
+  Deletes user-discount with 125 id.
 
