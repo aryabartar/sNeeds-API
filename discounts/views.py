@@ -70,14 +70,24 @@ class UserDiscountList(mixins.CreateModelMixin,
         """Returns all UserDiscount objects for admin and UserDiscount of a certain cafe for a cafe admin."""
         user = self.request.user
 
+        try:
+            cafe_profile = user.cafe_profile
+        except:
+            cafe_profile = None
+
         if not user.is_authenticated:
             return None
+
         elif user.is_superuser:
             return UserDiscount.objects.all()
-        elif user.cafe_profile is not None:
+
+        elif cafe_profile is not None:
             cafe = user.cafe_profile.cafe
             user_discounts = UserDiscount.objects.filter(discount__cafe__exact=cafe)
             return user_discounts
+
+        elif user.is_authenticated:
+            return UserDiscount.objects.filter(user__exact=user)
 
         return None
 
@@ -120,7 +130,7 @@ class UserDiscountDetail(APIView,
 
 
 class CafePage(APIView):
-    def get(self, request, *args , **kwargs):
+    def get(self, request, *args, **kwargs):
         cafe_slug = kwargs['cafe_slug']
         cafe = get_object_or_404(Cafe, slug=cafe_slug)
         cafe_serialize = CafeSerializer(cafe, context={'request': request})
