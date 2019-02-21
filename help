@@ -36,3 +36,18 @@ http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of 
 
 -- discount --
 http://127.0.0.1:8000/cafe/cafes/ => Retrieve all cafes (No pagination)
+http://127.0.0.1:8000/cafe/cafes/ehsan-va-shoraka/ => Retrieves a cafe with "ehsan-va-shoraka" slug
+http://127.0.0.1:8000/cafe/cafes/ehsan-va-shoraka/discounts => Retrieves all discounts of "ehsan-va-shoraka" cafe
+http://127.0.0.1:8000/cafe/discounts/ => Retrieves all discounts.
+http://127.0.0.1:8000/cafe/user-discounts/ => For Retrieve and Post.
+  This is different for 3 type of users:
+    1) Super Admin can retrieve all user-discounts.
+    2) Cafe Admin can retrieve all user-discounts of a cafe.
+    3) Simple User can not access any data.
+  Post format:
+    {
+        "discount": 12
+    }
+    Note: This will create a user-discount instance for logged in user.
+
+
