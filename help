@@ -67,3 +67,32 @@ http://127.0.0.1:8000/cafe/user-discounts/125 => Retrieve and Delete.
   Retrieves user-discount with 125 id.
   Deletes user-discount with 125 id.
 
+-- account --
+This is a technical guideline:
+Register:
+  register endpoint: http://127.0.0.1:8000/account/jwt/register/
+  Sample post request:
+    {
+        "username": "testapi125",
+        "email": "testapi125@gmail.com",
+        "password": "TestApi125",
+        "password2": "TestApi125"
+    }
+  Returns this json data:
+    {
+        "username": "testapi125",
+        "email": "testapi125@gmail.com",
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMSwidXNlcm5hbWUiOiJ0ZXN0YXBpMTIyNSIsImV4cCI6MTU1MDc3MDQ2MSwiZW1haWwiOiJ0ZXN0YXBpMTIyNUBnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1MDc3MDE2MX0.1llyvsE7jMvWDFXH4hQNEwksebqo_VZPDgJwgqhaaNg",
+        "token_expires": "2019-03-08T17:26:01.278792Z",
+        "message": "Success!"
+    }
+
+Login:
+  login endpoint: http://127.0.0.1:8000/account/jwt/login/
+  User can login with either username or email. (I prefer email)
+
+    {
+        "username": "testapi125",
+        "password": "TestApi125"
+    }
+

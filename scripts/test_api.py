@@ -11,7 +11,6 @@ account_data = {
     "email": "testapi1544@gmail.com",
     "password": "Sneeds@203040",
     "password2": "Sneeds@203040",
-
 }
 
 discount_data = {
