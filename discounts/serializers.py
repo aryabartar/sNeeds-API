@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cafe, CafeImage, Discount, UserDiscount, CafeProfile
+from .models import Cafe, CafeImage, Discount, UserDiscount, CafeProfile, UserDiscountArchive
 
 
 class CafeImageSerializer(serializers.ModelSerializer):
@@ -76,3 +76,7 @@ class UserDiscountSerializer(serializers.ModelSerializer):
         read_only_fields = [
             'user', 'code', 'status',
         ]
+
+# class UserDiscountArchiveSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model =

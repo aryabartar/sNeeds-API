@@ -7,7 +7,7 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Discount, Cafe, UserDiscount, UserUsedDiscount
+from .models import Discount, Cafe, UserDiscount
 from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
 
 
@@ -106,7 +106,6 @@ class UserDiscountDetail(APIView,
                          mixins.DestroyModelMixin,
                          mixins.RetrieveModelMixin):
     serializer_class = UserDiscountSerializer
-
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_object(self):
@@ -146,3 +145,8 @@ class CafeDiscountsPage(APIView):
             discounts_serialize = DiscountSerializer(discounts, many=True)
             return Response(discounts_serialize.data)
         return Response({"message": "No cafe found!"})
+
+# class UserDiscountArchiveList(generics.ListAPIView):
+#     class
+#     def get_queryset(self):
+#

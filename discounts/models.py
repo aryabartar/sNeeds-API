@@ -94,8 +94,8 @@ class UserDiscount(models.Model):
         return str(self.discount)
 
     def delete(self, *args, **kwargs):
-        """This method is used to archive discount in UserUsedDiscount object."""
-        user_used_discount = UserUsedDiscount(discount=self.discount, cafe=self.discount.cafe,
+        """This method is used to archive discount in UserDiscountArchive object."""
+        user_used_discount = UserDiscountArchive(discount=self.discount, cafe=self.discount.cafe,
                                               user=self.user, archive_string="Used")
         user_used_discount.save()
         super(UserDiscount, self).delete(*args, **kwargs)
@@ -109,7 +109,7 @@ class CafeProfile(models.Model):
         return self.cafe.name
 
 
-class UserUsedDiscount(models.Model):
+class UserDiscountArchive(models.Model):
     # When discount object is present.
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True,
                                  related_name="user_used_discounts")

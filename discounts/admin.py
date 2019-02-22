@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CafeImage, Cafe, Discount, UserDiscount, CafeProfile, UserUsedDiscount
+from .models import CafeImage, Cafe, Discount, UserDiscount, CafeProfile, UserDiscountArchive
 
 
 # Register your models here.
@@ -16,5 +16,5 @@ admin.site.register(Cafe, PropertyAdmin)
 admin.site.register(Discount)
 admin.site.register(UserDiscount)
 admin.site.register(CafeProfile)
-admin.site.register(UserUsedDiscount)
+admin.site.register(UserDiscountArchive)
 admin.site.register(CafeImage)
