@@ -92,13 +92,23 @@ Register:
         "message": "Success!"
     }
 
-Login is NOT COMPLETED
 Login:
   login endpoint: http://127.0.0.1:8000/account/jwt/login/
   User can login with either username or email. (I prefer email)
-
     {
-        "username": "testapi125",
-        "password": "TestApi125"
+       "username_or_email" : "ali",
+       "password" : "sneeds@203040"
+    }
+  or
+    {
+       "username_or_email" : "ali@gmail.com",
+       "password" : "sneeds@203040"
+    }
+
+  will return:
+    {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTA4MTQ1NjMsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNTUwODE0MjYzfQ.lexMBgJbescCWSj0LsETSY0KzjCNsYwTeaNgNnosa94",
+        "username": "ali",
+        "expires": "2019-03-09T05:41:03.892883Z"
     }
 
