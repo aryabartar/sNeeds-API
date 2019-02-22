@@ -24,15 +24,15 @@ class AuthView(APIView):
             return Response({"detail": "You are already authenticated"}, status=400)
 
         data = request.data
-        username = data.get('username')
+        username_or_email = data.get('username_or_email')
         password = data.get('password')
 
         qs = User.objects.filter(
-            Q(username__exact=username) |
-            Q(email__exact=username)
+            Q(username__exact=username_or_email) |
+            Q(email__exact=username_or_email)
         )
 
-        if len(qs) == 1:
+        if qs.exists():
             user_obj = qs.first()
             if user_obj.check_password(password):
                 user = user_obj

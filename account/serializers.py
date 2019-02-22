@@ -90,6 +90,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # user.is_active=False #Enable this for email verification
         user.save()
 
+        # TODO: Validate this
         # Save user information here
         phone = validated_data['phone']
         UserInformation.objects.create(user=user, phone=phone)
