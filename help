@@ -112,3 +112,18 @@ Login:
         "expires": "2019-03-09T05:41:03.892883Z"
     }
 
+Refresh token:
+  Refresh token endpoint: http://127.0.0.1:8000/account/jwt/refresh/
+
+  Post old token to:
+    {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTA4MTUwMTQsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNTUwODE0NzA1fQ.3Pnpau1yfIVSjbgfEgBT202Wjb0C4pYHX-0mtJiq4Vc"
+    }
+
+  will return:
+    {
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTA4MTUwNDgsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNTUwODE0NzA1fQ.xDCkbhXbNii7mcpVRGVgk_QBP7Dg05nC7nPxKzimqU0",
+        "username": "ali",
+        "expires": "2019-03-09T05:49:08.756955Z"
+    }
+  which token is your new token.
