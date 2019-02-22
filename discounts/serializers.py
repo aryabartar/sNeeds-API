@@ -77,6 +77,8 @@ class UserDiscountSerializer(serializers.ModelSerializer):
             'user', 'code', 'status',
         ]
 
-# class UserDiscountArchiveSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model =
+
+class UserDiscountArchiveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserDiscountArchive
+        fields = "__all__"

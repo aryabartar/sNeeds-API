@@ -7,8 +7,9 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Discount, Cafe, UserDiscount
-from .serializers import CafeSerializer, DiscountSerializer, UserDiscountSerializer
+from .models import Discount, Cafe, UserDiscount, UserDiscountArchive
+from .serializers import (CafeSerializer, DiscountSerializer, UserDiscountSerializer
+, UserDiscountArchiveSerializer)
 
 
 class CafeList(APIView):
@@ -82,7 +83,7 @@ class UserDiscountList(mixins.CreateModelMixin,
             return UserDiscount.objects.all()
 
         elif cafe_profile is not None:
-            cafe = user.cafe_profile.cafe
+            cafe = cafe_profile.cafe
             user_discounts = UserDiscount.objects.filter(discount__cafe__exact=cafe)
             return user_discounts
 
@@ -146,7 +147,27 @@ class CafeDiscountsPage(APIView):
             return Response(discounts_serialize.data)
         return Response({"message": "No cafe found!"})
 
-# class UserDiscountArchiveList(generics.ListAPIView):
-#     class
-#     def get_queryset(self):
-#
+
+class UserDiscountArchiveList(generics.ListAPIView):
+    serializer_class = UserDiscountArchiveSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        try:
+            cafe_profile = user.cafe_profile
+        except:
+            cafe_profile = None
+
+        if not user.is_authenticated:
+            return None
+
+        elif cafe_profile is not None:
+            cafe = cafe_profile.cafe
+            user_discounts_archive = UserDiscountArchive.objects.filter(cafe__exact=cafe)
+            return user_discounts_archive
+
+        elif user.is_authenticated:
+            return UserDiscountArchive.objects.filter(user__exact=user)
+
+        return None
