@@ -19,7 +19,7 @@ discount_data = {
 
 headers = {
     "Content-Type": "application/json",
-    # "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5LCJ1c2VybmFtZSI6InRlc3RhcGkiLCJleHAiOjE1NDk5OTc1MTEsImVtYWlsIjoiIiwib3JpZ19pYXQiOjE1NDk5OTcyMTF9.WzzutV_0FzkM5r3GiYuRg1e991M_TqN8BxbGUOswJKs"
+    "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo5LCJ1c2VybmFtZSI6InRlc3RhcGkiLCJleHAiOjE1NDk5OTc1MTEsImVtYWlsIjoiIiwib3JpZ19pYXQiOjE1NDk5OTcyMTF9.WzzutV_0FzkM5r3GiYuRg1e991M_TqN8BxbGUOswJKs"
 }
 
 r = requests.get(ENDPOINT,  headers=headers)
