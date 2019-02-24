@@ -3,6 +3,7 @@ media/*
 db.sqlite3
 .idea/
 media/
+venv/
 sneeds/settings/local.py
 
 *.egg-info
