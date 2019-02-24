@@ -124,6 +124,10 @@ class UserDiscountDetail(APIView,
 
     def delete(self, request, *args, **kwargs):
         user_discount = self.get_object()
+        try:
+            cafe_profile = user_discount.cafe
+        except:
+            pass
         if self.request.user == user_discount.user:  # Check permission
             return self.destroy(request, *args, **kwargs)
         return Response({"message": "Only user can delete its active discount. "})

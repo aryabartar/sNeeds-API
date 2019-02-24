@@ -24,7 +24,7 @@ SECRET_KEY = '!-d4b-f(-i7#6mqx1^618-+e2axkjkpgjb6xr=ptp4mx-q&3_$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['193.176.243.12', '127.0.0.1']
+ALLOWED_HOSTS = ['193.176.243.12', '127.0.0.1', '5.253.26.66']
 
 # Application definition
 
@@ -95,7 +95,7 @@ DATABASES = {
         'USER': 'sneeds',
         'PASSWORD': 'sneeds@203040',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '',
 
     }
 }
@@ -152,5 +152,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
 
 from sneeds.settings.restconf.main import *
-ALLOW_UNICODE_SLUGS = True
 
+ALLOW_UNICODE_SLUGS = True
