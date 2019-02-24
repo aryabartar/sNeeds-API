@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'sneeds-django/media')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
 
@@ -150,7 +150,5 @@ LOGIN_REDIRECT_URL = 'account:logout_success'
 
 CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
-
-from sneeds.settings.restconf.main import *
 
 ALLOW_UNICODE_SLUGS = True
