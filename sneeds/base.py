@@ -133,7 +133,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'sneeds/static/')
 
 
 STATICFILES_DIRS = [
@@ -142,7 +142,7 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = "/media/"
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'sneeds-django/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'sneeds/media/')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
 
