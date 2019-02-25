@@ -20,7 +20,6 @@ from . import views
 
 app_name = "booklet"
 urlpatterns = [
-    # path('', views.GetFieldsList.as_view(), name='get_fields_list'),
     path('fields/', views.FieldsList.as_view(), name='fields_list'),
     path('fields/<str:field_slug>/', views.FieldsDetail.as_view(), name='fields_detail'),
     path('fields/<str:field_slug>/topics/', views.FieldTopicsList.as_view(), name='field_topics_list'),
@@ -29,10 +28,7 @@ urlpatterns = [
     path('topics/<str:topic_slug>/booklets/', views.TopicBookletsList.as_view(), name='booklets_list'),
     path('booklets/', views.BookletsList.as_view(), name='booklets_list'),
     path('booklets/<str:booklet_slug>', views.BookletDetail.as_view(), name='booklets_detail'),
-    # path('tags/', views.TagsList.as_view(), name='tags_list'),
-    # path('tags/<str:tag_slug>/', views.TagsDetail.as_view(), name='tags_detail'),
-    # path('tags/<str:tag_slug>/posts/', views.TagsPostsList.as_view(), name='tags_posts_detail'),
-    # path('<str:field_slug>/', views.GetField.as_view(), name='get_field'),
-    # path('<str:field_slug>/<str:topic_slug>/', views.GetTopic.as_view(), name='get_topic'),
-    # path('<str:field_slug>/<str:topic_slug>/<str:booklet_slug>/', views.GetBooklet.as_view(), name='get_booklet'),
+    path('tags/', views.TagsList.as_view(), name='tags_list'),
+    path('tags/<str:tag_slug>/', views.TagsDetail.as_view(), name='tags_detail'),
+    path('tags/<str:tag_slug>/booklets/', views.TagsPostsList.as_view(), name='tags_posts_detail'),
 ]
