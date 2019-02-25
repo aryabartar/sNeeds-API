@@ -83,16 +83,11 @@ class Booklet(models.Model):
 
     number_of_likes = models.IntegerField(default=0)
 
+    booklet_image = models.ImageField(upload_to="pictures/booklets", null=False)
     booklet_content = models.URLField()
-    booklet_image = models.URLField()
 
     def get_absolute_url(self):
         return reverse('booklet:booklets_detail', kwargs={'booklet_slug': self.slug})
-
-    def get_tags_array(self):
-        if self.tags_str is not None:
-            return self.tags_str.split("|")
-        return []
 
     def __str__(self):
         return self.title
