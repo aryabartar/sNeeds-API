@@ -18,6 +18,12 @@ class FieldSerializer(serializers.ModelSerializer):
 
 class TopicSerializer(serializers.ModelSerializer):
     topic_url = serializers.SerializerMethodField()
+    field = serializers.SerializerMethodField()
+
+    def get_field(self, topic):
+        request = self.context.get('request')
+        field_url = topic.field.get_absolute_url()
+        return request.build_absolute_uri(field_url)
 
     def get_topic_url(self, topic):
         request = self.context.get('request')
@@ -31,6 +37,12 @@ class TopicSerializer(serializers.ModelSerializer):
 
 class BookletSerializer(serializers.ModelSerializer):
     booklet_url = serializers.SerializerMethodField()
+    topic = serializers.SerializerMethodField()
+
+    def get_topic(self, booklet):
+        request = self.context.get('request')
+        topic_url = booklet.topic.get_absolute_url()
+        return request.build_absolute_uri(topic_url)
 
     def get_booklet_url(self, booklet):
         request = self.context.get('request')
