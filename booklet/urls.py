@@ -21,8 +21,11 @@ from . import views
 app_name = "booklet"
 urlpatterns = [
     # path('', views.GetFieldsList.as_view(), name='get_fields_list'),
-    path('fields/', views.GetFieldsList.as_view(), name='get_fields_list'),
-    path('fields/<str:field_slug>', views.GetFieldsDetail.as_view(), name='get_fields_detail'),
+    path('fields/', views.FieldsList.as_view(), name='fields_list'),
+    path('fields/<str:field_slug>', views.FieldsDetail.as_view(), name='fields_detail'),
+    path('fields/<str:field_slug>/topics', views.FieldTopicsList.as_view(), name='field_topics_list'),
+    path('topics/', views.TopicsList.as_view(), name='topics_list'),
+    path('topics/<str:topic_slug>', views.TopicsDetail.as_view(), name='topics_detail'),
     # path('tags/', views.TagsList.as_view(), name='tags_list'),
     # path('tags/<str:tag_slug>/', views.TagsDetail.as_view(), name='tags_detail'),
     # path('tags/<str:tag_slug>/posts/', views.TagsPostsList.as_view(), name='tags_posts_detail'),
