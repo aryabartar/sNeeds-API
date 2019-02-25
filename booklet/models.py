@@ -42,6 +42,7 @@ class BookletTopic(models.Model):
                              null=False,
                              help_text="Sample: برنامه‌نویسی پیشرفته"
                              )
+    information = models.TextField(max_length=10000, null=True)
     slug = models.SlugField(null=False, help_text="Lower case |Sample: advanced-programming")
 
     def get_absolute_url(self):
@@ -71,7 +72,6 @@ class Tag(models.Model):
 
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)
-    information = models.TextField(max_length=10000, null=True)
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE,
                               related_name='booklets',
                               null=False,
