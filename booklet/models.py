@@ -77,18 +77,13 @@ class Booklet(models.Model):
 
     language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False, max_length=50)
     slug = models.SlugField(unique=True, null=False, blank=False)
-    tags_str = models.CharField(max_length=2000, blank=True, null=True,
-                                help_text="به این صورت وارد کنید : <br/>"
-                                          "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
     tags = models.ManyToManyField(Tag, blank=True, related_name="booklets",
                                   help_text="Don't change this if you are creating new booklet. Only change this if "
                                             "it is necessary.")
-    number_of_views = models.IntegerField(default=0,
-                                          help_text="لطفا مقدار را عوض نکنید ( به جز در مواقع نیاز شدید و باگ)",
-                                          verbose_name="تعداد بازدید")
     number_of_likes = models.IntegerField(default=0)
-    booklet_content = models.FileField(upload_to="website/booklet_content", blank=False)
-    booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
+
+    booklet_content = models.URLField()
+    booklet_image = models.URLField()
 
     def get_absolute_url(self):
         return reverse('booklet:booklets_detail', kwargs={'booklet_slug': self.slug})
