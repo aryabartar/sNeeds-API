@@ -132,14 +132,13 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'sneeds/static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'sneeds/static/')
 
-STATICFILES_DIRS = [
-    'static',
-]
+# STATICFILES_DIRS = [
+#     'static',
+# ]
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'sneeds/media/')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
