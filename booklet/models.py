@@ -63,12 +63,14 @@ class Booklet(models.Model):
                               null=False,
                               blank=False
                               )
+    slug = models.SlugField(unique=True, null=False, blank=False)
 
-    teacher = models.CharField(max_length=200, default=None)
+    teacher = models.CharField(max_length=200)
     number_of_pages = models.IntegerField(default=0, null=False, blank=False, help_text="حتما دقیق نوشته شود")
     format = models.CharField(max_length=40, default="PDF", null=False, blank=False)
-    year = models.IntegerField(help_text="In 1397 format.", null=True, blank=True)
-    writer = models.CharField(max_length=120, null=True, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True, related_name="booklets",
+                                  help_text="Don't change this if you are creating new booklet. Only change this if "
+                                            "it is necessary.")
 
     BOOKLET_LANGUAGE = (
         ('farsi', "فارسی"),
@@ -76,10 +78,9 @@ class Booklet(models.Model):
     )
 
     language = models.CharField(choices=BOOKLET_LANGUAGE, default='farsi', null=False, blank=False, max_length=50)
-    slug = models.SlugField(unique=True, null=False, blank=False)
-    tags = models.ManyToManyField(Tag, blank=True, related_name="booklets",
-                                  help_text="Don't change this if you are creating new booklet. Only change this if "
-                                            "it is necessary.")
+    year = models.IntegerField(help_text="In 1397 format.", null=True, blank=True)
+    writer = models.CharField(max_length=120, null=True, blank=True)
+
     number_of_likes = models.IntegerField(default=0)
 
     booklet_content = models.URLField()
