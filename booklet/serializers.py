@@ -28,6 +28,11 @@ class TopicSerializer(serializers.ModelSerializer):
         model = BookletTopic
         fields = "__all__"
 
+
+class BookletSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booklet
+        fields = "__all__"
 #
 # BOOKLET_SERIALIZER_FIELDS = [
 #     'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',

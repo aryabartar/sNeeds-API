@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import BookletField, BookletTopic, Booklet, Tag
-from .serializers import FieldSerializer, TopicSerializer
+from .serializers import FieldSerializer, TopicSerializer, BookletSerializer
 
 
 class FieldsList(APIView):
@@ -43,7 +43,26 @@ class TopicsDetail(APIView):
         topic = BookletTopic.objects.get(slug__exact=topic_slug)
         topic_serialize = TopicSerializer(topic, context={"request": request})
         return Response(topic_serialize.data)
-#
+
+
+class TopicBookletsList(APIView):
+    def get(self, request, topic_slug):
+        topic = BookletTopic.objects.get(slug__exact=topic_slug)
+        booklets = topic.booklets
+        booklet_serialize = BookletSerializer(booklets, many=True, context={"request": request})
+        return Response(booklet_serialize.data)
+
+
+class BookletsList(APIView):
+    def get(self, request):
+        booklets = Booklet.objects.all()
+        booklet_serialize = BookletSerializer(booklets, many=True, context={"request": request})
+        return Response(booklet_serialize.data)
+
+
+# class BookletDetail(APIView):
+#     def get(self, request):
+#         b
 #
 # class GetTopic(APIView):
 #     def get(self, request, field_slug, topic_slug):
