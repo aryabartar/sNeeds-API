@@ -1,17 +1,5 @@
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
-from django.template.defaultfilters import slugify
-
-
-def get_automated_slug(str):
-    "I write this function because slugify is not working for persian characters!"
-    str = str.replace(" ", "-")
-    str = str.replace(",", "-")
-    str = str.replace("(", "-")
-    str = str.replace(")", "")
-    str = str.replace("؟", "")
-    return str
 
 
 class BookletField(models.Model):
@@ -61,10 +49,6 @@ class Tag(models.Model):
                             help_text="If you are adding this tag for first time, leave this field blank."
                                       "Only change this field if there is a mistake or for other purposes ...")
 
-    def save(self, *args, **kwargs):
-        self.slug = get_automated_slug(self.title)
-        super(Tag, self).save(*args, **kwargs)
-
     def __str__(self):
         return self.title
 
@@ -113,18 +97,6 @@ class Booklet(models.Model):
         if self.tags_str is not None:
             return self.tags_str.split("|")
         return []
-
-    def save(self, *args, **kwargs):
-        tags = self.get_tags_array()
-        for tag in tags:
-            qs = Tag.objects.filter(slug__exact=get_automated_slug(tag))
-            if len(qs) == 0:
-                new_tag = Tag(title=tag)
-                new_tag.save()
-            else:
-                qs[0].save()
-            self.tags.add(Tag.objects.filter(slug__exact=get_automated_slug(tag))[0])
-        super(Booklet, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.title
