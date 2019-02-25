@@ -107,9 +107,7 @@ class Booklet(models.Model):
     booklet_image = models.ImageField(upload_to="website/booklet_images", blank=False)
 
     def get_absolute_url(self):
-        return reverse('booklet:get_booklet', kwargs={'booklet_slug': self.slug,
-                                                      'field_slug': self.topic.field.slug,
-                                                      'topic_slug': self.topic.slug})
+        return reverse('booklet:booklets_detail', kwargs={'booklet_slug': self.slug})
 
     def get_tags_array(self):
         if self.tags_str is not None:

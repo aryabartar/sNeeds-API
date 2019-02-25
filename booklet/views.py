@@ -18,14 +18,14 @@ class FieldsList(APIView):
 
 class FieldsDetail(APIView):
     def get(self, request, field_slug):
-        field = BookletField.objects.get(slug__exact=field_slug)
+        field = BookletField.objects.get(slug__iexact=field_slug)
         field_serialize = FieldSerializer(field, context={"request": request})
         return Response(field_serialize.data)
 
 
 class FieldTopicsList(APIView):
     def get(self, request, field_slug):
-        field = BookletField.objects.get(slug__exact=field_slug)
+        field = BookletField.objects.get(slug__iexact=field_slug)
         topic = field.topics.all()
         topic_serializer = TopicSerializer(topic, many=True, context={"request": request})
         return Response(topic_serializer.data)
@@ -40,14 +40,14 @@ class TopicsList(APIView):
 
 class TopicsDetail(APIView):
     def get(self, request, topic_slug):
-        topic = BookletTopic.objects.get(slug__exact=topic_slug)
+        topic = BookletTopic.objects.get(slug__iexact=topic_slug)
         topic_serialize = TopicSerializer(topic, context={"request": request})
         return Response(topic_serialize.data)
 
 
 class TopicBookletsList(APIView):
     def get(self, request, topic_slug):
-        topic = BookletTopic.objects.get(slug__exact=topic_slug)
+        topic = BookletTopic.objects.get(slug__iexact=topic_slug)
         booklets = topic.booklets
         booklet_serialize = BookletSerializer(booklets, many=True, context={"request": request})
         return Response(booklet_serialize.data)
@@ -60,9 +60,11 @@ class BookletsList(APIView):
         return Response(booklet_serialize.data)
 
 
-# class BookletDetail(APIView):
-#     def get(self, request):
-#         b
+class BookletDetail(APIView):
+    def get(self, request, booklet_slug):
+        booklets = Booklet.objects.get(slug__iexact=booklet_slug)
+        booklet_serialize = BookletSerializer(booklets, context={"request": request})
+        return Response(booklet_serialize.data)
 #
 # class GetTopic(APIView):
 #     def get(self, request, field_slug, topic_slug):

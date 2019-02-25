@@ -30,9 +30,17 @@ class TopicSerializer(serializers.ModelSerializer):
 
 
 class BookletSerializer(serializers.ModelSerializer):
+    booklet_url = serializers.SerializerMethodField()
+
+    def get_booklet_url(self, booklet):
+        request = self.context.get('request')
+        booklet_url = booklet.get_absolute_url()
+        return request.build_absolute_uri(booklet_url)
+
     class Meta:
         model = Booklet
         fields = "__all__"
+
 #
 # BOOKLET_SERIALIZER_FIELDS = [
 #     'title', 'booklet_url', 'information', 'teacher', 'slug', 'number_of_pages', 'format', 'language',
