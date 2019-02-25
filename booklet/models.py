@@ -22,7 +22,7 @@ class BookletField(models.Model):
     slug = models.SlugField(null=True, help_text="Lower case", unique=True)
 
     def get_absolute_url(self):
-        return reverse('booklet:get_field', kwargs={"field_slug": self.slug})
+        return reverse('booklet:get_fields_detail', kwargs={"field_slug": self.slug})
 
     def __str__(self):
         return self.title

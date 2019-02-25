@@ -3,7 +3,6 @@ import random
 import string
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
 from django.db import models
@@ -96,7 +95,7 @@ class UserDiscount(models.Model):
     def delete(self, *args, **kwargs):
         """This method is used to archive discount in UserDiscountArchive object."""
         user_used_discount = UserDiscountArchive(discount=self.discount, cafe=self.discount.cafe,
-                                              user=self.user, archive_string="Used")
+                                                 user=self.user, archive_string="Used")
         user_used_discount.save()
         super(UserDiscount, self).delete(*args, **kwargs)
 
