@@ -23,12 +23,19 @@ sample Post request:
 
 
 -- booklet --
-http://127.0.0.1:8000/booklet/ => Retrieve all fields + topics associated with that fields (No Pagination)
-http://127.0.0.1:8000/booklet/computer-engineering/ => Retrieve field with "computer-engineering" slug (This page includes that field topics and posts)
-http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/ => Retrieve a topic which it's field's slug is 'computer-engineering' and it's slug is 'advanced-programming'
 
-http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/deitel-java/ => Retrieve a booklet with 'deitel' slug. Also checks field and topic slug to be true!
-http://127.0.0.1:8000/booklet/computer-engineering/advanced-programming/deitel-java/?like=true => Increments number of likes (I will implement session validation later)
+http://127.0.0.1:8000/booklet/fields => Retrieve all fields.
+http://127.0.0.1:8000/booklet/fields/computer-science/ => Retrieve field with "computer-science" slug.
+http://127.0.0.1:8000/booklet/fields/computer-science/topics/ => Retrieve topics of "computer-science" field.
+
+http://127.0.0.1:8000/booklet/topics/ => Retrieve all topics.
+http://127.0.0.1:8000/booklet/topics/advanced-programming/ => Retrieve topic with "advanced-programming" slug.
+http://127.0.0.1:8000/booklet/topics/advanced-programming/booklets/ => Retrieve booklets of "advanced-programming" topics".
+
+http://127.0.0.1:8000/booklet/booklets/ => Retrieve all booklets.
+http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/ => Retrieve booklet with "advanced-programming-amirkabir-fall" slug.
+http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/tags => Retrieve booklet "advanced-programming-amirkabir-fall" tags.
+
 
 http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
 http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="best-booklet"
