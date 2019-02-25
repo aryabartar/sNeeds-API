@@ -19,7 +19,7 @@ class BookletField(models.Model):
     For example Civil Eng, Computer Eng, ...
     """
     title = models.CharField(max_length=120, blank=False, null=False, unique=True)
-    slug = models.SlugField(null=True, help_text="Lower case")
+    slug = models.SlugField(null=True, help_text="Lower case", unique=True)
 
     def get_absolute_url(self):
         return reverse('booklet:get_field', kwargs={"field_slug": self.slug})
@@ -43,7 +43,9 @@ class BookletTopic(models.Model):
                              help_text="Sample: برنامه‌نویسی پیشرفته"
                              )
     information = models.TextField(max_length=10000, null=True)
-    slug = models.SlugField(null=False, help_text="Lower case |Sample: advanced-programming")
+    slug = models.SlugField(null=False,
+                            unique=True,
+                            help_text="Lower case |Sample: advanced-programming")
 
     def get_absolute_url(self):
         return reverse('booklet:get_topic', kwargs={'field_slug': self.field.slug, 'topic_slug': self.slug})
@@ -94,7 +96,7 @@ class Booklet(models.Model):
     tags_str = models.CharField(max_length=2000, blank=True, null=True,
                                 help_text="به این صورت وارد کنید : <br/>"
                                           "جزوه ریاضی|بهترین جزوه عالم|جزوه بخون حالشو ببر")
-    tags = models.ManyToManyField(Tag,  blank=True, related_name="booklets",
+    tags = models.ManyToManyField(Tag, blank=True, related_name="booklets",
                                   help_text="Don't change this if you are creating new booklet. Only change this if "
                                             "it is necessary.")
     number_of_views = models.IntegerField(default=0,
