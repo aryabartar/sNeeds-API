@@ -107,6 +107,7 @@ class TagAndBookletsSerializer(TagSerializer):
 
 class BookletSerializer(serializers.ModelSerializer):
     tags = serializers.SerializerMethodField()
+    information = serializers.SerializerMethodField()
     booklet_url = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
     topic_slug = serializers.SerializerMethodField()
@@ -114,6 +115,10 @@ class BookletSerializer(serializers.ModelSerializer):
     field = serializers.SerializerMethodField()
     field_slug = serializers.SerializerMethodField()
     field_url = serializers.SerializerMethodField()
+
+    def get_information(self, booklet):
+        information = booklet.topic.information
+        return information
 
     def get_tags(self, booklet):
         tags = booklet.tags.all()
