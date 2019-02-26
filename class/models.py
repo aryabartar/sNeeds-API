@@ -15,7 +15,8 @@ class PublicClass(models.Model):
 
 
 class SoldPublicClass(models.Model):
-    public_class = models.ForeignKey(PublicClass, on_delete=models.SET_NULL, related_name="sold_classes")
+    public_class = models.ForeignKey(PublicClass, null=True, on_delete=models.SET_NULL,
+                                     related_name="sold_classes")
     user = get_user_model()
     timestamp = models.DateTimeField(auto_now_add=True)
 
