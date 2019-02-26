@@ -1,3 +1,15 @@
-from django.shortcuts import render
+from zeep import Client
 
-# Create your views here.
+from django.http import HttpResponse
+from django.shortcuts import redirect
+
+from rest_framework import generics, mixins, status, permissions
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
+
+class PayView(APIView):
+    def get(self, request):
+
+        return Response("dd")
+
