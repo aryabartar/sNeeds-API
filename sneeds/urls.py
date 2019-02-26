@@ -32,7 +32,7 @@ urlpatterns = [
     path('blog/', include(blog_urls)),
     path('booklet/', include(booklet_urls)),
     path('payment/', include(payment_urls)),
-    path('class/', include(payment_urls)),
+    path('class/', include(class_urls)),
 
     path('api-auth/', include('rest_framework.urls'))
 ]

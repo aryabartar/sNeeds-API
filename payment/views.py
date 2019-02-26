@@ -7,6 +7,8 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from classes.models import PublicClass
+
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 amount = 1000  # Toman / Required
@@ -42,4 +44,17 @@ class RequestPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        return send_request(request)
+        # return send_request(request)
+        return Response({})
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        if 'public_class' in data:
+            public_class = PublicClass.objects.filter(slug__iexact=data['public_class'])
+            print(data)
+            if public_class.exists():
+                public_class = public_class[0]
+                return Response({"title": public_class.title})
+            else:
+                return Response({"message": "Bag is empty!"})
+        return Response({})

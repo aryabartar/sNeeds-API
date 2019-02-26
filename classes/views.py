@@ -7,7 +7,9 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
+from payment.views import *
+
 
 class PublicClassPay(APIView):
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         return Response("dd")

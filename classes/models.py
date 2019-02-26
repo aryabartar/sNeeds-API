@@ -9,7 +9,7 @@ User = get_user_model()
 class PublicClass(models.Model):
     title = models.CharField(max_length=200)
     price = models.IntegerField(help_text="120000 stands for 120 hezar tooman.")
-    slug = models.SlugField(unique=True , null=True)
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.title
