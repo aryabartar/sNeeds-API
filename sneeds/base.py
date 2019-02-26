@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'booklet',
     'account',
     'payment',
-    'class',
+    'classes',
 
 ]
 

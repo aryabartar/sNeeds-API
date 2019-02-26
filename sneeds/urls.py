@@ -22,7 +22,7 @@ from search import urls as search_urls
 from blog import urls as blog_urls
 from booklet import urls as booklet_urls
 from payment import urls as payment_urls
-from Class import urls as class_urls
+from classes import urls as class_urls
 
 urlpatterns = [
     path('account/', include(account_urls)),
