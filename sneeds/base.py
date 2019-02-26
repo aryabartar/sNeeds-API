@@ -36,6 +36,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sessions',
 
+    # 3rd party packages
+    'rest_framework',
+    'corsheaders',
+
     # apps
     'website',
     'discounts',
@@ -43,10 +47,7 @@ INSTALLED_APPS = [
     'blog',
     'booklet',
     'account',
-
-    # 3rd party packages
-    'rest_framework',
-    'corsheaders',
+    'payment',
 
 ]
 
