@@ -18,5 +18,5 @@ from . import views
 
 app_name = "class"
 urlpatterns = [
-    path("classes/<str:class_slug>/pay/", views.ClassPay.as_view(), name="class_pay")
+    path("classes/<str:class_slug>/pay/", views.PublicClassPay.as_view(), name="class_pay")
 ]

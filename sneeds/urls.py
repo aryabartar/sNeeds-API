@@ -22,6 +22,7 @@ from search import urls as search_urls
 from blog import urls as blog_urls
 from booklet import urls as booklet_urls
 from payment import urls as payment_urls
+from Class import urls as class_urls
 
 urlpatterns = [
     path('account/', include(account_urls)),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('blog/', include(blog_urls)),
     path('booklet/', include(booklet_urls)),
     path('payment/', include(payment_urls)),
+    path('class/', include(payment_urls)),
 
     path('api-auth/', include('rest_framework.urls'))
 ]
