@@ -102,3 +102,6 @@ class BookletDownload(models.Model):
 
     class Meta:
         unique_together = (("user", "booklet"),)
+
+    def __str__(self):
+        return str(self.booklet)

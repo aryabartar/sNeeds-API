@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from rest_framework import generics, mixins, status
+from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -102,19 +102,21 @@ class TagsPostsList(generics.ListAPIView):
 
 
 class BookletDownloadsList(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         user = request.user
         booklet_slug = request.data.get("booklet-slug", None)
-        booklets = Booklet.objects.filter(slug__iexact=booklet_slug)
-        if not booklets.count() == 1:
-            return Response({"message": "Object not found!"})
-        booklet = booklets.first()
+
+        try:
+            booklet = Booklet.objects.get(slug__iexact=booklet_slug)
+        except:
+            return Response({"message": "No booklet found!"})
 
         if user.is_authenticated:
             booklet_download_serialize = BookletDownloadSerializer(data={"user": user.id, "booklet": booklet.id})
             if booklet_download_serialize.is_valid():
                 booklet_download_serialize.save()
+                return Response({"message": "success"})
             else:
-                print(booklet_download_serialize.errors)
-        return Response({})
+                return Response(booklet_download_serialize.errors)
