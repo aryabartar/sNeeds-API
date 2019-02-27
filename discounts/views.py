@@ -8,8 +8,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Discount, Cafe, UserDiscount, UserDiscountArchive
-from .serializers import (CafeSerializer, DiscountSerializer, UserDiscountSerializer
-, UserDiscountArchiveSerializer)
+from .serializers import (
+    CafeSerializer,
+    DiscountSerializer,
+    UserDiscountSerializer,
+    UserDiscountArchiveSerializer
+)
 
 
 class CafeList(APIView):

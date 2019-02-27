@@ -1,4 +1,4 @@
-from rest_framework import generics, mixins, status
+from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
@@ -63,6 +63,14 @@ class PostDetail(APIView):
             return Response(comment_serialize.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+def get_post(post_slug):
+    post = None
+    posts = Post.objects.filter(slug__iexact=post_slug)
+    if posts.count() == 1:
+        post = posts.first()
+    return post
+
+
 class TopicList(generics.ListAPIView):
     """
     Returns all topics as a list
@@ -74,16 +82,31 @@ class TopicList(generics.ListAPIView):
 
 
 class PostLikesList(APIView):
-    # serializer_class = PostLike
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        post = get_post(kwargs["post_slug"])
+
+        if user.is_authenticated:
+            likes = user.likes.all()
+            for like in likes:
+                if like.post == post:
+                    return Response({"liked": "true"})
+            return Response({"liked": "false"})
+        return Response({"message": "User is not authenticated."})
 
     def post(self, request, *args, **kwargs):
-        post_slug = kwargs['post_slug']
-        posts = Post.objects.filter(slug__iexact=post_slug)
-        if posts.count() == 1:
-            post = posts.first()
-            post_serialize = PostLikeSerializer(data={"user": request.user.pk, "post": post.pk})
-            if post_serialize.is_valid():
-                post_serialize.save()
-            else:
-                print(post_serialize.errors)
-        return Response({})
+        user = request.user
+        post = get_post(kwargs["post_slug"])
+
+        if user.is_authenticated:
+            try:
+                PostLike.objects.create(user=user, post=post)
+            # When trying to make duplicate values
+            except:
+                return Response({"message": "This user already liked this post"})
+        else:
+            PostLike.objects.create(user=None, post=post)
+
+        return Response({"message": "Success"})
