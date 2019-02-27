@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import LimitOffsetPagination
 
 from .models import BookletField, BookletTopic, Booklet, Tag
-from .serializers import FieldSerializer, TopicSerializer, BookletSerializer, TagSerializer
+from .serializers import FieldSerializer, TopicSerializer, BookletSerializer, TagSerializer, BookletDownloadSerializer
 
 
 class FieldsList(APIView):
@@ -106,6 +106,15 @@ class BookletDownloadsList(APIView):
     def post(self, request):
         user = request.user
         booklet_slug = request.data.get("booklet-slug", None)
+        booklets = Booklet.objects.filter(slug__iexact=booklet_slug)
+        if not booklets.count() == 1:
+            return Response({"message": "Object not found!"})
+        booklet = booklets.first()
+
         if user.is_authenticated:
-            pass
+            booklet_download_serialize = BookletDownloadSerializer(data={"user": user.id, "booklet": booklet.id})
+            if booklet_download_serialize.is_valid():
+                booklet_download_serialize.save()
+            else:
+                print(booklet_download_serialize.errors)
         return Response({})
