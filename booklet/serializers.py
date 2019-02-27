@@ -37,7 +37,15 @@ class TopicSerializer(serializers.ModelSerializer):
 
 class BookletSerializer(serializers.ModelSerializer):
     booklet_url = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
     topic = serializers.SerializerMethodField()
+
+    def get_tags(self, booklet):
+        tags = booklet.tags.all()
+        array = []
+        for tag in tags:
+            array.append(tag.slug)
+        return array
 
     def get_topic(self, booklet):
         request = self.context.get('request')
