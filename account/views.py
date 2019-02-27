@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, UserSerializer
 from .permissions import AnonPermissionOnly
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
@@ -51,3 +51,11 @@ class RegisterView(generics.CreateAPIView):
 
     def get_serializer_context(self, *args, **kwargs):
         return {"request": self.request}
+
+
+class MyAccountDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user_serialize = UserSerializer(request.user)
+        return Response(user_serialize.data)

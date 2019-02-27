@@ -20,6 +20,7 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 app_name = "account"
 urlpatterns = [
+    path('my-account/', views.MyAccountDetail.as_view()),
     path('jwt/login/', views.AuthView.as_view()),
     path('jwt/register/', views.RegisterView.as_view()),
     path('jwt/refresh/', refresh_jwt_token),

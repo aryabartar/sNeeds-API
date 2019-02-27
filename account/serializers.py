@@ -8,12 +8,27 @@ from rest_framework_jwt.settings import api_settings
 
 from .models import UserInformation
 
+User = get_user_model()
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 expire_delta = api_settings.JWT_REFRESH_EXPIRATION_DELTA
 
 User = get_user_model()
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        # fields = [
+        #     "username",
+        #     "email",
+        #     "first_name",
+        #     "last_name",
+        #     "phone",
+        # ]
+        fields = "__all__"
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
