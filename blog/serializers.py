@@ -10,7 +10,12 @@ class PostSerializer(serializers.ModelSerializer):
     topic_name = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
     topic_url = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
     jalali_timestamp_string = serializers.SerializerMethodField()
+
+    def get_likes(self, post):
+        like_count = post.likes.all().count()
+        return like_count
 
     def get_questions_and_answers(self, post):
         return PostQuestionAndAnswerSerializer(post.questions_and_answers, many=True).data
@@ -54,7 +59,7 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'post_main_image', 'short_description',
-                  'post_type', 'questions_and_answers', 'aparat_link', 'youtube_link', 'tags',
+                  'post_type', 'questions_and_answers', 'aparat_link', 'youtube_link', 'likes', 'tags',
                   'jalali_timestamp_string', 'slug']
 
 
@@ -131,4 +136,3 @@ class PostQuestionAndAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostQuestionAndAnswer
         fields = ['question', 'answer']
-

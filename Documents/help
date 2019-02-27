@@ -21,6 +21,17 @@ sample Post request:
             "post": 3
         }
 
+http://127.0.0.1:8000/blog/post/canada/living-difficulties-arya-khaligh/likes/ => Retrieve and Post.
+  Retrieve format:
+    {
+      "liked": "false"
+    }
+  Post format:
+    Just send an empty Post request :).
+  Note: If user is logged in and likes one post. This like will be permanent. If user is not logged in Django will
+        save its like in session(this is not permanent and user can like same post multiple times using different
+        browsers).
+
 
 -- booklet --
 
@@ -42,6 +53,12 @@ http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/field
 http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
 http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="best-booklet"
 http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of a tag with slug="best-booklet" (pagination included!)
+
+http://127.0.0.1:8000/booklet/user-downloads/ => Post. This endpoint saves user downloads to represent it in user profile. (Login required)
+  Post to this endpoint using this format.
+    {
+    "booklet-slug":"ap-amirkabir"
+    }
 
 -- discount --
 http://127.0.0.1:8000/cafe/cafes/ => Retrieve all cafes (No pagination included)
@@ -146,9 +163,18 @@ How to use JWT token:
         }
 
 
-
-{
-    "first_name": "ali",
-    "last_name": "akbar",
-    "phone": "09011853909"
-}
+http://127.0.0.1:8000/account/my-account/ => Retrieve and Update. (Login required)
+  Sample retrieved data format:
+    {
+        "username": "aryabartar",
+        "email": "bartararya@gmail.com",
+        "first_name": "arya",
+        "last_name": "khaligh",
+        "phone": "09011853909"
+    }
+  Sample update format:
+    {
+        "first_name": "hadi",
+        "last_name": "tabatabayi",
+        "phone": "09031834553"
+    }
