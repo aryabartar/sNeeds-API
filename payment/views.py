@@ -51,6 +51,10 @@ class CartHome(APIView):
         if qs.count() == 1:
             cart_obj = qs.first()
             print("Cart id exists", cart_obj)
+            # If user logs in the cart will still remain.
+            if request.user.is_authenticated and cart_obj.user is None:
+                cart_obj.user = request.user
+                cart_obj.save()
 
         else:
             cart_obj = Cart.objects.new(user=request.user)
