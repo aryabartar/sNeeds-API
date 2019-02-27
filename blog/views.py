@@ -82,11 +82,10 @@ class TopicList(generics.ListAPIView):
 
 
 class PostLikesList(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
     def get(self, request, *args, **kwargs):
+        post_slug = kwargs["post_slug"]
         user = request.user
-        post = get_post(kwargs["post_slug"])
+        post = get_post(post_slug)
 
         if user.is_authenticated:
             likes = user.likes.all()
@@ -94,11 +93,20 @@ class PostLikesList(APIView):
                 if like.post == post:
                     return Response({"liked": "true"})
             return Response({"liked": "false"})
-        return Response({"message": "User is not authenticated."})
+
+        else:
+            session = request.session
+            liked_posts = session.get("liked_posts", [])
+
+            if post_slug in liked_posts:
+                return Response({"liked": "true"})
+            else:
+                return Response({"liked": "false"})
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        post = get_post(kwargs["post_slug"])
+        post_slug = kwargs["post_slug"]
+        post = get_post(post_slug)
 
         if user.is_authenticated:
             try:
@@ -106,7 +114,14 @@ class PostLikesList(APIView):
             # When trying to make duplicate values
             except:
                 return Response({"message": "This user already liked this post"})
+
         else:
-            PostLike.objects.create(user=None, post=post)
+            session = request.session
+            liked_posts = session.get("liked_posts", [])
+
+            if post_slug in liked_posts:
+                return Response({"message": "Already liked this post(According to sessions)"})
+            else:
+                PostLike.objects.create(user=None, post=post)
 
         return Response({"message": "Success"})
