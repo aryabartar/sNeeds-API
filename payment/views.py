@@ -40,12 +40,14 @@ def verify(request):
         return HttpResponse('Transaction failed or canceled by user')
 
 
-class RequestPage(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+class CartHome(APIView):
+    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        session = request.session
-        key = session.session_key
-        request.session["a"] = "hello"
-        print(key)
+        cart_id = request.session.get("cart_id", None)
+        if cart_id is None:
+            print("Create new cart")
+            request.session['cart_id'] = 12
+        else:
+            print("Cart id exists!")
         return Response({"GET": "GET"})
