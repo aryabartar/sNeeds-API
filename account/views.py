@@ -59,3 +59,6 @@ class MyAccountDetail(APIView):
     def get(self, request):
         user_serialize = UserSerializer(request.user)
         return Response(user_serialize.data)
+
+    # def update(self , request):
+
