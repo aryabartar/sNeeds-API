@@ -82,6 +82,14 @@ class TopicList(generics.ListAPIView):
 
 
 class PostLikesList(APIView):
+    def liked_post_in_session(self, request, post_slug):
+        session = request.session
+        liked_posts = session.get("liked_posts", [])
+
+        if post_slug in liked_posts:
+            return True
+        return False
+
     def get(self, request, *args, **kwargs):
         post_slug = kwargs["post_slug"]
         user = request.user
@@ -95,33 +103,34 @@ class PostLikesList(APIView):
             return Response({"liked": "false"})
 
         else:
-            session = request.session
-            liked_posts = session.get("liked_posts", [])
-
-            if post_slug in liked_posts:
+            is_liked = self.liked_post_in_session(request, post_slug)
+            if is_liked:
                 return Response({"liked": "true"})
             else:
                 return Response({"liked": "false"})
 
-    def post(self, request, *args, **kwargs):
-        user = request.user
-        post_slug = kwargs["post_slug"]
-        post = get_post(post_slug)
 
-        if user.is_authenticated:
-            try:
-                PostLike.objects.create(user=user, post=post)
-            # When trying to make duplicate values
-            except:
-                return Response({"message": "This user already liked this post"})
+def post(self, request, *args, **kwargs):
+    user = request.user
+    post_slug = kwargs["post_slug"]
+    post = get_post(post_slug)
 
+    if user.is_authenticated:
+        try:
+            PostLike.objects.create(user=user, post=post)
+            return Response({"message": "Success"})
+
+        # When trying to make duplicate values
+        except:
+            return Response({"message": "This user already liked this post"})
+
+    else:
+        session = request.session
+        is_liked = self.liked_post_in_session(request, post_slug)
+        if is_liked:
+            return Response({"message": "Already liked this post(According to sessions)"})
         else:
-            session = request.session
+            PostLike.objects.create(user=None, post=post)
             liked_posts = session.get("liked_posts", [])
-
-            if post_slug in liked_posts:
-                return Response({"message": "Already liked this post(According to sessions)"})
-            else:
-                PostLike.objects.create(user=None, post=post)
-
-        return Response({"message": "Success"})
+            session['liked_posts'] = liked_posts.append(post_slug)
+            return Response({"message": "Success"})
