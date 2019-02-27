@@ -69,3 +69,8 @@ class TopicList(generics.ListAPIView):
     authentication_classes = []
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
+
+
+class PostLikesList(APIView):
+    def post(self, request, *args, **kwargs):
+        return Response({})

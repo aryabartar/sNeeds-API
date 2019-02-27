@@ -1,7 +1,10 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django_jalali.db import models as jmodels
+
+User = get_user_model()
 
 
 class Topic(models.Model):
@@ -18,6 +21,7 @@ class Topic(models.Model):
 class PostQuestionAndAnswer(models.Model):
     question = models.TextField(default=None)
     answer = models.TextField(default=None)
+
     def __str__(self):
         return self.question + " | " + self.answer
 
@@ -77,3 +81,8 @@ class AdminComment(models.Model):
 
     def __str__(self):
         return "{}".format(self.content)
+
+
+class PostLike(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, unique=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
