@@ -32,4 +32,5 @@ urlpatterns = [
     path('tags/', views.TagsList.as_view(), name='tags_list'),
     path('tags/<str:tag_slug>/', views.TagsDetail.as_view(), name='tags_detail'),
     path('tags/<str:tag_slug>/booklets/', views.TagsPostsList.as_view(), name='tags_posts_detail'),
+    path('user-downloads/', views.TagsPostsList.as_view(), name='tags_posts_detail'),
 ]
