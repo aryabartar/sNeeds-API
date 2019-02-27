@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from classes.models import PublicClass
+from .models import Cart
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -39,15 +40,21 @@ def verify(request):
     else:
         return HttpResponse('Transaction failed or canceled by user')
 
+def cart_create(user = None)
+    cart_obj = Cart.objects.create(user=None)
+    return cart_obj
 
 class CartHome(APIView):
     # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
+        # del request.session["cart_id"]
         cart_id = request.session.get("cart_id", None)
-        if cart_id is None:
-            print("Create new cart")
-            request.session['cart_id'] = 12
+        if cart_id is None and isinstance(cart_id , int):
+            cart_obj = cart_create()
+            request.session['cart_id'] = cart_obj.id
+            print("Created ", cart_obj)
         else:
-            print("Cart id exists!")
+            cart_obj = Cart.objects.get(id=cart_id)
+            print("Get ", cart_obj)
         return Response({"GET": "GET"})
