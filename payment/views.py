@@ -41,24 +41,19 @@ def verify(request):
         return HttpResponse('Transaction failed or canceled by user')
 
 
-def cart_create(user=None):
-    cart_obj = Cart.objects.create(user=None)
-    print("Created ", cart_obj)
-    return cart_obj
-
-
 class CartHome(APIView):
-    # permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, *args, **kwargs):
-        # del request.session["cart_id"]
+
         cart_id = request.session.get("cart_id", None)
         qs = Cart.objects.filter(id=cart_id)
+
         if qs.count() == 1:
             cart_obj = qs.first()
             print("Cart id exists", cart_obj)
+
         else:
-            cart_obj = cart_create()
+            cart_obj = Cart.objects.new(user=request.user)
             request.session['cart_id'] = cart_obj.id
 
         return Response({"GET": "GET"})
