@@ -1,6 +1,6 @@
 from zeep import Client
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 
 from rest_framework import generics, mixins, status, permissions
@@ -43,27 +43,9 @@ def verify(request):
 class RequestPage(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_public_class(self, public_class_slug):
-        public_class = PublicClass.objects.filter(slug__exact=public_class_slug)
-        if public_class.exists():
-            return public_class[0]
-        return None
-
     def get(self, request, *args, **kwargs):
-        # return send_request(request)
-        return Response({})
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        if 'just_show' in data:
-            if 'public_class' in data:
-                public_class = self.get_public_class(data['public_class'])
-                if public_class is not None:
-                    if data['just_show'] == "true":
-                        return Response({"title": public_class.title, "price": public_class.price})
-                    else:
-                        return send_request(request, amount=public_class.price)
-                else:
-                    return Response({"message": "No public_class found!"})
-
-        return Response({"message": "Bad request format!"})
+        session = request.session
+        key = session.session_key
+        request.session["a"] = "hello"
+        print(key)
+        return Response({"GET": "GET"})

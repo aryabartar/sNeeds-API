@@ -44,6 +44,7 @@ class DiscountList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
+        # print(request.session.get("a", "Unknown"))
         all_discounts = Discount.objects.all()
         discounts_serialize = DiscountSerializer(all_discounts, many=True)
         return Response(discounts_serialize.data)
