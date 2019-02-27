@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
-from .serializers import UserRegisterSerializer, UserSerializer
 from .permissions import AnonPermissionOnly
+from .serializers import UserRegisterSerializer, UserSerializer, UserInformationSerializer
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -60,5 +60,21 @@ class MyAccountDetail(APIView):
         user_serialize = UserSerializer(request.user)
         return Response(user_serialize.data)
 
-    # def update(self , request):
-
+    def put(self, request):
+        user = request.user
+        user_serialize = UserSerializer(user, request.data)
+        if user_serialize.is_valid():
+            user_serialize.save()
+        else:
+            return Response(user_serialize.errors)
+        try:
+            user_information = user.user_information
+            user_information_serializer = UserInformationSerializer(user_information,
+                                                                    data=request.data)
+            if user_information_serializer.is_valid():
+                user_information_serializer.save()
+            else:
+                return Response(user_information_serializer.errors)
+        except:
+            return Response({"This user has no user_information, Please check this first."})
+        return Response({"message": "Successfully updated!"})

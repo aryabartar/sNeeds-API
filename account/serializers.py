@@ -18,16 +18,26 @@ expire_delta = api_settings.JWT_REFRESH_EXPIRATION_DELTA
 User = get_user_model()
 
 
-class UserInformation(serializers.ModelSerializer):
+class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInformation
         fields = [
             "user",
             "phone",
         ]
+        read_only_fields = ("user",)
 
 
 class UserSerializer(serializers.ModelSerializer):
+    phone = serializers.SerializerMethodField()
+
+    def get_phone(self, user):
+        try:
+            phone = user.user_information.phone
+        except:
+            phone = None
+        return phone
+
     class Meta:
         model = User
         fields = [
@@ -37,6 +47,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "phone",
         ]
+        read_only_fields = ("username", "email", )
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
