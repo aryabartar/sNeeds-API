@@ -35,6 +35,8 @@ http://127.0.0.1:8000/booklet/topics/advanced-programming/booklets/ => Retrieve 
 http://127.0.0.1:8000/booklet/booklets/ => Retrieve all booklets.
 http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/ => Retrieve booklet with "advanced-programming-amirkabir-fall" slug.
 http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/tags => Retrieve booklet "advanced-programming-amirkabir-fall" tags.
+http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/topic => Retrieve booklet "advanced-programming-amirkabir-fall" tags.
+http://127.0.0.1:8000/booklet/booklets/advanced-programming-amirkabir-fall/field => Retrieve booklet "advanced-programming-amirkabir-fall" tags.
 
 
 http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
