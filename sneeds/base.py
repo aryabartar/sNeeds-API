@@ -136,8 +136,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'sneeds/static/')
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'sneeds/media/')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, '/media/')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
 
@@ -147,4 +147,3 @@ CORS_ORIGIN_ALLOW_ALL = True
 # CORS_ALLOW_CREDENTIALS = False
 
 ALLOW_UNICODE_SLUGS = True
-
