@@ -19,16 +19,25 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
+    phone = serializers.SerializerMethodField()
+
+    def get_phone(self, user):
+        try:
+            phone = user.user_information.phone
+        # When user information is empty
+        except:
+            phone = None
+        return phone
+
     class Meta:
         model = User
-        # fields = [
-        #     "username",
-        #     "email",
-        #     "first_name",
-        #     "last_name",
-        #     "phone",
-        # ]
-        fields = "__all__"
+        fields = [
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "phone",
+        ]
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
