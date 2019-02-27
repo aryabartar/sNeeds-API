@@ -7,12 +7,14 @@ from .models import (
     Post,
     UserComment,
     Topic,
+    PostLike,
 )
 
 from .serializers import (
     PostSerializer,
     UserCommentSerializer,
     TopicSerializer,
+    PostLikeSerializer,
 )
 
 
@@ -72,5 +74,16 @@ class TopicList(generics.ListAPIView):
 
 
 class PostLikesList(APIView):
+    # serializer_class = PostLike
+
     def post(self, request, *args, **kwargs):
+        post_slug = kwargs['post_slug']
+        posts = Post.objects.filter(slug__iexact=post_slug)
+        if posts.count() == 1:
+            post = posts.first()
+            post_serialize = PostLikeSerializer(data={"user": request.user.pk, "post": post.pk})
+            if post_serialize.is_valid():
+                post_serialize.save()
+            else:
+                print(post_serialize.errors)
         return Response({})
