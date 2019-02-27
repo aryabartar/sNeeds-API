@@ -107,16 +107,14 @@ class BookletDownloadsList(APIView):
     def post(self, request):
         user = request.user
         booklet_slug = request.data.get("booklet-slug", None)
-
         try:
             booklet = Booklet.objects.get(slug__iexact=booklet_slug)
         except:
             return Response({"message": "No booklet found!"})
 
-        if user.is_authenticated:
-            booklet_download_serialize = BookletDownloadSerializer(data={"user": user.id, "booklet": booklet.id})
-            if booklet_download_serialize.is_valid():
-                booklet_download_serialize.save()
-                return Response({"message": "success"})
-            else:
-                return Response(booklet_download_serialize.errors)
+        booklet_download_serialize = BookletDownloadSerializer(data={"user": user.id, "booklet": booklet.id})
+        if booklet_download_serialize.is_valid():
+            booklet_download_serialize.save()
+            return Response({"message": "Success!"})
+        else:
+            return Response(booklet_download_serialize.errors)
