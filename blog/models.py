@@ -91,4 +91,4 @@ class PostLike(models.Model):
         unique_together = (("user", "post"),)
 
     def __str__(self):
-        return "{} likes {} post".format(self.user.username, self.post.title)
+        return "post {} like".format(self.post.title)
