@@ -14,7 +14,6 @@ from .serializers import (
     PostSerializer,
     UserCommentSerializer,
     TopicSerializer,
-    PostLikeSerializer,
 )
 
 

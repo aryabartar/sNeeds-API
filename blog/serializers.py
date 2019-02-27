@@ -132,8 +132,3 @@ class PostQuestionAndAnswerSerializer(serializers.ModelSerializer):
         model = PostQuestionAndAnswer
         fields = ['question', 'answer']
 
-
-class PostLikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PostLike
-        fields = "__all__"

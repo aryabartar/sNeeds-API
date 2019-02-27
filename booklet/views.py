@@ -99,3 +99,13 @@ class TagsPostsList(generics.ListAPIView):
         tag = get_object_or_404(Tag, slug=tag_slug)
         booklets = tag.booklets.all()
         return booklets
+
+
+class BookletDownloadsList(APIView):
+
+    def post(self, request):
+        user = request.user
+        booklet_slug = request.data.get("booklet-slug", None)
+        if user.is_authenticated:
+            pass
+        return Response({})

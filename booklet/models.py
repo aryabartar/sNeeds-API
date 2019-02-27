@@ -96,7 +96,7 @@ class Booklet(models.Model):
         return self.title
 
 
-class UserDownload(models.Model):
+class BookletDownload(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="downloads")
     booklet = models.ForeignKey(Booklet, on_delete=models.CASCADE)
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import BookletField, BookletTopic, Booklet, Tag
+from .models import BookletField, BookletTopic, Booklet, Tag, BookletDownload
 
 
 class FieldSerializer(serializers.ModelSerializer):
@@ -90,4 +90,10 @@ class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Tag
+        fields = "__all__"
+
+
+class BookletDownloadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookletDownload
         fields = "__all__"
