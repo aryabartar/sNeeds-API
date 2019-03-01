@@ -5,6 +5,7 @@ db.sqlite3
 media/
 venv/
 sneeds-django/sneeds/local.py
+sneeds/local.py
 
 *.egg-info
 *.pot
