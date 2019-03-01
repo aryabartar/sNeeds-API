@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.db.models import Q
 
-from rest_framework import permissions, generics
+from rest_framework import permissions, generics, authentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
@@ -54,6 +54,7 @@ class RegisterView(generics.CreateAPIView):
 
 
 class MyAccountDetail(APIView):
+    # authentication_classes = [authentication.BasicAuthentication , authentication.SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
