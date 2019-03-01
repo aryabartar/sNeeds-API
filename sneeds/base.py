@@ -134,10 +134,12 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'sneeds/static/')
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static_cdn')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'media_cdn')
 
 LOGOUT_REDIRECT_URL = 'account:logout_success'
-
 LOGIN_REDIRECT_URL = 'account:logout_success'
 
 CORS_ORIGIN_ALLOW_ALL = True
