@@ -26,14 +26,10 @@ class PostQuestionAndAnswer(models.Model):
         return self.question + " | " + self.answer
 
 
-def upload_post_image(instance, filename):
-    return "post_images/{slug}/{filename}".format(slug=instance.slug, filename=filename)
-
-
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
-    post_main_image = models.ImageField(upload_to=upload_post_image, null=False, default="")
+    post_main_image = models.URLField()
     POST_TYPE = (
         ('Q&A', 'Question and Answer'),
         ('interview', 'Interview'),
@@ -85,7 +81,7 @@ class AdminComment(models.Model):
 
 class PostLike(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="likes")
-    post = models.ForeignKey(Post, on_delete=models.CASCADE , related_name="likes")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
 
     class Meta:
         unique_together = (("user", "post"),)
