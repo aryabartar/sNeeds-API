@@ -59,6 +59,10 @@ class Tag(models.Model):
         return reverse('booklet:tags_detail', kwargs={"tag_slug": self.slug})
 
 
+def upload_booklet_image(instance, filename):
+    return "booklet/booklet_image/{slug}/{filename}".format(slug=instance.slug, filename=filename)
+
+
 class Booklet(models.Model):
     title = models.CharField(max_length=200, blank=False)
     topic = models.ForeignKey(BookletTopic, on_delete=models.CASCADE,
@@ -86,7 +90,7 @@ class Booklet(models.Model):
 
     number_of_likes = models.IntegerField(default=0)
 
-    booklet_image = models.URLField()
+    booklet_image = models.ImageField(upload_to=upload_booklet_image, null=True)
     booklet_content = models.URLField()
 
     def get_absolute_url(self):

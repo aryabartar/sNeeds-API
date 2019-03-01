@@ -26,10 +26,14 @@ class PostQuestionAndAnswer(models.Model):
         return self.question + " | " + self.answer
 
 
+def upload_post_image(instance, filename):
+    return "blog/post_images/{slug}/{filename}".format(slug=instance.slug, filename=filename)
+
+
 class Post(models.Model):
     title = models.CharField(max_length=200, blank=False, null=False)
     topic = models.ForeignKey(Topic, null=True, related_name="posts", on_delete=models.SET_NULL)
-    post_main_image = models.URLField()
+    post_main_image = models.ImageField(upload_to=upload_post_image, null=True)
     POST_TYPE = (
         ('Q&A', 'Question and Answer'),
         ('interview', 'Interview'),
