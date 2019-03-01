@@ -4,7 +4,7 @@ db.sqlite3
 .idea/
 media/
 venv/
-sneeds/local.py
+sneeds-django/sneeds/local.py
 
 *.egg-info
 *.pot
