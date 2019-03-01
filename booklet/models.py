@@ -91,6 +91,7 @@ class Booklet(models.Model):
     number_of_likes = models.IntegerField(default=0)
 
     booklet_image = models.ImageField(upload_to=upload_booklet_image, null=True)
+    # booklet_image = models.ImageField( null=True)
     booklet_content = models.URLField()
 
     def get_absolute_url(self):
