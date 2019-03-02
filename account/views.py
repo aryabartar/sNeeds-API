@@ -28,11 +28,9 @@ class AuthView(APIView):
         password = data.get('password')
 
         qs = User.objects.filter(
-            Q(username__exact=username_or_email) |
-            Q(email__exact=username_or_email)
+            Q(username__iexact=username_or_email) |
+            Q(email__iexact=username_or_email)
         )
-        print(username_or_email)
-        print("Sadsad")
         if qs.exists():
             user_obj = qs.first()
             if user_obj.check_password(password):
@@ -42,7 +40,7 @@ class AuthView(APIView):
                 response = jwt_response_payload_handler(token, user, request=request)
                 return Response(response)
 
-        return Response({"detail": "Invalidd credentials!"}, status=401)
+        return Response({"detail": "Invalid credentials!"}, status=401)
 
 
 class RegisterView(generics.CreateAPIView):

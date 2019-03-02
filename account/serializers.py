@@ -94,13 +94,13 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def validate_email(self, value):
         qs = User.objects.filter(email__iexact=value)
         if qs.exists():
-            raise serializers.ValidationError("User with this email already exists")
+            raise serializers.ValidationError("User with this email already exists  .")
         return value
 
     def validate_username(self, value):
         qs = User.objects.filter(email__iexact=value)
         if qs.exists():
-            raise serializers.ValidationError("User with this username exists.")
+            raise serializers.ValidationError("User with this username exists  . ")
         return value
 
     def validate(self, data):
