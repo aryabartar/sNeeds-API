@@ -2,9 +2,32 @@ import json
 import requests
 import os
 
-AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/register/"
-REFRESH_ENDPOINT = AUTH_ENDPOINT + "refresh/"
+AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login1/"
+REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/refresh/"
 ENDPOINT = "http://127.0.0.1:8000/account/my-account/"
+
+headers = {
+    "Content-Type": "application/json",
+    # "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTE1MDM5NjQsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSJ9.BscMSRtWhNDnAhRKjA_-X6Z6bFCFT9R60sQg19tj7ic"
+}
+
+data = {
+    "username": "ali",
+    "password": "HelloTest",
+}
+
+r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
+print(r.json())
+token = r.json()['token']
+
+
+print(token)
+d = {
+    "token": token
+}
+
+r = requests.post(REFRESH_ENDPOINT, data=json.dumps(d), headers=headers)
+print(r.json())
 #
 # account_data = {
 #     "username": "testapi1544",
@@ -28,15 +51,15 @@ ENDPOINT = "http://127.0.0.1:8000/account/my-account/"
 # print(r.json())
 # # print(token)
 
-headers = {
-    "Content-Type": "application/json",
-    "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTEzNjc3MzEsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSJ9.eMUVy38j5aJoSECJz8ryEc-O8yInfSjOFtPtSK-SQZ8",
-}
+# headers = {
+#     "Content-Type": "application/json",
+#     "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTEzNjc3MzEsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSJ9.eMUVy38j5aJoSECJz8ryEc-O8yInfSjOFtPtSK-SQZ8",
+# }
 #
 # print(token)
 # post_data = json.dumps({"discount": 33})
-r = requests.get(ENDPOINT, headers=headers)
-print(r.text)
+# r = requests.get(ENDPOINT, headers=headers)
+# print(r.text)
 # print(posted_response.text)
 
 # refresh_data = {
