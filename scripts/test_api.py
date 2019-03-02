@@ -2,21 +2,22 @@ import json
 import requests
 import os
 
-AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login1/"
+AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login/"
 REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/refresh/"
-ENDPOINT = "http://127.0.0.1:8000/account/my-account"
+ENDPOINT = "http://127.0.0.1:8000/account/test/"
 
 data = {
-    "username": "ali",
+    "username_or_email": "ali",
     "password": "HelloTest",
 }
 
 r = requests.post(AUTH_ENDPOINT, data=data)
 token = r.json()['token']
+# print(r.text)
 
 headers = {
     "Content-Type": "application/json",
-    "Authorization": "JWT " + token,
+    "Authorization": "JWT " + token + "d",
 }
 
 data = {"username": "ali",
@@ -26,7 +27,7 @@ data = {"username": "ali",
         "user_information": None}
 
 post_data = json.dumps(data)
-posted_response = requests.get(ENDPOINT, data=post_data, headers=headers)
+posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
 print(posted_response.text)
 
 # d = {

@@ -31,7 +31,8 @@ class AuthView(APIView):
             Q(username__exact=username_or_email) |
             Q(email__exact=username_or_email)
         )
-
+        print(username_or_email)
+        print("Sadsad")
         if qs.exists():
             user_obj = qs.first()
             if user_obj.check_password(password):
@@ -41,7 +42,7 @@ class AuthView(APIView):
                 response = jwt_response_payload_handler(token, user, request=request)
                 return Response(response)
 
-        return Response({"detail": "Invalid credentials!"}, status=401)
+        return Response({"detail": "Invalidd credentials!"}, status=401)
 
 
 class RegisterView(generics.CreateAPIView):
@@ -81,8 +82,3 @@ class MyAccountDetail(APIView):
         return Response({"message": "Successfully updated!"})
 
 
-class Test(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        return Response({"s": "S"})
