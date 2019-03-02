@@ -79,3 +79,10 @@ class MyAccountDetail(APIView):
         except:
             return Response({"This user has no user_information, Please check this first."})
         return Response({"message": "Successfully updated!"})
+
+
+class Test(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        return Response({"s": "S"})

@@ -24,6 +24,7 @@ urlpatterns = [
     path('jwt/login1/', obtain_jwt_token),
     path('jwt/register/', views.RegisterView.as_view()),
     path('jwt/refresh/', refresh_jwt_token),
+    path('test', views.Test.as_view()),
 
     # path('signup/success/', views.signup_success, name="signup_success"),
     # path('signup/', views.signup, name="signup"),

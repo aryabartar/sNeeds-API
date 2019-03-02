@@ -4,30 +4,37 @@ import os
 
 AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login1/"
 REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/refresh/"
-ENDPOINT = "http://127.0.0.1:8000/account/my-account/"
-
-headers = {
-    "Content-Type": "application/json",
-    # "Authorization": "JWT " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTE1MDM5NjQsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSJ9.BscMSRtWhNDnAhRKjA_-X6Z6bFCFT9R60sQg19tj7ic"
-}
+ENDPOINT = "http://127.0.0.1:8000/account/my-account"
 
 data = {
     "username": "ali",
     "password": "HelloTest",
 }
 
-r = requests.post(AUTH_ENDPOINT, data=json.dumps(data), headers=headers)
-print(r.json())
+r = requests.post(AUTH_ENDPOINT, data=data)
 token = r.json()['token']
 
-
-print(token)
-d = {
-    "token": token
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "JWT " + token,
 }
 
-r = requests.post(REFRESH_ENDPOINT, data=json.dumps(d), headers=headers)
-print(r.json())
+data = {"username": "ali",
+        "email": "ali@gmail.com",
+        "first_name": "AKAB",
+        "last_name": "",
+        "user_information": None}
+
+post_data = json.dumps(data)
+posted_response = requests.get(ENDPOINT, data=post_data, headers=headers)
+print(posted_response.text)
+
+# d = {
+#     "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozMiwidXNlcm5hbWUiOiJhbGkiLCJleHAiOjE1NTE1MDU5ODcsImVtYWlsIjoiYWxpQGdtYWlsLmNvbSIsIm9yaWdfaWF0IjoxNTUxNTA1NjM5fQ.1IPteAlssHqdpKm4SVsydkgxUF_XzYhk5k3E75yuaW4"
+# }
+#
+# new_response = requests.post(REFRESH_ENDPOINT, data=json.dumps(d), headers=headers)
+# print(new_response.json())
 #
 # account_data = {
 #     "username": "testapi1544",

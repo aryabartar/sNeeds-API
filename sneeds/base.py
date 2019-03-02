@@ -141,4 +141,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ALLOW_UNICODE_SLUGS = True
 
+# JWT authentication settings
 from sneeds.restconf.main import *
+
+# TODO: server is not working while zarinpal ....
