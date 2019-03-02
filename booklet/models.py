@@ -33,7 +33,7 @@ class BookletTopic(models.Model):
                              null=False,
                              help_text="Sample: برنامه‌نویسی پیشرفته"
                              )
-    information = models.TextField(max_length=10000, null=True)
+    information = models.TextField(max_length=10000, null=True , blank=True)
     slug = models.SlugField(null=False,
                             unique=True,
                             help_text="Lower case |Sample: advanced-programming")
