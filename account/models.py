@@ -6,7 +6,7 @@ User = get_user_model()
 
 
 class UserInformation(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="user_information")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name="user_information")
     phone = models.CharField(max_length=11)
 
     def __str__(self):

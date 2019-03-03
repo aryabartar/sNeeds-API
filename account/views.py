@@ -62,9 +62,13 @@ class RegisterView(APIView):
 
         if user_register_serialize.is_valid() and user_information_serialize.is_valid():
             user_register_serialize.save()
-            # user = self.get_created_user(user_register_serialize.data['username'])
-            user_information_serialize.save()
-            return Response({**user_register_serialize.data, **user_information_serialize.save()})
+            user = self.get_created_user(user_register_serialize.data['username'])
+            user_information_serialize = UserInformationSerializer(data={**request.data, **{"user": user.pk}})
+            if user_information_serialize.is_valid():
+                user_information_serialize.save()
+            else:
+                return Response(user_information_serialize.errors)
+            return Response({**user_register_serialize.data, **user_information_serialize.data})
         else:
             return Response({**user_register_serialize.errors, **user_information_serialize.errors})
 

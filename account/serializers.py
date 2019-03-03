@@ -27,7 +27,6 @@ class UserInformationSerializer(serializers.ModelSerializer):
             int(phone)
         except:
             raise serializers.ValidationError("Phone should be integer.")
-
         return phone
 
     class Meta:
@@ -36,19 +35,12 @@ class UserInformationSerializer(serializers.ModelSerializer):
             "user",
             "phone",
         ]
-
+        extra_kwargs = {
+            'user': {'write_only': True}
+        }
 
 
 class UserSerializer(serializers.ModelSerializer):
-    phone = serializers.SerializerMethodField()
-
-    def get_phone(self, user):
-        try:
-            phone = user.user_information.phone
-        except:
-            phone = None
-        return phone
-
     class Meta:
         model = User
         fields = [
@@ -56,7 +48,6 @@ class UserSerializer(serializers.ModelSerializer):
             "email",
             "first_name",
             "last_name",
-            "phone",
         ]
         read_only_fields = ("username", "email",)
 
@@ -67,7 +58,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     }, write_only=True)
     token = serializers.SerializerMethodField(read_only=True)
     token_expires = serializers.SerializerMethodField(read_only=True)
-    message = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -80,15 +70,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'password2',
             'token',
             'token_expires',
-            'message',
         ]
 
         extra_kwargs = {
             'password': {'write_only': True}
         }
-
-    def get_message(self, user):
-        return "Success!"
 
     def get_token_expires(self, user):
         return timezone.now() + \
