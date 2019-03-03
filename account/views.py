@@ -53,7 +53,6 @@ class RegisterView(generics.CreateAPIView):
 
 
 class MyAccountDetail(APIView):
-    # authentication_classes = [authentication.BasicAuthentication , authentication.SessionAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
