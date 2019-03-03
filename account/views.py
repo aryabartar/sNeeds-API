@@ -43,13 +43,30 @@ class AuthView(APIView):
         return Response({"detail": "Invalid credentials!"}, status=401)
 
 
-class RegisterView(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserRegisterSerializer
+class RegisterView(APIView):
+    def get_created_user(self, username):
+        qs = User.objects.filter(username__exact=username)
+        if qs.exists():
+            user = qs.first()
+            return user
+        return None
+
     permission_classes = [AnonPermissionOnly]
 
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request": self.request}
+    def post(self, request):
+        user_register_serialize = UserRegisterSerializer(data=request.data)
+        user_information_serialize = UserInformationSerializer(data=request.data)
+
+        user_register_serialize.is_valid()
+        user_information_serialize.is_valid()
+
+        if user_register_serialize.is_valid() and user_information_serialize.is_valid():
+            user_register_serialize.save()
+            # user = self.get_created_user(user_register_serialize.data['username'])
+            user_information_serialize.save()
+            return Response({**user_register_serialize.data, **user_information_serialize.save()})
+        else:
+            return Response({**user_register_serialize.errors, **user_information_serialize.errors})
 
 
 class MyAccountDetail(APIView):
@@ -69,7 +86,7 @@ class MyAccountDetail(APIView):
             return Response({"This user has no user_information, Please check this first."}, status=400)
 
         user_information_serializer = UserInformationSerializer(user_information,
-                                                                data=request.data)
+                                                                data={**request.data, **{"user": user.pk}})
         # and in if doesn't check both operands if one of them is false
         user_serialize.is_valid()
         user_information_serializer.is_valid()
@@ -77,6 +94,6 @@ class MyAccountDetail(APIView):
         if user_information_serializer.is_valid() and user_serialize.is_valid():
             user_serialize.save()
             user_information_serializer.save()
+            return Response({**user_serialize.data, **user_information_serializer.data})
         else:
             return Response({**user_information_serializer.errors, **user_serialize.errors}, status=400)
-        return Response({"message": "Success"})

@@ -22,7 +22,12 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
     def validate_phone(self, phone):
         if not len(phone) == 11:
-            raise serializers.ValidationError("Phone length should be 11 characters,")
+            raise serializers.ValidationError("Phone length should be 11 characters.")
+        try:
+            int(phone)
+        except:
+            raise serializers.ValidationError("Phone should be integer.")
+
         return phone
 
     class Meta:
@@ -31,7 +36,7 @@ class UserInformationSerializer(serializers.ModelSerializer):
             "user",
             "phone",
         ]
-        read_only_fields = ("user",)
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,7 +65,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={
         "input_type": 'password'
     }, write_only=True)
-    phone = serializers.CharField(max_length=11, min_length=11, write_only=True)
     token = serializers.SerializerMethodField(read_only=True)
     token_expires = serializers.SerializerMethodField(read_only=True)
     message = serializers.SerializerMethodField(read_only=True)
@@ -72,7 +76,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
-            'phone',
             'password',
             'password2',
             'token',
@@ -129,9 +132,4 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         # user.is_active=False #Enable this for email verification
         user.save()
-
-        # TODO: Validate this
-        # Save user information here
-        phone = validated_data['phone']
-        UserInformation.objects.create(user=user, phone=phone)
         return user
