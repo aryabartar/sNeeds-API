@@ -62,20 +62,21 @@ class MyAccountDetail(APIView):
     def put(self, request):
         user = request.user
         user_serialize = UserSerializer(user, request.data)
-        if user_serialize.is_valid():
-            user_serialize.save()
-        else:
-            return Response(user_serialize.errors)
+
         try:
             user_information = user.user_information
-            user_information_serializer = UserInformationSerializer(user_information,
-                                                                    data=request.data)
-            if user_information_serializer.is_valid():
-                user_information_serializer.save()
-            else:
-                return Response(user_information_serializer.errors)
         except:
-            return Response({"This user has no user_information, Please check this first."})
-        return Response({"message": "Successfully updated!"})
+            return Response({"This user has no user_information, Please check this first."}, status=400)
 
+        user_information_serializer = UserInformationSerializer(user_information,
+                                                                data=request.data)
+        # and in if doesn't check both operands if one of them is false
+        user_serialize.is_valid()
+        user_information_serializer.is_valid()
 
+        if user_information_serializer.is_valid() and user_serialize.is_valid():
+            user_serialize.save()
+            user_information_serializer.save()
+        else:
+            return Response({**user_information_serializer.errors, **user_serialize.errors}, status=400)
+        return Response({"message": "Success"})

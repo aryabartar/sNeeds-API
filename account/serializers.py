@@ -19,6 +19,12 @@ User = get_user_model()
 
 
 class UserInformationSerializer(serializers.ModelSerializer):
+
+    def validate_phone(self, phone):
+        if not len(phone) == 11:
+            raise serializers.ValidationError("Phone length should be 11 characters,")
+        return phone
+
     class Meta:
         model = UserInformation
         fields = [
@@ -47,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "phone",
         ]
-        read_only_fields = ("username", "email", )
+        read_only_fields = ("username", "email",)
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
