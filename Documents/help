@@ -115,7 +115,7 @@ Register:
         "last_name": "bartar",
         "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozOSwidXNlcm5hbWUiOiJhbGkxMSIsImV4cCI6MTU1MDc3NzQxNywiZW1haWwiOiJhbGkxMUBnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1MDc3NzExN30.hCjGTB_9D0DvewMhgc6t5C5Xr8flFizCBPTk4SF5PHA",
         "token_expires": "2019-03-08T19:21:57.551613Z",
-        "message": "Success!"
+        "phone": "09011353909"
     }
 
 Login:
