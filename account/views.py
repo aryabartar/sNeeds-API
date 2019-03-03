@@ -76,19 +76,25 @@ class RegisterView(APIView):
 class MyAccountDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_user_information(self, user):
+        try:
+            user_information = user.user_information
+        except:
+            return Response({"This user has no user_information, Please check this first."}, status=400)
+        return user_information
+
     def get(self, request):
+        user = request.user
         user_serialize = UserSerializer(request.user)
-        return Response(user_serialize.data)
+        user_information = self.get_user_information(user)
+        user_information_serialize = UserInformationSerializer(user_information)
+        return Response({**user_serialize.data, **user_information_serialize.data})
 
     def put(self, request):
         user = request.user
         user_serialize = UserSerializer(user, request.data)
 
-        try:
-            user_information = user.user_information
-        except:
-            return Response({"This user has no user_information, Please check this first."}, status=400)
-
+        user_information = self.get_user_information(user)
         user_information_serializer = UserInformationSerializer(user_information,
                                                                 data={**request.data, **{"user": user.pk}})
         # and in if doesn't check both operands if one of them is false
