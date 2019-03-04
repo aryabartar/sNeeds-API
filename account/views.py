@@ -9,6 +9,8 @@ from rest_framework_jwt.settings import api_settings
 from .permissions import AnonPermissionOnly
 from .serializers import UserRegisterSerializer, UserSerializer, UserInformationSerializer
 
+from blog.serializers import PostLikeSerializer
+
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
@@ -107,3 +109,16 @@ class MyAccountDetail(APIView):
             return Response({**user_serialize.data, **user_information_serializer.data})
         else:
             return Response({**user_information_serializer.errors, **user_serialize.errors}, status=400)
+
+
+class AccountLikedPosts(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        likes = user.likes.all()
+        if likes.exists():
+            post_like_serialzie = PostLikeSerializer(likes, many=True)
+            return Response(post_like_serialzie.data)
+        else:
+            return Response({"message": "No likes found."})

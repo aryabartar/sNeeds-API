@@ -136,3 +136,14 @@ class PostQuestionAndAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PostQuestionAndAnswer
         fields = ['question', 'answer']
+
+
+class PostLikeSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.username
+
+    class Meta:
+        model = PostLike
+        fields = "__all__"
