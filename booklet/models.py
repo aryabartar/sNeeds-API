@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
+import django.contrib.auth.password_validation as validators
+
 
 User = get_user_model()
 
@@ -72,8 +74,8 @@ class Booklet(models.Model):
                               )
     slug = models.SlugField(unique=True, null=False, blank=False)
 
-    teacher = models.CharField(max_length=200)
-    number_of_pages = models.IntegerField(default=0, null=False, blank=False, help_text="حتما دقیق نوشته شود")
+    teacher = models.CharField(max_length=200, null=True, blank=True)
+    number_of_pages = models.IntegerField(default=0, null=True, blank=True, help_text="حتما دقیق نوشته شود")
     format = models.CharField(max_length=40, default="PDF", null=False, blank=False)
     tags = models.ManyToManyField(Tag, blank=True, related_name="booklets",
                                   help_text="Don't change this if you are creating new booklet. Only change this if "

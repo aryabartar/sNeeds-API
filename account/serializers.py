@@ -1,7 +1,9 @@
 import datetime
 
 from django.utils import timezone
+from django.core import exceptions
 from django.contrib.auth import get_user_model
+import django.contrib.auth.password_validation as validators
 
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
@@ -102,7 +104,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         data.pop('password2')
 
         if password != password2:
-            raise serializers.ValidationError("Passwords must match!")
+            raise serializers.ValidationError({"password": "Passwords must match."})
+
+        errors = dict()
+        try:
+            # validate the password and catch the exception
+            validators.validate_password(password=password)
+
+        # the exception raised here is different than serializers.ValidationError
+        except exceptions.ValidationError as e:
+            errors['password'] = list(e.messages)
+
+        if errors:
+            raise serializers.ValidationError(errors)
 
         return data
 
