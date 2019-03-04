@@ -118,7 +118,7 @@ class AccountLikedPosts(APIView):
         user = request.user
         likes = user.likes.all()
         if likes.exists():
-            post_like_serialzie = PostLikeSerializer(likes, many=True)
-            return Response(post_like_serialzie.data)
+            post_like_serialize = PostLikeSerializer(likes, many=True)
+            return Response(post_like_serialize.data)
         else:
             return Response({"message": "No likes found."})

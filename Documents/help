@@ -54,7 +54,7 @@ http://127.0.0.1:8000/booklet/tags/ => Retrieve all tags list.
 http://127.0.0.1:8000/booklet/tags/best-booklet/ => Retrieve a tag with slug="best-booklet"
 http://127.0.0.1:8000/booklet/tags/best-booklet/posts/ => Retrieve all posts of a tag with slug="best-booklet" (pagination included!)
 
-http://127.0.0.1:8000/booklet/user-downloads/ => Post. This endpoint saves user downloads to represent it in user profile. (Login required)
+http://127.0.0.1:8000/booklet/downloads/ => Post. This endpoint saves user downloads to represent it in user profile. (Login required)
   Post to this endpoint using this format.
     {
     "booklet-slug":"ap-amirkabir"
