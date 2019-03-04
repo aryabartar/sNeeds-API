@@ -22,7 +22,8 @@ urlpatterns = [
 
 
     path('my-account/', views.MyAccountDetail.as_view()),
-    path('my-account/post-likes', views.AccountLikedPosts.as_view()),
+    path('my-account/post-likes/', views.AccountLikedPosts.as_view()),
+    path('my-account/booklet-downloads/', views.AccountDownloadBooklet.as_view()),
 
     path('jwt/login/', views.AuthView.as_view()),
     path('jwt/login1/', obtain_jwt_token),

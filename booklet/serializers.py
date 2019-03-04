@@ -94,6 +94,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BookletDownloadSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
     booklet_slug = serializers.SlugField(source='booklet.slug', read_only=True)
 
     class Meta:

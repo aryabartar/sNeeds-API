@@ -139,11 +139,8 @@ class PostQuestionAndAnswerSerializer(serializers.ModelSerializer):
 
 
 class PostLikeSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-    post = serializers.SlugField(source='post.slug')
-
-    def get_user(self, obj):
-        return obj.user.username
+    username = serializers.CharField(source="user.username", read_only=True)
+    post_slug = serializers.SlugField(source='post.slug', read_only=True)
 
     class Meta:
         model = PostLike

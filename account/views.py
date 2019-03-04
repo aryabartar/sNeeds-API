@@ -130,7 +130,7 @@ class AccountDownloadBooklet(APIView):
 
     def get(self, request):
         user = request.user
-        downloads = user.user_downloads.all()
+        downloads = user.booklet_downloads.all()
         if downloads.exists():
             post_download_serialize = BookletDownloadSerializer(downloads, many=True)
             return Response(post_download_serialize.data)
