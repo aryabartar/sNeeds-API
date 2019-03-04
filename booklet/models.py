@@ -104,7 +104,7 @@ class Booklet(models.Model):
 
 
 class BookletDownload(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="downloads")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="booklet_downloads")
     booklet = models.ForeignKey(Booklet, on_delete=models.CASCADE)
 
     class Meta:

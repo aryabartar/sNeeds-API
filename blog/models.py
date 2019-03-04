@@ -84,7 +84,7 @@ class AdminComment(models.Model):
 
 
 class PostLike(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="likes")
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="post_likes")
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
 
     class Meta:

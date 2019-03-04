@@ -10,6 +10,7 @@ from .permissions import AnonPermissionOnly
 from .serializers import UserRegisterSerializer, UserSerializer, UserInformationSerializer
 
 from blog.serializers import PostLikeSerializer
+from booklet.serializers import BookletDownloadSerializer
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -116,9 +117,22 @@ class AccountLikedPosts(APIView):
 
     def get(self, request):
         user = request.user
-        likes = user.likes.all()
+        likes = user.post_likes.all()
         if likes.exists():
             post_like_serialize = PostLikeSerializer(likes, many=True)
             return Response(post_like_serialize.data)
         else:
-            return Response({"message": "No likes found."})
+            return Response({"message": "No like found."})
+
+
+class AccountDownloadBooklet(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        downloads = user.user_downloads.all()
+        if downloads.exists():
+            post_download_serialize = BookletDownloadSerializer(downloads, many=True)
+            return Response(post_download_serialize.data)
+        else:
+            return Response({"message": "No download found."})

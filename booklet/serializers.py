@@ -94,6 +94,8 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BookletDownloadSerializer(serializers.ModelSerializer):
+    booklet_slug = serializers.SlugField(source='booklet.slug', read_only=True)
+
     class Meta:
         model = BookletDownload
         fields = "__all__"
