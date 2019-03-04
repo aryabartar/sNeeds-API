@@ -178,3 +178,7 @@ http://127.0.0.1:8000/account/my-account/ => Retrieve and Update. (Login require
         "last_name": "tabatabayi",
         "phone": "09031834553"
     }
+
+http://127.0.0.1:8000/account/my-account/post-likes/ => Retrieve all liked posts.
+http://127.0.0.1:8000/account/my-account/booklet-downloads/ => Retrieve all downloaded booklets.
+
