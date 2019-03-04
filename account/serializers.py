@@ -109,7 +109,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         errors = dict()
         try:
             # validate the password and catch the exception
-            validators.validate_password(password=password)
+            validators.validate_password(password)
 
         # the exception raised here is different than serializers.ValidationError
         except exceptions.ValidationError as e:
