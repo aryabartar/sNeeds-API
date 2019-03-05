@@ -31,10 +31,6 @@ class UserInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserInformation
-        fields = [
-            "user",
-            "phone",
-        ]
         extra_kwargs = {
             'user': {'write_only': True}
         }
