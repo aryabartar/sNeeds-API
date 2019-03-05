@@ -104,8 +104,10 @@ Register:
         "first_name": "arya",
         "last_name": "bartar",
         "phone": "09011353909",
-        "password": "sneeds@203040",
-        "password2": "sneeds@203040"
+        "password": "testpass",
+        "password2": "testpass",
+        "field":"computer-eng",
+        "university":"AUT"
     }
   Returns this json data:
     {
@@ -113,9 +115,11 @@ Register:
         "email": "ali@gmail.com",
         "first_name": "arya",
         "last_name": "bartar",
-        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozOSwidXNlcm5hbWUiOiJhbGkxMSIsImV4cCI6MTU1MDc3NzQxNywiZW1haWwiOiJhbGkxMUBnbWFpbC5jb20iLCJvcmlnX2lhdCI6MTU1MDc3NzExN30.hCjGTB_9D0DvewMhgc6t5C5Xr8flFizCBPTk4SF5PHA",
-        "token_expires": "2019-03-08T19:21:57.551613Z",
-        "phone": "09011353909"
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjo3MiwidXNlcm5hbWUiOiJhbDExIiwiZXhwIjoxNTUxNzkwNTMxLCJlbWFpbCI6ImFsMTFAZ21haWwuY29tIiwib3JpZ19pYXQiOjE1NTE3OTAyMzF9.W3aux4n9A1g17LupT6PO9E1Vml5q3Kn54hbDTyfRS2E",
+        "token_expires": "2019-04-14T12:47:11.219441Z",
+        "phone": "09011353909",
+        "field": "computer-eng",
+        "university": "AUT"
     }
 
 Login:
@@ -166,17 +170,21 @@ How to use JWT token:
 http://127.0.0.1:8000/account/my-account/ => Retrieve and Update. (Login required)
   Sample retrieved data format:
     {
-        "username": "aryabartar",
+        "username": "arya",
         "email": "bartararya@gmail.com",
-        "first_name": "arya",
-        "last_name": "khaligh",
-        "phone": "09011853909"
+        "first_name": "hadi",
+        "last_name": "tabatabayi",
+        "phone": "09031834553",
+        "field": "comp eng",
+        "university": "AUT"
     }
   Sample update format:
     {
         "first_name": "hadi",
         "last_name": "tabatabayi",
-        "phone": "09031834553"
+        "phone": "09031834553",
+        "field":"comp eng",
+        "university":"AUT"
     }
 
 http://127.0.0.1:8000/account/my-account/post-likes/ => Retrieve all liked posts.
