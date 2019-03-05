@@ -24,6 +24,7 @@ urlpatterns = [
     path('my-account/post-likes/', views.AccountLikedPosts.as_view()),
     path('my-account/booklet-downloads/', views.AccountDownloadBooklet.as_view()),
 
+    path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
 
     path('jwt/login/', views.AuthView.as_view()),
     path('jwt/register/', views.RegisterView.as_view()),

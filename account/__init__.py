@@ -1,1 +1,1 @@
-import account.handlers
+from .handlers import password_reset_token_created

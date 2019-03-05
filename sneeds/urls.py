@@ -36,8 +36,6 @@ urlpatterns = [
     path('payment/', include(payment_urls)),
     path('class/', include(class_urls)),
 
-    path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
-
     path('api-auth/', include('rest_framework.urls')),
     path('docs/', include_docs_urls(title='API documentation (written by: Arya Khaligh)')),
 ]
