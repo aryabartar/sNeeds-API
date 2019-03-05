@@ -1,1 +1,1 @@
-import account.signals.handlers
+import account.handlers
