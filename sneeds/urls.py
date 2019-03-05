@@ -18,6 +18,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework.documentation import include_docs_urls
+
 from discounts import urls as discounts_urls
 from account import urls as account_urls
 from blog import urls as blog_urls
@@ -26,18 +28,18 @@ from payment import urls as payment_urls
 from classes import urls as class_urls
 
 urlpatterns = [
-                  path('account/', include(account_urls)),
-                  path('admin/', admin.site.urls),
-                  path('cafe/', include(discounts_urls)),
-                  path('blog/', include(blog_urls)),
-                  path('booklet/', include(booklet_urls)),
-                  path('payment/', include(payment_urls)),
-                  path('class/', include(class_urls)),
+    path('account/', include(account_urls)),
+    path('admin/', admin.site.urls),
+    path('cafe/', include(discounts_urls)),
+    path('blog/', include(blog_urls)),
+    path('booklet/', include(booklet_urls)),
+    path('payment/', include(payment_urls)),
+    path('class/', include(class_urls)),
 
-                  path('api-auth/', include('rest_framework.urls'))
-              ]
+    path('api-auth/', include('rest_framework.urls')),
+    path('docs/', include_docs_urls(title='API documentation (written by: Arya Khaligh'))
+
+]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-

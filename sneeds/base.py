@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     # 3rd party packages
     'rest_framework',
     'corsheaders',
+    'django_rest_passwordreset',
 
     # apps
     'blog',
@@ -105,7 +106,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', #=> Default (8 characters)
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',  # => Default (8 characters)
         'OPTIONS': {
             'min_length': 6,
         }
