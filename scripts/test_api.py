@@ -3,8 +3,8 @@ import requests
 import os
 
 AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login/"
-REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/refresh/"
-ENDPOINT = "http://127.0.0.1:8000/booklet/downloads/"
+REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/password-reset/"
+ENDPOINT = "http://127.0.0.1:8000/account/password-reset/"
 
 data = {
     "username_or_email": "ali",
@@ -21,7 +21,7 @@ headers = {
 }
 
 data = {
-    "booklet-slug": "hello-dieltel2",
+    "email": "bartararya@gmail.com",
 }
 
 post_data = json.dumps(data)

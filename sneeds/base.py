@@ -140,3 +140,7 @@ ALLOW_UNICODE_SLUGS = True
 from sneeds.restconf.main import *
 
 # TODO: server is not working while zarinpal ....
+
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

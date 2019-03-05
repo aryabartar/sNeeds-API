@@ -37,8 +37,7 @@ urlpatterns = [
     path('class/', include(class_urls)),
 
     path('api-auth/', include('rest_framework.urls')),
-    path('docs/', include_docs_urls(title='API documentation (written by: Arya Khaligh'))
-
+    path('docs/', include_docs_urls(title='API documentation (written by: Arya Khaligh)')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
