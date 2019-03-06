@@ -28,11 +28,11 @@ def password_reset_token_created(sender, reset_password_token, *args, **kwargs):
 
     # render email text
     email_html_message = render_to_string('user_reset_password.html', context)  # Reads from app templates
-    email_plaintext_message = render_to_string('user_reset_password.txt', context) # Reads from app templates
+    email_plaintext_message = render_to_string('user_reset_password.txt', context)  # Reads from app templates
 
     msg = EmailMultiAlternatives(
         # title:
-        ("Password Reset for {title}".format(title="Some website title")),
+        "بازیابی کلمه عبور وبسایت اسنیدز",
         # message:
         email_plaintext_message,
         # from:

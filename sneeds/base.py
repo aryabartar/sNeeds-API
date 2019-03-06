@@ -139,8 +139,14 @@ ALLOW_UNICODE_SLUGS = True
 # JWT authentication settings
 from sneeds.restconf.main import *
 
-# TODO: server is not working while zarinpal ....
+# TODO: server is not working while zarinpal is not connected ....
 
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'bartararya3@gmail.com'
+EMAIL_HOST_PASSWORD = 'Sneeds@20304011'
+

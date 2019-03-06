@@ -100,6 +100,7 @@ class MyAccountDetail(APIView):
         user_information = self.get_user_information(user)
         user_information_serializer = UserInformationSerializer(user_information,
                                                                 data={**request.data, **{"user": user.pk}})
+
         # and in if doesn't check both operands if one of them is false
         user_serialize.is_valid()
         user_information_serializer.is_valid()

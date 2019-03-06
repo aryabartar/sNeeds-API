@@ -20,10 +20,20 @@ headers = {
     "Authorization": "JWT " + token,
 }
 
+# data = {
+#     "email": "bartararya@gmail.com",
+# }
+#
+# post_data = json.dumps(data)
+# posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
+# print(posted_response.text)
+#
+ENDPOINT2 = "http://127.0.0.1:8000/account/password-reset/confirm/"
 data = {
-    "email": "bartararya@gmail.com",
+    "token": "e5e179b653cebfcb73318e3c944d68e2eb123c2f29ce5cd8dfa6a897f4635cb6",
+    "password": "temptest"
 }
 
 post_data = json.dumps(data)
-posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
+posted_response = requests.post(ENDPOINT2, data=post_data, headers=headers)
 print(posted_response.text)
