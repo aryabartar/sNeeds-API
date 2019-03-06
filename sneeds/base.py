@@ -111,6 +111,12 @@ AUTH_PASSWORD_VALIDATORS = [
             'min_length': 6,
         }
     },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # Internationalization
@@ -149,4 +155,3 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bartararya3@gmail.com'
 EMAIL_HOST_PASSWORD = 'Sneeds@20304011'
-

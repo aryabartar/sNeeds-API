@@ -30,8 +30,8 @@ headers = {
 
 ENDPOINT2 = "http://127.0.0.1:8000/account/forget-password/confirm/"
 data = {
-    "token": "082e8dfa7f694d7703cadc25b8e3795e1754d52f4e70a48eb443a7c3726de0a5",
-    "password": "12"
+    "token": "d3778688607dfafd51e2cf5c132e665fc019c806195150abe89352d0443a0b37",
+    "password": "2"
 }
 
 post_data = json.dumps(data)
