@@ -20,20 +20,20 @@ headers = {
     "Authorization": "JWT " + token,
 }
 
-# data = {
-#     "email": "bartararya@gmail.com",
-# }
-#
-# post_data = json.dumps(data)
-# posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
-# print(posted_response.text)
-
-ENDPOINT2 = "http://127.0.0.1:8000/account/forget-password/confirm/"
 data = {
-    "token": "d3778688607dfafd51e2cf5c132e665fc019c806195150abe89352d0443a0b37",
-    "password": "2"
+    "email": "bartararya@gmail.com",
 }
 
 post_data = json.dumps(data)
-posted_response = requests.post(ENDPOINT2, data=post_data, headers=headers)
+posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
 print(posted_response.text)
+
+# ENDPOINT2 = "http://127.0.0.1:8000/account/forget-password/confirm/"
+# data = {
+#     "token": "d3778688607dfafd51e2cf5c132e665fc019c806195150abe89352d0443a0b37",
+#     "password": "sneeds@203040"
+# }
+#
+# post_data = json.dumps(data)
+# posted_response = requests.post(ENDPOINT2, data=post_data, headers=headers)
+# print(posted_response.text)
