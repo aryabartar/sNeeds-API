@@ -190,3 +190,27 @@ http://127.0.0.1:8000/account/my-account/ => Retrieve and Update. (Login require
 http://127.0.0.1:8000/account/my-account/post-likes/ => Retrieve all liked posts.
 http://127.0.0.1:8000/account/my-account/booklet-downloads/ => Retrieve all downloaded booklets.
 
+Forget password:
+  http://127.0.0.1:8000/account/forget-password/
+  POST to this endpoint:
+    data = {
+    "email": "bartararya@gmail.com",
+    }
+  And this will cause sending an url to the registered email.
+
+  The link is like this:
+    http://127.0.0.1:8000/account/forget-password/?token=e5e179b653cebfcb73318e3c944d68e2eb123c2f29ce5cd8dfa6a897f4635cb6
+
+  Grab the token and POST it to this url:
+    http://127.0.0.1:8000/account/forget-password/confirm/
+    In this format:
+    data = {
+    "token": "e5e179b653cebfcb73318e3c944d68e2eb123c2f29ce5cd8dfa6a897f4635cb6",
+    "password": "TempTestPassword"
+    }
+
+  Responses:
+    {"status":"notfound"} => Fail
+    {"status":"OK"} => Success
+
+

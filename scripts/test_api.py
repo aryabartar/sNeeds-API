@@ -3,8 +3,8 @@ import requests
 import os
 
 AUTH_ENDPOINT = "http://127.0.0.1:8000/account/jwt/login/"
-REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/password-reset/"
-ENDPOINT = "http://127.0.0.1:8000/account/password-reset/"
+REFRESH_ENDPOINT = "http://127.0.0.1:8000/account/forget-password/"
+ENDPOINT = "http://127.0.0.1:8000/account/forget-password/"
 
 data = {
     "username_or_email": "ali",
@@ -27,11 +27,11 @@ headers = {
 # post_data = json.dumps(data)
 # posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
 # print(posted_response.text)
-#
-ENDPOINT2 = "http://127.0.0.1:8000/account/password-reset/confirm/"
+
+ENDPOINT2 = "http://127.0.0.1:8000/account/forget-password/confirm/"
 data = {
-    "token": "e5e179b653cebfcb73318e3c944d68e2eb123c2f29ce5cd8dfa6a897f4635cb6",
-    "password": "temptest"
+    "token": "082e8dfa7f694d7703cadc25b8e3795e1754d52f4e70a48eb443a7c3726de0a5",
+    "password": "12"
 }
 
 post_data = json.dumps(data)
