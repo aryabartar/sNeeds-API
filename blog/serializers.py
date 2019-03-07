@@ -8,8 +8,7 @@ class PostSerializer(serializers.ModelSerializer):
     questions_and_answers = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     topic_name = serializers.SerializerMethodField()
-    topic_url = serializers.SerializerMethodField()
-    topic_url = serializers.SerializerMethodField()
+    topic_slug = serializers.SerializerMethodField()
     likes = serializers.SerializerMethodField()
     jalali_timestamp_string = serializers.SerializerMethodField()
 
@@ -37,10 +36,9 @@ class PostSerializer(serializers.ModelSerializer):
                   }
         return {"day": str(jalali[2]), "month": str(months[jalali[1]]), "year": jalali[0][2:]}
 
-    def get_topic_url(self, post):
-        request = self.context.get('request')
-        topic_url = post.topic.get_absolute_url()
-        return request.build_absolute_uri(topic_url)
+    def get_topic_slug(self, post):
+        slug = post.topic.slug
+        return slug
 
     def get_topic_name(self, post):
         return post.topic.title
@@ -58,7 +56,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['post_url', 'comments', 'topic_name', 'topic_url', 'title', 'slug', 'post_main_image',
+        fields = ['post_url', 'comments', 'topic_name', 'topic_slug', 'title', 'slug', 'post_main_image',
                   'short_description', 'post_type', 'questions_and_answers', 'aparat_link', 'youtube_link', 'likes',
                   'tags', 'jalali_timestamp_string', 'slug']
 
