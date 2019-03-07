@@ -130,3 +130,19 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         # user.is_active=False #Enable this for email verification
         user.save()
         return user
+
+
+class PasswordSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(style={
+        "input_type": 'password'
+    }, write_only=True)
+
+    class Meta:
+        model = User
+        fields = ["password", "password2"]
+        extra_kwargs = {
+            'password': {'write_only': True},
+        }
+
+    # def create(self, validated_data):
+        

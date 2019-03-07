@@ -21,6 +21,7 @@ app_name = "account"
 urlpatterns = [
 
     path('my-account/', views.MyAccountDetail.as_view()),
+    path('my-account/update-password/', views.UpdatePassword.as_view()),
     path('my-account/post-likes/', views.AccountLikedPosts.as_view()),
     path('my-account/booklet-downloads/', views.AccountDownloadBooklet.as_view()),
 

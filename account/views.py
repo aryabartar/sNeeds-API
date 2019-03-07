@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework_jwt.settings import api_settings
 
 from .permissions import AnonPermissionOnly
-from .serializers import UserRegisterSerializer, UserSerializer, UserInformationSerializer
+from .serializers import UserRegisterSerializer, UserSerializer, UserInformationSerializer, PasswordSerializer
 
 from blog.serializers import PostLikeSerializer
 from booklet.serializers import BookletDownloadSerializer
@@ -88,7 +88,7 @@ class MyAccountDetail(APIView):
 
     def get(self, request):
         user = request.user
-        user_serialize = UserSerializer(request.user)
+        user_serialize = UserSerializer(user)
         user_information = self.get_user_information(user)
         user_information_serialize = UserInformationSerializer(user_information)
         return Response({**user_serialize.data, **user_information_serialize.data})
@@ -137,3 +137,18 @@ class AccountDownloadBooklet(APIView):
             return Response(post_download_serialize.data)
         else:
             return Response({"message": "No download found."})
+
+
+class UpdatePassword(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        password_serializer = PasswordSerializer(user, request.data)
+
+        if password_serializer.is_valid():
+            password_serializer.save()
+        else:
+            return Response(password_serializer.data)
+
+        return Response({"status": "OK"})
