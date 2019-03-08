@@ -95,7 +95,7 @@ class PostLikesList(APIView):
 
         if user.is_authenticated:
             try:
-                likes = user.likes.all()
+                likes = user.post_likes.all()
             except:
                 return Response({"liked": "false"})
 

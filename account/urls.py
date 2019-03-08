@@ -19,7 +19,6 @@ from rest_framework_jwt.views import refresh_jwt_token
 
 app_name = "account"
 urlpatterns = [
-
     path('my-account/', views.MyAccountDetail.as_view()),
     path('my-account/update-password/', views.UpdatePassword.as_view()),
     path('my-account/post-likes/', views.AccountLikedPosts.as_view()),

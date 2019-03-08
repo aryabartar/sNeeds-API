@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 
+# JWT authentication settings
+from sneeds.restconf.main import *
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -117,10 +120,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Iran'
 USE_I18N = True
 USE_L10N = True
-USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
@@ -136,12 +138,9 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ALLOW_UNICODE_SLUGS = True
 
-# JWT authentication settings
-from sneeds.restconf.main import *
-
 # TODO: server is not working while zarinpal is not connected ....
 
-
+# -- email settings --
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
 EMAIL_USE_TLS = True
@@ -149,3 +148,4 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'bartararya3@gmail.com'
 EMAIL_HOST_PASSWORD = 'Sneeds@20304011'
+# -------------------
