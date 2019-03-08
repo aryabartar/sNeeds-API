@@ -61,7 +61,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
         instance.save()
 
 
-def pre_save_cart_receiver(sender, instance, action, *args, **kwargs):
+def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
 
 

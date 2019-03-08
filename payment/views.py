@@ -53,3 +53,11 @@ class CartHome(APIView):
         cart_obj.save()
         print(total)
         return Response({"GET": "GET"})
+
+
+class CartUpdate(APIView):
+    def get(self, request, *args, **kwargs):
+        public_class_obj = PublicClass.objects.get(id=1)
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        cart_obj.public_classes.add(public_class_obj)
+        return Response({})
