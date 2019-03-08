@@ -149,6 +149,6 @@ class UpdatePassword(APIView):
         if password_serializer.is_valid():
             password_serializer.save()
         else:
-            return Response(password_serializer.data)
+            return Response(password_serializer.errors)
 
         return Response({"status": "OK"})

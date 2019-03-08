@@ -144,5 +144,12 @@ class PasswordSerializer(serializers.ModelSerializer):
             'password': {'write_only': True},
         }
 
-    # def create(self, validated_data):
-        
+    def validate(self, attrs):
+        if not attrs.get("password") == attrs.get("password2"):
+            raise serializers.ValidationError({"password": "Password and password2 must be same."})
+        return attrs
+
+    def update(self, user, validated_data):
+        user.set_password(validated_data['password'])
+        user.save()
+        return user
