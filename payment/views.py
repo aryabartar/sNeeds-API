@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from classes.models import PublicClass
 from .models import Cart
+from .serializers import CartSerializer
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -41,16 +42,10 @@ def verify(request):
 
 
 class CartHome(APIView):
-
     def get(self, request, *args, **kwargs):
-        cart_obj, cart_new_obj = Cart.objects.new_or_get(request)
-        public_classes = cart_obj.public_classes.all()
-        total = 0
-        for public_class in public_classes:
-            total += public_class.price
-        cart_obj.total = total
-        cart_obj.save()
-        return Response({"GET": "GET"})
+        cart_obj, new_obj = Cart.objects.new_or_get(request)
+        cart_serialize = CartSerializer(cart_obj)
+        return Response(cart_serialize.data)
 
 
 class CartUpdate(APIView):
