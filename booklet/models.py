@@ -94,7 +94,7 @@ class Booklet(models.Model):
 
     booklet_image = models.ImageField(upload_to=upload_booklet_image, null=True)
     # booklet_image = models.ImageField( null=True)
-    booklet_content = models.URLField()
+    booklet_content = models.URLField(max_length=300)
 
     def get_absolute_url(self):
         return reverse('booklet:booklets_detail', kwargs={'booklet_slug': self.slug})

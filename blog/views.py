@@ -94,7 +94,11 @@ class PostLikesList(APIView):
         post = get_post(post_slug)
 
         if user.is_authenticated:
-            likes = user.likes.all()
+            try:
+                likes = user.likes.all()
+            except:
+                return Response({"liked": "false"})
+
             for like in likes:
                 if like.post == post:
                     return Response({"liked": "true"})
