@@ -44,5 +44,12 @@ def verify(request):
 class CartHome(APIView):
 
     def get(self, request, *args, **kwargs):
-        Cart.objects.new_or_get(request)
+        cart_obj, cart_new_obj = Cart.objects.new_or_get(request)
+        public_classes = cart_obj.public_classes.all()
+        total = 0
+        for public_class in public_classes:
+            total += public_class.price
+        cart_obj.total = total
+        cart_obj.save()
+        print(total)
         return Response({"GET": "GET"})
