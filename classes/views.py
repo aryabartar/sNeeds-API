@@ -7,7 +7,7 @@ from rest_framework import generics, mixins, status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from payment.views import *
+from cart.views import *
 
 
 class PublicClassPay(APIView):

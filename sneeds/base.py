@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'booklet',
     'discounts',
     'account',
-    'payment',
+    'cart',
     'classes',
 
 ]

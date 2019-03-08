@@ -24,7 +24,7 @@ from discounts import urls as discounts_urls
 from account import urls as account_urls
 from blog import urls as blog_urls
 from booklet import urls as booklet_urls
-from payment import urls as payment_urls
+from cart import urls as payment_urls
 from classes import urls as class_urls
 
 urlpatterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     path('cafe/', include(discounts_urls)),
     path('blog/', include(blog_urls)),
     path('booklet/', include(booklet_urls)),
-    path('payment/', include(payment_urls)),
+    path('cart/', include(payment_urls)),
     path('class/', include(class_urls)),
 
     path('api-auth/', include('rest_framework.urls')),
