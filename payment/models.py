@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.contrib.auth import get_user_model
 
 from classes.models import PublicClass
@@ -46,3 +47,16 @@ class Cart(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+
+def pre_save_cart_receiver(sender, instance, action, *args, **kwargs):
+    if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+        public_classes = instance.public_classes.all()
+        total = 0
+        for public_class in public_classes:
+            total += public_class.price
+        instance.total = total
+        instance.save()
+
+
+m2m_changed.connect(pre_save_cart_receiver, sender=Cart.public_classes.through)
