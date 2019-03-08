@@ -68,21 +68,20 @@ class CartUpdate(APIView):
         add_to_cart = self.get_boolean_from_string_or_none(request.data.get("add_to_cart", None))
 
         if public_class_slug is not None and add_to_cart is not None:
-            public_class_qs = PublicClass.objects.filter(slug=public_class_slug)
 
-            if public_class_qs.exists():
-                public_class_obj = public_class_qs[0]
-                cart_obj, new_obj = Cart.objects.new_or_get(request)
-
-                if add_to_cart is True:
-                    cart_obj.public_classes.add(public_class_obj)
-                else:
-                    cart_obj.public_classes.remove(public_class_obj)
-
-                return Response({"status": "OK"})
-
-            else:
+            try:
+                public_class_obj = PublicClass.objects.get(slug=public_class_slug)
+            except PublicClass.DoesNotExist:
                 return Response({"message": "No product found."})
+
+            cart_obj, new_obj = Cart.objects.new_or_get(request)
+
+            if add_to_cart is True:
+                cart_obj.public_classes.add(public_class_obj)
+            else:
+                cart_obj.public_classes.remove(public_class_obj)
+
+            return Response({"status": "OK"})
 
         else:
             return Response({"message": "Bad request."})
