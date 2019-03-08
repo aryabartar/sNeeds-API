@@ -29,7 +29,6 @@ def send_request(request, amount):
 
 def verify(request):
     if request.GET.get('Status') == 'OK':
-        print(request.GET)
         result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
         if result.Status == 100:
             return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
@@ -51,13 +50,39 @@ class CartHome(APIView):
             total += public_class.price
         cart_obj.total = total
         cart_obj.save()
-        print(total)
         return Response({"GET": "GET"})
 
 
 class CartUpdate(APIView):
-    def get(self, request, *args, **kwargs):
-        public_class_obj = PublicClass.objects.get(id=1)
-        cart_obj, new_obj = Cart.objects.new_or_get(request)
-        cart_obj.public_classes.add(public_class_obj)
-        return Response({})
+    def put(self, request, *args, **kwargs):
+        public_class_slug = request.data.get("public_class_slug", None)
+        add_to_cart = request.data.get("add_to_cart", None)
+
+        if add_to_cart == "true":
+            add_to_cart = True
+        elif add_to_cart == "false":
+            add_to_cart = False
+        else:
+            add_to_cart = None
+
+        if public_class_slug is not None and add_to_cart is not None:
+            public_class_qs = PublicClass.objects.filter(slug=public_class_slug)
+
+            if public_class_qs.exists():
+                public_class_obj = public_class_qs[0]
+                cart_obj, new_obj = Cart.objects.new_or_get(request)
+
+                if add_to_cart is True:
+                    print("true")
+                    cart_obj.public_classes.add(public_class_obj)
+                else:
+                    print("running this")
+                    cart_obj.public_classes.remove(public_class_obj)
+
+                return Response({"status": "OK"})
+
+            else:
+                return Response({"message": "No product found."})
+
+        else:
+            return Response({"message": "Bad request."})
