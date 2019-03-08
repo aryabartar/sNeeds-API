@@ -49,6 +49,8 @@ class CartHome(APIView):
 
 
 class CartUpdate(APIView):
+    permission_classes = [permissions.AllowAny]
+
     def get_boolean_from_string_or_none(self, str):
         if str == "true":
             str = True
