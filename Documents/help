@@ -214,3 +214,11 @@ Forget password:
     {"status":"OK"} => Success
 
 
+Change password:
+  http://127.0.0.1:8000/account/my-account/update-password/
+  Send UPDATE request to the endpoint in this format:
+    {
+    "password":"test@hadipass",
+    "password2":"test@hadipass"
+    }
+  The user will be logged out and it should login with new password.

@@ -97,6 +97,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate_password(self, password):
         validate_user_password(password)
+        return password
 
     def validate_email(self, value):
         qs = User.objects.filter(email__iexact=value)
