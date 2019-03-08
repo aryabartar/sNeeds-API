@@ -54,16 +54,18 @@ class CartHome(APIView):
 
 
 class CartUpdate(APIView):
+    def get_boolean_from_string_or_none(self, str):
+        if str == "true":
+            str = True
+        elif str == "false":
+            str = False
+        else:
+            str = None
+        return str
+
     def put(self, request, *args, **kwargs):
         public_class_slug = request.data.get("public_class_slug", None)
-        add_to_cart = request.data.get("add_to_cart", None)
-
-        if add_to_cart == "true":
-            add_to_cart = True
-        elif add_to_cart == "false":
-            add_to_cart = False
-        else:
-            add_to_cart = None
+        add_to_cart = self.get_boolean_from_string_or_none(request.data.get("add_to_cart", None))
 
         if public_class_slug is not None and add_to_cart is not None:
             public_class_qs = PublicClass.objects.filter(slug=public_class_slug)
@@ -73,10 +75,8 @@ class CartUpdate(APIView):
                 cart_obj, new_obj = Cart.objects.new_or_get(request)
 
                 if add_to_cart is True:
-                    print("true")
                     cart_obj.public_classes.add(public_class_obj)
                 else:
-                    print("running this")
                     cart_obj.public_classes.remove(public_class_obj)
 
                 return Response({"status": "OK"})
