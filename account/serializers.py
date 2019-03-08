@@ -18,6 +18,16 @@ jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 expire_delta = api_settings.JWT_REFRESH_EXPIRATION_DELTA
 
 
+def validate_user_password(password):
+    try:
+        # validate the password and catch the exception
+        validators.validate_password(password)
+
+    # the exception raised here is different than serializers.ValidationError
+    except exceptions.ValidationError as e:
+        raise serializers.ValidationError(e.messages)
+
+
 class UserInformationSerializer(serializers.ModelSerializer):
 
     def validate_phone(self, phone):
@@ -85,6 +95,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         token = jwt_encode_handler(payload)
         return token
 
+    def validate_password(self, password):
+        validate_user_password(password)
+
     def validate_email(self, value):
         qs = User.objects.filter(email__iexact=value)
         if qs.exists():
@@ -104,18 +117,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         if password != password2:
             raise serializers.ValidationError({"password": "Passwords must match."})
-
-        errors = dict()
-        try:
-            # validate the password and catch the exception
-            validators.validate_password(password)
-
-        # the exception raised here is different than serializers.ValidationError
-        except exceptions.ValidationError as e:
-            errors['password'] = list(e.messages)
-
-        if errors:
-            raise serializers.ValidationError(errors)
 
         return data
 
@@ -143,6 +144,10 @@ class PasswordSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
+
+    def validate_password(self, password):
+        validate_user_password(password)
+        return password
 
     def validate(self, attrs):
         if not attrs.get("password") == attrs.get("password2"):
