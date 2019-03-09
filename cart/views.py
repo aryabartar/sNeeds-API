@@ -92,6 +92,6 @@ class OrderDetail(APIView):
 
     def get(self, request):
         cart_obj, cart_created = Cart.objects.new_or_get(request)
-        order = Order.objects.get_or_create(cart=cart_obj, user=request.user)
+        order, order_created = Order.objects.get_or_create(cart=cart_obj, user=request.user)
         order_serialize = OrderSerializer(order)
         return Response(order_serialize.data)
