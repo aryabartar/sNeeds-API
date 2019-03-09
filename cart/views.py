@@ -8,7 +8,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from classes.models import PublicClass
+from order.models import Order
 from .models import Cart
+
+from order.serializers import OrderSerializer
 from .serializers import CartSerializer
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
@@ -82,3 +85,13 @@ class CartUpdate(APIView):
 
         else:
             return Response({"message": "Bad request."})
+
+
+class OrderDetail(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        cart_obj, cart_created = Cart.objects.new_or_get(request)
+        order = Order.objects.get_or_create(cart=cart_obj, user=request.user)
+        order_serialize = OrderSerializer(order)
+        return Response(order_serialize.data)
