@@ -87,7 +87,7 @@ class CartUpdate(APIView):
             return Response({"message": "Bad request."})
 
 
-class OrderDetail(APIView):
+class OrderHome(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
