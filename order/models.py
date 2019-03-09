@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.signals import pre_save
 
+from sneeds.utils import unique_order_id_generator
 from cart.models import Cart
 
 User = get_user_model()
@@ -21,3 +23,11 @@ class Order(models.Model):
 
     def __str__(self):
         return self.order_id
+
+
+def pre_save_create_order_id(sender, instance, *args, **kwargs):
+    if not instance.order_id:
+        instance.order_id = unique_order_id_generator(instance)
+
+
+pre_save.connect(pre_save_create_order_id, sender=Order)
