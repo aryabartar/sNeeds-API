@@ -39,7 +39,7 @@ class CartManager(models.Manager):
 # Create your models here.
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    public_classes = models.ManyToManyField(PublicClass, null=True, blank=True)
+    public_classes = models.ManyToManyField(PublicClass, blank=True)
     subtotal = models.DecimalField(default=0, max_digits=20, decimal_places=0)
     total = models.DecimalField(default=0, max_digits=20, decimal_places=0)
     updates = models.DateTimeField(auto_now=True)
@@ -69,13 +69,13 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
 
 
 def post_save_product_receiver(sender, instance, *args, **kwargs):
+    """ Updates cart total when a product is changed."""
     carts_qs = Cart.objects.all()
     for cart in carts_qs:
-        print("RUNNING")
         cart.update_total()
 
 
 m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.public_classes.through)
 pre_save.connect(pre_save_cart_receiver, sender=Cart)
 post_save.connect(post_save_product_receiver, sender=PublicClass)
-post_delete.connect(post_save_product_receiver , sender=PublicClass)
+post_delete.connect(post_save_product_receiver, sender=PublicClass)
