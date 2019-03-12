@@ -25,7 +25,7 @@ data = {
 }
 
 post_data = json.dumps(data)
-posted_response = requests.post(ENDPOINT, data=post_data, headers=headers)
+posted_response = requests.get(ENDPOINT, data=post_data, headers=headers)
 print(posted_response.text)
 
 # ENDPOINT2 = "http://127.0.0.1:8000/account/forget-password/confirm/"

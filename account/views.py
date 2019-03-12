@@ -70,6 +70,7 @@ class RegisterView(APIView):
             if user_information_serialize.is_valid():
                 user_information_serialize.save()
             else:
+                del user  # User is saved previously
                 return Response(user_information_serialize.errors)
             return Response({**user_register_serialize.data, **user_information_serialize.data})
         else:

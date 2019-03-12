@@ -42,7 +42,7 @@ class UserInformationSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInformation
         fields = [
-            'phone', 'field', 'university',
+            'user', 'phone', 'field', 'university',
         ]
         extra_kwargs = {
             'user': {'write_only': True}
