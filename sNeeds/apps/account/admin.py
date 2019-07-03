@@ -5,3 +5,4 @@ from . import models
 admin.site.register(models.ConsultantProfile)
 admin.site.register(models.University)
 admin.site.register(models.FieldOfStudy)
+admin.site.register(models.Country)
