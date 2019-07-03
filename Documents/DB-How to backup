@@ -1,2 +1,0 @@
-sudo su - postgres
-pg_dump postgres > postgres_db.sql
