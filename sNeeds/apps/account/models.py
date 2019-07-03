@@ -8,5 +8,10 @@ class ConsultantProfile (models.Model):
 
 
 class University (models.Model):
-    name = models.CharField(max_length=256, blank=False)
-    description = models.TextField()
+    name = models.CharField(max_length=256, blank=False, unique=True)
+    description = models.TextField(blank=True, null=True)
+
+
+class FieldOfStudy (models.Model):
+    name = models.CharField(max_length=256, blank=False, unique=True)
+    description = models.TextField(blank=True, null=True)
