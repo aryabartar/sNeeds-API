@@ -4,7 +4,7 @@ from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import  Country
+from .models import Country
 from .serializers import CountrySerializer
 
 
@@ -17,5 +17,5 @@ class CountryDetail(APIView):
 
     def get(self, request, slug):
         country = self.get_object(slug)
-        serializer = CountrySerializer(country)
+        serializer = CountrySerializer(country, context={"request": request})
         return Response(serializer.data)
