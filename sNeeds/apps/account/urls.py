@@ -20,4 +20,6 @@ urlpatterns = [
     path('countries/<str:slug>', views.CountryDetail.as_view(), name="country-detail"),
 
     path('universities/<str:slug>', views.UniversityDetail.as_view(), name="university-detail"),
+
+    path('field-of-studies/<str:slug>', views.FieldOfStudyDetail.as_view(), name="field-of-study-detail"),
 ]

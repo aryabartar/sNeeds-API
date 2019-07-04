@@ -4,31 +4,44 @@ from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Country, University, FieldOfStudy, ConsultantProfile
-from . import  serializers
+from . import models
+from . import serializers
 
 
 class CountryDetail(APIView):
     def get_object(self, slug):
         try:
-            return Country.objects.get(slug=slug)
-        except Country.DoesNotExist:
+            return models.Country.objects.get(slug=slug)
+        except models.Country.DoesNotExist:
             raise Http404
 
     def get(self, request, slug):
         country = self.get_object(slug)
-        serializer = CountrySerializer(country, context={"request": request})
+        serializer = serializers.CountrySerializer(country, context={"request": request})
         return Response(serializer.data)
 
 
 class UniversityDetail(APIView):
     def get_object(self, slug):
         try:
-            return University.objects.get(slug=slug)
-        except University.DoesNotExist:
+            return models.University.objects.get(slug=slug)
+        except models.University.DoesNotExist:
             raise Http404
 
     def get(self, request, slug):
         university = self.get_object(slug)
         serializer = serializers.UniversitySerializer(university, context={"request": request})
+        return Response(serializer.data)
+
+
+class FieldOfStudyDetail(APIView):
+    def get_object(self, slug):
+        try:
+            return models.FieldOfStudy.objects.get(slug=slug)
+        except models.FieldOfStudy.DoesNotExist:
+            raise Http404
+
+    def get(self, request, slug):
+        field_of_study = self.get_object(slug)
+        serializer = serializers.FieldOfStudySerializer(field_of_study, context={"request": request})
         return Response(serializer.data)

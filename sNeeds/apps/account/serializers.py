@@ -16,3 +16,11 @@ class UniversitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.University
         fields = ('url', 'name', 'country', 'description', 'slug')
+
+
+class FieldOfStudySerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="field-of-study-detail", lookup_field='slug', read_only=True)
+
+    class Meta:
+        model = models.FieldOfStudy
+        fields = ('url', 'name',  'description', 'slug')
