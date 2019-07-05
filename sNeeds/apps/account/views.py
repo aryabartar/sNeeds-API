@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import Http404
 
-from rest_framework import status, generics
+from rest_framework import status, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -75,6 +75,10 @@ class ConsultantProfileDetail(APIView):
         serializer = serializers.ConsultantProfileSerializer(consultant_profile, context={"request": request})
         return Response(serializer.data)
 
-# class ConsultantProfileList(generics.GenericAPIView):
-#     queryset = models.FieldOfStudy.objects.all()
-#     serializer_class = serializers.FieldOfStudySerializer
+
+class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
+    queryset = models.FieldOfStudy.objects.all()
+    serializer_class = serializers.FieldOfStudySerializer
+
+    def get(self, request , *args, **kwargs):
+        return self.list(request, *args, **kwargs)
