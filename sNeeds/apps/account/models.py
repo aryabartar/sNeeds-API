@@ -33,9 +33,9 @@ class FieldOfStudy(models.Model):
 class ConsultantProfile(models.Model):
     consultant = models.OneToOneField(
         User, on_delete=models.SET_NULL, null=True)
-    university = models.ManyToManyField(University)
-    field_of_study = models.ManyToManyField(FieldOfStudy)
-    country = models.ManyToManyField(Country)
+    universities = models.ManyToManyField(University)
+    field_of_studies = models.ManyToManyField(FieldOfStudy)
+    countries = models.ManyToManyField(Country)
     slug = models.SlugField(help_text="lowercase pls")
     # profile_picture = models.ImageField(upload_to="consultant_profile_photo")
     aparat_link = models.URLField(null=True, blank=True)
