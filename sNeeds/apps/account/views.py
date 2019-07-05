@@ -45,3 +45,16 @@ class FieldOfStudyDetail(APIView):
         field_of_study = self.get_object(slug)
         serializer = serializers.FieldOfStudySerializer(field_of_study, context={"request": request})
         return Response(serializer.data)
+
+
+class ConsultantProfileDetail(APIView):
+    def get_object(self, slug):
+        try:
+            return models.ConsultantProfile.objects.get(slug=slug)
+        except models.FieldOfStudy.DoesNotExist:
+            raise Http404
+
+    def get(self, request, slug):
+        consultant_profile = self.get_object(slug)
+        serializer = serializers.ConsultantProfileSerializer(consultant_profile, context={"request": request})
+        return Response(serializer.data)
