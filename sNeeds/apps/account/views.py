@@ -22,7 +22,7 @@ class CountryDetail(APIView):
         return Response(serializer.data)
 
 
-class CountryList(generics.ListCreateAPIView):
+class CountryList(generics.ListAPIView):
     queryset = models.Country.objects.all()
     serializer_class = serializers.CountrySerializer
 
@@ -40,6 +40,11 @@ class UniversityDetail(APIView):
         return Response(serializer.data)
 
 
+class UniversityList(generics.ListAPIView):
+    queryset = models.University.objects.all()
+    serializer_class = serializers.UniversitySerializer
+
+
 class FieldOfStudyDetail(APIView):
     def get_object(self, slug):
         try:
@@ -53,6 +58,11 @@ class FieldOfStudyDetail(APIView):
         return Response(serializer.data)
 
 
+class FieldOfStudyList(generics.ListAPIView):
+    queryset = models.FieldOfStudy.objects.all()
+    serializer_class = serializers.FieldOfStudySerializer
+
+
 class ConsultantProfileDetail(APIView):
     def get_object(self, slug):
         try:
@@ -64,3 +74,7 @@ class ConsultantProfileDetail(APIView):
         consultant_profile = self.get_object(slug)
         serializer = serializers.ConsultantProfileSerializer(consultant_profile, context={"request": request})
         return Response(serializer.data)
+
+# class ConsultantProfileList(generics.GenericAPIView):
+#     queryset = models.FieldOfStudy.objects.all()
+#     serializer_class = serializers.FieldOfStudySerializer
