@@ -1,8 +1,9 @@
 from django.shortcuts import render
-from rest_framework.views import APIView
 from django.http import Http404
+
+from rest_framework import status, generics
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 
 from . import models
 from . import serializers
@@ -19,6 +20,11 @@ class CountryDetail(APIView):
         country = self.get_object(slug)
         serializer = serializers.CountrySerializer(country, context={"request": request})
         return Response(serializer.data)
+
+
+class CountryList(generics.ListCreateAPIView):
+    queryset = models.Country.objects.all()
+    serializer_class = serializers.CountrySerializer
 
 
 class UniversityDetail(APIView):
