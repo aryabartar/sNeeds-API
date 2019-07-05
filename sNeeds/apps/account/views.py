@@ -5,7 +5,6 @@ from rest_framework import status, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from django_filtes
 from . import models
 from . import serializers
 
@@ -78,13 +77,12 @@ class ConsultantProfileDetail(APIView):
 
 
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
-    queryset = models.FieldOfStudy.objects.all()
-    serializer_class = serializers.FieldOfStudySerializer
-    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    queryset = models.ConsultantProfile.objects.all()
+    serializer_class = serializers.ConsultantProfileSerializer
+    filterset_fields = ('universities', 'field_of_studies', 'countries')
 
     def get_queryset(self):
-        print(self.request.query_params)
-        return models.FieldOfStudy.objects.all()
+        return models.ConsultantProfile.objects.all()
 
-    def get(self, request , *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
