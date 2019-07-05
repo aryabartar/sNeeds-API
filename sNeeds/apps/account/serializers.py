@@ -33,8 +33,10 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
+    university = UniversitySerializer(many=True, read_only=True)
+    field_of_study = FieldOfStudySerializer(many=True, read_only=True)
     country = CountrySerializer(many=True, read_only=True)
 
     class Meta:
         model = models.ConsultantProfile
-        fields = ('url', 'consultant', 'country', 'slug')
+        fields = ('url', 'consultant', 'university', 'field_of_study', 'country', 'slug', 'aparat_link')
