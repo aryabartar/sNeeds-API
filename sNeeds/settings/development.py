@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django_filters',  # for filtering get queries in DRF
 
     'sNeeds.apps.account',
+    'sNeeds.apps.store',
+
 ]
 
 MIDDLEWARE = [
