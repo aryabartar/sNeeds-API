@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from sNeeds.apps.account.models import ConsultantProfile
 
 
-# Create your models here.
 class TimeSlotSale(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE,
                                    related_name="time_slot_sales_as_consultant")
@@ -13,3 +12,9 @@ class TimeSlotSale(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     price = models.IntegerField()
+
+    def get_consultant_username(self):
+        return self.consultant.user.username
+
+    def get_buyer_username(self):
+        return self.buyer.username
