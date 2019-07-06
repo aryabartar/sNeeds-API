@@ -6,12 +6,21 @@ from rest_framework.response import Response
 
 from . import models
 from . import serializers
+from . import utils
+
+from sNeeds.apps.account.models import ConsultantProfile
 
 
-class TimeSlotSailList(generics.GenericAPIView):
+class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = models.TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
 
     def get_queryset(self):
         user = self.request.user
-        return models.TimeSlotSale.objects.filter(consultant__user__exact=user)
+        if utils.is_consultant(user):
+            return models.TimeSlotSale.objects.filter(consultant__user__exact=user)
+        else:
+            return models.TimeSlotSale.objects.filter(buyer__exact=user)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
