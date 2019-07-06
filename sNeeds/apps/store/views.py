@@ -14,4 +14,4 @@ class TimeSlotSailList(generics.GenericAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return models.TimeSlotSale.objects.filter()
+        return models.TimeSlotSale.objects.filter(consultant__user__exact=user)
