@@ -29,7 +29,7 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
 
 class ConsultantProfileSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
-        view_name="field-of-study-detail",
+        view_name="consultant-profile-detail",
         lookup_field='slug',
         read_only=True
     )

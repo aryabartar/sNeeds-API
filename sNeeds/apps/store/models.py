@@ -6,9 +6,7 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 class TimeSlotSale(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE,
-                                   related_name="time_slot_sales_as_consultant")
-    buyer = models.ForeignKey(User, on_delete=models.CASCADE,
-                              related_name="time_slot_sales_as_buyer")
+                                   related_name="time_slot_sales")
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     price = models.IntegerField()

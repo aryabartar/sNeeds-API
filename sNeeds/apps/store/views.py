@@ -9,20 +9,12 @@ from . import models
 from . import serializers
 from . import utils
 
-from sNeeds.apps.account.models import ConsultantProfile
-
 
 class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = models.TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
-    def get_queryset(self):
-        user = self.request.user
-        if utils.is_consultant(user):
-            return models.TimeSlotSale.objects.filter(consultant__user__exact=user)
-        else:
-            return models.TimeSlotSale.objects.filter(buyer__exact=user)
+    filterset_fields = ('consultant',)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
