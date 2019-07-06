@@ -31,7 +31,7 @@ class FieldOfStudy(models.Model):
 
 
 class ConsultantProfile(models.Model):
-    consultant = models.OneToOneField(
+    user = models.OneToOneField(
         User, on_delete=models.SET_NULL, null=True)
     # profile_picture = models.ImageField(upload_to="consultant_profile_photo")
     aparat_link = models.URLField(null=True, blank=True)
@@ -40,6 +40,5 @@ class ConsultantProfile(models.Model):
     field_of_studies = models.ManyToManyField(FieldOfStudy)
     countries = models.ManyToManyField(Country)
 
-
     def __str__(self):
-        return self.consultant.__str__()
+        return self.user.__str__()

@@ -7,5 +7,11 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 
-# class TimeSlotSailList(generics.GenericAPIView):
 
+class TimeSlotSailList(generics.GenericAPIView):
+    queryset = models.TimeSlotSale.objects.all()
+    serializer_class = serializers.TimeSlotSaleSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.TimeSlotSale.objects.filter()
