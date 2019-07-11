@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
 
+    'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
     'sNeeds.apps.store',
 
@@ -124,7 +125,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'auth.User'
+AUTH_USER_MODEL = 'customAuth.CustomUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
