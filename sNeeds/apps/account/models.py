@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-
+from django.conf import settings
 
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
@@ -32,7 +31,7 @@ class FieldOfStudy(models.Model):
 
 class ConsultantProfile(models.Model):
     user = models.OneToOneField(
-        get_user_model(), on_delete=models.SET_NULL, null=True)
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
     # profile_picture = models.ImageField(upload_to="consultant_profile_photo")
     aparat_link = models.URLField(null=True, blank=True)
     slug = models.SlugField(help_text="lowercase pls")
