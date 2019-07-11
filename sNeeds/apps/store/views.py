@@ -8,13 +8,14 @@ from rest_framework import permissions
 from . import models
 from . import serializers
 from . import utils
+from . import filtersets
 
 
 class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = models.TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    filterset_fields = ('consultant',)
+    filterset_class = filtersets.TimeSlotSailFilter
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
