@@ -9,7 +9,13 @@ from .utils import jwt_response_payload_handler
 
 
 class AuthView(APIView):
-    "hh"
+    '''
+    Post format:
+        {
+        "email":"bartararya@gmail.com",
+        "password":"****:)"
+        }
+    '''
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
@@ -22,7 +28,11 @@ class AuthView(APIView):
         password = data.get('password')
         user = authenticate(email=email, password=password)
 
-        payload = jwt_utils.jwt_payload_handler(user)
-        token = jwt_utils.jwt_encode_handler(payload)
-        response = jwt_response_payload_handler(token, user=user, request=request)
-        return Response(response, status=200)
+        if user:
+            payload = jwt_utils.jwt_payload_handler(user)
+            token = jwt_utils.jwt_encode_handler(payload)
+            response = jwt_response_payload_handler(token, user=user, request=request)
+            return Response(response, status=200)
+
+        else:
+            return Response({'detail': 'Invalid email/password'}, status=401)
