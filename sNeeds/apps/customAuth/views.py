@@ -1,15 +1,17 @@
 import datetime
 
-from django.contrib.auth import authenticate
-from django.conf import settings
-from django.utils import timezone
+from django.contrib.auth import authenticate, get_user_model
 
+from rest_framework import generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
 from rest_framework_jwt import utils as jwt_utils
 
 from .utils import jwt_response_payload_handler
+from .serializers import UserRegisterSerializer
+
+User = get_user_model()
+
 
 class AuthView(APIView):
     '''
@@ -41,3 +43,8 @@ class AuthView(APIView):
         else:
             return Response({'detail': 'Invalid email/password'}, status=401)
 
+
+class RegisterView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = []
