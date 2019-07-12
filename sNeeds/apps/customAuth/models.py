@@ -32,6 +32,7 @@ class CustomUserManager(BaseUserManager):
                                  **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
+
         return self._create_user(email, password, True, True,
                                  **extra_fields)
 
@@ -51,6 +52,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         default=False,
         help_text=_('Designates whether the user can log into this admin site.'),
     )
+    is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(
         _('active'),
         default=True,
@@ -65,7 +67,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     EMAIL_FIELD = 'email'
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['']
+    REQUIRED_FIELDS = []
 
     class Meta:
         verbose_name = _('user')
