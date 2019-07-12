@@ -1,8 +1,6 @@
 from django.db import models, connection
 from django.conf import settings
 
-from django.contrib.auth.models import User
-
 
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
