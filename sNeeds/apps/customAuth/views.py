@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth import authenticate, get_user_model
 
-from rest_framework import generics
+from rest_framework import status, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
@@ -24,7 +24,6 @@ class AuthView(APIView):
     permission_classes = []
 
     def post(self, request, *args, **kwargs):
-
         if request.user.is_authenticated:
             return Response({'detail': 'You are already authenticated'}, status=400)
 
@@ -44,7 +43,12 @@ class AuthView(APIView):
             return Response({'detail': 'Invalid email/password'}, status=401)
 
 
-class RegisterView(generics.CreateAPIView):
+class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
     permission_classes = []
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already authenticated'}, status=400)
+        return self.create(request, *args, **kwargs)
