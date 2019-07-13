@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('docs/', include_docs_urls(title='sNeeds docs')),
 
     path('auth/', include('sNeeds.apps.customAuth.urls')),
     path('account/', include('sNeeds.apps.account.urls')),
