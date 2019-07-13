@@ -30,6 +30,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'password2',
+            'phone_number',
+            'address',
             'token_response',
         ]
 
