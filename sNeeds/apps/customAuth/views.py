@@ -8,7 +8,8 @@ from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
 
 from .utils import jwt_response_payload_handler
-from .serializers import UserRegisterSerializer
+from .serializers import UserRegisterSerializer, UserSerializer
+from .permissions import NotLoggedInPermission
 
 User = get_user_model()
 
@@ -46,9 +47,14 @@ class AuthView(APIView):
 class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
-    permission_classes = []
+    permission_classes = [NotLoggedInPermission]
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return Response({'detail': 'You are already authenticated'}, status=400)
         return self.create(request, *args, **kwargs)
+
+
+# class UserView(mixins.CreateModelMixin, generics.GenericAPIView):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer

@@ -20,6 +20,26 @@ def validate_user_password(password):
         raise serializers.ValidationError(e.messages)
 
 
+class UserSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'email',
+            'first_name',
+            'last_name',
+            'phone_number',
+            'address',
+            'password',
+            'password2',
+        ]
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'email': {'write_only': True}
+        }
+
+
 class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     token_response = serializers.SerializerMethodField(read_only=True)
@@ -62,7 +82,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         if len(value) < 10:
             raise serializers.ValidationError("Phone number is less than 10 characters")
         return value
-
 
     def validate(self, data):
         pw = data.get('password')

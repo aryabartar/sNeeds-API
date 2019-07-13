@@ -1,7 +1,7 @@
 from django_filters import rest_framework as filters
 
-from . import models
 from sNeeds.apps.account.models import ConsultantProfile
+from . import models
 
 
 class TimeSlotSailFilter(filters.FilterSet):
