@@ -16,8 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from .utils import urls
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
@@ -25,4 +23,6 @@ urlpatterns = [
     path('auth/', include('sNeeds.apps.customAuth.urls')),
     path('account/', include('sNeeds.apps.account.urls')),
     path('store/', include('sNeeds.apps.store.urls')),
+    path('docs/', include('sNeeds.apps.docs.urls')),
+
 ]

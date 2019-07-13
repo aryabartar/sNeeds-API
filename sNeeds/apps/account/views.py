@@ -1,6 +1,6 @@
 from django.http import Http404
 
-from rest_framework import status, generics, mixins
+from rest_framework import status, generics, mixins, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -64,3 +64,14 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class CheckConsultantProfileView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            request.user.consultant_profile
+            return Response({"is_consultant": True}, 200)
+        except:
+            return Response({"is_consultant": False}, 200)
