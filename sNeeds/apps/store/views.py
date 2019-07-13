@@ -22,10 +22,11 @@ class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
         data = request.data
         consultant = request.user.consultant_profile
-        data.update({'consultant': consultant})
+        data.update({'consultant': consultant.pk})
 
         serializer = serializers.TimeSlotSaleSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response({}, 200)
-        return Response({}, 200)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
