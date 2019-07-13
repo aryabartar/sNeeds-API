@@ -30,6 +30,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'email',
             'password',
             'password2',
+            'first_name',
+            'last_name',
             'phone_number',
             'address',
             'token_response',
@@ -54,6 +56,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User with this email already exists")
         return value
 
+    def validate_phone_number(self, value):
+        if len(value) > 11:
+            raise serializers.ValidationError("Phone number is more than 11 characters")
+        if len(value) < 10:
+            raise serializers.ValidationError("Phone number is less than 10 characters")
+        return value
+
+
     def validate(self, data):
         pw = data.get('password')
         pw2 = data.pop('password2')
@@ -63,7 +73,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_obj = User(
-            email=validated_data.get('email'))
+            email=validated_data.get('email'),
+            first_name=validated_data.get('first_name'),
+            last_name=validated_data.get('last_name'),
+            phone_number=validated_data.get('phone_number'),
+            address=validated_data.get('address'),
+        )
         user_obj.set_password(validated_data.get('password'))
         user_obj.save()
         return user_obj
