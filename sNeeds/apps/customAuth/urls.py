@@ -8,8 +8,9 @@ from . import views
 app_name = "auth"
 
 urlpatterns = [
+    path('my-account/', views.UserView.as_view()),
+
     path('jwt/token/', views.AuthView.as_view()),
     path('jwt/token/refresh/', refresh_jwt_token),
     path('jwt/register/', views.RegisterView.as_view()),
-    path('my-account/', views.UserView.as_view())
 ]

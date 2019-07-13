@@ -90,3 +90,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None, **kwargs):
         """Send an email to this user."""
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def update_instance(self, instance, **kwargs):
+        for (key, value) in kwargs.items():
+            setattr(instance, key, value)
+        instance.save()

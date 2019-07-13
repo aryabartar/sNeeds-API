@@ -20,8 +20,21 @@ def validate_user_password(password):
         raise serializers.ValidationError(e.messages)
 
 
+def validate_email(email):
+    qs = User.objects.filter(email__iexact=email)
+    if qs.exists():
+        raise serializers.ValidationError("User with this email already exists")
+
+
+def validate_phone_number(phone):
+    if len(phone) > 11:
+        raise serializers.ValidationError("Phone number is more than 11 characters")
+    if len(phone) < 10:
+        raise serializers.ValidationError("Phone number is less than 10 characters")
+
+
 class UserSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, required=False, write_only=True)
 
     class Meta:
         model = User
@@ -35,9 +48,41 @@ class UserSerializer(serializers.ModelSerializer):
             'password2',
         ]
         extra_kwargs = {
-            'password': {'write_only': True},
-            'email': {'write_only': True}
+            'email': {'read_only': True},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+            'phone_number': {'required': False},
+            'address': {'required': False},
+            'password': {'write_only': True, 'required': False},
         }
+
+    def validate(self, data):
+        pw = data.get('password', -1)
+        pw2 = data.get('password2', -1)
+
+        if pw != pw2:
+            raise serializers.ValidationError("Passwords must match")
+
+        try:
+            data.pop('password2')
+        except:
+            pass
+
+        return data
+
+    def update(self, instance, validated_data):
+        password = validated_data.get('password', None)
+        try:
+            password = validated_data.pop('password')
+        except:
+            pass
+
+        User().update_instance(instance, **validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+
+        return instance
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -71,16 +116,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return value
 
     def validate_email(self, value):
-        qs = User.objects.filter(email__iexact=value)
-        if qs.exists():
-            raise serializers.ValidationError("User with this email already exists")
+        validate_email(value)
         return value
 
     def validate_phone_number(self, value):
-        if len(value) > 11:
-            raise serializers.ValidationError("Phone number is more than 11 characters")
-        if len(value) < 10:
-            raise serializers.ValidationError("Phone number is less than 10 characters")
+        validate_phone_number(value)
         return value
 
     def validate(self, data):
