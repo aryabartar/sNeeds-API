@@ -67,6 +67,10 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
 
 
 class CheckConsultantProfileView(APIView):
+    """
+    GET:
+    returns is_consultant with true or false values.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
