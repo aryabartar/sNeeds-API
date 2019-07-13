@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth import authenticate, get_user_model
 
-from rest_framework import status, generics, mixins
+from rest_framework import status, permissions, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
@@ -22,7 +22,6 @@ class AuthView(APIView):
         "password":"****:)"
         }
     '''
-    permission_classes = []
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -55,6 +54,21 @@ class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
         return self.create(request, *args, **kwargs)
 
 
-# class UserView(mixins.CreateModelMixin, generics.GenericAPIView):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+class UserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_user(self, request):
+        return request.user
+
+    def get(self, request, *args, **kwargs):
+        user = self.get_user(request)
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
+
+    def put(self, request, *args, **kwargs):
+        user = self.get_user(request)
+        serializer = UserSerializer(user, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
