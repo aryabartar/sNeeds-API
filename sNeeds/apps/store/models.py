@@ -17,7 +17,7 @@ class TimeSlotSale(models.Model):
 
     def clean(self, *args, **kwargs):
         if self.end_time <= self.start_time:
-            raise ValidationError(('Start time should be lass than end time'), code='invalid')
+            raise ValidationError('Start time should be lass than end time', code='invalid')
 
         super(TimeSlotSale, self).clean(*args, **kwargs)
 
