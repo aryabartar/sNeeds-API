@@ -55,6 +55,28 @@ class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
 
 
 class UserView(APIView):
+    """
+    Either of fields can be empty
+    {
+        "first_name": "Arya",
+        "last_name": "Khaligh",
+        "phone_number":"09011353909",
+        "address":"Ardabil",
+        "password":"jafaAar",
+        "password2":"jafaAar"
+    }
+    e.g:
+        For changing first_name:
+            {
+                "first_name": "Arya"
+            }
+        For changing password:
+            {
+                "password":"jafaAar",
+                "password2":"jafaAar"
+            }
+
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get_user(self, request):
