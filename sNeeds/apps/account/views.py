@@ -8,17 +8,10 @@ from . import models
 from . import serializers
 
 
-class CountryDetail(APIView):
-    def get_object(self, slug):
-        try:
-            return models.Country.objects.get(slug=slug)
-        except models.Country.DoesNotExist:
-            raise Http404
-
-    def get(self, request, slug):
-        country = self.get_object(slug)
-        serializer = serializers.CountrySerializer(country, context={"request": request})
-        return Response(serializer.data)
+class CountryDetail(generics.RetrieveAPIView):
+    queryset = models.Country.objects.all()
+    serializer_class = serializers.CountrySerializer
+    lookup_field = 'slug'
 
 
 class CountryList(generics.ListAPIView):
@@ -26,17 +19,10 @@ class CountryList(generics.ListAPIView):
     serializer_class = serializers.CountrySerializer
 
 
-class UniversityDetail(APIView):
-    def get_object(self, slug):
-        try:
-            return models.University.objects.get(slug=slug)
-        except models.University.DoesNotExist:
-            raise Http404
-
-    def get(self, request, slug):
-        university = self.get_object(slug)
-        serializer = serializers.UniversitySerializer(university, context={"request": request})
-        return Response(serializer.data)
+class UniversityDetail(generics.RetrieveAPIView):
+    queryset = models.University.objects.all()
+    serializer_class = serializers.UniversitySerializer
+    lookup_field = 'slug'
 
 
 class UniversityList(generics.ListAPIView):
@@ -44,17 +30,10 @@ class UniversityList(generics.ListAPIView):
     serializer_class = serializers.UniversitySerializer
 
 
-class FieldOfStudyDetail(APIView):
-    def get_object(self, slug):
-        try:
-            return models.FieldOfStudy.objects.get(slug=slug)
-        except models.FieldOfStudy.DoesNotExist:
-            raise Http404
-
-    def get(self, request, slug):
-        field_of_study = self.get_object(slug)
-        serializer = serializers.FieldOfStudySerializer(field_of_study, context={"request": request})
-        return Response(serializer.data)
+class FieldOfStudyDetail(generics.RetrieveAPIView):
+    queryset = models.FieldOfStudy.objects.all()
+    serializer_class = serializers.FieldOfStudySerializer
+    lookup_field = 'slug'
 
 
 class FieldOfStudyList(generics.ListAPIView):

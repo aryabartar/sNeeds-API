@@ -4,7 +4,7 @@ from . import models
 
 
 class CountrySerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="country-detail", lookup_field='slug', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name="account:country-detail", lookup_field='slug', read_only=True)
 
     class Meta:
         model = models.Country
@@ -12,7 +12,7 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class UniversitySerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="university-detail", lookup_field='slug', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name="account:university-detail", lookup_field='slug', read_only=True)
 
     class Meta:
         model = models.University
@@ -20,7 +20,7 @@ class UniversitySerializer(serializers.ModelSerializer):
 
 
 class FieldOfStudySerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="field-of-study-detail", lookup_field='slug', read_only=True)
+    url = serializers.HyperlinkedIdentityField(view_name="account:field-of-study-detail", lookup_field='slug', read_only=True)
 
     class Meta:
         model = models.FieldOfStudy
