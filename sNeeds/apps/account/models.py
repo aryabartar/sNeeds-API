@@ -32,7 +32,7 @@ class FieldOfStudy(models.Model):
 
 class ConsultantProfile(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True)
+        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="consultant_profile")
     # profile_picture = models.ImageField(upload_to="consultant_profile_photo")
     aparat_link = models.URLField(null=True, blank=True)
     slug = models.SlugField(help_text="lowercase pls")

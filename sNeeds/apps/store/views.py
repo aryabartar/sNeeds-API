@@ -14,8 +14,18 @@ from . import filtersets
 class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
     queryset = models.TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
-    permission_classes = (permissions.IsAuthenticated,)
     filterset_class = filtersets.TimeSlotSailFilter
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        consultant = request.user.consultant_profile
+        data.update({'consultant': consultant})
+
+        serializer = serializers.TimeSlotSaleSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({}, 200)
+        return Response({}, 200)

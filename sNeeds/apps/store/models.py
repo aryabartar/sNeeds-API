@@ -12,6 +12,3 @@ class TimeSlotSale(models.Model):
 
     def get_consultant_username(self):
         return self.consultant.user.username
-
-    def get_buyer_username(self):
-        return self.buyer.username
