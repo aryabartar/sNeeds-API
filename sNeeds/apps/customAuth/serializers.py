@@ -89,3 +89,55 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         user_obj.set_password(validated_data.get('password'))
         user_obj.save()
         return user_obj
+
+
+class UserSerializer(serializers.ModelSerializer):
+    password2 = serializers.CharField(style={'input_type': 'password'}, required=False, write_only=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'email',
+            'first_name',
+            'last_name',
+            'phone_number',
+            'address',
+            'password',
+            'password2',
+        ]
+        extra_kwargs = {
+            'email': {'read_only': True},
+            'first_name': {'required': False},
+            'last_name': {'required': False},
+            'phone_number': {'required': False},
+            'address': {'required': False},
+            'password': {'write_only': True, 'required': False},
+        }
+
+    def validate(self, data):
+        pw = data.get('password', -1)
+        pw2 = data.get('password2', -1)
+
+        if pw != pw2:
+            raise serializers.ValidationError("Passwords must match")
+
+        try:
+            data.pop('password2')
+        except:
+            pass
+
+        return data
+
+    def update(self, instance, validated_data):
+        password = validated_data.get('password', None)
+        try:
+            password = validated_data.pop('password')
+        except:
+            pass
+
+        User().update_instance(instance, **validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+
+        return instance

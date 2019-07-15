@@ -3,9 +3,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
+from . import models
 
 
-class CartList(APIView):
+class CartListView(APIView):
     """
     POST:
     {

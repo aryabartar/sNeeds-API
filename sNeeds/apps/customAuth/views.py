@@ -8,8 +8,10 @@ from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
 
 from .utils import jwt_response_payload_handler
-from .serializers import UserRegisterSerializer, UserSerializer
+from .serializers import UserRegisterSerializer
 from .permissions import NotLoggedInPermission
+
+from . import serializers
 
 User = get_user_model()
 
@@ -43,7 +45,7 @@ class AuthView(APIView):
             return Response({'detail': 'Invalid email/password'}, status=401)
 
 
-class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
+class UserListView(mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
     permission_classes = [NotLoggedInPermission]
@@ -52,3 +54,41 @@ class RegisterView(mixins.CreateModelMixin, generics.GenericAPIView):
         if request.user.is_authenticated:
             return Response({'detail': 'You are already authenticated'}, status=400)
         return self.create(request, *args, **kwargs)
+
+
+class UserDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+    """
+    Either of fields can be empty
+    {
+        "first_name": "Arya",
+        "last_name": "Khaligh",
+        "phone_number":"09011353909",
+        "address":"Ardabil",
+        "password":"jafaAar",
+        "password2":"jafaAar"
+    }
+    e.g:
+        For changing first_name:
+            {
+                "first_name": "Arya"
+            }
+        For changing password:
+            {
+                "password":"jafaAar",
+                "password2":"jafaAar"
+            }
+    """
+    queryset = User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request)
+
+    # def put(self, request, *args, **kwargs):
+    #     user = self.get_user(request)
+    #     serializer = serializers.UserSerializer(user, data=request.data)
+    #     if serializer.is_valid():
+    #         serializer.save()
+    #         return Response(serializer.data)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
