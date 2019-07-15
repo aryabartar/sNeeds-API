@@ -16,7 +16,7 @@
     }
 ]
 ```
-
+---
 > account/countries/{slug}/ [GET]  
 > account/countries/canada/ [GET]
 ```json
@@ -26,7 +26,7 @@
     "slug": "canada"
 }
 ```
-
+---
 > account/universities/ [GET]
 ```json
 [
@@ -46,7 +46,7 @@
     }
 ]
 ```
-
+---
 > account/universities/{slug}/ [GET]  
 > account/universities/mit/ [GET] 
 ```json
@@ -58,7 +58,7 @@
     "slug": "mit"
 }
 ```
-
+---
 > account/field-of-studies/ [GET]
 ```json
 [
@@ -76,7 +76,7 @@
     }
 ]
 ```
-
+---
 > account/field-of-studies/{slug}/ [GET]
 > account/field-of-studies/f1/ [GET]
 ```json
@@ -87,7 +87,7 @@
     "slug": "f1"
 }
 ```
-
+---
 > account/my-account/ [GET]
 
 If not logged in:
@@ -110,7 +110,7 @@ If consultant:
     "is_consultant": true
 }
 ```
-
+---
 > account/consultant-profiles/ [GET]
 ```json
 [
@@ -158,7 +158,7 @@ If consultant:
     }
 ]
 ```
-
+---
 > account/consultant-profiles/{slug}/ [GET]  
 > account/consultant-profiles/helloman/ [GET]
 ```json
@@ -205,7 +205,8 @@ If consultant:
     "aparat_link": null
 }
 ```
-
+---
+## Authentication
 > auth/jwt/token/ [POST]
 
 body:
@@ -250,7 +251,7 @@ Vary: Accept
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImIyQGcuY29tIiwib3JpZ19pYXQiOjE1NjMxODA5MDcsInVzZXJfaWQiOjE0LCJ1c2VybmFtZSI6ImIyQGcuY29tIiwiZXhwIjoxNTYzNzg1NzA3fQ.R0e89tIOLtOUKP_1D6JsM0jNhAlTR5wMStxRcrJuITQ"
 }
 ```
-
+---
 > auth/jwt/token/refresh/ [POST]
 
 body:
@@ -319,7 +320,7 @@ Vary: Accept
     }
 }
 ```
-
+---
 > auth/accounts/{ID}/ [GET]  
 > auth/accounts/14/ [GET]
 
@@ -350,7 +351,7 @@ Vary: Accept
     "address": "Ardabil"
 }
 ```
-
+---
 > auth/accounts/{ID}/ [PUT]  
 > auth/accounts/14/ [PUT]
 
