@@ -39,7 +39,6 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
-    'drf_yasg',  # for filtering get queries in DRF
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
