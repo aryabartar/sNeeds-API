@@ -9,7 +9,7 @@ from rest_framework_jwt import utils as jwt_utils
 
 from .utils import jwt_response_payload_handler
 from .serializers import UserRegisterSerializer
-from .permissions import NotLoggedInPermission
+from .permissions import NotLoggedInPermission, SameUserPermission
 
 from . import serializers
 
@@ -56,7 +56,7 @@ class UserListView(mixins.CreateModelMixin, generics.GenericAPIView):
         return self.create(request, *args, **kwargs)
 
 
-class UserDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
+class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     """
     Either of fields can be empty
     {
@@ -80,15 +80,10 @@ class UserDetailView(mixins.RetrieveModelMixin, generics.GenericAPIView):
     """
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, SameUserPermission]
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request)
 
-    # def put(self, request, *args, **kwargs):
-    #     user = self.get_user(request)
-    #     serializer = serializers.UserSerializer(user, data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, *args, **kwargs):
+        self.update(request)
