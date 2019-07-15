@@ -6,6 +6,13 @@ from . import serializers
 
 
 class CartList(APIView):
+    """
+    POST:
+    {
+        "time_slot_sales" : [10,11]
+    }
+    """
+
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
