@@ -1,4 +1,5 @@
 from django.http import Http404
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.views import APIView
@@ -67,10 +68,6 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
 
 
 class CheckConsultantProfileView(APIView):
-    """
-    GET:
-    returns is_consultant with true or false values.
-    """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
