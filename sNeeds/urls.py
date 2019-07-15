@@ -19,10 +19,10 @@ from django.urls import include, path
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('docs/', include('sNeeds.apps.docs.urls')),
 
     path('auth/', include('sNeeds.apps.customAuth.urls')),
     path('account/', include('sNeeds.apps.account.urls')),
     path('store/', include('sNeeds.apps.store.urls')),
-    path('docs/', include('sNeeds.apps.docs.urls')),
-
+    path('carts/', include('sNeeds.apps.carts.urls')),
 ]
