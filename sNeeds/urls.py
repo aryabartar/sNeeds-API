@@ -24,5 +24,5 @@ urlpatterns = [
     path('auth/', include('sNeeds.apps.customAuth.urls')),
     path('account/', include('sNeeds.apps.account.urls')),
     path('store/', include('sNeeds.apps.store.urls')),
-    path('carts/', include('sNeeds.apps.carts.urls')),
+    path('cart/', include('sNeeds.apps.carts.urls')),
 ]
