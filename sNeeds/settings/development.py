@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.store',
     'sNeeds.apps.docs',
     'sNeeds.apps.carts',
+    'sNeeds.apps.orders',
 ]
 
 MIDDLEWARE = [
