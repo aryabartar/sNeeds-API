@@ -57,13 +57,16 @@ class UserListView(mixins.CreateModelMixin, generics.GenericAPIView):
 
 
 class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
-
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [permissions.IsAuthenticated, SameUserPermission]
 
     def get(self, request, *args, **kwargs):
+        if request.user.id != kwargs.get('id', None):
+            return Response({"detail": "You are not logged in as this user."}, 401)
         return self.retrieve(request)
 
     def put(self, request, *args, **kwargs):
+        if request.user.id != kwargs.get('id', None):
+            return Response({"detail": "You are not logged in as this user."}, 401)
         self.update(request)
