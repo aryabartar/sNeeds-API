@@ -10,6 +10,7 @@ User = get_user_model()
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
+    subtotal = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     total = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -18,14 +19,20 @@ class Cart(models.Model):
         return "User {} cart".format(self.user)
 
 
-def pre_save_cart_receiver(sender, instance, action, *args, **kwargs):
+def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
         time_slot_sales = instance.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
             total = t.price
-        instance.total = total
+        instance.subtotal = total
         instance.save()
 
 
-m2m_changed.connect(pre_save_cart_receiver, sender=Cart.time_slot_sales.through)
+def pre_save_cart_receiver(sender, instance, *args, **kwargs):
+    instance.total = instance.subtotal * 1.2
+    instance.save()
+
+
+m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.time_slot_sales.through)
+pre_save.connect(pre_save_cart_receiver, sender=Cart)

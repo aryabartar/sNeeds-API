@@ -31,8 +31,7 @@ class CartSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"detail": "Cart already exists."})
 
         cart_obj = Cart(
-            user=user,
-            total=0
+            user=user
         )
         cart_obj.save()
         for time_slot_sale in validated_data['time_slot_sales']:
