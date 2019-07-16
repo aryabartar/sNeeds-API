@@ -24,7 +24,7 @@ class CartDetailView(APIView):
         if qs.exists():
             cart_obj = qs.first()
             self.check_object_permissions(request, cart_obj)
-            serializer = serializers.CartSerializer(cart_obj)
+            serializer = serializers.CartSerializer(cart_obj, context={"request" : request})
             return Response(serializer.data, 200)
         else:
             return Response({"detail": "Not found."}, 404)

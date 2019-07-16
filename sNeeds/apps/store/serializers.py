@@ -4,7 +4,8 @@ from . import models
 
 
 class TimeSlotSaleSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(read_only=True, lookup_field='id', view_name="store:time-slot-detail")
+    url = serializers.HyperlinkedIdentityField(read_only=True, lookup_field='id',
+                                               view_name="store:time-slot-sale-detail")
 
     consultant_url = serializers.HyperlinkedRelatedField(
         source='consultant',

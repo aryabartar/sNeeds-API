@@ -7,7 +7,8 @@ class CartSerializer(serializers.ModelSerializer):
     time_slot_sales = serializers.HyperlinkedRelatedField(
         many=True,
         read_only=True,
-        view_name='track-detail'
+        lookup_field='id',
+        view_name='store:time-slot-sale-detail'
     )
 
     class Meta:
