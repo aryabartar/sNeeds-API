@@ -16,9 +16,9 @@ class CartSerializer(serializers.ModelSerializer):
     def validate(self, data):
         request = self.context.get("request", None)
         user = request.user
-        qs = Cart.objects.filter(user=user)
-        if qs.exists():
-            raise serializers.ValidationError("Cart already exists.")
+        if not user.is_authenticated:
+            raise serializers.ValidationError({"detail": "User is not authenticated."})
+
         return data
 
     def create(self, validated_data):
@@ -26,6 +26,10 @@ class CartSerializer(serializers.ModelSerializer):
         request = self.context.get('request', None)
         if request and hasattr(request, "user"):
             user = request.user
+        qs = Cart.objects.filter(user=user)
+        if qs.exists():
+            raise serializers.ValidationError({"detail": "Cart already exists."})
+
         cart_obj = Cart(
             user=user,
             total=0

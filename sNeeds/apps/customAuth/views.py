@@ -59,6 +59,7 @@ class UserListView(mixins.CreateModelMixin, generics.GenericAPIView):
 class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
+    lookup_field = 'id'
     permission_classes = [permissions.IsAuthenticated, SameUserPermission]
 
     def get(self, request, *args, **kwargs):

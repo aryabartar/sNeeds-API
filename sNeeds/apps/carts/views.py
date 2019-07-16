@@ -8,12 +8,6 @@ from .permissions import CartOwnerPermission
 
 
 class CartListView(generics.CreateAPIView):
-    """
-    POST:
-    {
-        "time_slot_sales" : [20,21]
-    }
-    """
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -37,12 +31,16 @@ class CartDetailView(APIView):
 
     def put(self, request, *args, **kwargs):
         data = request.data
-        if 'user' in data.keys:
-            data.pop('user')
+        user = request.user
+        qs = models.Cart.objects.filter(user=user)
 
-        serializer = serializers.CartSerializer(data=data)
+        if not qs.exists():
+            return Response({"detail": "No cart exists."}, 404)
+
+        serializer = serializers.CartSerializer(qs.first(), data=data, context={"request": request})
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, 201)
+            return Response(serializer.data, 200)
+
         return Response(serializer.errors, 400)
