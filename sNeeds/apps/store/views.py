@@ -35,3 +35,9 @@ class TimeSlotSailList(mixins.ListModelMixin, generics.GenericAPIView):
 
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TimeSlotSaleDetail(generics.RetrieveAPIView):
+    queryset = models.TimeSlotSale.objects.all()
+    serializer_class = serializers.TimeSlotSaleSerializer
+    lookup_field = "id"

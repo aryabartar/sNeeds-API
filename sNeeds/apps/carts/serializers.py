@@ -4,6 +4,12 @@ from .models import Cart
 
 
 class CartSerializer(serializers.ModelSerializer):
+    time_slot_sales = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='track-detail'
+    )
+
     class Meta:
         model = Cart
         fields = ['id', 'user', 'time_slot_sales', 'total']
