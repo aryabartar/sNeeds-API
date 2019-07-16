@@ -63,10 +63,10 @@ class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
 
     def get(self, request, *args, **kwargs):
         if request.user.id != kwargs.get('id', None):
-            return Response({"detail": "You are not logged in as this user."}, 401)
+            return Response({"detail": "You are not logged in as this user."}, 403)
         return self.retrieve(request)
 
     def put(self, request, *args, **kwargs):
         if request.user.id != kwargs.get('id', None):
-            return Response({"detail": "You are not logged in as this user."}, 401)
+            return Response({"detail": "You are not logged in as this user."}, 403)
         self.update(request)

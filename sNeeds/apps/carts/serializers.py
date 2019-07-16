@@ -9,10 +9,24 @@ class CartSerializer(serializers.ModelSerializer):
         fields = ['id', 'user', 'time_slot_sales', 'total']
         extra_kwargs = {
             'id': {'read_only': True},
+            'user': {'read_only': True},
             'total': {'read_only': True},
         }
 
     def validate(self, data):
-        if len(Cart.objects.filter(user__id=data.get('user').id)) > 0:
-            raise serializers.ValidationError("This user already has cart.")
         return data
+
+    def create(self, validated_data):
+        user = None
+        request = self.context.get('request', None)
+        if request and hasattr(request, "user"):
+            user = request.user
+        cart_obj = Cart(
+            user=user,
+            total=0
+        )
+        cart_obj.save()
+        for time_slot_sale in validated_data['time_slot_sales']:
+            cart_obj.time_slot_sales.add(time_slot_sale)
+        cart_obj.save()
+        return cart_obj

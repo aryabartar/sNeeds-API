@@ -18,8 +18,7 @@ class CartListView(APIView):
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        data.update({"user": request.user.pk})
-        serializer = serializers.CartSerializer(data=data)
+        serializer = serializers.CartSerializer(data=data, context={"request": request})
 
         if serializer.is_valid():
             serializer.save()
@@ -31,7 +30,6 @@ class CartDetailView(APIView):
     permission_classes = (CartOwnerPermission, permissions.IsAuthenticated)
 
     def get(self, request, *args, **kwargs):
-        print()
         if request.user.id != kwargs.get('id', None):
             return Response({"detail": "You are not logged in as this user."}, 403)
 
@@ -43,3 +41,15 @@ class CartDetailView(APIView):
             return Response(serializer.data, 200)
         else:
             return Response({"detail": "Not found."}, 404)
+
+    def put(self, request, *args, **kwargs):
+        data = request.data
+        if 'user' in data.keys:
+            data.pop('user')
+
+        serializer = serializers.CartSerializer(data=data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, 201)
+        return Response(serializer.errors, 400)
