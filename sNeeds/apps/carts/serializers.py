@@ -14,6 +14,11 @@ class CartSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
+        request = self.context.get("request", None)
+        user = request.user
+        qs = Cart.objects.filter(user=user)
+        if qs.exists():
+            raise serializers.ValidationError("Cart already exists.")
         return data
 
     def create(self, validated_data):

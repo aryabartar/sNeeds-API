@@ -7,23 +7,16 @@ from . import models
 from .permissions import CartOwnerPermission
 
 
-class CartListView(APIView):
+class CartListView(generics.CreateAPIView):
     """
     POST:
     {
-        "time_slot_sales" : [10,11]
+        "time_slot_sales" : [20,21]
     }
     """
+    queryset = models.Cart.objects.all()
+    serializer_class = serializers.CartSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request, *args, **kwargs):
-        data = request.data
-        serializer = serializers.CartSerializer(data=data, context={"request": request})
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, 201)
-        return Response(serializer.errors, 400)
 
 
 class CartDetailView(APIView):
