@@ -24,7 +24,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
         time_slot_sales = instance.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
-            total = t.price
+            total += t.price
         instance.subtotal = total
         instance.save()
 

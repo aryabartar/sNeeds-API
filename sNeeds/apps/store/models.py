@@ -24,3 +24,6 @@ class TimeSlotSale(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         super(TimeSlotSale, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.pk)
