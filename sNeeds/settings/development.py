@@ -24,6 +24,7 @@ from .keys import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+CORS_ORIGIN_ALLOW_ALL = DEBUG #TODO: Change in production
 
 ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1']
 
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
     'drf_yasg',  # for filtering get queries in DRF
+    'corsheaders',
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
@@ -50,6 +52,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

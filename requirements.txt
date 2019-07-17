@@ -4,6 +4,7 @@ chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 Django==2.2.3
+django-cors-headers==3.0.2
 django-filter==2.1.0
 djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
