@@ -15,14 +15,13 @@ class Order(models.Model):
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
-    total = models.DecimalField(max_digits=100, decimal_places=2, null=True, default=0, blank=True)
+    total = models.IntegerField(default=0, null=True, blank=True)
 
     def __str__(self):
         return str(self.order_id)
 
     def update_total(self):
         self.total = self.cart.total
-        print("HERE" , self.cart.total)
         self.save()
         return self.total
 

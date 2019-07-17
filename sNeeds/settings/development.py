@@ -24,7 +24,7 @@ from .keys import SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-CORS_ORIGIN_ALLOW_ALL = DEBUG #TODO: Change in production
+CORS_ORIGIN_ALLOW_ALL = DEBUG  # TODO: Change in production
 
 ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1']
 

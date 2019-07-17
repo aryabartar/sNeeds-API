@@ -11,7 +11,7 @@ class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     subtotal = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
-    total = models.DecimalField(default=0.00, max_digits=100, decimal_places=2)
+    total = models.IntegerField(default=0, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
