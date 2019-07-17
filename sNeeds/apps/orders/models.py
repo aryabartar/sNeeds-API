@@ -12,7 +12,7 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
-    order_id = models.CharField(max_length=12, blank=True)
+    order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
     total = models.DecimalField(max_digits=100, decimal_places=2)
