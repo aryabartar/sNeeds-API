@@ -9,7 +9,7 @@ from sNeeds.apps.billing.models import BillingProfile
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['id', 'billing_profile', 'order_id', 'cart', 'status', 'total']
+        fields = ['id', 'billing_profile', 'order_id', 'cart', 'status', 'total', 'active', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'billing_profile': {'read_only': True},
