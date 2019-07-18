@@ -20,11 +20,11 @@ class CartDetailView(APIView):
         if request.user.id != kwargs.get('id', None):
             return Response({"detail": "You are not logged in as this user."}, 403)
 
-        qs = models.Cart.objects.filter(user=self.request.user)
-        if qs.exists():
+        qs = models.Cart.objects.filter(user=self.request.user, active=True)
+        if qs.count() == 1:
             cart_obj = qs.first()
             self.check_object_permissions(request, cart_obj)
-            serializer = serializers.CartSerializer(cart_obj, context={"request" : request})
+            serializer = serializers.CartSerializer(cart_obj, context={"request": request})
             return Response(serializer.data, 200)
         else:
             return Response({"detail": "Not found."}, 404)

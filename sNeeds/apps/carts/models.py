@@ -30,7 +30,6 @@ class Cart(models.Model):
     objects = CartModelManager()
 
     def set_time_slot_sales(self, time_slot_sales):
-        print(time_slot_sales)
         for time_slot_sale in time_slot_sales:
             self.time_slot_sales.add(time_slot_sale)
         self.save()

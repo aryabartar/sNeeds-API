@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import Cart
 
 
+# TODO : Add time_slot_sales validator for invalid data.
 class CartSerializer(serializers.ModelSerializer):
     time_slot_sales = serializers.HyperlinkedRelatedField(
         many=True,
@@ -20,6 +21,7 @@ class CartSerializer(serializers.ModelSerializer):
             'total': {'read_only': True},
         }
 
+
     def validate(self, data):
         request = self.context.get("request", None)
         user = request.user
@@ -34,6 +36,6 @@ class CartSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        time_slot_sales = request.get('time_slot_sales', [])
-        cart_obj = Cart.objects.get_new_and_deactive_others(user, time_slot_sales=[time_slot_sales])
+        time_slot_sales = request.data.get('time_slot_sales', [])
+        cart_obj = Cart.objects.get_new_and_deactive_others(user, time_slot_sales=time_slot_sales)
         return cart_obj
