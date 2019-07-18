@@ -9,20 +9,17 @@ User = get_user_model()
 
 class CartModelManager(models.Manager):
     def get_new_and_deactive_others(self, user, *args, **kwargs):
-        qs = Cart.objects.filter(user=user, active=True)
-        qs.update(active = False)
-        new_cart = self.create(user=user)
-
         time_slot_sales = kwargs.get('time_slot_sales', None)
-        for time_slot_sale in time_slot_sales:
-            new_cart.time_slot_sales.add(time_slot_sale)
-        new_cart.save()
+
+        Cart.objects.filter(user=user, active=True).update(active=False)
+        new_cart = self.create(user=user)
+        new_cart.set_time_slot_sales(time_slot_sales)
 
         return new_cart
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
@@ -31,6 +28,12 @@ class Cart(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     objects = CartModelManager()
+
+    def set_time_slot_sales(self, time_slot_sales):
+        print(time_slot_sales)
+        for time_slot_sale in time_slot_sales:
+            self.time_slot_sales.add(time_slot_sale)
+        self.save()
 
     def __str__(self):
         return "User {} cart".format(self.user)

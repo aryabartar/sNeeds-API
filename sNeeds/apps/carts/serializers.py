@@ -34,5 +34,6 @@ class CartSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        cart_obj = Cart.objects.get_new_and_deactive_others(user, time_slot_sale_sales=['time_slot_sales'])
+        time_slot_sales = request.get('time_slot_sales', [])
+        cart_obj = Cart.objects.get_new_and_deactive_others(user, time_slot_sales=[time_slot_sales])
         return cart_obj
