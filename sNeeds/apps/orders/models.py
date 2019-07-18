@@ -9,12 +9,13 @@ from sNeeds.apps.billing.models import BillingProfile
 ORDER_STATUS_CHOICES = (
     ('created', 'Created'),
     ('paid', 'Paid'),
-    ('refunded', 'Refunded'),
+    ('canceled_not_refunded', 'Canceled but not refunded'),
+    ('canceled_refunded', 'Canceled and refunded'),
 )
 
 
 class Order(models.Model):
-    billing_profile = models.ForeignKey(BillingProfile, on_delete=models.SET_NULL, null=True)
+    billing_profile = models.ForeignKey(BillingProfile, null=True, on_delete=models.SET_NULL)
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
