@@ -20,6 +20,9 @@ class Order(models.Model):
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
     total = models.IntegerField(default=0, null=True, blank=True)
+    active = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return str(self.order_id)
