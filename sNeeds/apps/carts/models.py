@@ -10,9 +10,14 @@ User = get_user_model()
 class CartModelManager(models.Manager):
     def get_new_and_deactive_others(self, user, *args, **kwargs):
         qs = Cart.objects.filter(user=user, active=True)
-        for obj in qs:
-            obj.update(active=False)
-        new_cart = self.create(**kwargs)
+        qs.update(active = False)
+        new_cart = self.create(user=user)
+
+        time_slot_sales = kwargs.get('time_slot_sales', None)
+        for time_slot_sale in time_slot_sales:
+            new_cart.time_slot_sales.add(time_slot_sale)
+        new_cart.save()
+
         return new_cart
 
 
@@ -24,6 +29,8 @@ class Cart(models.Model):
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    objects = CartModelManager()
 
     def __str__(self):
         return "User {} cart".format(self.user)
