@@ -7,11 +7,21 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
+class CartModelManager(models.Manager):
+    def get_new_and_deactive_others(self, user, *args, **kwargs):
+        qs = Cart.objects.filter(user=user, active=True)
+        for obj in qs:
+            obj.update(active=False)
+        new_cart = self.create(**kwargs)
+        return new_cart
+
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
+    active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
