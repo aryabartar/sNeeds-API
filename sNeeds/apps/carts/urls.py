@@ -5,6 +5,6 @@ from . import views
 app_name = "cart"
 
 urlpatterns = [
-    path('carts/', views.CartListView.as_view()),
-    path('carts/<int:pk>/', views.CartDetailView.as_view()),
+    path('carts/', views.CartListView.as_view(), name="cart-list"),
+    path('carts/<int:id>/', views.CartDetailView.as_view(), name="cart-detail"),
 ]

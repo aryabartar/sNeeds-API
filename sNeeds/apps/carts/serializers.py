@@ -4,10 +4,11 @@ from .models import Cart
 
 
 class CartSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'user', 'time_slot_sales', 'total', 'active']
+        fields = ['id', 'url','user', 'time_slot_sales', 'total', 'active']
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},

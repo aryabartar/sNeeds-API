@@ -11,6 +11,7 @@ class CartListView(generics.ListCreateAPIView):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filterset_fields = ('active',)
 
     def get_queryset(self):
         return models.Cart.objects.filter(user=self.request.user)
@@ -19,4 +20,5 @@ class CartListView(generics.ListCreateAPIView):
 class CartDetailView(generics.RetrieveUpdateAPIView):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
+    lookup_field = 'id'
     permission_classes = (CartOwnerPermission, permissions.IsAuthenticated)
