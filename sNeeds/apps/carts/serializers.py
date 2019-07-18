@@ -12,6 +12,7 @@ class CartSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
             'user': {'read_only': True},
             'total': {'read_only': True},
+            'active': {'read_only': True},
         }
 
     def validate(self, data):
@@ -21,6 +22,8 @@ class CartSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"detail": "User is not authenticated."})
 
         return data
+
+
 
     def create(self, validated_data):
         user = None
