@@ -39,9 +39,8 @@ def post_save_cart_total(sender, instance, created, *args, **kwargs):
     if not created:
         cart_obj = instance
         qs = Order.objects.filter(cart=cart_obj)
-        if qs.count() == 1:
-            order_obj = qs.first()
-            order_obj.update_total()
+        for obj in qs:
+            obj.update_total()
 
 
 def post_save_order(sender, instance, created, *args, **kwargs):

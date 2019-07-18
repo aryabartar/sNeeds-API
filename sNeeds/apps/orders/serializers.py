@@ -29,13 +29,15 @@ class OrderSerializer(serializers.ModelSerializer):
         if cart_qs.count() != 1:
             raise serializers.ValidationError({"detail": "User has no active cards."})
 
+        return attrs
+
     def create(self, validated_data):
         user = None
         request = self.context.get('request', None)
         if request and hasattr(request, "user"):
             user = request.user
 
-        billing_profile = BillingProfile.objects.get_or_create(user=user)
+        billing_profile, created = BillingProfile.objects.get_or_create(user=user)
         cart = Cart.objects.get(user=user, active=True)
 
         order_obj = Order.objects.create(billing_profile=billing_profile, cart=cart)

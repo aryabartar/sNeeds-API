@@ -6,7 +6,12 @@ from . import serializers
 from . import models
 
 
-class OrderListView(generics.CreateAPIView):
+class OrderListView(generics.ListCreateAPIView):
     queryset = models.Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = models.Order.objects.filter(billing_profile__user=user)
+        return qs
