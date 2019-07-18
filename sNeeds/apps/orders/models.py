@@ -2,7 +2,9 @@ from django.db import models
 from django.db.models.signals import pre_save, post_save
 
 from .utils import unique_order_id_generator
+
 from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.billing.models import BillingProfile
 
 ORDER_STATUS_CHOICES = (
     ('created', 'Created'),
@@ -12,6 +14,7 @@ ORDER_STATUS_CHOICES = (
 
 
 class Order(models.Model):
+    billing_profile = models.ForeignKey(BillingProfile, on_delete=models.SET_NULL, null=True)
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
     cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
