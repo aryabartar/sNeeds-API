@@ -26,4 +26,5 @@ urlpatterns = [
     path('store/', include('sNeeds.apps.store.urls')),
     path('cart/', include('sNeeds.apps.carts.urls')),
     path('order/', include('sNeeds.apps.orders.urls')),
+    path('payment/', include('sNeeds.apps.payments.urls')),
 ]

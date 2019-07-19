@@ -1,16 +1,15 @@
-# -*- coding: utf-8 -*-
-# Github.com/Rasooll
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from zeep import Client
 
 MERCHANT = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-amount = 1000  # Toman / Required
+amount = 100  # Toman / Required
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-email = 'email@example.com'  # Optional
-mobile = '09123456789'  # Optional
-CallbackURL = 'http://localhost:8000/verify/' # Important: need to edit for realy server.
+email = 'bartararya@gmail.com'  # Optional
+mobile = '09011353909'  # Optional
+CallbackURL = 'http://localhost:8000/payment/verify/'  # Important: need to edit for real server.
+
 
 def send_request(request):
     result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
@@ -18,6 +17,7 @@ def send_request(request):
         return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
     else:
         return HttpResponse('Error code: ' + str(result.Status))
+
 
 def verify(request):
     if request.GET.get('Status') == 'OK':

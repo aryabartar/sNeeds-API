@@ -6,15 +6,16 @@ from zeep import Client
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-amount = 1000  # Toman / Required
+amount = 100  # Toman / Required
 description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
 email = 'email@example.com'  # Optional
-mobile = '09123456789'  # Optional
+mobile = '09011353909'  # Optional
 CallbackURL = 'http://localhost:8000/verify/'  # Important: need to edit for realy server.
 
 
 def send_request(request):
     result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
+    print(result.Authority)
     if result.Status == 100:
         return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
     else:
