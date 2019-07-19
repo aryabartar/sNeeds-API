@@ -49,6 +49,8 @@ def post_save_cart_total(sender, instance, created, *args, **kwargs):
 def post_save_order(sender, instance, created, *args, **kwargs):
     if created:
         instance.update_total()
+
+    if instance.active:
         Order.objects.filter(
             billing_profile__user=instance.billing_profile.user,
             active=True
