@@ -49,7 +49,10 @@ def post_save_cart_total(sender, instance, created, *args, **kwargs):
 def post_save_order(sender, instance, created, *args, **kwargs):
     if created:
         instance.update_total()
-        Order.objects.filter(active=True).exclude(id=instance.id).update(active=False)
+        Order.objects.filter(
+            billing_profile__user=instance.billing_profile.user,
+            active=True
+        ).exclude(id=instance.id).update(active=False)
 
 
 pre_save.connect(pre_save_create_order_id, sender=Order)

@@ -7,6 +7,8 @@ from sNeeds.apps.billing.models import BillingProfile
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    # url = serializers.HyperlinkedIdentityField(view_name="order:cart-detail", lookup_field='id', read_only=True)
+
     class Meta:
         model = Order
         fields = ['id', 'billing_profile', 'order_id', 'cart', 'status', 'total', 'active', ]
