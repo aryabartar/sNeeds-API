@@ -7,15 +7,11 @@ from django.shortcuts import redirect
 
 from zeep import Client
 
+from .permissions import OrderOwnerPermission
 from sNeeds.apps.orders.models import Order
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-amount = 100  # Toman / Required
-description = "توضیحات مربوط به تراکنش را در این قسمت وارد کنید"  # Required
-email = 'email@example.com'  # Optional
-mobile = '09011353909'  # Optional
-CallbackURL = 'http://localhost:8000/verify/'  # Important: need to edit for realy server.
 
 
 def is_authenticated(user):
@@ -27,6 +23,8 @@ def is_authenticated(user):
 
 
 class SendRequest(APIView):
+    permission_classes = [OrderOwnerPermission, ]
+
     def post(self, request, *args, **kwargs):
         user = request.user
         data = request.data
@@ -48,16 +46,25 @@ class SendRequest(APIView):
         if not order.active:
             return Response({"detail": "Order is not active"}, 400)
 
+        if not self.check_object_permissions(request, order):
+            return Response({"detail": "Order is not for this user"}, 400)
 
+        if order.total <= 0:
+            return Response({"detail": "Order is empty"}, 400)
 
+        result = client.service.PaymentRequest(
+            MERCHANT,
+            100,
+            "پرداخت اسنیدز",
+            order.billing_profile.user.email,
+            order.billing_profile.user.phone_number,
+            'http://localhost:8000/payment/verify/'
+        )
 
-def send_request(request):
-    result = client.service.PaymentRequest(MERCHANT, amount, description, email, mobile, CallbackURL)
-    print(result.Authority)
-    # if result.Status == 100:
-    #     return redirect('https://www.zarinpal.com/pg/StartPay/' + str(result.Authority))
-    # else:
-    #     return HttpResponse('Error code: ' + str(result.Status))
+        if result.Status == 100:
+            return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
+        else:
+            return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
 
 
 def verify(request):
