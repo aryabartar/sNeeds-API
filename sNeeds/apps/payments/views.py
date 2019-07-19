@@ -1,9 +1,11 @@
+from django.urls import reverse
+from django.http import HttpResponse
+from django.shortcuts import redirect
+from django.http import JsonResponse
+
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from django.http import HttpResponse
-from django.shortcuts import redirect
 
 from zeep import Client
 
@@ -37,7 +39,7 @@ class SendRequest(APIView):
             return Response({"detail": "Order_id is empty"}, 400)
 
         order_qs = Order.objects.filter(id=order_id)
-        if order.count() != 1:
+        if order_qs.count() != 1:
             return Response({"detail": "No order exists"}, 400)
 
         order = order_qs.first()
@@ -46,11 +48,13 @@ class SendRequest(APIView):
         if not order.active:
             return Response({"detail": "Order is not active"}, 400)
 
-        if not self.check_object_permissions(request, order):
-            return Response({"detail": "Order is not for this user"}, 400)
+        self.check_object_permissions(request, order)
 
         if order.total <= 0:
             return Response({"detail": "Order is empty"}, 400)
+
+        print("HEEEELLLLOOOO")
+        print(reverse("payment:verify"))
 
         result = client.service.PaymentRequest(
             MERCHANT,
@@ -58,7 +62,7 @@ class SendRequest(APIView):
             "پرداخت اسنیدز",
             order.billing_profile.user.email,
             order.billing_profile.user.phone_number,
-            'http://localhost:8000/payment/verify/'
+            'http://127.0.0.1:8000/payment/verify/'
         )
 
         if result.Status == 100:
@@ -69,12 +73,12 @@ class SendRequest(APIView):
 
 def verify(request):
     if request.GET.get('Status') == 'OK':
-        result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], amount)
+        result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], 100)
         if result.Status == 100:
-            return HttpResponse('Transaction success.\nRefID: ' + str(result.RefID))
+            return JsonResponse({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
         elif result.Status == 101:
-            return HttpResponse('Transaction submitted : ' + str(result.Status))
+            return JsonResponse({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
         else:
-            return HttpResponse('Transaction failed.\nStatus: ' + str(result.Status))
+            return JsonResponse({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
     else:
-        return HttpResponse('Transaction failed or canceled by user')
+        return JsonResponse({"detail": "Transaction failed or canceled by user"}, status=400)

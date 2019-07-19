@@ -26,7 +26,7 @@ from .keys import SECRET_KEY
 DEBUG = True
 CORS_ORIGIN_ALLOW_ALL = DEBUG  # TODO: Change in production
 
-ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1']
+ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1', 'localhost']
 
 # Application definition
 

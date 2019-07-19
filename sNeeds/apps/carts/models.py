@@ -35,7 +35,7 @@ class Cart(models.Model):
         self.save()
 
     def __str__(self):
-        return "User {} cart".format(self.user)
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):

@@ -25,7 +25,7 @@ class Order(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return str(self.order_id)
+        return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
 
     def update_total(self):
         self.total = self.cart.total
