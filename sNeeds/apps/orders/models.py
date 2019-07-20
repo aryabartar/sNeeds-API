@@ -33,9 +33,15 @@ class Order(models.Model):
         self.save()
         return self.total
 
-    def set_paid_order(self):
+    def set_paid(self):
+        if not self.active:
+            raise ValidationError("Order is not active.")
+        if not self.status == "created":
+            raise ValidationError("Order status is not created.")
+
+        self.active = False
         self.status = "paid"
-        self.cart.cart_paid()
+        self.cart.set_paid()
 
     def _check_order_owners(self):
         if self.cart.user != self.billing_profile.user:
@@ -48,6 +54,7 @@ class Order(models.Model):
     def clean(self):
         self._check_order_owners()
         self._check_both_active()
+
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:
@@ -83,8 +90,8 @@ def pre_save_pay_order(sender, instance, *args, **kwargs):
     if old:
         # Just paid
         if instance.status == "paid" and old.status == "created":
-            instance.active = False
-            instance.set_paid_order()
+            instance.status = "created"
+            instance.set_paid()
 
 
 def pre_save_pay_validator(sender, instance, *args, **kwargs):

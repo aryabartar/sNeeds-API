@@ -35,11 +35,16 @@ class Cart(models.Model):
             self.time_slot_sales.add(time_slot_sale)
         self.save()
 
-    def cart_paid(self):
+    def set_paid(self):
+        if not self.active:
+            raise ValidationError("Cart is not active.")
+
         user = self.user
         time_slot_sales_qs = self.time_slot_sales.all()
         for time_slot_sale in time_slot_sales_qs:
             time_slot_sale.sell_to(user)
+        self.active = False
+        self.save()
 
     def _check_active(self):
         try:

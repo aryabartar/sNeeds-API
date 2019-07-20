@@ -31,10 +31,11 @@ class TimeSlotSale(models.Model):
         super(TimeSlotSale, self).save(*args, **kwargs)
 
     def sell_to(self, user):
-        if not self.sold:
-            self.sold = True
-            self.sold_to = user
-            self.save()
+        if self.sold:
+            raise ValidationError("This TimeSlot is sold.")
+        self.sold = True
+        self.sold_to = user
+        self.save()
 
     def __str__(self):
         return str(self.pk)
