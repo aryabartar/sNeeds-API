@@ -41,9 +41,13 @@ class Order(models.Model):
         if self.cart.user != self.billing_profile.user:
             raise ValidationError("Billing profile and user is not same.")
 
+    def _check_both_active(self):
+        if self.active and not self.cart.active:
+            raise ValidationError("Cart should be active too.")
+
     def clean(self):
         self._check_order_owners()
-
+        self._check_both_active()
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:
