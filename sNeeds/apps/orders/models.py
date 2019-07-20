@@ -18,7 +18,7 @@ ORDER_STATUS_CHOICES = (
 class Order(models.Model):
     billing_profile = models.ForeignKey(BillingProfile, null=True, on_delete=models.SET_NULL)
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
-    cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL)
+    cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
     total = models.IntegerField(default=0, null=True, blank=True)
     active = models.BooleanField(default=True)
@@ -35,6 +35,7 @@ class Order(models.Model):
 
     def set_paid_order(self):
         self.status = "paid"
+        self.cart.cart_paid()
 
     def _check_order_owners(self):
         if self.cart.user != self.billing_profile.user:
@@ -75,10 +76,7 @@ def pre_save_pay_order(sender, instance, *args, **kwargs):
     # Just paid
     if instance.status == "paid" and old.status == "created":
         instance.active = False
-        cart = instance.cart
-        time_slot_sales_qs = cart.time_slot_sales.all()
-        for time_slot_sale in time_slot_sales_qs:
-            time_slot_sale.sell_to(user)
+        instance.set_paid_order()
 
 
 def pre_save_pay_validator(sender, instance, *args, **kwargs):

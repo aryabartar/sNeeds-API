@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save, post_save, m2m_changed
@@ -34,6 +35,22 @@ class Cart(models.Model):
             self.time_slot_sales.add(time_slot_sale)
         self.save()
 
+    def cart_paid(self):
+        user = self.user
+        time_slot_sales_qs = self.time_slot_sales.all()
+        for time_slot_sale in time_slot_sales_qs:
+            time_slot_sale.sell_to(user)
+
+    def _check_active(self):
+        try:
+            if self.cart_order.status != "created" and self.active:
+                raise ValidationError("This cart is paid, can not set active.")
+        except:
+            pass
+
+    def clean(self):
+        self._check_active()
+
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
@@ -52,5 +69,11 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
 
 
+def post_save_cart(sender, instance, created, *args, **kwargs):
+    qs = Cart.objects.filter(active=True).exclude(pk=instance.pk)
+    qs.update(active=False)
+
+
 m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.time_slot_sales.through)
 pre_save.connect(pre_save_cart_receiver, sender=Cart)
+post_save.connect(post_save_cart, sender=Cart)
