@@ -32,6 +32,10 @@ class Order(models.Model):
         self.save()
         return self.total
 
+    def set_paid_order(self):
+        self.active = False
+        self.status = "paid"
+
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:
@@ -55,6 +59,12 @@ def post_save_order(sender, instance, created, *args, **kwargs):
             billing_profile__user=instance.billing_profile.user,
             active=True
         ).exclude(id=instance.id).update(active=False)
+
+
+def pre_save_pay_order_id(sender, instance, *args, **kwargs):
+    old = Order.objects.get(pk=instance.pk)
+    if instance.status == "paid" and old.status == "created":
+        cart = instance.cart
 
 
 pre_save.connect(pre_save_create_order_id, sender=Order)

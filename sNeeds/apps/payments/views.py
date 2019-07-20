@@ -12,8 +12,8 @@ from zeep import Client
 from .permissions import OrderOwnerPermission
 from sNeeds.apps.orders.models import Order
 
-MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
-client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+# MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
+# client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 
 
 def is_authenticated(user):
@@ -53,18 +53,15 @@ class SendRequest(APIView):
         if order.total <= 0:
             return Response({"detail": "Order is empty"}, 400)
 
-        print("HEEEELLLLOOOO")
-        print(reverse("payment:verify"))
-
         result = client.service.PaymentRequest(
             MERCHANT,
             100,
             "پرداخت اسنیدز",
             order.billing_profile.user.email,
             order.billing_profile.user.phone_number,
-            'http://127.0.0.1:8000/payment/verify/'
+            request.build_absolute_uri(reverse("payment:verify")),
         )
-
+        print(result)
         if result.Status == 100:
             return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
         else:
@@ -74,6 +71,7 @@ class SendRequest(APIView):
 def verify(request):
     if request.GET.get('Status') == 'OK':
         result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], 100)
+        print(result)
         if result.Status == 100:
             return JsonResponse({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
         elif result.Status == 101:
@@ -82,3 +80,12 @@ def verify(request):
             return JsonResponse({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
     else:
         return JsonResponse({"detail": "Transaction failed or canceled by user"}, status=400)
+
+
+class TempVerify(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        user = request.user
+        order = Order.objects.filter(user=user, active=True, status="created")

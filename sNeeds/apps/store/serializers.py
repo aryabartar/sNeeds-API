@@ -22,4 +22,5 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.TimeSlotSale
-        fields = ('url', 'consultant', 'consultant_url', 'consultant_slug', 'start_time', 'end_time', 'price',)
+        fields = (
+        'url', 'consultant', 'consultant_url', 'consultant_slug', 'start_time', 'end_time', 'price', 'sold', 'sold_to',)
