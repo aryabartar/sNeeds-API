@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 
@@ -33,8 +34,15 @@ class Order(models.Model):
         return self.total
 
     def set_paid_order(self):
-        self.active = False
         self.status = "paid"
+
+
+    def _check_order_owners(self):
+        if self.cart.user != self.billing_profile.user:
+            raise ValidationError("Billing profile and user is not same.")
+
+    def clean(self):
+        self._check_order_owners()
 
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
@@ -63,10 +71,17 @@ def post_save_order(sender, instance, created, *args, **kwargs):
 
 def pre_save_pay_order_id(sender, instance, *args, **kwargs):
     old = Order.objects.get(pk=instance.pk)
+    user = instance.billing_profile.user
+    # Just paid
     if instance.status == "paid" and old.status == "created":
+        instance.active = False
         cart = instance.cart
+        time_slot_sales_qs = cart.time_slot_sales.all()
+        for time_slot_sale in time_slot_sales_qs:
+            time_slot_sale.sell_to(user)
 
 
 pre_save.connect(pre_save_create_order_id, sender=Order)
+pre_save.connect(pre_save_pay_order_id, sender=Order)
 post_save.connect(post_save_order, sender=Order)
 post_save.connect(post_save_cart_total, sender=Cart)

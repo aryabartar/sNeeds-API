@@ -34,6 +34,7 @@ class TimeSlotSale(models.Model):
         if not self.sold:
             self.sold = True
             self.sold_to = user
+            self.save()
 
     def __str__(self):
         return str(self.pk)
