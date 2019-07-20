@@ -15,7 +15,7 @@ class TimeSlotSale(models.Model):
     end_time = models.DateTimeField()
     price = models.IntegerField()
     sold = models.BooleanField(default=False)
-    sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    sold_to = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     def get_consultant_username(self):
         return self.consultant.user.username

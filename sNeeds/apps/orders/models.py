@@ -70,13 +70,17 @@ def post_save_order(sender, instance, created, *args, **kwargs):
 
 
 def pre_save_pay_order(sender, instance, *args, **kwargs):
-    old = Order.objects.get(pk=instance.pk)
-    user = instance.billing_profile.user
+    old = None
+    try:
+        old = Order.objects.get(pk=instance.pk)
+    except Order.DoesNotExist:
+        pass
 
-    # Just paid
-    if instance.status == "paid" and old.status == "created":
-        instance.active = False
-        instance.set_paid_order()
+    if old:
+        # Just paid
+        if instance.status == "paid" and old.status == "created":
+            instance.active = False
+            instance.set_paid_order()
 
 
 def pre_save_pay_validator(sender, instance, *args, **kwargs):
