@@ -15,6 +15,16 @@ ORDER_STATUS_CHOICES = (
 )
 
 
+class OrderQuerySet(models.QuerySet):
+    def delete_time_slots_from_other_carts(self, order):
+        cart = order.cart
+        time_slot_sales_qs = cart.time_slot_sales
+        for ts in time_slot_sales_qs.all():
+            carts_qs = Cart.objects.filter(time_slot_sales__exact=ts).exclude(id=cart.id)
+            for c in carts_qs:
+                c.time_slot_sales.remove(ts)
+
+
 class Order(models.Model):
     billing_profile = models.ForeignKey(BillingProfile, null=True, on_delete=models.SET_NULL)
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
@@ -24,6 +34,8 @@ class Order(models.Model):
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    objects = OrderQuerySet.as_manager()
 
     def __str__(self):
         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
@@ -92,6 +104,7 @@ def pre_save_pay_order(sender, instance, *args, **kwargs):
         if instance.status == "paid" and old.status == "created":
             instance.status = "created"
             instance.set_paid()
+            Order.objects.delete_time_slots_from_other_carts(instance)
 
 
 def pre_save_pay_validator(sender, instance, *args, **kwargs):

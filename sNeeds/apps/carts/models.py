@@ -1,7 +1,7 @@
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save, post_save, m2m_changed
+from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale
 
