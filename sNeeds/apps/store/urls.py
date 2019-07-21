@@ -4,5 +4,5 @@ app_name = "store"
 
 urlpatterns = [
     path('time-slot-sales/', views.TimeSlotSailList.as_view(), name="time-slot-sale-list"),
-    path('time-slot-sales/<int:id>', views.TimeSlotSaleDetail.as_view(), name="time-slot-sale-detail"),
+    path('time-slot-sales/<int:id>/', views.TimeSlotSaleDetail.as_view(), name="time-slot-sale-detail"),
 ]

@@ -8,13 +8,15 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
-class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
+class AbstractCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
     created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
@@ -26,15 +28,12 @@ class Cart(models.Model):
         self.save()
 
 
-class SoldCart(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="sold_cart")
-    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
-    total = models.IntegerField(default=0, blank=True)
-    subtotal = models.IntegerField(default=0.00, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
+class Cart(AbstractCart):
+    updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return "User {} cart | pk: {}".format(self.user, str(self.pk))
+
+class SoldCart(AbstractCart):
+    pass
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):

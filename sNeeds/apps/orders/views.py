@@ -29,3 +29,11 @@ class OrderDetailView(generics.RetrieveDestroyAPIView):
         if obj.active and obj.status == "created":
             return self.destroy(request, *args, **kwargs)
         return Response({"detail": "Can not delete not active or paid order."})
+
+
+# class OrderDetailAcceptView(APIView):
+#
+#     def post(self, request, *args, **kwargs):
+#         order_id = kwargs.get('id', None)
+#         order = models.Order.objects.get(id=order_id)
+#

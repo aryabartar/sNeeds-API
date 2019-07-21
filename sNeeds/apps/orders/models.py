@@ -18,7 +18,7 @@ ORDER_STATUS_CHOICES = (
 )
 
 
-class Order(models.Model):
+class AbstractOrder(models.Model):
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_order")
@@ -58,12 +58,19 @@ class Order(models.Model):
         self._check_order_owners()
         self._check_both_active()
 
+    class Meta:
+        abstract = True
 
-# class SoldOrder(Order):
-#     cart = models.ForeignKey(SoldCart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
-#
-#     def __str__(self):
-#         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
+
+class Order(AbstractOrder):
+    pass
+
+
+class SoldOrder(AbstractOrder):
+    cart = models.ForeignKey(SoldCart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
+
+    def __str__(self):
+        return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
 
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
