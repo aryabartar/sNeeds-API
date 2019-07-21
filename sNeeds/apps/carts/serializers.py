@@ -8,23 +8,13 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'url','user', 'time_slot_sales', 'total', 'active']
+        fields = ['id', 'url', 'user', 'time_slot_sales', 'total', 'active']
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
             'total': {'read_only': True},
             'active': {'read_only': True},
         }
-
-    def validate(self, data):
-        request = self.context.get("request", None)
-        user = request.user
-        if not user.is_authenticated:
-            raise serializers.ValidationError({"detail": "User is not authenticated."})
-
-        return data
-
-
 
     def create(self, validated_data):
         user = None

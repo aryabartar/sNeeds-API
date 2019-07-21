@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save, post_save, m2m_changed
 from django.core.exceptions import ValidationError
@@ -8,10 +8,9 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
-class CartModelManager(models.Manager):
+class CartModelQuerySet(models.QuerySet):
     def get_new_and_deactive_others(self, user, *args, **kwargs):
         time_slot_sales = kwargs.get('time_slot_sales', None)
-
         Cart.objects.filter(user=user, active=True).update(active=False)
         new_cart = self.create(user=user)
         new_cart.set_time_slot_sales(time_slot_sales)
@@ -28,11 +27,21 @@ class Cart(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    objects = CartModelManager()
+    objects = CartModelQuerySet().as_manager()
 
+    def __str__(self):
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))
+
+    def add_to_time_slot_sales(self, time_slot_sale):
+        if time_slot_sale.sold:
+            raise ValidationError("This timeslot is sold.")
+        self.time_slot_sales.add(time_slot_sale)
+        self.save()
+
+    @transaction.atomic
     def set_time_slot_sales(self, time_slot_sales):
-        for time_slot_sale in time_slot_sales:
-            self.time_slot_sales.add(time_slot_sale)
+        for ts in time_slot_sales:
+            self.add_to_time_slot_sales(ts)
         self.save()
 
     def set_paid(self):
@@ -55,9 +64,6 @@ class Cart(models.Model):
 
     def clean(self):
         self._check_active()
-
-    def __str__(self):
-        return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
