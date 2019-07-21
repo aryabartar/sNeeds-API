@@ -8,12 +8,21 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
+class CartManager(models.Manager):
+    def new_cart_with_time_sales(self, time_sales, **kwargs):
+        obj = self.create(**kwargs)
+        obj.add(time_sales)
+        return obj
+
+
 class AbstractCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    objects = CartManager()
 
     class Meta:
         abstract = True

@@ -6,7 +6,6 @@ from django.db.models.signals import pre_save, post_save
 from .utils import unique_order_id_generator
 
 from sNeeds.apps.carts.models import Cart, SoldCart
-from sNeeds.apps.billing.models import BillingProfile
 
 User = get_user_model()
 

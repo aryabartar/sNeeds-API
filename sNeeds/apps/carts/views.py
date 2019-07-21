@@ -11,7 +11,6 @@ class CartListView(generics.ListCreateAPIView):
     queryset = models.Cart.objects.all()
     serializer_class = serializers.CartSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    filterset_fields = ('active',)
 
     def get_queryset(self):
         return models.Cart.objects.filter(user=self.request.user)
