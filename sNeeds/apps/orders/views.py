@@ -14,7 +14,7 @@ class OrderListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = models.Order.objects.filter(billing_profile__user=user).exclude(status="created", active=False)
+        qs = models.Order.objects.filter(cart__user=user)
         return qs
 
 

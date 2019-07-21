@@ -9,9 +9,10 @@ User = get_user_model()
 
 
 class CartManager(models.Manager):
+    @transaction.atomic
     def new_cart_with_time_sales(self, time_sales, **kwargs):
         obj = self.create(**kwargs)
-        obj.add(time_sales)
+        obj.time_slot_sales.add(*time_sales)
         return obj
 
 
