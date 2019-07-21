@@ -1,11 +1,14 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import pre_save, post_save
 
 from .utils import unique_order_id_generator
 
-from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.carts.models import Cart, SoldCart
 from sNeeds.apps.billing.models import BillingProfile
+
+User = get_user_model()
 
 ORDER_STATUS_CHOICES = (
     ('created', 'Created'),
@@ -15,27 +18,15 @@ ORDER_STATUS_CHOICES = (
 )
 
 
-class OrderQuerySet(models.QuerySet):
-    def delete_time_slots_from_other_carts(self, order):
-        cart = order.cart
-        time_slot_sales_qs = cart.time_slot_sales
-        for ts in time_slot_sales_qs.all():
-            carts_qs = Cart.objects.filter(time_slot_sales__exact=ts).exclude(id=cart.id)
-            for c in carts_qs:
-                c.time_slot_sales.remove(ts)
-
-
 class Order(models.Model):
-    billing_profile = models.ForeignKey(BillingProfile, null=True, on_delete=models.SET_NULL)
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
-    cart = models.ForeignKey(Cart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_order")
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
     total = models.IntegerField(default=0, null=True, blank=True)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    objects = OrderQuerySet.as_manager()
 
     def __str__(self):
         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
@@ -68,6 +59,13 @@ class Order(models.Model):
         self._check_both_active()
 
 
+# class SoldOrder(Order):
+#     cart = models.ForeignKey(SoldCart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
+#
+#     def __str__(self):
+#         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
+
+
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
     if not instance.order_id:
         instance.order_id = unique_order_id_generator(instance)
@@ -85,35 +83,7 @@ def post_save_order(sender, instance, created, *args, **kwargs):
     if created:
         instance.update_total()
 
-    if instance.active:
-        Order.objects.filter(
-            billing_profile__user=instance.billing_profile.user,
-            active=True
-        ).exclude(id=instance.id).update(active=False)
-
-
-def pre_save_pay_order(sender, instance, *args, **kwargs):
-    old = None
-    try:
-        old = Order.objects.get(pk=instance.pk)
-    except Order.DoesNotExist:
-        pass
-
-    if old:
-        # Just paid
-        if instance.status == "paid" and old.status == "created":
-            instance.status = "created"
-            instance.set_paid()
-            Order.objects.delete_time_slots_from_other_carts(instance)
-
-
-def pre_save_pay_validator(sender, instance, *args, **kwargs):
-    if instance.status != "created" and instance.active:
-        instance.active = False
-
 
 pre_save.connect(pre_save_create_order_id, sender=Order)
-pre_save.connect(pre_save_pay_order, sender=Order)
-pre_save.connect(pre_save_pay_validator, sender=Order)
 post_save.connect(post_save_order, sender=Order)
 post_save.connect(post_save_cart_total, sender=Cart)

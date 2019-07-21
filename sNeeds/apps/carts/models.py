@@ -8,62 +8,33 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
-class CartModelQuerySet(models.QuerySet):
-    def get_new_and_deactive_others(self, user, *args, **kwargs):
-        time_slot_sales = kwargs.get('time_slot_sales', None)
-        Cart.objects.filter(user=user, active=True).update(active=False)
-        new_cart = self.create(user=user)
-        new_cart.set_time_slot_sales(time_slot_sales)
-
-        return new_cart
-
-
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
-    active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    objects = CartModelQuerySet().as_manager()
 
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
-    def add_to_time_slot_sales(self, time_slot_sale):
-        if time_slot_sale.sold:
-            raise ValidationError("This timeslot is sold.")
-        self.time_slot_sales.add(time_slot_sale)
-        self.save()
-
     @transaction.atomic
     def set_time_slot_sales(self, time_slot_sales):
         for ts in time_slot_sales:
-            self.add_to_time_slot_sales(ts)
+            self.time_slot_sales.add(ts)
         self.save()
 
-    def set_paid(self):
-        if not self.active:
-            raise ValidationError("Cart is not active.")
 
-        user = self.user
-        time_slot_sales_qs = self.time_slot_sales.all()
-        for time_slot_sale in time_slot_sales_qs:
-            time_slot_sale.sell_to(user)
-        self.active = False
-        self.save()
+class SoldCart(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="sold_cart")
+    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
+    total = models.IntegerField(default=0, blank=True)
+    subtotal = models.IntegerField(default=0.00, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
-    def _check_active(self):
-        try:
-            if self.cart_order.status != "created" and self.active:
-                raise ValidationError("This cart is paid, can not set active.")
-        except:
-            pass
-
-    def clean(self):
-        self._check_active()
+    def __str__(self):
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
