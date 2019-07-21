@@ -22,6 +22,15 @@ class OrderSerializer(serializers.ModelSerializer):
             'total': {'read_only': True},
         }
 
+    def validate(self, attrs):
+        user = self.context.get('request', None).user
+
+        order_qs = Order.objects.filter(cart__user=user)
+        if order_qs.count() > 0:
+            raise ValidationError({"detail": "User has an active order."})
+
+        return attrs
+
     def create(self, validated_data):
         user = None
         request = self.context.get('request', None)

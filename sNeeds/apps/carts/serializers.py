@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from .models import Cart
 
@@ -14,6 +15,15 @@ class CartSerializer(serializers.ModelSerializer):
             'user': {'read_only': True},
             'total': {'read_only': True},
         }
+
+    def validate(self, attrs):
+        user = self.context.get('request', None).user
+
+        cart_qs = Cart.objects.filter(user=user)
+        if cart_qs.count() > 0:
+            raise ValidationError({"detail": "User has an active cart."})
+
+        return attrs
 
     def create(self, validated_data):
         user = None
