@@ -20,7 +20,6 @@ ORDER_STATUS_CHOICES = (
 
 class AbstractOrder(models.Model):
     order_id = models.CharField(max_length=12, blank=True, help_text="Leave this field blank.")
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_order")
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
     total = models.IntegerField(default=0, null=True, blank=True)
@@ -35,28 +34,6 @@ class AbstractOrder(models.Model):
         self.total = self.cart.total
         self.save()
         return self.total
-
-    def set_paid(self):
-        if not self.active:
-            raise ValidationError("Order is not active.")
-        if not self.status == "created":
-            raise ValidationError("Order status is not created.")
-
-        self.active = False
-        self.status = "paid"
-        self.cart.set_paid()
-
-    def _check_order_owners(self):
-        if self.cart.user != self.billing_profile.user:
-            raise ValidationError("Billing profile and user is not same.")
-
-    def _check_both_active(self):
-        if self.active and not self.cart.active:
-            raise ValidationError("Cart should be active too.")
-
-    def clean(self):
-        self._check_order_owners()
-        self._check_both_active()
 
     class Meta:
         abstract = True

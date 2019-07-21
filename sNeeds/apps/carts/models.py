@@ -50,11 +50,5 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
 
 
-def post_save_cart(sender, instance, created, *args, **kwargs):
-    qs = Cart.objects.filter(active=True).exclude(pk=instance.pk)
-    qs.update(active=False)
-
-
 m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.time_slot_sales.through)
 pre_save.connect(pre_save_cart_receiver, sender=Cart)
-post_save.connect(post_save_cart, sender=Cart)
