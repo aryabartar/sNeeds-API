@@ -1,6 +1,5 @@
 from django.contrib import admin
-from . import models
+from .models import TimeSlotSale, SoldTimeSlotSale
 
-
-# Register your models here.
-admin.site.register(models.TimeSlotSale)
+admin.site.register(TimeSlotSale)
+admin.site.register(SoldTimeSlotSale)

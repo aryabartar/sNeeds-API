@@ -36,9 +36,9 @@ class ConsultantProfile(models.Model):
     # profile_picture = models.ImageField(upload_to="consultant_profile_photo")
     aparat_link = models.URLField(null=True, blank=True)
     slug = models.SlugField(help_text="lowercase pls")
-    universities = models.ManyToManyField(University)
-    field_of_studies = models.ManyToManyField(FieldOfStudy)
-    countries = models.ManyToManyField(Country)
+    universities = models.ManyToManyField(University, blank=True)
+    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
+    countries = models.ManyToManyField(Country,blank=True)
 
     def __str__(self):
         return self.user.__str__()
