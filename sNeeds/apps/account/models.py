@@ -39,6 +39,7 @@ class ConsultantProfile(models.Model):
     universities = models.ManyToManyField(University, blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
     countries = models.ManyToManyField(Country,blank=True)
+    active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.__str__()

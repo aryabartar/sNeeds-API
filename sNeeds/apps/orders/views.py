@@ -3,23 +3,23 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
-from . import models
+from .models import Order, SoldOrder
 from .permissions import OrderOwnerPermission
 
 
 class OrderListView(generics.ListCreateAPIView):
-    queryset = models.Order.objects.all()
+    queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user = self.request.user
-        qs = models.Order.objects.filter(cart__user=user)
+        qs = Order.objects.filter(cart__user=user)
         return qs
 
 
 class OrderDetailView(generics.RetrieveDestroyAPIView):
-    queryset = models.Order.objects.all()
+    queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     lookup_field = 'id'
     permission_classes = (OrderOwnerPermission, permissions.IsAuthenticated)
@@ -31,9 +31,9 @@ class OrderDetailView(generics.RetrieveDestroyAPIView):
         return Response({"detail": "Can not delete not active or paid order."})
 
 
-# class OrderDetailAcceptView(APIView):
-#
-#     def post(self, request, *args, **kwargs):
-#         order_id = kwargs.get('id', None)
-#         order = models.Order.objects.get(id=order_id)
-#
+class OrderDetailAcceptView(APIView):
+    def post(self, request, *args, **kwargs):
+        order_id = kwargs.get('id', None)
+        order = Order.objects.get(id=order_id)
+        sold_order = SoldOrder.objects.get_new_sold(order)
+        return Response({"detail": "created"}, 201)

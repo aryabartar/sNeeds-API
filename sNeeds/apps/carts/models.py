@@ -15,12 +15,27 @@ class CartManager(models.Manager):
         obj.time_slot_sales.add(*time_sales)
         return obj
 
+    @transaction.atomic
+    def set_cart_paid(self, cart):
+        sold_cart_obj = SoldCart.objects.create(
+            user=cart.user,
+            subtotal=cart.subtotal,
+            total=cart.total,
+        )
+        sold_cart_obj.time_slot_sales.add(*cart.time_slot_sales.all())
+        sold_cart_obj.save()
+
+        cart.time_slot_sales.all().set_time_slot_sold(sold_to=cart.user)
+
+        cart.delete()
+
+        return sold_cart_obj
+
 
 class AbstractCart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
-    total = models.IntegerField(default=0, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
+    total = models.IntegerField(default=0, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     objects = CartManager()
@@ -39,11 +54,12 @@ class AbstractCart(models.Model):
 
 
 class Cart(AbstractCart):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     updated = models.DateTimeField(auto_now=True)
 
 
 class SoldCart(AbstractCart):
-    pass
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):

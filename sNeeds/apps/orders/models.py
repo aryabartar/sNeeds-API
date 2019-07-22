@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db import models
+from django.db import models, transaction
 from django.db.models.signals import pre_save, post_save
 
 from .utils import unique_order_id_generator
@@ -9,16 +9,35 @@ from sNeeds.apps.carts.models import Cart, SoldCart
 
 User = get_user_model()
 
+ORDER_STATUS_CHOICES = (
+    ('created', 'Created'),
+)
 SOLD_ORDER_STATUS_CHOICES = (
     ('paid', 'Paid'),
     ('canceled_not_refunded', 'Canceled but not refunded'),
     ('canceled_refunded', 'Canceled and refunded'),
 )
-ORDER_STATUS_CHOICES = (
-    ('paid', 'Paid'),
-    ('canceled_not_refunded', 'Canceled but not refunded'),
-    ('canceled_refunded', 'Canceled and refunded'),
-)
+
+
+class SoldOrderManager(models.Manager):
+    @transaction.atomic
+    def get_new_sold(self, order):
+        cart = order.cart
+        sold_order = self.create(
+            cart=None,
+            status="paid",
+            order_id=order.order_id,
+            total=order.total,
+        )
+
+        cart = Cart.objects.set_cart_paid(cart)
+
+        sold_order.cart = cart
+        sold_order.save()
+
+        order.delete()
+
+        return sold_order
 
 
 class AbstractOrder(models.Model):
@@ -30,11 +49,6 @@ class AbstractOrder(models.Model):
     def __str__(self):
         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
 
-    def update_total(self):
-        self.total = self.cart.total
-        self.save()
-        return self.total
-
     class Meta:
         abstract = True
 
@@ -43,13 +57,28 @@ class Order(AbstractOrder):
     cart = models.OneToOneField(Cart, null=True, on_delete=models.CASCADE, related_name="cart_order")
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
 
+    def update_total(self):
+        self.total = self.cart.total
+        self.save()
+        return self.total
+
+    def get_user(self):
+        return self.cart.user
+
 
 class SoldOrder(AbstractOrder):
     cart = models.OneToOneField(SoldCart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
     status = models.CharField(max_length=256, default='paid', choices=SOLD_ORDER_STATUS_CHOICES)
 
-    def __str__(self):
-        return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
+    objects = SoldOrderManager()
+
+    def update_total(self):
+        self.total = self.cart.total
+        self.save()
+        return self.total
+
+    def get_user(self):
+        return self.cart.user
 
 
 def pre_save_create_order_id(sender, instance, *args, **kwargs):
