@@ -24,12 +24,6 @@ class OrderDetailView(generics.RetrieveDestroyAPIView):
     lookup_field = 'id'
     permission_classes = (OrderOwnerPermission, permissions.IsAuthenticated)
 
-    def delete(self, request, *args, **kwargs):
-        obj = self.get_object()
-        if obj.active and obj.status == "created":
-            return self.destroy(request, *args, **kwargs)
-        return Response({"detail": "Can not delete not active or paid order."})
-
 
 class OrderDetailAcceptView(APIView):
     def post(self, request, *args, **kwargs):
