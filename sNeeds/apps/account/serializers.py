@@ -39,6 +39,8 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         lookup_field='slug',
         read_only=True
     )
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
 
     universities = UniversitySerializer(many=True, read_only=True)
     field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
@@ -46,4 +48,13 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ConsultantProfile
-        fields = ('url', 'id', 'user', 'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link')
+        fields = (
+            'id', 'url', 'profile_picture', 'first_name', 'last_name',
+            'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
+            'active')
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
