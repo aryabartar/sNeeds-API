@@ -5,12 +5,14 @@
 ```json
 [
     {
-        "url": "http://127.0.0.1:8000/account/countries/usa/",
+        "id": 1,
+        "url": "http://193.176.241.131:8000/account/countries/usa/",
         "name": "USA",
         "slug": "usa"
     },
     {
-        "url": "http://127.0.0.1:8000/account/countries/canada/",
+        "id": 2,
+        "url": "http://193.176.241.131:8000/account/countries/canada/",
         "name": "Canada",
         "slug": "canada"
     }
@@ -21,9 +23,10 @@
 > account/countries/canada/ [GET]
 ```json
 {
-    "url": "http://127.0.0.1:8000/account/countries/canada/",
-    "name": "Canada",
-    "slug": "canada"
+    "id": 1,
+    "url": "http://193.176.241.131:8000/account/countries/usa/",
+    "name": "USA",
+    "slug": "usa"
 }
 ```
 ---
@@ -31,6 +34,7 @@
 ```json
 [
     {
+        "id": 1,
         "url": "http://127.0.0.1:8000/account/universities/mit/",
         "name": "MIT",
         "country": "USA",
@@ -38,6 +42,7 @@
         "slug": "mit"
     },
     {
+        "id": 2,
         "url": "http://127.0.0.1:8000/account/universities/sharif/",
         "name": "Sharif",
         "country": "Iran",
@@ -51,6 +56,7 @@
 > account/universities/mit/ [GET] 
 ```json
 {
+    "id": 1,
     "url": "http://127.0.0.1:8000/account/universities/mit/",
     "name": "MIT",
     "country": "USA",
@@ -63,12 +69,14 @@
 ```json
 [
     {
+        "id": 1,
         "url": "http://127.0.0.1:8000/account/field-of-studies/f1/",
         "name": "f1",
         "description": "nothing",
         "slug": "f1"
     },
     {
+        "id": 2,
         "url": "http://127.0.0.1:8000/account/field-of-studies/f2/",
         "name": "f2",
         "description": "nothing",
@@ -81,6 +89,7 @@
 > account/field-of-studies/f1/ [GET]
 ```json
 {
+    "id": 1,
     "url": "http://127.0.0.1:8000/account/field-of-studies/f1/",
     "name": "f1",
     "description": "nothing",
