@@ -172,10 +172,12 @@ If consultant:
 > account/consultant-profiles/helloman/ [GET]
 ```json
 {
+    "id": 2,
     "url": "http://127.0.0.1:8000/account/consultant-profiles/helloman/",
-    "pk": 6,
-    "user": 14,
-    "universities": [
+    "profile_picture": "http://127.0.0.1:8000/media/abstract-abstract-art-abstract-background-1629236.jpg",
+    "first_name": "آریا",
+    "last_name": "خلیق",
+     "universities": [
         {
             "url": "http://127.0.0.1:8000/account/universities/mit/",
             "name": "MIT",
@@ -211,7 +213,8 @@ If consultant:
         }
     ],
     "slug": "helloman",
-    "aparat_link": null
+    "aparat_link": null,
+    "active": true
 }
 ```
 ---
