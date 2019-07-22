@@ -1,7 +1,7 @@
-import django as transaction
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db.models.signals import pre_delete
 
 from sNeeds.apps.account.models import ConsultantProfile
 

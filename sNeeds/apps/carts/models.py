@@ -1,6 +1,6 @@
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
-from django.db.models.signals import pre_save, post_save, m2m_changed
+from django.db.models.signals import pre_save, pre_delete, m2m_changed
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale
@@ -8,7 +8,13 @@ from sNeeds.apps.store.models import TimeSlotSale
 User = get_user_model()
 
 
-class CartManager(models.Manager):
+class CartManager(models.QuerySet):
+    def remove_time_slot_sale(self, time_slot):
+        qs = self._chain()
+        for obj in qs:
+            obj.time_slot_sales.remove(time_slot)
+        return qs
+
     @transaction.atomic
     def new_cart_with_time_sales(self, time_sales, **kwargs):
         obj = self.create(**kwargs)
@@ -38,7 +44,7 @@ class AbstractCart(models.Model):
     total = models.IntegerField(default=0, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
-    objects = CartManager()
+    objects = CartManager.as_manager()
 
     class Meta:
         abstract = True
@@ -76,5 +82,14 @@ def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
 
 
+def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):
+    """
+    When TimeSlotSale obj deletes, no signal will not trigger.
+    This signal fix this problem.
+    """
+    Cart.objects.filter(time_slot_sales=instance).remove_time_slot_sale(instance)
+
+
+pre_delete.connect(pre_delete_time_slot_sale_receiver, sender=TimeSlotSale)
 m2m_changed.connect(m2m_changed_cart_receiver, sender=Cart.time_slot_sales.through)
 pre_save.connect(pre_save_cart_receiver, sender=Cart)
