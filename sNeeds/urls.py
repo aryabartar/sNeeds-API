@@ -15,16 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls')),
-    path('docs/', include('sNeeds.apps.docs.urls')),
+                  path('admin/', admin.site.urls),
+                  path('api-auth/', include('rest_framework.urls')),
+                  path('docs/', include('sNeeds.apps.docs.urls')),
 
-    path('auth/', include('sNeeds.apps.customAuth.urls')),
-    path('account/', include('sNeeds.apps.account.urls')),
-    path('store/', include('sNeeds.apps.store.urls')),
-    path('cart/', include('sNeeds.apps.carts.urls')),
-    path('order/', include('sNeeds.apps.orders.urls')),
-    path('payment/', include('sNeeds.apps.payments.urls')),
-]
+                  path('auth/', include('sNeeds.apps.customAuth.urls')),
+                  path('account/', include('sNeeds.apps.account.urls')),
+                  path('store/', include('sNeeds.apps.store.urls')),
+                  path('cart/', include('sNeeds.apps.carts.urls')),
+                  path('order/', include('sNeeds.apps.orders.urls')),
+                  path('payment/', include('sNeeds.apps.payments.urls')),
+              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+              static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
