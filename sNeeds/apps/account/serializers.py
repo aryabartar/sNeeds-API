@@ -7,22 +7,12 @@ from . import models
 User = get_user_model()
 
 
-def validate_user_password(password):
-    try:
-        # validate the password and catch the exception
-        validators.validate_password(password)
-
-    # the exception raised here is different than serializers.ValidationError
-    except exceptions.ValidationError as e:
-        raise serializers.ValidationError(e.messages)
-
-
 class CountrySerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="account:country-detail", lookup_field='slug', read_only=True)
 
     class Meta:
         model = models.Country
-        fields = ('url', 'name', 'slug')
+        fields = ('id', 'url', 'name', 'slug')
 
 
 class UniversitySerializer(serializers.ModelSerializer):
@@ -31,7 +21,7 @@ class UniversitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.University
-        fields = ('url', 'name', 'country', 'description', 'slug')
+        fields = ('id', 'url', 'name', 'country', 'description', 'slug')
 
 
 class FieldOfStudySerializer(serializers.ModelSerializer):
@@ -40,7 +30,7 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.FieldOfStudy
-        fields = ('url', 'name', 'description', 'slug')
+        fields = ('id', 'url', 'name', 'description', 'slug')
 
 
 class ConsultantProfileSerializer(serializers.ModelSerializer):
@@ -56,6 +46,4 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.ConsultantProfile
-        fields = ('url', 'pk', 'user', 'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link')
-
-
+        fields = ('url', 'id', 'user', 'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link')
