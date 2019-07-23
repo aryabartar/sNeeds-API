@@ -21,7 +21,7 @@ SOLD_ORDER_STATUS_CHOICES = (
 
 class SoldOrderManager(models.Manager):
     @transaction.atomic
-    def get_new_sold(self, order):
+    def sell_order(self, order):
         cart = order.cart
         sold_order = self.create(
             cart=None,

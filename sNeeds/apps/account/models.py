@@ -44,6 +44,7 @@ class ConsultantProfile(models.Model):
         on_delete=models.SET_NULL,
         related_name="consultant_profile"
     )
+    bio = models.TextField(null=True, blank=True)
     profile_picture = models.ImageField(get_upload_path("consultant_profile_pictures"))
     aparat_link = models.URLField(null=True, blank=True)
     slug = models.SlugField(help_text="lowercase pls")

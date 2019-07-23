@@ -12,7 +12,7 @@ class CountrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Country
-        fields = ('id', 'url', 'name', 'slug')
+        fields = ('id', 'url', 'name', 'slug', 'picture')
 
 
 class UniversitySerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class UniversitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.University
-        fields = ('id', 'url', 'name', 'country', 'description', 'slug')
+        fields = ('id', 'url', 'name', 'country', 'description', 'slug', 'picture')
 
 
 class FieldOfStudySerializer(serializers.ModelSerializer):
@@ -30,7 +30,7 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.FieldOfStudy
-        fields = ('id', 'url', 'name', 'description', 'slug')
+        fields = ('id', 'url', 'name', 'description', 'slug', 'picture')
 
 
 class ConsultantProfileSerializer(serializers.ModelSerializer):
