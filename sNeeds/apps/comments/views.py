@@ -13,3 +13,10 @@ class CommentListView(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
     filterset_class = CommentFilterSet
+
+
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Comment.objects.all().order_by('-created')
+    serializer_class = CommentSerializer
+    permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'id'

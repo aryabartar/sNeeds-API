@@ -6,11 +6,11 @@ from .models import Comment, AdminComment
 
 class CommentSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField(read_only=True)
-    # admin_comment = serializers.HyperlinkedRelatedField()
+    url = serializers.HyperlinkedIdentityField(view_name="comments:comment-detail", lookup_field='id', read_only=True)
 
     class Meta:
         model = Comment
-        fields = ['id', 'user', 'first_name', 'consultant', 'message', 'created', 'updated', ]
+        fields = ['id', 'url', 'user', 'first_name', 'consultant', 'message', 'created', 'updated', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
