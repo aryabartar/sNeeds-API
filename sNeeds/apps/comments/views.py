@@ -10,4 +10,4 @@ from .permissions import CommentOwnerPermission
 class CommentListView(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [CommentSerializer, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]

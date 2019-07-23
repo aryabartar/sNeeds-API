@@ -29,4 +29,5 @@ urlpatterns = [
                   path('cart/', include('sNeeds.apps.carts.urls')),
                   path('order/', include('sNeeds.apps.orders.urls')),
                   path('payment/', include('sNeeds.apps.payments.urls')),
+                  path('comments/', include('sNeeds.apps.comments.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
