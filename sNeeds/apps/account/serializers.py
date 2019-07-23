@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from . import models
+from sNeeds.apps.comments.models import SoldTimeSlotRate
 
 User = get_user_model()
 
@@ -41,6 +42,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     )
     first_name = serializers.SerializerMethodField(read_only=True)
     last_name = serializers.SerializerMethodField(read_only=True)
+    rate = serializers.SerializerMethodField(read_only=True)
 
     universities = UniversitySerializer(many=True, read_only=True)
     field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
@@ -51,7 +53,20 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
-            'active')
+            'rate', 'active')
+
+    def get_rate(self, obj):
+        qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant=obj)
+
+        if not qs.exists():
+            return None
+
+        sum = 0
+        for obj in qs:
+            sum += obj.rate
+        avg = sum / qs.count()
+
+        return avg
 
     def get_first_name(self, obj):
         return obj.user.first_name
