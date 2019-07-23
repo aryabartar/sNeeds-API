@@ -22,7 +22,4 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
 
 
-class AdminCommentListView(generics.ListAPIView):
-    queryset = AdminComment.objects.all().order_by('-created')
-    serializer_class = AdminCommentSerializer
-    filterset_class = AdminCommentFilterSet
+

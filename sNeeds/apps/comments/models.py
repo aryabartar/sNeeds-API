@@ -1,7 +1,9 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
 from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 User = get_user_model()
 
@@ -25,3 +27,11 @@ class AdminComment(models.Model):
 
     def __str__(self):
         return "Comment {} Reply".format(self.comment)
+
+
+class SoldTimeSlotRate(models.Model):
+    sold_time_slot = models.OneToOneField(SoldTimeSlotSale, on_delete=models.CASCADE)
+    rate = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(5)],
+    )
+
