@@ -9,7 +9,7 @@ from .filtersets import CommentFilterSet
 
 
 class CommentListView(generics.ListCreateAPIView):
-    queryset = Comment.objects.all()
+    queryset = Comment.objects.all().order_by('-created')
     serializer_class = CommentSerializer
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
     filterset_class = CommentFilterSet
