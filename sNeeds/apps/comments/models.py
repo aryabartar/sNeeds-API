@@ -15,3 +15,13 @@ class Comment(models.Model):
 
     def __str__(self):
         return "User : {} | Consultant : {}".format(str(self.user), str(self.consultant))
+
+
+class AdminComment(models.Model):
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    message = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Comment {} Reply".format(self.comment)

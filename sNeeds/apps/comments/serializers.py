@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Comment
+from .models import Comment, AdminComment
 
 
 class CommentSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField(read_only=True)
+    # admin_comment = serializers.HyperlinkedRelatedField()
 
     class Meta:
         model = Comment
@@ -43,3 +44,9 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
         return obj
+
+
+class AdminCommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AdminComment
+        fields = ['id', 'comment', 'message', 'created', 'updated', ]
