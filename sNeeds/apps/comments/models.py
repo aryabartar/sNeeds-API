@@ -18,7 +18,7 @@ class Comment(models.Model):
 
 
 class AdminComment(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    comment = models.OneToOneField(Comment, on_delete=models.CASCADE, related_name="admin_reply")
     message = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

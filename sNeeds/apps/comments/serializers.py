@@ -5,18 +5,31 @@ from .models import Comment, AdminComment
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    first_name = serializers.SerializerMethodField(read_only=True)
     url = serializers.HyperlinkedIdentityField(view_name="comments:comment-detail", lookup_field='id', read_only=True)
+    first_name = serializers.SerializerMethodField(read_only=True)
+    admin_reply = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Comment
-        fields = ['id', 'url', 'user', 'first_name', 'consultant', 'message', 'created', 'updated', ]
+        fields = ['id', 'url', 'user', 'admin_reply', 'first_name', 'consultant', 'message', 'created', 'updated', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
             'created': {'read_only': True},
             'updated': {'read_only': True},
         }
+
+    def get_admin_reply(self, obj):
+        admin_reply = None
+        try:
+            admin_reply = AdminComment.objects.get(comment=obj)
+        except:
+            pass
+
+        if not admin_reply:
+            return None
+
+        return AdminCommentSerializer(admin_reply).data
 
     def get_first_name(self, obj):
         return obj.user.get_short_name()
