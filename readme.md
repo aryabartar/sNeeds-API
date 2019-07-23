@@ -163,13 +163,19 @@ If consultant:
             }
         ],
         "slug": "helloman",
-        "aparat_link": null
+        "aparat_link": null,
+        "rate": 3.5,
+        "active": true
     }
 ]
 ```
 ---
 > account/consultant-profiles/{slug}/ [GET]  
 > account/consultant-profiles/helloman/ [GET]
+
+
+NOTE: rate can be null or float between 0 and 5
+
 ```json
 {
     "id": 2,
@@ -214,6 +220,7 @@ If consultant:
     ],
     "slug": "helloman",
     "aparat_link": null,
+    "rate": 3.5,
     "active": true
 }
 ```
