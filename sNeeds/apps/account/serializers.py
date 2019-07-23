@@ -49,7 +49,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ConsultantProfile
         fields = (
-            'id', 'url', 'profile_picture', 'first_name', 'last_name',
+            'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
             'active')
 
