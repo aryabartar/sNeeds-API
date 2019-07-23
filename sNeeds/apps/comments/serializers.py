@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Comment, AdminComment
+from .models import Comment, AdminComment, SoldTimeSlotRate
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -63,3 +63,9 @@ class AdminCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminComment
         fields = ['id', 'comment', 'message', 'created', 'updated', ]
+
+
+class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SoldTimeSlotRate
+        fields = ['sold_time_slot', 'rate', ]
