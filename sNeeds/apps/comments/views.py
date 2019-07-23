@@ -2,10 +2,10 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import CommentSerializer, AdminCommentSerializer
-from .models import Comment, AdminComment
-from .permissions import CommentOwnerPermission
-from .filtersets import CommentFilterSet, AdminCommentFilterSet
+from .models import Comment, SoldTimeSlotRate
+from .serializers import CommentSerializer, SoldTimeSlotRateSerializer
+from .permissions import CommentOwnerPermission, SoldTimeSlotRateOwnerPermission
+from .filtersets import CommentFilterSet
 
 
 class CommentListView(generics.ListCreateAPIView):
@@ -22,4 +22,7 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
 
 
-
+class SoldTimeSlotRateListView(generics.ListCreateAPIView):
+    queryset = SoldTimeSlotRate.objects.all()
+    serializer_class = SoldTimeSlotRateSerializer
+    permission_classes = [SoldTimeSlotRateOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
