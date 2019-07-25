@@ -47,6 +47,7 @@ class ConsultantProfile(models.Model):
     bio = models.TextField(null=True, blank=True)
     profile_picture = models.ImageField(get_upload_path("consultant_profile_pictures"))
     aparat_link = models.URLField(null=True, blank=True)
+    resume = models.FileField()
     slug = models.SlugField(help_text="lowercase pls")
     universities = models.ManyToManyField(University, blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)

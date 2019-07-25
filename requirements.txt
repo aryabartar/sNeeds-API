@@ -1,6 +1,7 @@
 appdirs==1.4.3
 attrs==19.1.0
 autopep8==1.4.4
+bitcoin==1.1.42
 cached-property==1.5.1
 certifi==2019.6.16
 chardet==3.0.4
@@ -13,6 +14,7 @@ django-filter==2.1.0
 djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
 drf-yasg==1.16.0
+future==0.17.1
 idna==2.8
 inflection==0.3.1
 isodate==0.6.0
@@ -20,15 +22,20 @@ itypes==1.1.0
 Jinja2==2.10.1
 lxml==4.3.4
 MarkupSafe==1.1.1
+Pillow==6.1.0
 psycopg2==2.8.3
 pycodestyle==2.5.0
+pycoin==0.90.20190630
 PyJWT==1.7.1
+python-http-client==3.1.0
 pytz==2019.1
 requests==2.22.0
 requests-toolbelt==0.9.1
 ruamel.yaml==0.15.99
+sendgrid==6.0.5
 six==1.12.0
 sqlparse==0.3.0
+transactions==0.2.0
 uritemplate==3.0.0
 urllib3==1.25.3
 zeep==3.4.0
