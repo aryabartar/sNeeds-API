@@ -1,10 +1,10 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Order
+from .models import Order, SoldOrder
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.carts.serializers import CartSerializer
+from sNeeds.apps.carts.serializers import CartSerializer, SoldCartSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -44,3 +44,11 @@ class OrderSerializer(serializers.ModelSerializer):
         order_obj = Order.objects.create(cart=cart)
 
         return order_obj
+
+
+class SoldOrderSerializer(serializers.ModelSerializer):
+    cart = SoldCartSerializer(read_only=True)
+
+    class Meta:
+        model = SoldOrder
+        fields = ['id', 'order_id', 'cart', 'status', 'total', 'created', 'updated', ]

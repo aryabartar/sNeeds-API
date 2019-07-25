@@ -23,7 +23,7 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (CartOwnerPermission, permissions.IsAuthenticated)
 
 
-class SoldCartListView(generics.ListCreateAPIView):
+class SoldCartListView(generics.ListAPIView):
     queryset = SoldCart.objects.all()
     serializer_class = serializers.SoldCartSerializer
     permission_classes = (permissions.IsAuthenticated,)
@@ -32,7 +32,7 @@ class SoldCartListView(generics.ListCreateAPIView):
         return SoldCart.objects.filter(user=self.request.user)
 
 
-class SoldCartDetailView(generics.RetrieveUpdateDestroyAPIView):
+class SoldCartDetailView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = SoldCart.objects.all()
     serializer_class = serializers.SoldCartSerializer

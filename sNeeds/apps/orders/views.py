@@ -35,3 +35,12 @@ class OrderDetailAcceptView(APIView):
 
         SoldOrder.objects.sell_order(order)
         return Response({"detail": "Sold order created"}, 201)
+
+
+class SoldOrderListView(generics.ListCreateAPIView):
+    queryset = SoldOrder.objects.all()
+    serializer_class = serializers.SoldOrderSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        return SoldOrder.objects.filter(cart__user=self.request.user)
