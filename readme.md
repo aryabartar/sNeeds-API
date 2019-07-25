@@ -532,3 +532,65 @@ body:
     "rate": 4.5
 }
 ```
+
+
+## Store
+
+> store/time-slot-sales/ [GET]
+
+```json
+[
+    {
+        "id": 11,
+        "url": "http://127.0.0.1:8000/store/time-slot-sales/11/",
+        "consultant": 2,
+        "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/11/",
+        "consultant_slug": "11",
+        "start_time": "2019-07-25T08:14:13Z",
+        "end_time": "2019-07-25T08:14:21Z",
+        "price": 11
+    },
+    {
+        "id": 12,
+        "url": "http://127.0.0.1:8000/store/time-slot-sales/12/",
+        "consultant": 2,
+        "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/11/",
+        "consultant_slug": "11",
+        "start_time": "2019-07-25T08:14:13Z",
+        "end_time": "2019-07-25T09:14:13Z",
+        "price": 10
+    }
+]
+```
+
+
+> store/time-slot-sales/ [POST]
+
+NOTE: User should be consultant.
+
+body:
+```json
+{
+    "start_time": "2019-07-25T08:14:13Z",
+    "end_time": "2019-07-25T09:14:13Z",
+    "price": 10
+}
+```
+
+> store/time-slot-sales/{ID}/ [GET]
+> store/time-slot-sales/13/ [GET]
+
+```json
+{
+    "id": 13,
+    "url": "http://127.0.0.1:8000/store/time-slot-sales/13/",
+    "consultant": 3,
+    "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/12/",
+    "consultant_slug": "12",
+    "start_time": "2019-07-25T08:14:13Z",
+    "end_time": "2019-07-25T09:14:13Z",
+    "price": 10
+}
+```
+
+

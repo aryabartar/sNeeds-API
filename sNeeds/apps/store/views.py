@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 from . import filtersets
-from .permissions import ConsultantPermission
+from .permissions import ConsultantPermission, TimeSlotSaleOwnerPermission
 
 
 class TimeSlotSailList(generics.ListCreateAPIView):
@@ -19,7 +19,8 @@ class TimeSlotSailList(generics.ListCreateAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class TimeSlotSaleDetail(generics.RetrieveAPIView):
+class TimeSlotSaleDetail(generics.RetrieveDestroyAPIView):
+    lookup_field = "id"
     queryset = models.TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
-    lookup_field = "id"
+    permission_classes = [TimeSlotSaleOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
