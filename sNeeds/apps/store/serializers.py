@@ -48,6 +48,12 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 
 
 class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="store:sold-time-slot-sale-detail",
+        lookup_field='id',
+        read_only=True
+    )
+
     class Meta:
         model = SoldTimeSlotSale
-        fields = ['id', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', ]
+        fields = ['id', 'url', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', ]
