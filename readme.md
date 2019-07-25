@@ -598,3 +598,150 @@ body:
 
 NOTE: Consultant should be time slot sale creator.
 
+## Cart
+
+> cart/carts/ [GET]  
+
+NOTE: This endpoint only returns this user carts(not for others).  
+NOTE: Currently this endpoint returns at most one cart because each user at most has only one active cart.
+
+```json
+
+[
+    {
+        "id": 20,
+        "url": "http://127.0.0.1:8000/cart/carts/20/",
+        "user": 1,
+        "time_slot_sales": [
+            11,
+            12
+        ],
+        "total": 21
+    }
+]
+```
+
+> cart/carts/ [POST]  
+
+body:
+```json
+{
+    "time_slot_sales": [10, 11]
+}
+```
+
+If user already has an active cart:
+```
+HTTP 400 Bad Request
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "detail": "User has an active cart."
+}
+```
+
+> cart/carts/{ID}/ [GET]  
+> cart/carts/20/ [GET]
+
+```json
+{
+    "id": 20,
+    "url": "http://127.0.0.1:8000/cart/carts/20/",
+    "user": 1,
+    "time_slot_sales": [
+        11,
+        12
+    ],
+    "total": 21
+}
+```
+
+> cart/carts/{ID}/ [GET]  
+> cart/carts/20/ [GET] 
+ 
+NOTE: All time slots in time_slot_sales must be included.
+
+body:
+```json
+{
+    "time_slot_sales": [
+        14,
+        12
+    ]
+}
+```
+
+> cart/carts/{ID}/ [DELETE]  
+> cart/carts/20/ [DELETE]
+
+
+## Order
+
+> order/orders/ [GET]
+
+NOTE: This endpoint returns at most one order.
+
+```json
+{
+    "id": 28,
+    "url": "http://127.0.0.1:8000/order/orders/28/",
+    "order_id": "i3ljwbzwza",
+    "cart": {
+        "id": 21,
+        "url": "http://127.0.0.1:8000/cart/carts/21/",
+        "user": 1,
+        "time_slot_sales": [
+            11,
+            12
+        ],
+        "total": 21
+    },
+    "status": "created",
+    "total": 21
+}
+```
+
+
+
+> order/orders/ [POST]  
+
+To create order for cart only send a POST request with empty body.  
+
+If user has no active cart:
+```json
+{
+    "detail": "User has no cart."
+}
+```
+
+> order/orders/{ID}/ [GET]
+> order/orders/30/ [GET]
+
+```json
+
+{
+    "id": 30,
+    "url": "http://127.0.0.1:8000/order/orders/30/",
+    "order_id": "smga5us0pi",
+    "cart": {
+        "id": 23,
+        "url": "http://127.0.0.1:8000/cart/carts/23/",
+        "user": 1,
+        "time_slot_sales": [
+            11,
+            14
+        ],
+        "total": 31
+    },
+    "status": "created",
+    "total": 31
+}
+```
+
+
+> order/orders/{ID}/ [DELETE]
+> order/orders/30/ [DELETE]
+
+

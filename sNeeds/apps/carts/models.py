@@ -69,6 +69,7 @@ class SoldCart(AbstractCart):
     sold_time_slot_sales = models.ManyToManyField(SoldTimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 
+
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
         time_slot_sales = instance.time_slot_sales.all()
