@@ -593,4 +593,8 @@ body:
 }
 ```
 
+> store/time-slot-sales/{ID}/ [DELETE]
+> store/time-slot-sales/13/ [DELETE]
+
+NOTE: Consultant should be time slot sale creator.
 
