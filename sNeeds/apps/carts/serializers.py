@@ -2,19 +2,28 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import Cart, SoldCart
+from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 
 
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
+    time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'time_slot_sales', 'total', ]
+        fields = ['id', 'url', 'user', 'time_slot_sales', 'time_slot_sales_detail', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
             'total': {'read_only': True},
         }
+
+    def get_time_slot_sales_detail(self, obj):
+        return TimeSlotSaleSerializer(
+            obj.time_slot_sales,
+            context=self.context,
+            many=True
+        ).data
 
     def create(self, validated_data):
         user = None
@@ -33,7 +42,18 @@ class CartSerializer(serializers.ModelSerializer):
 
 class SoldCartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:sold-cart-detail", lookup_field='id', read_only=True)
+    sold_time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = SoldCart
-        fields = "__all__"
+        fields = [
+            'id', 'url', 'user', 'sold_time_slot_sales', 'sold_time_slot_sales_detail',
+            'total', 'subtotal', 'created', 'updated',
+        ]
+
+    def get_sold_time_slot_sales_detail(self, obj):
+        return SoldTimeSlotSaleSerializer(
+            obj.sold_time_slot_sales.all(),
+            context=self.context,
+            many=True
+        ).data
