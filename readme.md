@@ -598,6 +598,50 @@ body:
 
 NOTE: Consultant should be time slot sale creator.
 
+
+> store/sold-time-slot-sales/ [GET]  
+
+NOTE: This EP only returns this user lost time slots.
+
+```json
+[
+    {
+        "id": 20,
+        "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/20/",
+        "consultant": 2,
+        "start_time": "2019-07-25T08:14:13Z",
+        "end_time": "2019-07-25T08:14:21Z",
+        "price": 11,
+        "sold_to": 1
+    },
+    {
+        "id": 21,
+        "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/21/",
+        "consultant": 3,
+        "start_time": "2019-07-25T08:25:28Z",
+        "end_time": "2019-07-25T08:25:29Z",
+        "price": 20,
+        "sold_to": 1
+    }
+]
+```
+
+> store/sold-time-slot-sales/{ID}/ [GET]  
+> store/sold-time-slot-sales/20/ [GET]  
+
+```json
+{
+    "id": 20,
+    "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/20/",
+    "consultant": 2,
+    "start_time": "2019-07-25T08:14:13Z",
+    "end_time": "2019-07-25T08:14:21Z",
+    "price": 11,
+    "sold_to": 1
+}
+```
+
+
 ## Cart
 
 > cart/carts/ [GET]  

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Cart
+from .models import Cart, SoldCart
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -29,3 +29,11 @@ class CartSerializer(serializers.ModelSerializer):
         time_slot_sales = validated_data.get('time_slot_sales', [])
         cart_obj = Cart.objects.new_cart_with_time_sales(time_slot_sales, user=user)
         return cart_obj
+
+
+class SoldCartSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="cart:sold-cart-detail", lookup_field='id', read_only=True)
+
+    class Meta:
+        model = SoldCart
+        fields = "__all__"

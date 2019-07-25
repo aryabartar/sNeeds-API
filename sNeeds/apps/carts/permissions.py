@@ -9,3 +9,12 @@ class CartOwnerPermission(permissions.BasePermission):
             return True
         return False
 
+
+class SoldCartOwnerPermission(permissions.BasePermission):
+    message = "This user is not sold cart owner."
+
+    def has_object_permission(self, request, view, obj):
+        if request.user == obj.user:
+            return True
+        return False
+
