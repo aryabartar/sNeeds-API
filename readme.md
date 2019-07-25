@@ -679,7 +679,7 @@ body:
 
 ## Order
 
-> order/orders/ [GET]
+> order/orders/ [GET]  
 
 NOTE: This endpoint returns at most one order.
 
@@ -705,7 +705,7 @@ NOTE: This endpoint returns at most one order.
 
 
 
-> order/orders/ [POST]  
+> order/orders/ [POST]    
 
 To create order for cart only send a POST request with empty body.  
 
@@ -740,8 +740,16 @@ If user has no active cart:
 }
 ```
 
+> order/orders/{ID}/accept/ [POST]  
+> order/orders/30/accept/ [POST]  
 
-> order/orders/{ID}/ [DELETE]
-> order/orders/30/ [DELETE]
+NOTE: This endpoint is temporary.  
+NOTE: This is for testing.  
+This endpoint sells order. 
 
-
+If cart is empty:  
+```json
+{
+    "detail": "Cart is empty"
+}
+```

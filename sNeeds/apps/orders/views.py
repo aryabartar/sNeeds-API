@@ -29,5 +29,9 @@ class OrderDetailAcceptView(APIView):
     def post(self, request, *args, **kwargs):
         order_id = kwargs.get('id', None)
         order = Order.objects.get(id=order_id)
-        sold_order = SoldOrder.objects.sell_order(order)
-        return Response({"detail": "created"}, 201)
+
+        if order.total <= 0:
+            return Response({"detail": "Cart is empty"}, 400)
+
+        SoldOrder.objects.sell_order(order)
+        return Response({"detail": "Sold order created"}, 201)

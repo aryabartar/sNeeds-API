@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import TimeSlotSale
+from .models import TimeSlotSale, SoldTimeSlotSale
 
 from sNeeds.apps.account.models import ConsultantProfile
 
@@ -45,3 +45,9 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
         )
 
         return obj
+
+
+class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SoldTimeSlotSale
+        fields = ['id', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', ]

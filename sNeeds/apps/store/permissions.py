@@ -37,3 +37,18 @@ class TimeSlotSaleOwnerPermission(permissions.BasePermission):
             return True
 
         return False
+
+
+class SoldTimeSlotSaleOwnerPermission (permissions.BasePermission):
+    message = "This user is not sold time slot sale owner."
+
+    def has_object_permission(self, request, view, obj):
+        print("\n\n\n\n\n\n")
+        print("HEEEEELLO")
+        print("\n\n\n\n\n\n")
+        user = request.user
+
+        if obj.sold_to == user:
+            return True
+
+        return False
