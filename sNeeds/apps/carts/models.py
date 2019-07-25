@@ -28,10 +28,11 @@ class CartManager(models.QuerySet):
             subtotal=cart.subtotal,
             total=cart.total,
         )
-        sold_cart_obj.time_slot_sales.add(*cart.time_slot_sales.all())
-        sold_cart_obj.save()
 
-        cart.time_slot_sales.all().set_time_slot_sold(sold_to=cart.user)
+        qs = cart.time_slot_sales.all().set_time_slot_sold(sold_to=cart.user)
+
+        sold_cart_obj.sold_time_slot_sales.add(*qs)
+        sold_cart_obj.save()
 
         cart.delete()
 
@@ -48,6 +49,12 @@ class AbstractCart(models.Model):
     class Meta:
         abstract = True
 
+
+class Cart(AbstractCart):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
+    updated = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
@@ -58,16 +65,13 @@ class AbstractCart(models.Model):
         self.save()
 
 
-class Cart(AbstractCart):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
-    updated = models.DateTimeField(auto_now=True)
-
-
 class SoldCart(AbstractCart):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     sold_time_slot_sales = models.ManyToManyField(SoldTimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):

@@ -12,15 +12,21 @@ class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
+        sold_tome_slot_sales_list = []
         for obj in qs:
-            SoldTimeSlotSale.objects.create(
-                consultant=obj.consultant,
-                start_time=obj.start_time,
-                end_time=obj.end_time,
-                price=obj.price,
-                sold_to=sold_to,
+            sold_tome_slot_sales_list.append(
+                SoldTimeSlotSale.objects.create(
+                    consultant=obj.consultant,
+                    start_time=obj.start_time,
+                    end_time=obj.end_time,
+                    price=obj.price,
+                    sold_to=sold_to,
+                )
             )
+
         qs.delete()
+
+        return sold_tome_slot_sales_list
 
 
 class AbstractTimeSlotSale(models.Model):
