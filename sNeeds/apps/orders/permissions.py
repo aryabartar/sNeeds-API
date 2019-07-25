@@ -8,3 +8,12 @@ class OrderOwnerPermission(permissions.BasePermission):
         if request.user == obj.get_user():
             return True
         return False
+
+
+class SoldOrderOwnerPermission(permissions.BasePermission):
+    message = "This user is not sold order owner."
+
+    def has_object_permission(self, request, view, obj):
+        if request.user == obj.get_user():
+            return True
+        return False

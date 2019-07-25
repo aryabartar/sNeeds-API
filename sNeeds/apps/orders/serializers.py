@@ -47,8 +47,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class SoldOrderSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="order:sold-order-detail", lookup_field='id', read_only=True)
     cart = SoldCartSerializer(read_only=True)
 
     class Meta:
         model = SoldOrder
-        fields = ['id', 'order_id', 'cart', 'status', 'total', 'created', 'updated', ]
+        fields = ['id', 'url', 'order_id', 'cart', 'status', 'total', 'created', 'updated', ]

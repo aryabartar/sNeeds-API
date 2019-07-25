@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import Order, SoldOrder
-from .permissions import OrderOwnerPermission
+from .permissions import OrderOwnerPermission, SoldOrderOwnerPermission
 
 
 class OrderListView(generics.ListCreateAPIView):
@@ -44,3 +44,10 @@ class SoldOrderListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         return SoldOrder.objects.filter(cart__user=self.request.user)
+
+
+class SoldOrderDetailView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = SoldOrder.objects.all()
+    serializer_class = serializers.SoldOrderSerializer
+    permission_classes = (SoldOrderOwnerPermission, permissions.IsAuthenticated,)
