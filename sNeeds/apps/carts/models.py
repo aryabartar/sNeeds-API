@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.db.models.signals import pre_save, pre_delete, m2m_changed
 from django.core.exceptions import ValidationError
 
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 
 User = get_user_model()
 
@@ -39,7 +39,6 @@ class CartManager(models.QuerySet):
 
 
 class AbstractCart(models.Model):
-    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     subtotal = models.IntegerField(default=0.00, blank=True)
     total = models.IntegerField(default=0, blank=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -61,12 +60,14 @@ class AbstractCart(models.Model):
 
 class Cart(AbstractCart):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 
 
 class SoldCart(AbstractCart):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-
+    sold_time_slot_sales = models.ManyToManyField(SoldTimeSlotSale, blank=True)
+    updated = models.DateTimeField(auto_now=True)
 
 def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
