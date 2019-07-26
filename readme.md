@@ -164,6 +164,7 @@ If consultant:
         ],
         "slug": "helloman",
         "aparat_link": null,
+        "resume": "http://127.0.0.1:8000/files/2L-125_stereo-2822k-1b_04.dsf",
         "rate": 3.5,
         "active": true
     }
@@ -220,6 +221,7 @@ NOTE: rate can be null or float between 0 and 5
     ],
     "slug": "helloman",
     "aparat_link": null,
+    "resume": "http://127.0.0.1:8000/files/2L-125_stereo-2822k-1b_04.dsf",
     "rate": 3.5,
     "active": true
 }
