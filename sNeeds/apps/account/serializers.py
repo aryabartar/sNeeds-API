@@ -53,7 +53,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
-            'rate', 'active')
+             'resume','rate', 'active')
 
     def get_rate(self, obj):
         qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant=obj)

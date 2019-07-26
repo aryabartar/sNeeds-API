@@ -2,13 +2,17 @@ from django.db import models, connection
 from django.conf import settings
 
 
-def get_upload_path(sub_dir):
-    return "account/" + sub_dir
+def get_image_upload_path(sub_dir):
+    return "media/account/" + sub_dir
+
+
+def get_file_upload_path(sub_dir):
+    return "file/account/" + sub_dir
 
 
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
-    picture = models.ImageField(upload_to=get_upload_path("country_pictures"))
+    picture = models.ImageField(upload_to=get_image_upload_path("country_pictures"))
     slug = models.SlugField(help_text="Lowercase pls")
 
     def __str__(self):
@@ -19,7 +23,7 @@ class University(models.Model):
     name = models.CharField(max_length=256, unique=True)
     country = models.CharField(max_length=256)
     description = models.TextField(blank=True, null=True)
-    picture = models.ImageField(upload_to=get_upload_path("university_pictures"))
+    picture = models.ImageField(upload_to=get_image_upload_path("university_pictures"))
     slug = models.SlugField(help_text="Lowercase pls")
 
     def __str__(self):
@@ -29,7 +33,7 @@ class University(models.Model):
 class FieldOfStudy(models.Model):
     name = models.CharField(max_length=256, unique=True)
     description = models.TextField(blank=True, null=True)
-    picture = models.ImageField(upload_to=get_upload_path("field_of_study_pictures"))
+    picture = models.ImageField(upload_to=get_image_upload_path("field_of_study_pictures"))
     slug = models.SlugField(help_text="Lowercase pls")
 
     def __str__(self):
@@ -45,9 +49,9 @@ class ConsultantProfile(models.Model):
         related_name="consultant_profile"
     )
     bio = models.TextField(null=True, blank=True)
-    profile_picture = models.ImageField(get_upload_path("consultant_profile_pictures"))
+    profile_picture = models.ImageField(upload_to=get_image_upload_path("consultant_profile_pictures"))
     aparat_link = models.URLField(null=True, blank=True)
-    # resume = models.FileField()
+    resume = models.FileField(upload_to=get_file_upload_path("consultant_resume"), null=True, )
     slug = models.SlugField(help_text="lowercase pls")
     universities = models.ManyToManyField(University, blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
