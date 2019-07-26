@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
 from django.db import models, connection
 from django.conf import settings
+
+User = get_user_model()
 
 
 def get_image_upload_path(sub_dir):
@@ -57,6 +60,14 @@ class ConsultantProfile(models.Model):
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
     countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.user.__str__()
+
+
+class Resume(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    resume = models.FileField(upload_to=get_file_upload_path("user_resume"), null=True)
 
     def __str__(self):
         return self.user.__str__()
