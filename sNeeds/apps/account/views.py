@@ -81,7 +81,7 @@ class MyAccountInfoView(APIView):
         return Response({"is_consultant": is_consultant, "user_pk": user_pk}, 200)
 
 
-class ResumeListView(generics.ListCreateAPIView):
+class UserFileListView(generics.ListCreateAPIView):
     queryset = models.UserFile.objects.all()
     serializer_class = serializers.UserFileSerializer
     permission_classes = [permissions.IsAuthenticated, ]

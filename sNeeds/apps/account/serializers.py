@@ -80,3 +80,12 @@ class UserFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserFile
         fields = ['id', 'user', 'file', 'type', ]
+
+    def validate(self, attrs):
+        file = attrs.get('file', None)
+
+        # ~5MBs
+        if file and file.size > 5242880:
+            raise serializers.ValidationError({"detail": "File limit exceeds 5MB."})
+
+        return attrs

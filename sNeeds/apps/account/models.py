@@ -70,8 +70,8 @@ class ConsultantProfile(models.Model):
 
 
 class UserFile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=get_file_upload_path("user_file"), null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_file_upload_path("user_upload_file"))
     type = models.CharField(max_length=256, choices=USER_FILE_CHOICES)
 
     def __str__(self):
