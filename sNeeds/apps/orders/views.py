@@ -6,6 +6,9 @@ from . import serializers
 from .models import Order, SoldOrder
 from .permissions import OrderOwnerPermission, SoldOrderOwnerPermission
 
+from django.core.mail import send_mail
+from django.conf import settings
+
 
 class OrderListView(generics.ListCreateAPIView):
     queryset = Order.objects.all()

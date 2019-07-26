@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django_filters',  # for filtering get queries in DRF
     'drf_yasg',  # for filtering get queries in DRF
     'corsheaders',
+    'django_rest_passwordreset',
+
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
@@ -156,3 +158,9 @@ REST_FRAMEWORK = {
 }
 
 from .JWTAuthConfig import JWT_AUTH
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'noreply.sneeds@gmail.com'
+EMAIL_HOST_PASSWORD = 'sneeds@203040'

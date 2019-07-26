@@ -22,20 +22,33 @@
 
 # using SendGrid's Python Library
 # https://github.com/sendgrid/sendgrid-python
-import os
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+# import os
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
+#
+# message = Mail(
+#     from_email='from_email@example.com',
+#     to_emails='bartararya@gmail.com',
+#     subject='Sending with Twilio SendGrid is Fun',
+#     html_content='<strong>and easy to do anywhere, even with Python</strong>')
+# try:
+#     sg = SendGridAPIClient(os.environ.get('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'))
+#     response = sg.send(message)
+#     print(response.status_code)
+#     print(response.body)
+#     print(response.headers)
+# except Exception as e:
+#     print(e)
 
-message = Mail(
-    from_email='from_email@example.com',
-    to_emails='bartararya@gmail.com',
-    subject='Sending with Twilio SendGrid is Fun',
-    html_content='<strong>and easy to do anywhere, even with Python</strong>')
-try:
-    sg = SendGridAPIClient(os.environ.get('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'))
-    response = sg.send(message)
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
-except Exception as e:
-    print(e)
+
+from melipayamak import Api
+
+username = "09354478724"
+password = "Sneeds@203040"
+api = Api(username, password)
+sms = api.sms()
+to = '09011353909'
+_from = '50001060659168'
+text = 'تست وب سرویس ملی پیامک'
+response = sms.send(to, _from, text)
+print(response)
