@@ -82,11 +82,11 @@ class MyAccountInfoView(APIView):
 
 
 class ResumeListView(generics.ListCreateAPIView):
-    queryset = models.Resume.objects.all()
-    serializer_class = serializers.ResumeSerializer
+    queryset = models.UserFile.objects.all()
+    serializer_class = serializers.UserFileSerializer
     permission_classes = [permissions.IsAuthenticated, ]
 
     def get_queryset(self):
         user = self.request.user
-        qs = models.Resume.objects.filter(user=user)
+        qs = models.UserFile.objects.filter(user=user)
         return qs

@@ -76,7 +76,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         return obj.user.last_name
 
 
-class ResumeSerializer(serializers.ModelSerializer):
+class UserFileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Resume
-        fields = ['id', 'user', 'resume', ]
+        model = models.UserFile
+        fields = ['id', 'user', 'file', 'type', ]

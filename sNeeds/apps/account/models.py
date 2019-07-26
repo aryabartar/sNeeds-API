@@ -4,6 +4,10 @@ from django.conf import settings
 
 User = get_user_model()
 
+USER_FILE_CHOICES = (
+    ('resume', 'Resume'),
+)
+
 
 def get_image_upload_path(sub_dir):
     return "media/account/" + sub_dir
@@ -65,9 +69,10 @@ class ConsultantProfile(models.Model):
         return self.user.__str__()
 
 
-class Resume(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    resume = models.FileField(upload_to=get_file_upload_path("user_resume"), null=True)
+class UserFile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    file = models.FileField(upload_to=get_file_upload_path("user_file"), null=True)
+    type = models.CharField(max_length=256, choices=USER_FILE_CHOICES)
 
     def __str__(self):
         return self.user.__str__()
