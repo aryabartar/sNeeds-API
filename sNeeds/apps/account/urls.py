@@ -18,6 +18,5 @@ urlpatterns = [
     path('consultant-profiles/<str:slug>/', views.ConsultantProfileDetail.as_view(), name="consultant-profile-detail"),
 
     path('user-files/', views.UserFileListView.as_view()),
-    path('user-files/<int:id>', views.UserFileDetailView.as_view(), name='user-file-detail'),
-
+    path('user-files/<int:id>/', views.UserFileDetailView.as_view(), name='user-file-detail'),
 ]

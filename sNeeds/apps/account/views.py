@@ -98,3 +98,5 @@ class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserFile.objects.all()
     serializer_class = serializers.UserFileSerializer
     permission_classes = [UserFileOwnerPermission, permissions.IsAuthenticated, ]
+
+    def get_queryset(self):

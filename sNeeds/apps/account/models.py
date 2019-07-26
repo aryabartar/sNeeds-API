@@ -74,6 +74,7 @@ class UserFile(models.Model):
     file = models.FileField(upload_to=get_file_upload_path("user_upload_file"))
     type = models.CharField(max_length=256, choices=USER_FILE_CHOICES)
 
+    objects =
     class Meta:
         unique_together = ('user', 'type')
 
