@@ -79,3 +79,14 @@ class MyAccountInfoView(APIView):
         user_pk = request.user.pk
 
         return Response({"is_consultant": is_consultant, "user_pk": user_pk}, 200)
+
+
+class ResumeListView(generics.ListCreateAPIView):
+    queryset = models.Resume.objects.all()
+    serializer_class = serializers.ResumeSerializer
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = models.Resume.objects.filter(user=user)
+        return qs
