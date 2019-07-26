@@ -89,8 +89,11 @@ class UserFileListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = models.UserFile.objects.filter(user=user)
-        return qs
+        consultant_profile_qs = models.ConsultantProfile.objects.filter(user=user)
+        if consultant_profile_qs.exists():
+            return models.UserFile.objects.get_consultant_accessed_files(consultant_profile_qs.first())
+        else:
+            return models.UserFile.objects.filter(user=user)
 
 
 class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
@@ -99,4 +102,3 @@ class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.UserFileSerializer
     permission_classes = [UserFileOwnerPermission, permissions.IsAuthenticated, ]
 
-    # def get_queryset(self):

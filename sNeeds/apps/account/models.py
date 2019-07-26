@@ -9,6 +9,18 @@ USER_FILE_CHOICES = (
 )
 
 
+class UserFileModelManager(models.Manager):
+    def get_consultant_accessed_files(self, consultant_profile):
+        from sNeeds.apps.store.models import SoldTimeSlotSale
+
+        sold_to_list = SoldTimeSlotSale.objects.filter(
+            consultant=consultant_profile
+        ).values_list('sold_to', flat=True)
+
+        qs = UserFile.objects.filter(user__in=sold_to_list)
+        return qs
+
+
 def get_image_upload_path(sub_dir):
     return "media/account/" + sub_dir
 
@@ -58,7 +70,7 @@ class ConsultantProfile(models.Model):
     bio = models.TextField(null=True, blank=True)
     profile_picture = models.ImageField(upload_to=get_image_upload_path("consultant_profile_pictures"))
     aparat_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to=get_file_upload_path("consultant_resume"), null=True, )
+    resume = models.FileField(upload_to=get_file_upload_path("consultant_resume"), null=True, blank=True)
     slug = models.SlugField(help_text="lowercase pls")
     universities = models.ManyToManyField(University, blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
@@ -74,7 +86,8 @@ class UserFile(models.Model):
     file = models.FileField(upload_to=get_file_upload_path("user_upload_file"))
     type = models.CharField(max_length=256, choices=USER_FILE_CHOICES)
 
-    # objects =
+    objects = UserFileModelManager()
+
     class Meta:
         unique_together = ('user', 'type')
 
