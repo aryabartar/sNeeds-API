@@ -88,10 +88,22 @@ class UserFileSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         file = attrs.get('file', None)
+        request = self.context.get('request', None)
+        user = request.user
 
         # ~5MBs
         if file and file.size > 5242880:
             raise serializers.ValidationError({"detail": "File limit exceeds 5MB."})
+
+        qs = models.UserFile.objects.filter(user=user, type=attrs['type'])
+
+        if request.method == "POST":
+            if qs.exists():
+                raise serializers.ValidationError({"detail": "User with type should be unique."})
+
+        else:
+            if qs.count() > 1:
+                raise serializers.ValidationError({"detail": "User with type should be unique."})
 
         return attrs
 
