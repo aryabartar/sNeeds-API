@@ -7,6 +7,7 @@ from rest_framework.response import Response
 
 from . import models
 from . import serializers
+from .permissions import UserFileOwnerPermission
 
 
 class CountryDetail(generics.RetrieveAPIView):
@@ -90,3 +91,10 @@ class UserFileListView(generics.ListCreateAPIView):
         user = self.request.user
         qs = models.UserFile.objects.filter(user=user)
         return qs
+
+
+class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    lookup_field = 'id'
+    queryset = models.UserFile.objects.all()
+    serializer_class = serializers.UserFileSerializer
+    permission_classes = [UserFileOwnerPermission, permissions.IsAuthenticated, ]

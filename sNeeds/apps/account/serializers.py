@@ -77,9 +77,14 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
 
 class UserFileSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(lookup_field='id', view_name='account:user-file-detail')
+
     class Meta:
         model = models.UserFile
-        fields = ['id', 'user', 'file', 'type', ]
+        fields = ['id', 'url', 'user', 'file', 'type', ]
+        extra_kwargs = {
+            'user': {'read_only': True},
+        }
 
     def validate(self, attrs):
         file = attrs.get('file', None)
@@ -89,3 +94,13 @@ class UserFileSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"detail": "File limit exceeds 5MB."})
 
         return attrs
+
+    def create(self, validated_data):
+        user = self.context.get('request', None).user
+
+        obj = models.UserFile.objects.create(
+            user=user,
+            file=validated_data['file'],
+            type=validated_data['type'],
+        )
+        return obj
