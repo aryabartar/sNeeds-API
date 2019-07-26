@@ -99,4 +99,4 @@ class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = serializers.UserFileSerializer
     permission_classes = [UserFileOwnerPermission, permissions.IsAuthenticated, ]
 
-    def get_queryset(self):
+    # def get_queryset(self):
