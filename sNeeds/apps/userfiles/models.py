@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from sNeeds.apps.store.models import SoldTimeSlotSale
+
+
 User = get_user_model()
 
 USER_FILE_CHOICES = (
@@ -14,8 +17,6 @@ def get_file_upload_path(sub_dir):
 
 class UserFileModelManager(models.Manager):
     def get_consultant_accessed_files(self, consultant_profile):
-        from sNeeds.apps.store.models import SoldTimeSlotSale
-
         sold_to_list = SoldTimeSlotSale.objects.filter(
             consultant=consultant_profile,
         ).values_list('sold_to', flat=True)
