@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'sNeeds.apps.orders',
     'sNeeds.apps.comments',
     'sNeeds.apps.userfiles',
+
+    'django_cleanup',  # should go after your apps
 ]
 
 MIDDLEWARE = [
