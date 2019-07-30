@@ -72,14 +72,26 @@ class MyAccountInfoView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        is_consultant = True
+        consultant = None
         try:
-            request.user.consultant_profile
+            consultant = request.user.consultant_profile
         except:
-            is_consultant = False
-        user_pk = request.user.pk
+            pass
 
-        return Response({"is_consultant": is_consultant, "user_pk": user_pk}, 200)
+        if consultant:
+            is_consultant = True
+            consultant_id = consultant.id
+        else:
+            is_consultant = False
+            consultant_id = None
+
+        return Response(
+            {
+                "user_pk": request.user.pk,
+                "is_consultant": is_consultant,
+                "consultant": consultant_id
+            },
+            200)
 
 
 class UserFileListView(generics.ListCreateAPIView):
@@ -101,4 +113,3 @@ class UserFileDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.UserFile.objects.all()
     serializer_class = serializers.UserFileSerializer
     permission_classes = [UserFileOwnerPermission, permissions.IsAuthenticated, ]
-
