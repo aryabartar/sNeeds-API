@@ -1,7 +1,7 @@
 from django.urls import path
 from . import views
 
-app_name = "userfiles"
+app_name = "userfile"
 
 urlpatterns = [
     path('user-files/', views.UserFileListView.as_view()),

@@ -30,4 +30,5 @@ urlpatterns = [
                   path('order/', include('sNeeds.apps.orders.urls')),
                   path('payment/', include('sNeeds.apps.payments.urls')),
                   path('comment/', include('sNeeds.apps.comments.urls')),
+                  path('user-file/', include('sNeeds.apps.userfiles.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

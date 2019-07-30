@@ -64,3 +64,4 @@ class TimeSlotSale(AbstractTimeSlotSale):
 
 class SoldTimeSlotSale(AbstractTimeSlotSale):
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    used = models.BooleanField(default=False)

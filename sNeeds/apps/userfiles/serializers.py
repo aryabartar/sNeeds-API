@@ -8,7 +8,7 @@ User = get_user_model()
 
 
 class UserFileSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(lookup_field='id', view_name='account:user-file-detail')
+    url = serializers.HyperlinkedIdentityField(lookup_field='id', view_name='userfile:user-file-detail')
 
     class Meta:
         model = models.UserFile
