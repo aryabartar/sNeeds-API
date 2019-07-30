@@ -17,7 +17,7 @@ class UserFileModelManager(models.Manager):
         from sNeeds.apps.store.models import SoldTimeSlotSale
 
         sold_to_list = SoldTimeSlotSale.objects.filter(
-            consultant=consultant_profile
+            consultant=consultant_profile,
         ).values_list('sold_to', flat=True)
 
         qs = UserFile.objects.filter(user__in=sold_to_list)

@@ -614,7 +614,8 @@ NOTE: This EP only returns this user lost time slots.
         "start_time": "2019-07-25T08:14:13Z",
         "end_time": "2019-07-25T08:14:21Z",
         "price": 11,
-        "sold_to": 1
+        "sold_to": 1,
+        "used": false
     },
     {
         "id": 21,
@@ -623,7 +624,8 @@ NOTE: This EP only returns this user lost time slots.
         "start_time": "2019-07-25T08:25:28Z",
         "end_time": "2019-07-25T08:25:29Z",
         "price": 20,
-        "sold_to": 1
+        "sold_to": 1,
+        "used": true
     }
 ]
 ```
@@ -639,7 +641,8 @@ NOTE: This EP only returns this user lost time slots.
     "start_time": "2019-07-25T08:14:13Z",
     "end_time": "2019-07-25T08:14:21Z",
     "price": 11,
-    "sold_to": 1
+    "sold_to": 1,
+    "used": false
 }
 ```
 

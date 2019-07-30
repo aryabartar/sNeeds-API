@@ -56,4 +56,4 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SoldTimeSlotSale
-        fields = ['id', 'url', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', ]
+        fields = ['id', 'url', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', 'used', ]
