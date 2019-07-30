@@ -25,7 +25,7 @@ class TimeSlotSailList(generics.ListCreateAPIView):
         return self.list(request, *args, **kwargs)
 
 
-class SoldTimeSlotSailList(generics.ListAPIView):
+class SoldTimeSlotSaleList(generics.ListAPIView):
     queryset = SoldTimeSlotSale.objects.all()
     serializer_class = serializers.SoldTimeSlotSaleSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -48,7 +48,7 @@ class TimeSlotSaleDetail(generics.RetrieveDestroyAPIView):
     permission_classes = [TimeSlotSaleOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
 
 
-class SoldTimeSlotSailDetail(generics.RetrieveAPIView):
+class SoldTimeSlotSaleDetail(generics.RetrieveAPIView):
     lookup_field = "id"
     queryset = SoldTimeSlotSale.objects.all()
     serializer_class = serializers.SoldTimeSlotSaleSerializer

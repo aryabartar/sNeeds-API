@@ -39,13 +39,13 @@ class TimeSlotSaleOwnerPermission(permissions.BasePermission):
         return False
 
 
-class SoldTimeSlotSaleOwnerPermission (permissions.BasePermission):
+class SoldTimeSlotSaleOwnerPermission(permissions.BasePermission):
     message = "This user is not sold time slot sale owner."
 
     def has_object_permission(self, request, view, obj):
         user = request.user
 
-        if obj.sold_to == user:
+        if user == obj.consultant.user or obj.sold_to == user:
             return True
 
         return False
