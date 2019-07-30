@@ -12,6 +12,8 @@ from .permissions import (
     SoldTimeSlotSaleOwnerPermission,
 )
 
+from sNeeds.apps.account.models import ConsultantProfile
+
 
 class TimeSlotSailList(generics.ListCreateAPIView):
     queryset = TimeSlotSale.objects.all()
@@ -29,7 +31,14 @@ class SoldTimeSlotSailList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return SoldTimeSlotSale.objects.filter(sold_to=self.request.user)
+        user = self.request.user
+        consultant_profile_qs = ConsultantProfile.objects.filter(user=user)
+
+        if consultant_profile_qs.exists():
+            consultant_profile = consultant_profile_qs.first()
+            return SoldTimeSlotSale.objects.filter(consultant=consultant_profile)
+        else:
+            return SoldTimeSlotSale.objects.filter(sold_to=user)
 
 
 class TimeSlotSaleDetail(generics.RetrieveDestroyAPIView):

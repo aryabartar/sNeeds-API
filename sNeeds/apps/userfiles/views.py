@@ -15,6 +15,7 @@ class UserFileListView(generics.ListCreateAPIView):
     queryset = models.UserFile.objects.all()
     serializer_class = serializers.UserFileSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filterset_fields = ('user', )
 
 
     def get_queryset(self):
