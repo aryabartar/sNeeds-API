@@ -166,6 +166,7 @@ If consultant:
         "aparat_link": null,
         "resume": "http://127.0.0.1:8000/files/2L-125_stereo-2822k-1b_04.dsf",
         "rate": 3.5,
+        "comment_number": 3,
         "active": true
     }
 ]
@@ -223,6 +224,7 @@ NOTE: rate can be null or float between 0 and 5
     "aparat_link": null,
     "resume": "http://127.0.0.1:8000/files/2L-125_stereo-2822k-1b_04.dsf",
     "rate": 3.5,
+    "comment_number": 3,
     "active": true
 }
 ```
@@ -613,6 +615,8 @@ NOTE: If you want to show user's files in consultant panel read "User Files" doc
         "id": 20,
         "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/20/",
         "consultant": 2,
+        "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/11/",
+        "consultant_slug": "11",
         "start_time": "2019-07-25T08:14:13Z",
         "end_time": "2019-07-25T08:14:21Z",
         "price": 11,
@@ -623,6 +627,8 @@ NOTE: If you want to show user's files in consultant panel read "User Files" doc
         "id": 21,
         "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/21/",
         "consultant": 3,
+        "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/12/",
+        "consultant_slug": "12",
         "start_time": "2019-07-25T08:25:28Z",
         "end_time": "2019-07-25T08:25:29Z",
         "price": 20,
@@ -640,6 +646,8 @@ NOTE: If you want to show user's files in consultant panel read "User Files" doc
     "id": 20,
     "url": "http://127.0.0.1:8000/store/sold-time-slot-sales/20/",
     "consultant": 2,
+    "consultant_url": "http://127.0.0.1:8000/account/consultant-profiles/11/",
+    "consultant_slug": "11",
     "start_time": "2019-07-25T08:14:13Z",
     "end_time": "2019-07-25T08:14:21Z",
     "price": 11,

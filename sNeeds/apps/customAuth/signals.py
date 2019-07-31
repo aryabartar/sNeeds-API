@@ -19,12 +19,9 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
                                                    reset_password_token.key)
     }
 
-    print(context)
     response = sendemail.reset_password(
         context['email'],
-        'arya',
+        context['current_user'].first_name,
         context['reset_password_url']
     )
-
-    print(response)
 

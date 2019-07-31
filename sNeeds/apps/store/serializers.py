@@ -53,7 +53,20 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
         lookup_field='id',
         read_only=True
     )
+    consultant_url = serializers.HyperlinkedRelatedField(
+        source='consultant',
+        lookup_field='slug',
+        read_only=True,
+        view_name='account:consultant-profile-detail'
+    )
+
+    consultant_slug = serializers.SlugRelatedField(
+        source='consultant',
+        slug_field='slug',
+        read_only=True
+    )
 
     class Meta:
         model = SoldTimeSlotSale
-        fields = ['id', 'url', 'consultant', 'start_time', 'end_time', 'price', 'sold_to', 'used', ]
+        fields = ['id', 'url', 'consultant', 'consultant_url', 'consultant_slug',
+                  'start_time', 'end_time', 'price', 'sold_to', 'used', ]

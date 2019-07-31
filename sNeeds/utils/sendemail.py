@@ -12,10 +12,10 @@ headers = {
 
 def reset_password(send_to, name, resetlink):
     payload = {
-        "params": {"name": name, "resetlink": resetlink},
         "sender": {"name": "sNeeds", "email": 'noreply.sneeds@gmail.com'},
         "to": [{"email": send_to}],
         "replyTo": {'email': 'noreply.sneeds@gmail.com'},
+        "params": {"name": name, "resetlink": resetlink},
         "templateId": 5,
     }
     json_data = json.dumps(payload)
