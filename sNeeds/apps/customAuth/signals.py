@@ -5,6 +5,8 @@ from django.urls import reverse
 
 from django_rest_passwordreset.signals import reset_password_token_created
 
+from sNeeds.utils import sendemail
+
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
@@ -17,19 +19,12 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
                                                    reset_password_token.key)
     }
 
-    # render email text
-    email_html_message = render_to_string('user_reset_password.html', context)
-    email_plaintext_message = render_to_string('user_reset_password.txt', context)
-
-    msg = EmailMultiAlternatives(
-        # title:
-        "Password Reset for {title}".format(title="Some website title"),
-        # message:
-        email_plaintext_message,
-        # from:
-        "noreply.sneeds@gmail.com",
-        # to:
-        [reset_password_token.user.email]
+    print(context)
+    response = sendemail.reset_password(
+        context['email'],
+        'arya',
+        context['reset_password_url']
     )
-    msg.attach_alternative(email_html_message, "text/html")
-    msg.send()
+
+    print(response)
+
