@@ -16,12 +16,13 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'username': reset_password_token.user.first_name,
         'email': reset_password_token.user.email,
         'reset_password_url': "{}?token={}".format(reverse('auth:password_reset:reset-password-request'),
-                                                   reset_password_token.key)
+                                                   reset_password_token.key),
+        'token': reset_password_token.key,
     }
+    reset_link = "http://193.176.241.131:8080/account/password-reset/?token={}".format(context['token'])
 
-    response = sendemail.reset_password(
+    sendemail.reset_password(
         context['email'],
         context['current_user'].first_name,
-        context['reset_password_url']
+        reset_link,
     )
-
