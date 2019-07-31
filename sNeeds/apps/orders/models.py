@@ -5,6 +5,7 @@ from django.db.models.signals import pre_save, post_save
 
 from .utils import unique_order_id_generator
 
+from sNeeds.utils.sendemail import accept_order
 from sNeeds.apps.carts.models import Cart, SoldCart
 
 User = get_user_model()
@@ -99,6 +100,13 @@ def post_save_order(sender, instance, created, *args, **kwargs):
         instance.update_total()
 
 
+def post_save_sold_order(sender, instance, created, *args, **kwargs):
+    if created:
+        user = instance.cart.user
+        accept_order(user.email, user.get_full_name(), instance.order_id)
+
+
 pre_save.connect(pre_save_create_order_id, sender=Order)
 post_save.connect(post_save_order, sender=Order)
 post_save.connect(post_save_cart_total, sender=Cart)
+post_save.connect(post_save_sold_order, sender=SoldOrder)

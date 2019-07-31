@@ -33,4 +33,5 @@ def accept_order(send_to, name, order_id):
     }
     json_data = json.dumps(payload)
     response = requests.request("POST", url, data=json_data, headers=headers)
+    print(response.text)
     return response.text
