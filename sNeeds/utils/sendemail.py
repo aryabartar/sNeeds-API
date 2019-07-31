@@ -21,3 +21,16 @@ def reset_password(send_to, name, resetlink):
     json_data = json.dumps(payload)
     response = requests.request("POST", url, data=json_data, headers=headers)
     return response.text
+
+
+def accept_order(send_to, name, order_id):
+    payload = {
+        "sender": {"name": "sNeeds", "email": 'noreply.sneeds@gmail.com'},
+        "to": [{"email": send_to}],
+        "replyTo": {'email': 'noreply.sneeds@gmail.com'},
+        "params": {"name": name, "order_id": order_id},
+        "templateId": 6,
+    }
+    json_data = json.dumps(payload)
+    response = requests.request("POST", url, data=json_data, headers=headers)
+    return response.text
