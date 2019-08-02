@@ -93,6 +93,8 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
 def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
     time_slot_sale_count = instance.time_slot_sales_count()
+    count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_none(time_slot_sale_count)
+    instance.total = instance.subtotal * ((100.0 - count_discount) / 100)
 
 
 def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):

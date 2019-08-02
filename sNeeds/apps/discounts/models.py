@@ -1,10 +1,11 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
     def get_discount_or_none(self, number):
         try:
-            obj = TimeSlotSaleNumberDiscount.objects.filter(number=number)
+            obj = TimeSlotSaleNumberDiscount.objects.get(number=number)
             return obj.discount
         except:
             return None
@@ -12,9 +13,11 @@ class TimeSlotSaleNumberDiscountModelManager(models.Manager):
 
 class TimeSlotSaleNumberDiscount(models.Model):
     number = models.IntegerField(unique=True)
-    discount = models.FloatField()
+    discount = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
 
-    objects = TimeSlotSaleNumberDiscountModelManager
+    objects = TimeSlotSaleNumberDiscountModelManager()
 
     def __str__(self):
-        return self.number
+        return str(self.number)
