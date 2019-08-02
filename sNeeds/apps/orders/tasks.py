@@ -9,12 +9,5 @@ from celery import shared_task
 
 @shared_task
 def create_random_user_accounts():
-    time.sleep(5)
-    print("eee\n\n\neee\n\n\neee")
-    time.sleep(5)
-    print("eee\n\n\neee\n\n\neee")
-    time.sleep(5)
-    print("eee\n\n\neee\n\n\neee")
-    time.sleep(5)
-    print("eee\n\n\neee\n\n\neee")
+    print("hello")
     return None

@@ -5,9 +5,7 @@ from rest_framework.views import APIView
 from . import serializers
 from .models import Order, SoldOrder
 from .permissions import OrderOwnerPermission, SoldOrderOwnerPermission
-
-from django.core.mail import send_mail
-from django.conf import settings
+from .tasks import create_random_user_accounts
 
 
 class OrderListView(generics.ListCreateAPIView):
@@ -18,6 +16,7 @@ class OrderListView(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         qs = Order.objects.filter(cart__user=user)
+        create_random_user_accounts.delay()
         return qs
 
 
