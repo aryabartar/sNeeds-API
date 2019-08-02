@@ -56,6 +56,10 @@ class Cart(AbstractCart):
     discount_percent = models.FloatField(default=0)
     updated = models.DateTimeField(auto_now=True)
 
+    def time_slot_sales_count(self):
+        count = len(self.time_slot_sales.all())
+        return count
+
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
 
