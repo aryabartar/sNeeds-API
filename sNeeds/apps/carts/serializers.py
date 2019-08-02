@@ -2,21 +2,30 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import Cart, SoldCart
+
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
+from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
 
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
     time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
+    time_slot_sales_discount = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'time_slot_sales', 'time_slot_sales_detail', 'total', ]
+        fields = ['id', 'url', 'user', 'time_slot_sales', 'time_slot_sales_detail',
+                  'subtotal', 'time_slot_sales_discount', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
             'total': {'read_only': True},
         }
+
+    def get_time_slot_sales_discount(self, obj):
+        time_slot_sale_count = obj.time_slot_sales_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+        return count_discount
 
     def get_time_slot_sales_detail(self, obj):
         return TimeSlotSaleSerializer(
