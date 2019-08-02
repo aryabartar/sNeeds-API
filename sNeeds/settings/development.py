@@ -162,8 +162,5 @@ REST_FRAMEWORK = {
 
 from .JWTAuthConfig import JWT_AUTH
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'noreply.sneeds@gmail.com'
-EMAIL_HOST_PASSWORD = 'sneeds@203040'
+CELERY_BROKER_URL = 'amqp://localhost'
+
