@@ -1,12 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.db.models.signals import pre_save, post_save
 
-from .utils import unique_order_id_generator
-from .tasks import create_random_user_accounts
 
-from sNeeds.utils.sendemail import accept_order
 from sNeeds.apps.carts.models import Cart, SoldCart
 
 
@@ -82,33 +78,3 @@ class SoldOrder(AbstractOrder):
 
     def get_user(self):
         return self.cart.user
-
-
-def pre_save_create_order_id(sender, instance, *args, **kwargs):
-    if not instance.order_id:
-        instance.order_id = unique_order_id_generator(instance)
-
-
-def post_save_cart_total(sender, instance, created, *args, **kwargs):
-    if not created:
-        cart_obj = instance
-        qs = Order.objects.filter(cart=cart_obj)
-        for obj in qs:
-            obj.update_total()
-
-
-def post_save_order(sender, instance, created, *args, **kwargs):
-    if created:
-        instance.update_total()
-
-
-def post_save_sold_order(sender, instance, created, *args, **kwargs):
-    if created:
-        # user = instance.cart.user
-        # accept_order(user.email, user.get_full_name(), instance.order_id)
-        create_random_user_accounts.delay()
-
-pre_save.connect(pre_save_create_order_id, sender=Order)
-post_save.connect(post_save_order, sender=Order)
-post_save.connect(post_save_cart_total, sender=Cart)
-post_save.connect(post_save_sold_order, sender=SoldOrder)
