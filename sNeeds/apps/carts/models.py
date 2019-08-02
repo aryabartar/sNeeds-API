@@ -5,6 +5,8 @@ from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 
+from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
+
 User = get_user_model()
 
 
@@ -90,6 +92,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
 
 def pre_save_cart_receiver(sender, instance, *args, **kwargs):
     instance.total = instance.subtotal
+    time_slot_sale_count = instance.time_slot_sales_count()
 
 
 def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):
