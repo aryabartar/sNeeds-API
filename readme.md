@@ -685,7 +685,9 @@ NOTE: Currently this endpoint returns at most one cart because each user at most
                 "price": 55
             }
         ],
-        "total": 55
+        "subtotal": 66,
+        "time_slot_sales_discount": 35.0,
+        "total": 42,
     }
 ]
 ```
@@ -734,7 +736,9 @@ Vary: Accept
             "price": 55
         }
     ],
-    "total": 55
+    "subtotal": 66,
+    "time_slot_sales_discount": 35.0,
+    "total": 42,
 }
 ```
 
