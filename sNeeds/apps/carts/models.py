@@ -53,6 +53,7 @@ class AbstractCart(models.Model):
 class Cart(AbstractCart):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
+    discount_percent = models.FloatField(default=0)
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
