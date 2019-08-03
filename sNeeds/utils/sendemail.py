@@ -35,3 +35,17 @@ def accept_order(send_to, name, order_id):
     response = requests.request("POST", url, data=json_data, headers=headers)
     print(response.text)
     return response.text
+
+
+def notify_sold_time_slot(send_to, name, sold_time_slot_id):
+    payload = {
+        "sender": {"name": "sNeeds", "email": 'noreply.sneeds@gmail.com'},
+        "to": [{"email": send_to}],
+        "replyTo": {'email': 'noreply.sneeds@gmail.com'},
+        "params": {"name": name, "id": sold_time_slot_id},
+        "templateId": 7,
+    }
+    json_data = json.dumps(payload)
+    response = requests.request("POST", url, data=json_data, headers=headers)
+    print(response.text)
+    return response.text
