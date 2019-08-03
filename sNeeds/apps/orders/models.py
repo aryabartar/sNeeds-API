@@ -2,9 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 
-
 from sNeeds.apps.carts.models import Cart, SoldCart
-
 
 User = get_user_model()
 
@@ -55,6 +53,11 @@ class AbstractOrder(models.Model):
 class Order(AbstractOrder):
     cart = models.OneToOneField(Cart, null=True, on_delete=models.CASCADE, related_name="cart_order")
     status = models.CharField(max_length=256, default='created', choices=ORDER_STATUS_CHOICES)
+
+    def is_acceptable_for_pay(self):
+        if self.total > 0:
+            return True
+        return False
 
     def update_total(self):
         self.total = self.cart.total
