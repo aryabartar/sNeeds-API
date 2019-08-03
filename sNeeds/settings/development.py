@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.carts',
     'sNeeds.apps.orders',
     'sNeeds.apps.comments',
+    'sNeeds.apps.payments',
     'sNeeds.apps.userfiles',
     'sNeeds.apps.discounts',
 
@@ -158,6 +159,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 100,
     # 'PAGE_SIZE': 100,
 }
 

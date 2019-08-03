@@ -9,6 +9,8 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from .models import PayPayment
+
 from sNeeds.apps.orders.models import Order
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
@@ -35,34 +37,40 @@ class SendRequest(APIView):
             "پرداخت اسنیدز",
             order.cart.user.email,
             order.cart.user.phone_number,
-            request.build_absolute_uri(reverse("payment:verify")),
+            "http://193.176.241.131:8080/payment/accept/",
         )
 
-        print(result)
+        PayPayment.objects.get_or_create(user=user, order=order, authority=result.Authority)
+
         if result.Status == 100:
             return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
+
         else:
             return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
 
 
-def verify(request):
-    if request.GET.get('Status') == 'OK':
-        result = client.service.PaymentVerification(MERCHANT, request.GET['Authority'], 100)
-        print(result)
-        if result.Status == 100:
-            return JsonResponse({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
-        elif result.Status == 101:
-            return JsonResponse({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
-        else:
-            return JsonResponse({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
-    else:
-        return JsonResponse({"detail": "Transaction failed or canceled by user"}, status=400)
+class Verify(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
 
-
-class TempVerify(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         data = request.data
-        user = request.user
-        order = Order.objects.filter(user=user, active=True, status="created")
+        if data.get('status', None) == 'OK':
+            user = request.user
+
+            try:
+                payment = PayPayment.objects.get(user=user)
+            except PayPayment.DoesNotExist:
+                return Response({"detail": "Payment error"}, status=400)
+
+            result = client.service.PaymentVerification(MERCHANT, data.get('authority', None), int(payment.order.total))
+            payment.delete()
+
+            if result.Status == 100:
+                return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
+            elif result.Status == 101:
+                return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
+            else:
+                return Response({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
+
+        else:
+            return Response({"detail": "Transaction failed or canceled by user"}, status=400)
