@@ -40,7 +40,10 @@ class SendRequest(APIView):
             "http://193.176.241.131:8080/payment/accept/",
         )
 
-        PayPayment.objects.get_or_create(user=user, order=order, authority=result.Authority)
+        pay_payment_obj, created = PayPayment.objects.get_or_create(user=user, order=order)
+        if created:
+            pay_payment_obj.authority = result.Authority
+            pay_payment_obj.save()
 
         if result.Status == 100:
             return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
@@ -56,14 +59,18 @@ class Verify(APIView):
         data = request.data
         if data.get('status', None) == 'OK':
             user = request.user
+            authority = data.get('authority', None)
 
             try:
-                payment = PayPayment.objects.get(user=user)
-            except PayPayment.DoesNotExist:
-                return Response({"detail": "Payment error"}, status=400)
+                payment = PayPayment.objects.get(
+                    user=user,
+                    authority=authority
+                )
 
-            result = client.service.PaymentVerification(MERCHANT, data.get('authority', None), int(payment.order.total))
-            payment.delete()
+            except PayPayment.DoesNotExist:
+                return Response({"detail": "PayPayment does not exists."}, status=400)
+
+            result = client.service.PaymentVerification(MERCHANT, authority, int(payment.order.total))
 
             if result.Status == 100:
                 SoldOrder.objects.sell_order(payment.order)
