@@ -28,10 +28,8 @@ class CartManager(models.QuerySet):
             subtotal=cart.subtotal,
             total=cart.total,
         )
-        print("v")
 
         qs = cart.time_slot_sales.all().set_time_slot_sold(sold_to=cart.user)
-        print("aa")
         sold_cart_obj.sold_time_slot_sales.add(*qs)
         sold_cart_obj.save()
 

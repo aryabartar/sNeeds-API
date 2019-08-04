@@ -40,10 +40,7 @@ class SendRequest(APIView):
             "http://193.176.241.131:8080/payment/accept/",
         )
 
-        pay_payment_obj, created = PayPayment.objects.get_or_create(user=user, order=order)
-        if created:
-            pay_payment_obj.authority = result.Authority
-            pay_payment_obj.save()
+        PayPayment.objects.create(user=user, order=order, authority=result.Authority)
 
         if result.Status == 100:
             return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})

@@ -13,7 +13,7 @@ class TimeSlotSaleManager(models.QuerySet):
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
         sold_tome_slot_sales_list = []
-        print("1")
+
         for obj in qs:
             sold_tome_slot_sales_list.append(
                 SoldTimeSlotSale.objects.create(
@@ -25,7 +25,7 @@ class TimeSlotSaleManager(models.QuerySet):
                 )
             )
 
-        print("4")
+
         qs.delete()
 
         return sold_tome_slot_sales_list
