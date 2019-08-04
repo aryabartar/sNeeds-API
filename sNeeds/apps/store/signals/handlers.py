@@ -25,8 +25,10 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 
 def post_save_time_slot_receiver(sender, instance, *args, **kwargs):
     cart_qs = Cart.objects.filter(time_slot_sales=instance)
+
+    # Used when time slot sold price is changed and its signal is triggered to update this model
     for obj in cart_qs:
-        obj.save()
+        obj.update_price()
 
 
 pre_delete.connect(pre_delete_time_slot_sale_receiver, sender=TimeSlotSale)

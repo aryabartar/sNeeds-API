@@ -10,7 +10,6 @@ from sNeeds.apps.orders import tasks
 
 def sold_order_post_save_receiver(sender, instance, *args, **kwargs):
     created = kwargs['created']
-    print("d")
     if created:
         user = instance.cart.user
         tasks.send_accept_order_mail.delay(user.email, user.get_full_name(), instance.order_id)
