@@ -56,12 +56,19 @@ class Cart(AbstractCart):
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def update_total(self):
+        time_slot_sale_count = self.time_slot_sales_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+        self.total = self.subtotal * ((100.0 - count_discount) / 100)
+
     def update_price(self):
         time_slot_sales = self.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
             total += t.price
         self.subtotal = total
+        self.update_total()
+        self.save()
 
     def time_slot_sales_count(self):
         count = len(self.time_slot_sales.all())
