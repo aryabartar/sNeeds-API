@@ -20,18 +20,20 @@ class SoldOrderManager(models.Manager):
     @transaction.atomic
     def sell_order(self, order):
         cart = order.cart
-        sold_order = self.create(
+        print("0")
+        sold_order = SoldOrder(
             cart=None,
             status="paid",
             order_id=order.order_id,
             total=order.total,
         )
-
+        print("a")
         cart = Cart.objects.set_cart_paid(cart)
-
+        print("b")
         sold_order.cart = cart
+        print("c")
         sold_order.save()
-
+        print("d")
         order.delete()
 
         return sold_order

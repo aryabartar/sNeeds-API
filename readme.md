@@ -916,20 +916,6 @@ If user has no active cart:
 }
 ```
 
-> order/orders/{ID}/accept/ [POST]  
-> order/orders/30/accept/ [POST]  
-
-NOTE: This endpoint is temporary.  
-NOTE: This is for testing.  
-This endpoint sells order. 
-
-If cart is empty:  
-```json
-{
-    "detail": "Cart is empty"
-}
-```
-
 > cart/sold-carts/ [GET]
 
 ```json

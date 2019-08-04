@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 
 from .models import PayPayment
 
-from sNeeds.apps.orders.models import Order
+from sNeeds.apps.orders.models import Order, SoldOrder
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
 client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
@@ -66,6 +66,7 @@ class Verify(APIView):
             payment.delete()
 
             if result.Status == 100:
+                SoldOrder.objects.sell_order(payment.order)
                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
             elif result.Status == 101:
                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)

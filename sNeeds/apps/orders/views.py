@@ -25,18 +25,6 @@ class OrderDetailView(generics.RetrieveDestroyAPIView):
     permission_classes = (OrderOwnerPermission, permissions.IsAuthenticated)
 
 
-class OrderDetailAcceptView(APIView):
-    def post(self, request, *args, **kwargs):
-        order_id = kwargs.get('id', None)
-        order = Order.objects.get(id=order_id)
-
-        if order.total <= 0:
-            return Response({"detail": "Cart is empty"}, 400)
-
-        SoldOrder.objects.sell_order(order)
-        return Response({"detail": "Sold order created"}, 201)
-
-
 class SoldOrderListView(generics.ListCreateAPIView):
     queryset = SoldOrder.objects.all()
     serializer_class = serializers.SoldOrderSerializer

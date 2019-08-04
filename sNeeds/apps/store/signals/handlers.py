@@ -3,6 +3,7 @@ from django.db.models.signals import post_save, pre_delete, pre_save, m2m_change
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.utils.sendemail import notify_sold_time_slot
+from sNeeds.apps.store.tasks import send_notify_sold_time_slot_mail
 
 
 def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):
@@ -15,7 +16,7 @@ def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
     if created:
-        notify_sold_time_slot(
+        send_notify_sold_time_slot_mail.delay(
             instance.consultant.user.email,
             instance.consultant.user.get_full_name(),
             instance.id
