@@ -7,7 +7,7 @@ from .models import CartConsultantDiscount
 class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartConsultantDiscount
-        fields = ['consultant_discount']
+        fields = ['id', 'consultant_discount']
 
     def create(self, validated_data):
         request = self.context.get("request", None)
@@ -18,9 +18,6 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         except:
             raise ValidationError("User has no cart.")
 
-        obj = CartConsultantDiscount.objects.create_with_consultant_discount(
-            validated_data["consultant_discount"],
-            cart=cart,
-        )
+        obj = CartConsultantDiscount.objects.create(cart=cart, **validated_data)
 
         return obj
