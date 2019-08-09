@@ -6,6 +6,14 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.account.models import ConsultantProfile
 
 
+class CartConsultantDiscountManager(models.Manager):
+    def create_with_consultant_discount(self, consultant_discount, **kwargs):
+        obj = self.create(**kwargs)
+        obj.consultant_discount.add(*consultant_discount)
+        obj.save()
+        return obj
+
+
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
     def get_discount_or_zero(self, number):
         try:
@@ -44,8 +52,10 @@ class ConsultantDiscount(models.Model):
 
 
 class CartConsultantDiscount(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-    consultant_discount = models.ManyToManyField(ConsultantDiscount)
+    cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
+    consultant_discount = models.ForeignKey(ConsultantDiscount, on_delete=models.CASCADE)
+
+    objects = CartConsultantDiscountManager()
 
     def __str__(self):
         return "cart {} discount".format(str(self.consultant_discount))
