@@ -52,8 +52,8 @@ class ConsultantDiscount(models.Model):
 
 
 class CartConsultantDiscount(models.Model):
-    cart = models.OneToOneField(Cart, on_delete=models.CASCADE)
-    consultant_discount = models.ForeignKey(ConsultantDiscount, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE,)
+    consultant_discount = models.ForeignKey(ConsultantDiscount, on_delete=models.CASCADE,)
 
     objects = CartConsultantDiscountManager()
 

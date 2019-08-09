@@ -13,9 +13,14 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         request = self.context.get("request", None)
         user = request.user
 
+        try:
+            cart = user.cart
+        except:
+            raise ValidationError("User has no cart.")
+
         obj = CartConsultantDiscount.objects.create_with_consultant_discount(
             validated_data["consultant_discount"],
-            cart=user,
+            cart=cart,
         )
 
         return obj
