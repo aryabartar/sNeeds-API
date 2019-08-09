@@ -40,6 +40,8 @@ class SendRequest(APIView):
             "http://193.176.241.131:8080/payment/accept/",
         )
 
+        print(result)
+
         PayPayment.objects.create(user=user, order=order, authority=result.Authority)
 
         if result.Status == 100:
