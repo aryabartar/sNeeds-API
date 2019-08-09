@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.carts.models import Cart
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
@@ -37,3 +38,14 @@ class ConsultantDiscount(models.Model):
     def clean(self):
         if self.end < self.start:
             raise ValidationError("Start time is before end time.")
+
+    def __str__(self):
+        return "{}%".format(str(self.percent))
+
+
+class CartConsultantDiscount(models.Model):
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    consultant_discount = models.ManyToManyField(ConsultantDiscount)
+
+    def __str__(self):
+        return "cart {} discount".format(str(self.consultant_discount))
