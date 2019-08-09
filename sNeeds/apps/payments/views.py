@@ -18,7 +18,10 @@ client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 
 
 class SendRequest(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
+    # permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request):
+        return Response({}, 200)
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -48,6 +51,7 @@ class SendRequest(APIView):
         # else:
         #     return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
         return Response({}, 200)
+
 
 class Verify(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
