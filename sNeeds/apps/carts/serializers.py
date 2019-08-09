@@ -23,7 +23,7 @@ class CartSerializer(serializers.ModelSerializer):
         }
 
     def get_time_slot_sales_discount(self, obj):
-        time_slot_sale_count = obj.time_slot_sales_count()
+        time_slot_sale_count = obj.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         return count_discount
 
