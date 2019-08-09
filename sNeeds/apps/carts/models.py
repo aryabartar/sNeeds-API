@@ -49,7 +49,7 @@ class AbstractCart(models.Model):
 
 
 class Cart(AbstractCart):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 

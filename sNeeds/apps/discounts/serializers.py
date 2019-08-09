@@ -15,7 +15,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
 
         obj = CartConsultantDiscount.objects.create_with_consultant_discount(
             validated_data["consultant_discount"],
-            user=user,
+            cart=user,
         )
 
         return obj

@@ -10,6 +10,8 @@ class CartConsultantDiscountListView(generics.ListCreateAPIView):
     queryset = CartConsultantDiscount.objects.all()
     serializer_class = CartConsultantDiscountSerializer
 
+
 class CartConsultantDiscountDetailView(generics.RetrieveDestroyAPIView):
     queryset = CartConsultantDiscount.objects.all()
     serializer_class = CartConsultantDiscountSerializer
+    lookup_field = 'id'
