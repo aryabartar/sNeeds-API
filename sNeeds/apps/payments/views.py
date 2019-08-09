@@ -23,31 +23,31 @@ class SendRequest(APIView):
     def post(self, request, *args, **kwargs):
         user = request.user
 
-        try:
-            order = Order.objects.get(cart__user=user)
-        except Order.DoesNotExist:
-            return Response({"detail": "User has no order"}, 400)
-
-        if not order.is_acceptable_for_pay():
-            return Response({"detail": "Can not pay this order"}, 400)
-
-        result = client.service.PaymentRequest(
-            MERCHANT,
-            int(order.total),
-            "پرداخت اسنیدز",
-            order.cart.user.email,
-            order.cart.user.phone_number,
-            "http://193.176.241.131:8080/payment/accept/",
-        )
-
-        PayPayment.objects.create(user=user, order=order, authority=result.Authority)
-
-        if result.Status == 100:
-            return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
-
-        else:
-            return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
-
+        # try:
+        #     order = Order.objects.get(cart__user=user)
+        # except Order.DoesNotExist:
+        #     return Response({"detail": "User has no order"}, 400)
+        #
+        # if not order.is_acceptable_for_pay():
+        #     return Response({"detail": "Can not pay this order"}, 400)
+        #
+        # result = client.service.PaymentRequest(
+        #     MERCHANT,
+        #     int(order.total),
+        #     "پرداخت اسنیدز",
+        #     order.cart.user.email,
+        #     order.cart.user.phone_number,
+        #     "http://193.176.241.131:8080/payment/accept/",
+        # )
+        #
+        # PayPayment.objects.create(user=user, order=order, authority=result.Authority)
+        #
+        # if result.Status == 100:
+        #     return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
+        #
+        # else:
+        #     return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
+        return Response({}, 200)
 
 class Verify(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
