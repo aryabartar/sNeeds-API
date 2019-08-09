@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.db.models.signals import post_save
+from django.core.exceptions import ValidationError
+
+from sNeeds.apps.account.models import ConsultantProfile
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
@@ -23,3 +25,15 @@ class TimeSlotSaleNumberDiscount(models.Model):
     def __str__(self):
         return str(self.number)
 
+
+class ConsultantDiscount(models.Model):
+    consultant = models.ManyToManyField(ConsultantProfile)
+    percent = models.FloatField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+    def clean(self):
+        if self.end < self.start:
+            raise ValidationError("Start time is before end time.")
