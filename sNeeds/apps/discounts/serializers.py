@@ -4,15 +4,27 @@ from rest_framework.exceptions import ValidationError
 from .models import CartConsultantDiscount, ConsultantDiscount
 
 
+class ConsultantDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultantDiscount
+        fields = ['consultant', 'percent', ]
+
+
 class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     code = serializers.CharField(
         source="consultant_discount.code",
         required=True, max_length=128
     )
+    url = serializers.HyperlinkedIdentityField(view_name="discount:cart-consultant-discount-detail", lookup_field='id')
+    consultant_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = CartConsultantDiscount
-        fields = ['id', 'code', ]
+        fields = ['id', 'consultant_discount', 'url', 'code', ]
+
+    def get_consultant_discount(self, obj):
+        consultant_discount_serialize = ConsultantDiscountSerializer(obj.consultant_discount)
+        return consultant_discount_serialize.data
 
     def validate_code(self, code):
         consultant_discount = ConsultantDiscount.objects.get_with_code_or_none(code)

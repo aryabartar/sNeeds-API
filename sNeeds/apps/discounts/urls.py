@@ -6,5 +6,6 @@ app_name = "discount"
 
 urlpatterns = [
     path('cart-consultant-discount/', views.CartConsultantDiscountListView.as_view()),
-    path('cart-consultant-discount/<int:id>/', views.CartConsultantDiscountDetailView.as_view()),
+    path('cart-consultant-discount/<int:id>/', views.CartConsultantDiscountDetailView.as_view(),
+         name="cart-consultant-discount-detail"),
 ]
