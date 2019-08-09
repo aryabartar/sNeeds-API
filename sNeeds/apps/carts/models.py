@@ -53,10 +53,13 @@ class Cart(AbstractCart):
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def update_total(self):
+    def _get_time_slot_sales_count(self):
+        return self.time_slot_sales.all().count()
+
+    def _update_total(self):
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
-        time_slot_sale_count = self.time_slot_sales_count()
+        time_slot_sale_count = self._get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         self.total = self.subtotal * ((100.0 - count_discount) / 100)
 
@@ -66,12 +69,8 @@ class Cart(AbstractCart):
         for t in time_slot_sales:
             total += t.price
         self.subtotal = total
-        self.update_total()
+        self._update_total()
         self.save()
-
-    def time_slot_sales_count(self):
-        count = len(self.time_slot_sales.all())
-        return count
 
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
