@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from .models import CartConsultantDiscount
 from .serializers import CartConsultantDiscountSerializer
-
+from .permissions import CartConsultantDiscountPermission
 
 class CartConsultantDiscountListView(generics.ListCreateAPIView):
     queryset = CartConsultantDiscount.objects.all()
@@ -14,4 +14,5 @@ class CartConsultantDiscountListView(generics.ListCreateAPIView):
 class CartConsultantDiscountDetailView(generics.RetrieveDestroyAPIView):
     queryset = CartConsultantDiscount.objects.all()
     serializer_class = CartConsultantDiscountSerializer
+    permission_classes = [CartConsultantDiscountPermission,]
     lookup_field = 'id'

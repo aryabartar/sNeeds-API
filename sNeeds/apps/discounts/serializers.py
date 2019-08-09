@@ -15,7 +15,10 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         source="consultant_discount.code",
         required=True, max_length=128
     )
-    url = serializers.HyperlinkedIdentityField(view_name="discount:cart-consultant-discount-detail", lookup_field='id')
+    url = serializers.HyperlinkedIdentityField(
+        view_name="discount:cart-consultant-discount-detail",
+        lookup_field='id'
+    )
     consultant_discount = serializers.SerializerMethodField()
 
     class Meta:
