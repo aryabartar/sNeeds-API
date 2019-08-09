@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
-from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
 User = get_user_model()
 
@@ -55,6 +54,8 @@ class Cart(AbstractCart):
     updated = models.DateTimeField(auto_now=True)
 
     def update_total(self):
+        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
+
         time_slot_sale_count = self.time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         self.total = self.subtotal * ((100.0 - count_discount) / 100)
