@@ -1,4 +1,4 @@
-from zeep import Client
+# from zeep import Client
 
 from django.urls import reverse
 from django.http import HttpResponse
@@ -13,8 +13,10 @@ from .models import PayPayment
 
 from sNeeds.apps.orders.models import Order, SoldOrder
 
-MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
-client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+
+#
+# MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
+# client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 
 
 class SendRequest(APIView):
@@ -23,8 +25,8 @@ class SendRequest(APIView):
     def get(self, request):
         return Response({}, 200)
 
-    def post(self, request, *args, **kwargs):
-        user = request.user
+    def post(self, request, format=None):
+        # user = request.user
 
         # try:
         #     order = Order.objects.get(cart__user=user)
@@ -52,34 +54,34 @@ class SendRequest(APIView):
         #     return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
         return Response({}, 200)
 
-
-class Verify(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-
-    def post(self, request):
-        data = request.data
-        if data.get('status', None) == 'OK':
-            user = request.user
-            authority = data.get('authority', None)
-
-            try:
-                payment = PayPayment.objects.get(
-                    user=user,
-                    authority=authority
-                )
-
-            except PayPayment.DoesNotExist:
-                return Response({"detail": "PayPayment does not exists."}, status=400)
-
-            result = client.service.PaymentVerification(MERCHANT, authority, int(payment.order.total))
-
-            if result.Status == 100:
-                SoldOrder.objects.sell_order(payment.order)
-                return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
-            elif result.Status == 101:
-                return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
-            else:
-                return Response({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
-
-        else:
-            return Response({"detail": "Transaction failed or canceled by user"}, status=400)
+#
+# class Verify(APIView):
+#     permission_classes = [permissions.IsAuthenticated, ]
+#
+#     def post(self, request):
+#         data = request.data
+#         if data.get('status', None) == 'OK':
+#             user = request.user
+#             authority = data.get('authority', None)
+#
+#             try:
+#                 payment = PayPayment.objects.get(
+#                     user=user,
+#                     authority=authority
+#                 )
+#
+#             except PayPayment.DoesNotExist:
+#                 return Response({"detail": "PayPayment does not exists."}, status=400)
+#
+#             result = client.service.PaymentVerification(MERCHANT, authority, int(payment.order.total))
+#
+#             if result.Status == 100:
+#                 SoldOrder.objects.sell_order(payment.order)
+#                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
+#             elif result.Status == 101:
+#                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
+#             else:
+#                 return Response({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
+#
+#         else:
+#             return Response({"detail": "Transaction failed or canceled by user"}, status=400)
