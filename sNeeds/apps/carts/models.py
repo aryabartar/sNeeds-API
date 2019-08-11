@@ -53,27 +53,53 @@ class Cart(AbstractCart):
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
     updated = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))
+
     def get_time_slot_sales_count(self):
         return self.time_slot_sales.all().count()
 
+    def _update_total_cart_consultant_discount_percent(self):
+        from sNeeds.apps.discounts.models import CartConsultantDiscount
+
+        time_slot_sales = self.time_slot_sales.all()
+        cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
+
+        total = 0
+
+        for t in time_slot_sales:
+            percent = 0
+
+            for obj in cart_consultant_discount_qs:
+                consultants_qs = obj.consultant_discount.consultant.all()
+
+                if t.consultant in consultants_qs:
+                    percent += obj.consultant_discount.percent
+
+            total += t.price * ((100.0 - percent) / 100)
+
+        self.total = total
+
     def _update_total(self):
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
+        # For code discount
+        self._update_total_cart_consultant_discount_percent()
 
+        # For quantity discount
         time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
-        self.total = self.subtotal * ((100.0 - count_discount) / 100)
+        self.total = self.total * ((100.0 - count_discount) / 100)
 
     def update_price(self):
         time_slot_sales = self.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
             total += t.price
+
         self.subtotal = total
         self._update_total()
-        self.save()
 
-    def __str__(self):
-        return "User {} cart | pk: {}".format(self.user, str(self.pk))
+        self.save()
 
     @transaction.atomic
     def set_time_slot_sales(self, time_slot_sales):

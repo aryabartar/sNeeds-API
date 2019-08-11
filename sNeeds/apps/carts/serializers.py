@@ -19,6 +19,7 @@ class CartSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
+            'subtotal': {'read_only': True},
             'total': {'read_only': True},
         }
 

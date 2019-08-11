@@ -42,15 +42,8 @@ class ConsultantDiscount(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     code = models.CharField(max_length=128, unique=True)
-    # start = models.DateTimeField()
-    # end = models.DateTimeField()
-    # active = models.BooleanField(default=False)
 
     objects = ConsultantDiscountManager()
-
-    def clean(self):
-        if self.end < self.start:
-            raise ValidationError("Start time is before end time.")
 
     def __str__(self):
         return "{}%".format(str(self.percent))
