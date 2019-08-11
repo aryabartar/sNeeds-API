@@ -11,8 +11,12 @@ from sNeeds.apps.carts.models import Cart
 def post_save_time_slot_sale_number_discount(sender, instance, *args, **kwargs):
     qs = Cart.objects.all()
     for obj in qs:
-        # For triggering Cart post_save to update total
-        obj.save()
+        obj.update_price()
+
+def post_delete_time_slot_sale_number_discount(sender, instance, *args, **kwargs):
+    qs = Cart.objects.all()
+    for obj in qs:
+        obj.update_price()
 
 
 def post_save_cart_consultant_discount(sender, instance, *args, **kwargs):
@@ -21,6 +25,7 @@ def post_save_cart_consultant_discount(sender, instance, *args, **kwargs):
 
 
 def post_delete_cart_consultant_discount(sender, instance, *args, **kwargs):
+    print("trigger")
     cart = instance.cart
     cart.update_price()
 
@@ -41,6 +46,7 @@ def m2m_changed_consultant_discount(sender, instance, action, *args, **kwargs):
 
 
 post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
+post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_save.connect(post_save_cart_consultant_discount, sender=CartConsultantDiscount)
 post_delete.connect(post_delete_cart_consultant_discount, sender=CartConsultantDiscount)
 post_save.connect(post_save_consultant_discount, sender=ConsultantDiscount)

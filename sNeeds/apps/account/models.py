@@ -14,7 +14,7 @@ def get_file_upload_path(sub_dir):
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
     picture = models.ImageField(upload_to=get_image_upload_path("country_pictures"))
-    slug = models.SlugField(help_text="Lowercase pls")
+    slug = models.SlugField(unique=True, help_text="Lowercase pls")
 
     def __str__(self):
         return self.name
@@ -25,7 +25,7 @@ class University(models.Model):
     country = models.CharField(max_length=256)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=get_image_upload_path("university_pictures"))
-    slug = models.SlugField(help_text="Lowercase pls")
+    slug = models.SlugField(unique=True, help_text="Lowercase pls")
 
     def __str__(self):
         return self.name
@@ -35,7 +35,7 @@ class FieldOfStudy(models.Model):
     name = models.CharField(max_length=256, unique=True)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=get_image_upload_path("field_of_study_pictures"))
-    slug = models.SlugField(help_text="Lowercase pls")
+    slug = models.SlugField(unique=True, help_text="Lowercase pls")
 
     def __str__(self):
         self.name = self.name
