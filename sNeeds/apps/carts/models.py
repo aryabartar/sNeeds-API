@@ -64,7 +64,7 @@ class Cart(AbstractCart):
 
         time_slot_sales = self.time_slot_sales.all()
         cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
-
+        print(cart_consultant_discount_qs)
         total = 0
 
         for t in time_slot_sales:
@@ -80,17 +80,22 @@ class Cart(AbstractCart):
 
         self.total = total
 
-    def _update_total(self):
+    def _update_total_time_slot_number(self):
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
-        # For code discount
-        self._update_total_cart_consultant_discount_percent()
 
-        # For quantity discount
         time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         self.total = self.total * ((100.0 - count_discount) / 100)
 
+    def _update_total(self):
+        # For code discount
+        self._update_total_cart_consultant_discount_percent()
+
+        # For quantity discount
+        self._update_total_time_slot_number()
+
     def update_price(self):
+        print("3")
         time_slot_sales = self.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
@@ -99,6 +104,7 @@ class Cart(AbstractCart):
         self.subtotal = total
         self._update_total()
 
+        print("total: ", self.total)
         self.save()
 
     @transaction.atomic
