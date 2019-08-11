@@ -40,15 +40,12 @@ class SendRequest(APIView):
             "http://193.176.241.131:8080/payment/accept/",
         )
 
-        print(result)
+        if result.Status != 100:
+            return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
 
         PayPayment.objects.create(user=user, order=order, authority=result.Authority)
 
-        if result.Status == 100:
-            return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
-
-        else:
-            return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
+        return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
 
 
 class Verify(APIView):
