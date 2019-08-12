@@ -35,7 +35,7 @@ def validate_phone_number(phone):
 
 class UserRegisterSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
-    token_response = serializers.SerializerMethodField(read_only=True)
+    token_response = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -148,11 +148,13 @@ class SafeUserDataSerializer(serializers.ModelSerializer):
         model = User
 
         fields = [
+            'id',
             'first_name',
             'last_name',
         ]
 
         extra_kwargs = {
+            'id': {'read_only': True},
             'first_name': {'read_only': True},
             'last_name': {'read_only': False},
         }
