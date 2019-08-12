@@ -141,3 +141,18 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class SafeUserDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+
+        fields = [
+            'first_name',
+            'last_name',
+        ]
+
+        extra_kwargs = {
+            'first_name': {'read_only': True},
+            'last_name': {'read_only': False},
+        }
