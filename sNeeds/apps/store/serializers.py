@@ -3,6 +3,7 @@ from rest_framework import serializers
 from .models import TimeSlotSale, SoldTimeSlotSale
 
 from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.account.serializers import ConsultantProfileSerializer
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
 
@@ -55,27 +56,22 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
-    consultant_url = serializers.HyperlinkedRelatedField(
-        source='consultant',
-        lookup_field='slug',
-        read_only=True,
-        view_name='account:consultant-profile-detail'
-    )
-
-    consultant_slug = serializers.SlugRelatedField(
-        source='consultant',
-        slug_field='slug',
-        read_only=True
-    )
-
+    consultant = serializers.SerializerMethodField()
     sold_to = serializers.SerializerMethodField()
 
     class Meta:
         model = SoldTimeSlotSale
         fields = [
-            'id', 'url', 'consultant', 'consultant_url', 'consultant_slug',
-            'start_time', 'end_time', 'price', 'sold_to', 'used',
+            'id', 'url', 'consultant', 'start_time', 'end_time',
+            'price', 'sold_to', 'used',
         ]
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+    def get_consultant(self, obj):
+        request = self.context.get('request')
+
+        return ConsultantProfileSerializer(
+            obj.consultant, context={'request': request}
+        ).data
