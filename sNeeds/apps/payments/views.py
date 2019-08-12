@@ -14,13 +14,14 @@ from .models import PayPayment
 from sNeeds.apps.orders.models import Order, SoldOrder
 
 MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
-client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 
 
 class SendRequest(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request, *args, **kwargs):
+        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+
         user = request.user
 
         try:
@@ -52,6 +53,8 @@ class Verify(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request):
+        client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+
         data = request.data
         if data.get('status', None) == 'OK':
             user = request.user
