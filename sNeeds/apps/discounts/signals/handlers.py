@@ -25,7 +25,6 @@ def post_save_cart_consultant_discount(sender, instance, *args, **kwargs):
 
 
 def post_delete_cart_consultant_discount(sender, instance, *args, **kwargs):
-    print("trigger")
     cart = instance.cart
     cart.update_price()
 

@@ -1157,3 +1157,72 @@ Response:
 
 Note: Show RedID to user.  
 For other response codes show user an error. 
+
+## Discounts  
+
+> discount/cart-consultant-discounts/ [GET]
+
+
+```json
+[
+    {
+        "id": 35,
+        "consultant_discount": {
+            "consultant": [
+                4,
+                2,
+                3
+            ],
+            "percent": 10.0
+        },
+        "url": "http://127.0.0.1:8000/discount/cart-consultant-discounts/35/",
+        "code": "10"
+    },
+    {
+        "id": 36,
+        "consultant_discount": {
+            "consultant": [
+                2,
+                3,
+                4
+            ],
+            "percent": 20.0
+        },
+        "url": "http://127.0.0.1:8000/discount/cart-consultant-discounts/36/",
+        "code": "11"
+    }
+]
+```
+
+
+
+> discount/cart-consultant-discounts/ [POST]
+
+
+```json
+{
+    "code": "10"
+}
+```
+
+> discount/cart-consultant-discounts/{ID}/ [GET]
+> discount/cart-consultant-discounts/35/ [GET]
+
+```json
+{
+    "id": 35,
+    "consultant_discount": {
+        "consultant": [
+            4,
+            2,
+            3
+        ],
+        "percent": 10.0
+    },
+    "url": "http://127.0.0.1:8000/discount/cart-consultant-discounts/35/",
+    "code": "10"
+}
+```
+
+> discount/cart-consultant-discounts/{ID}/ [DELETE]
+> discount/cart-consultant-discounts/35/ [DELETE]
