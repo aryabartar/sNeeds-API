@@ -1,7 +1,13 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import CartConsultantDiscount, ConsultantDiscount
+from .models import CartConsultantDiscount, ConsultantDiscount, TimeSlotSaleNumberDiscount
+
+
+class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TimeSlotSaleNumberDiscount
+        fields = ['number', 'discount', ]
 
 
 class ConsultantDiscountSerializer(serializers.ModelSerializer):

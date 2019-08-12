@@ -1304,6 +1304,46 @@ For other response codes show user an error.
 
 ## Discounts  
 
+> discount/time-slot-sale-number-discounts/ [GET]
+
+Use this to show number discounts to all people.   
+
+```json
+[
+    {
+        "number": 1,
+        "discount": 0.0
+    },
+    {
+        "number": 3,
+        "discount": 20.0
+    },
+    {
+        "number": 4,
+        "discount": 30.0
+    },
+    {
+        "number": 5,
+        "discount": 40.0
+    },
+    {
+        "number": 6,
+        "discount": 50.0
+    },
+    {
+        "number": 7,
+        "discount": 60.0
+    },
+    {
+        "number": 2,
+        "discount": 25.0
+    }
+]
+```
+
+
+
+
 > discount/cart-consultant-discounts/ [GET]
 
 

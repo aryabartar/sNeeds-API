@@ -2,9 +2,15 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CartConsultantDiscount
-from .serializers import CartConsultantDiscountSerializer
+from .models import CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from .serializers import CartConsultantDiscountSerializer, TimeSlotSaleNumberDiscountSerializer
 from .permissions import CartConsultantDiscountPermission
+
+
+class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
+    queryset = TimeSlotSaleNumberDiscount.objects.all()
+    serializer_class = TimeSlotSaleNumberDiscountSerializer
+    permission_classes = []
 
 
 class CartConsultantDiscountListView(generics.ListCreateAPIView):
