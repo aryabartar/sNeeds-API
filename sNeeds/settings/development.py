@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_rest_passwordreset',
 
-
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
     'sNeeds.apps.store',
@@ -167,3 +166,7 @@ from .JWTAuthConfig import JWT_AUTH
 
 CELERY_BROKER_URL = 'amqp://localhost'
 
+# Loading API keys
+from .APIs import API_KEYS
+
+SKYROOM_API_KEY = API_KEYS.get("skyroom")

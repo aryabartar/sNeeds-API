@@ -1,6 +1,8 @@
 import requests
 import json
 
+from django.conf import settings
+
 
 class APIException(Exception):
     pass
@@ -13,7 +15,7 @@ class HTTPException(Exception):
 class SkyroomAPI(object):
     def __init__(self, apikey):
         self.host = 'www.skyroom.online'
-        self.apikey = apikey
+        self.apikey = settings.SKYROOM_API_KEY
         self.headers = {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
