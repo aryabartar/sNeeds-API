@@ -112,3 +112,71 @@ def create_room(room_id):
 
     return room_id
 
+
+def get_user_all_rooms(user_id):
+    params = {
+        "user_id": user_id
+    }
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.getUserRooms(params=params)
+        if response.get('ok'):
+            break
+        if i == NUMBER_OF_TRIES - 1:
+            raise Exception("1")
+
+    return response.get("result")
+
+
+def is_user_in_rooms(room_id, user_rooms):
+    for room_dict in user_rooms:
+        if room_id == room_dict.get("room_id"):
+            return True
+    return False
+
+
+def remove_user_from_room(user_id, room_id):
+    params = {
+        "user_id": user_id,
+        "rooms": [room_id, ]
+    }
+
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.removeUserRooms(params=params)
+        if response.get('ok'):
+            break
+        if i == NUMBER_OF_TRIES - 1:
+            raise Exception("1")
+
+
+def make_user_room_presentor(user_id, room_id):
+    params = {
+        "room_id": room_id,
+        "users": [
+            {"user_id": user_id, "access": 2}
+        ]
+    }
+
+    user_all_rooms = get_user_all_rooms(user_id)
+
+    if  is_user_in_rooms(room_id, user_all_rooms):
+        remove_user_from_room(user_id, room_id)
+
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.addRoomUsers(params=params)
+        if response.get('ok'):
+            break
+        if i == NUMBER_OF_TRIES - 1:
+            raise Exception("1")
+
+    print(response)
+# {
+#   "action": "getLoginUrl",
+#   "params": {
+#     "room_id": 1,
+#     "user_id": 1,
+#     "language": "fa",
+#     "ttl": 300
+#   }
+# }
+#
+# def get_login_url(room_id, user_id):
