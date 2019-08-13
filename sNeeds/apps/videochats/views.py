@@ -22,7 +22,16 @@ class Test(APIView):
         }
         # response = s.createUser(params=params)
         # response = s.getUsers(params=params)
-        response = s.getUser(params={"user_id" : 53012})
+        # response = s.getUsers()
+        # print("Response is :", response)
+        # response = s.getRooms()
+        # print("Response is :", response)
+        response = s.getLoginUrl(params={
+            "room_id": 13126,
+            "user_id": 53043,
+            "language": "fa",
+            "ttl": 300
+        })
 
         print("Response is :", response)
         return Response({}, 200)
