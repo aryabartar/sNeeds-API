@@ -1,4 +1,5 @@
 from sNeeds.utils import skyroom
+import random
 
 NUMBER_OF_TRIES = 5
 s = skyroom.SkyroomAPI()
@@ -55,3 +56,59 @@ def create_user_or_get_current_id(username, password, nickname):
         user_id = get_user_id_in_all_users(username, all_users)
 
     return user_id
+
+
+def get_all_rooms():
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.getRooms()
+        if response.get('ok'):
+            break
+        if i == NUMBER_OF_TRIES - 1:
+            raise Exception("1")
+
+    all_rooms = response.get("result")
+    return all_rooms
+
+
+def check_room_in_all_rooms(room_title, all_rooms):
+    for room_dict in all_rooms:
+        if room_title == room_dict.get("title"):
+            return True
+    return False
+
+
+def get_room_id_in_all_rooms(room_title, all_rooms):
+    for room_dict in all_rooms:
+        if room_title == room_dict.get("title"):
+            return room_dict.get("id")
+    return None
+
+
+def create_room(room_id):
+    name = "مشاوره اسنیدز {}".format(room_id)
+    title = "مشاوره اسنیدز {}".format(room_id)
+
+    params = {
+        "name": name,
+        "title": title,
+        "guest_login": False,
+        "op_login_first": False,
+        "max_users": 3
+    }
+
+    all_rooms = get_all_rooms()
+
+    if not check_room_in_all_rooms(title, all_rooms):
+        for i in range(0, NUMBER_OF_TRIES):
+
+            response = s.createRoom(params=params)
+            if response.get('ok'):
+                break
+            if i == NUMBER_OF_TRIES - 1:
+                raise Exception("1")
+        room_id = response.get("result")
+    else:
+        room_id = get_room_id_in_all_rooms(title, all_rooms)
+
+    return room_id
+

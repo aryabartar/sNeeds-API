@@ -50,7 +50,9 @@ class Test(APIView):
         #     "ttl": 300
         # })
 
-        from .utils import create_user_or_get_current_id
-        response = create_user_or_get_current_id("r122rr" , "!2232324" , "dfdf")
+        from .utils import create_user_or_get_current_id, create_room
+        # response = create_user_or_get_current_id("r12d2rr" , "!2232324" , "dfdf")
+        response = create_room(111)
         print("Response is :", response)
         return Response({}, 200)
+
