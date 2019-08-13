@@ -13,7 +13,7 @@ class HTTPException(Exception):
 
 
 class SkyroomAPI(object):
-    def __init__(self, apikey):
+    def __init__(self):
         self.host = 'www.skyroom.online'
         self.apikey = settings.SKYROOM_API_KEY
         self.headers = {
@@ -30,27 +30,34 @@ class SkyroomAPI(object):
 
     def _request(self, action, params=None):
         url = 'https://' + self.host + '/skyroom/api/' + self.apikey
+
         data = {
             'action': action
         }
+
         if params:
             data['params'] = params
+
         try:
             content_data = requests.post(url, headers=self.headers, auth=None, json=data).content
+
             try:
                 response = json.loads(content_data.decode("utf-8"))
-                if (response['ok'] == True):
-                    response = response['result']
+
+                if response['ok']:
+                    response = {"ok": response['ok'], "result": response['result']}
+
                 else:
-                    raise APIException(
-                        (u'APIException[error_code: %s]: %s' % (
-                            response['error_code'], response['error_message'])).encode('utf-8')
-                    )
+                    response = {"ok": response['ok'], "error_message": response['error_message']}
+
             except ValueError as e:
-                raise HTTPException(e)
+                response = {"ok": False, "error_message": "ارور اتصال به سرور اسکای‌روم"}
+
             return response
+
         except requests.exceptions.RequestException as e:
-            raise HTTPException(e)
+            response = {"ok": False, "error_message": "ارور اتصال نامشخص"}
+            return response
 
     # 1.Service Management
 
@@ -102,6 +109,7 @@ class SkyroomAPI(object):
     def getUser(self, params=None):
         return self._request('getUser', params)
 
+    # Implemented
     def createUser(self, params=None):
         return self._request('createUser', params)
 
