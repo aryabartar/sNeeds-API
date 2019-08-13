@@ -158,7 +158,7 @@ def make_user_room_presentor(user_id, room_id):
 
     user_all_rooms = get_user_all_rooms(user_id)
 
-    if  is_user_in_rooms(room_id, user_all_rooms):
+    if is_user_in_rooms(room_id, user_all_rooms):
         remove_user_from_room(user_id, room_id)
 
     for i in range(0, NUMBER_OF_TRIES):
@@ -168,15 +168,20 @@ def make_user_room_presentor(user_id, room_id):
         if i == NUMBER_OF_TRIES - 1:
             raise Exception("1")
 
-    print(response)
-# {
-#   "action": "getLoginUrl",
-#   "params": {
-#     "room_id": 1,
-#     "user_id": 1,
-#     "language": "fa",
-#     "ttl": 300
-#   }
-# }
-#
-# def get_login_url(room_id, user_id):
+
+def get_without_password_login_url(user_id, room_id):
+    params = {
+        "room_id": user_id,
+        "user_id": room_id,
+        "language": "fa",
+        "ttl": 7200
+    }
+
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.getLoginUrl(params=params)
+        if response.get('ok'):
+            break
+        if i == NUMBER_OF_TRIES - 1:
+            raise Exception("1")
+
+    return response.get('result')

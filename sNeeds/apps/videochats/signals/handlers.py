@@ -6,8 +6,6 @@ from sNeeds.apps.videochats.models import Room
 def pre_save_room_receiver(sender, instance, created, *args, **kwargs):
     if not instance.consultant_login_url:
         pass
-    if not instance.consultant_login_url:
-        pass
 
 
 pre_save.connect(pre_save_room_receiver, sender=Room)
