@@ -29,26 +29,28 @@ class RoomListView(generics.ListAPIView):
 
 class Test(APIView):
     def get(self, *args, **kwargs):
-        s = skyroom.SkyroomAPI()
-        params = {
-            "username": "test-user441445",
-            "password": "123456",
-            "nickname": "کاربر عمومی",
-            "status": 2,
-            "is_public": True
-        }
-        # response = s.createUser(params=params)
-        # response = s.getUsers(params=params)
-        # response = s.getUsers()
-        # print("Response is :", response)
-        # response = s.getRooms()
-        # print("Response is :", response)
-        response = s.getLoginUrl(params={
-            "room_id": 13126,
-            "user_id": 53043,
-            "language": "fa",
-            "ttl": 300
-        })
+        # s = skyroom.SkyroomAPI()
+        # params = {
+        #     "username": "test-user441445",
+        #     "password": "123456",
+        #     "nickname": "کاربر عمومی",
+        #     "status": 2,
+        #     "is_public": True
+        # }
+        # # response = s.createUser(params=params)
+        # # response = s.getUsers(params=params)
+        # # response = s.getUsers()
+        # # print("Response is :", response)
+        # # response = s.getRooms()
+        # # print("Response is :", response)
+        # response = s.getLoginUrl(params={
+        #     "room_id": 13126,
+        #     "user_id": 53043,
+        #     "language": "fa",
+        #     "ttl": 300
+        # })
 
+        from .utils import create_user_or_get_current_id
+        response = create_user_or_get_current_id("r122rr" , "!2232324" , "dfdf")
         print("Response is :", response)
         return Response({}, 200)

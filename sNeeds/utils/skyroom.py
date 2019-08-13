@@ -48,7 +48,7 @@ class SkyroomAPI(object):
                     response = {"ok": response['ok'], "result": response['result']}
 
                 else:
-                    response = {"ok": response['ok'], "error_message": response['error_message']}
+                    response = {"ok": False, "error_message": response['error_message']}
 
             except ValueError as e:
                 response = {"ok": False, "error_message": "ارور اتصال به سرور اسکای‌روم"}
