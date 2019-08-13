@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 
 
-class VideochatsConfig(AppConfig):
-    name = 'videochats'
+class VideoChatsConfig(AppConfig):
+    name = 'sNeeds.apps.videochats'
+
+    def ready(self):
+        import sNeeds.apps.videochats.signals.handlers

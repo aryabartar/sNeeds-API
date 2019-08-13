@@ -6,5 +6,5 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 class Room(models.Model):
     sold_time_slot = models.OneToOneField(SoldTimeSlotSale, on_delete=models.CASCADE)
-    consultant_login_url = models.URLField()
-    user_login_url = models.URLField()
+    consultant_login_url = models.URLField(blank=True)
+    user_login_url = models.URLField(blank=True)
