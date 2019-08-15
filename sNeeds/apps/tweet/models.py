@@ -1,5 +1,5 @@
 from django.db import models
-from accounts.models import CustomUser
+from sNeeds.apps.customAuth.models import CustomUser
 
 
 def path_for_uploading_file(instance, filename):

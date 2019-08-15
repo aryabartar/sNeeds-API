@@ -1,7 +1,15 @@
 
 from rest_framework import serializers
-
 from .models import TweetModel
+
+
+class IndexPageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TweetModel
+        fields = [
+            'sender',
+            'receiver'
+        ]
 
 
 class TextMessageModelSerializerSender(serializers.ModelSerializer):

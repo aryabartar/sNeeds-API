@@ -22,7 +22,6 @@ urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api-auth/', include('rest_framework.urls')),
                   path('docs/', include('sNeeds.apps.docs.urls')),
-
                   path('auth/', include('sNeeds.apps.customAuth.urls')),
                   path('account/', include('sNeeds.apps.account.urls')),
                   path('store/', include('sNeeds.apps.store.urls')),
@@ -33,4 +32,5 @@ urlpatterns = [
                   path('user-file/', include('sNeeds.apps.userfiles.urls')),
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochats/', include('sNeeds.apps.videochats.urls')),
+                  path('tweet/', include('sNeeds.apps.tweet.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
