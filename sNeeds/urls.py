@@ -32,5 +32,5 @@ urlpatterns = [
                   path('comment/', include('sNeeds.apps.comments.urls')),
                   path('user-file/', include('sNeeds.apps.userfiles.urls')),
                   path('discount/', include('sNeeds.apps.discounts.urls')),
-                  path('videochats/', include('sNeeds.apps.videochats.urls')),
+                  path('videochat/', include('sNeeds.apps.videochats.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

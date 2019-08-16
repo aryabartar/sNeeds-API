@@ -6,11 +6,13 @@ from .models import Room
 
 
 class RoomSerializer(serializers.ModelSerializer):
-    time_slot = serializers.SerializerMethodField()
+    sold_time_slot_url = serializers.HyperlinkedRelatedField(
+        source='sold_time_slot', view_name="store:time-slot-sale-detail",
+        lookup_field='id', read_only=True,
+    )
 
     class Meta:
         model = Room
-        fields = ['id', 'sold_time_slot', 'consultant_login_url', 'user_login_url']
-
-    def get_time_slot(self, obj):
-        return SoldTimeSlotSaleSerializer(obj.sold_time_slot).data
+        fields = [
+            'id', 'sold_time_slot', 'sold_time_slot_url', 'user_login_url', 'consultant_login_url', 'created'
+        ]
