@@ -11,10 +11,12 @@ def post_save_room_receiver(sender, instance, created, *args, **kwargs):
         sold_time_slot_id = instance.sold_time_slot.id
 
         user_login_url, consultant_login_url = create_2members_chat_room(
-            user.email,
+            user.id,
             user.first_name,
-            consultant_user.email,
+            user.email,
+            consultant_user.id,
             consultant_user.first_name,
+            consultant_user.email,
             sold_time_slot_id
         )
 
