@@ -4,6 +4,9 @@ from sNeeds.utils import skyroom
 from sNeeds.settings.passwords import ALL_SKYROOM_USERS_PASSWORD
 
 NUMBER_OF_TRIES = 5
+LOGIN_LINK_TTL = 4200  # 70 minutes
+ROOM_MAX_USERS = 2
+ROOM_SESSION_DURATION = 70  # 70 minutes
 s = skyroom.SkyroomAPI()
 
 
@@ -90,7 +93,7 @@ def _get_room_id_in_all_rooms(room_title, all_rooms):
     return None
 
 
-def create_room_or_get(room_id):
+def create_room_or_get(room_id, max_users):
     name = "مشاوره اسنیدز {}".format(room_id)
     title = "مشاوره اسنیدز {}".format(room_id)
 
@@ -99,7 +102,8 @@ def create_room_or_get(room_id):
         "title": title,
         "guest_login": False,
         "op_login_first": False,
-        "max_users": 3
+        "max_users": max_users,
+        "session_duration": ROOM_SESSION_DURATION
     }
 
     all_rooms = _get_all_rooms()
@@ -175,12 +179,12 @@ def make_user_room_presentor(user_id, room_id):
             raise Exception("1")
 
 
-def get_login_url_without_password(user_id, room_id):
+def get_login_url_without_password(user_id, room_id, ttl):
     params = {
         "user_id": user_id,
         "room_id": room_id,
         "language": "fa",
-        "ttl": 7200
+        "ttl": ttl
     }
 
     for i in range(0, NUMBER_OF_TRIES):
@@ -207,13 +211,13 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
     user1_id = create_user_or_get_current_id(username1, ALL_SKYROOM_USERS_PASSWORD, nickname1, user1email)
     user2_id = create_user_or_get_current_id(username2, ALL_SKYROOM_USERS_PASSWORD, nickname2, user2email)
 
-    room_id = create_room_or_get(roomid)
+    room_id = create_room_or_get(roomid, ROOM_MAX_USERS)
 
     make_user_room_presentor(user1_id, room_id)
     make_user_room_presentor(user2_id, room_id)
 
-    user1_url = get_login_url_without_password(user1_id, room_id)
-    user2_url = get_login_url_without_password(user2_id, room_id)
+    user1_url = get_login_url_without_password(user1_id, room_id, LOGIN_LINK_TTL)
+    user2_url = get_login_url_without_password(user2_id, room_id, LOGIN_LINK_TTL)
 
     return_dict = {
         "user1_id": user1_id,

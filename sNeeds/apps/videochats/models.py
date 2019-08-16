@@ -15,3 +15,4 @@ class Room(models.Model):
     user_login_url = models.URLField(max_length=1024, blank=True)
     consultant_login_url = models.URLField(max_length=1024, blank=True)
 
+    created = models.DateTimeField(auto_now_add=True)
