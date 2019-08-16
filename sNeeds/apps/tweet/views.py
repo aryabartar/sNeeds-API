@@ -57,12 +57,9 @@ class CreateRetrieveMessageAPIView(mixins.CreateModelMixin,
         user_id = self.request.user.id
         user_id2 = self.kwargs['personId']
         if qs.exists():
-            try:
-                received_messages = qs.filter(receiver_id__exact=user_id)
-                received_messages.update(seen=True)
-                return super().get(request, *args, **kwargs)
-            except Exception as ex:
-                return Response({"details": str(ex)})
+            received_messages = qs.filter(receiver_id__exact=user_id)
+            received_messages.update(seen=True)
+            return super().get(request, *args, **kwargs)
         else:
             try:
                 user = CustomUser.objects.get(pk=user_id2)
