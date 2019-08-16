@@ -50,9 +50,9 @@ class Test(APIView):
         #     "ttl": 300
         # })
 
-        from .utils import create_user_or_get_current_id, create_room, _make_user_room_presentor
+        from .utils import create_user_or_get_current_id, create_room, make_user_room_presentor
         user_id = create_user_or_get_current_id("ttest" , "!2232324" , "dfdf")
         room_id = create_room(1121)
-        _make_user_room_presentor(user_id, room_id)
+        make_user_room_presentor(user_id, room_id)
         return Response({}, 200)
 

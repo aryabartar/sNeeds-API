@@ -154,7 +154,7 @@ def _remove_user_from_room(user_id, room_id):
             raise Exception("1")
 
 
-def _make_user_room_presentor(user_id, room_id):
+def make_user_room_presentor(user_id, room_id):
     params = {
         "room_id": room_id,
         "users": [
@@ -209,10 +209,11 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
 
     room_id = create_room_or_get(roomid)
 
-    _make_user_room_presentor(user1_id, room_id)
-    _make_user_room_presentor(user2_id, room_id)
+    make_user_room_presentor(user1_id, room_id)
+    make_user_room_presentor(user2_id, room_id)
 
     user1_url = get_login_url_without_password(user1_id, room_id)
     user2_url = get_login_url_without_password(user2_id, room_id)
 
     return user1_url, user2_url
+
