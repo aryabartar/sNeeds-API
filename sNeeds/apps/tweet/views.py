@@ -37,14 +37,11 @@ class CreateRetrieveMessageAPIView(mixins.CreateModelMixin,
 
     def get_queryset(self):
         qs = TweetModel.objects.all()
-        try:
-            user_id = self.request.user.id  # Me
-            user_id2 = self.kwargs['personId']  # The person who sent a tweet for me or I have sent a tweet for him
-            if user_id is not None:
-                qs = qs.filter((Q(sender_id__exact=user_id) & Q(receiver_id__exact=user_id2)) | (Q(sender_id__exact=user_id2) & Q(receiver_id__exact=user_id)))
-            return qs
-        except Exception as ex:
-            raise Exception(str(ex))
+        user_id = self.request.user.id  # Me
+        user_id2 = self.kwargs['personId']  # The person who sent a tweet for me or I have sent a tweet for him
+        if user_id is not None:
+            qs = qs.filter((Q(sender_id__exact=user_id) & Q(receiver_id__exact=user_id2)) | (Q(sender_id__exact=user_id2) & Q(receiver_id__exact=user_id)))
+        return qs
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -67,32 +64,29 @@ class CreateRetrieveMessageAPIView(mixins.CreateModelMixin,
                 return Response({"details": "There isn't such a user"}, status=status.HTTP_404_NOT_FOUND)
             else:
                 if not qs.exists():
-                    return Response({"details": "You haven't sent or received any message from " + user.email}, status=status.HTTP_404_NOT_FOUND)
+                    return Response({"details": "You haven't sent or received any message from this user"}, status=status.HTTP_404_NOT_FOUND)
                 else:
                     return Response({"details": "An Error occurred."}, status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request, *args, **kwargs):
+        user_id = self.request.user.id
         user_id2 = self.kwargs['personId']
-        if CustomUser.objects.filter(id=user_id2).exists():
-            if ConsultantProfile.objects.filter(user__email="eng.mrgh@gmail.com"):
+        try:
+            user = CustomUser.objects.get(pk=user_id2) # This part is just for testing that such a user exist or not. if such a user does not exist this throws an exception
+            if ConsultantProfile.objects.filter(user__email=user.email):
                 data = {'text': request.data['text'],
-                        'sender': self.request.user.id,  # Me
-                        'receiver': self.kwargs['personId']}  # The page of person I'm now visiting
+                        'sender': user_id,  # Me
+                        'receiver': user_id2}  # The page of person I'm now visiting
                 if 'file' in request.FILES:
-                    data['file']= request.FILES['file']
+                    data['file'] = request.FILES['file']
                 serializer = self.get_serializer(data=data)
-                try:
-                    serializer.is_valid(raise_exception=True)
-                    serializer.save()
-                    headers = self.get_success_headers(serializer.data)
-                    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-                except Exception as ex:
-                    return Response({"details": str(ex)}, status=status.HTTP_406_NOT_ACCEPTABLE)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
             else:
-                print(ConsultantProfile.objects.all())
-                print(ConsultantProfile.objects.filter(user=user_id2))
                 return Response({"details": "Specified user is not a consultant. You could sent messages only to our consultants."})
-        else:
+        except ObjectDoesNotExist:
             return Response({"details": "Specified user does not exist."}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
     def perform_create(self, serializer):
@@ -105,28 +99,33 @@ class UpdateMessageAPIView(UpdateAPIView, DestroyAPIView):
 
     def get_queryset(self):
         qs = TweetModel.objects.all()
-        if qs is not None:
-            return qs
-        else:
-            raise Exception("No TextMessage available.")
+        user_id = self.request.user.id  # Me
+        user_id2 = self.kwargs['personId']  # The person who sent a tweet for me or I have sent a tweet for him
+        if user_id is not None:
+            qs = qs.filter((Q(sender_id__exact=user_id) & Q(receiver_id__exact=user_id2)) |
+                           (Q(sender_id__exact=user_id2) & Q(receiver_id__exact=user_id)))
+        return qs
 
     def put(self, request, *args, **kwargs):
         tweets = self.get_queryset()
         personId = self.kwargs['personId']
         tweet_id = self.kwargs['tweetId']
         try:
-            tweet = tweets.filter(id=tweet_id)
-            tweet.update(text=request.data['text'], edited=True)
-            return Response(status=status.HTTP_202_ACCEPTED)
-        except Exception as ex:
-            return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+            tweet = tweets.get(pk=tweet_id)
+            tweet.text = self.request.data['text']
+            tweet.edited = True
+            tweet.save()
+            return Response({"detail": "Requested message was updated."}, status=status.HTTP_202_ACCEPTED)#TODO: This method is not like the response of the post
+        except ObjectDoesNotExist:
+            return Response({"details": "Requested message does not exist, may be deleted or haven't sent yet."}, status=status.HTTP_404_NOT_FOUND)
 
     def destroy(self, request, *args, **kwargs):  # TODO: the file which is uploaded by the tweet should be deleted
         tweets = self.get_queryset()
+        person_id = self.kwargs['personId']
         tweet_id = self.kwargs['tweetId']
         try:
-            tweet = tweets.filter(id=tweet_id)
+            tweet = tweets.get(id=tweet_id)
             tweet.delete()
-            return Response(status=status.HTTP_202_ACCEPTED)
-        except Exception as ex:
-            return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Requested Message was deleted."},status=status.HTTP_202_ACCEPTED)
+        except ObjectDoesNotExist:
+            return Response({"detail": "Requested message does not exist, may be deleted or haven't sent yet."}, status=status.HTTP_400_BAD_REQUEST)
