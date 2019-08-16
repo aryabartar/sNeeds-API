@@ -37,7 +37,7 @@ def create_user_or_get_current_id(username, password, nickname):
         "password": password,
         "nickname": nickname,
         "status": 1,
-        "is_public": True
+        "is_public": False
     }
     all_users = get_all_users()
 
@@ -45,6 +45,7 @@ def create_user_or_get_current_id(username, password, nickname):
 
         for i in range(0, NUMBER_OF_TRIES):
             response = s.createUser(params=params)
+            print(response)
             if response.get('ok'):
                 break
             if i == NUMBER_OF_TRIES - 1:
@@ -84,7 +85,7 @@ def get_room_id_in_all_rooms(room_title, all_rooms):
     return None
 
 
-def create_room(room_id):
+def create_room_or_get(room_id):
     name = "مشاوره اسنیدز {}".format(room_id)
     title = "مشاوره اسنیدز {}".format(room_id)
 
@@ -169,10 +170,10 @@ def make_user_room_presentor(user_id, room_id):
             raise Exception("1")
 
 
-def get_without_password_login_url(user_id, room_id):
+def get_login_url_without_password(user_id, room_id):
     params = {
-        "room_id": user_id,
-        "user_id": room_id,
+        "user_id": user_id,
+        "room_id": room_id,
         "language": "fa",
         "ttl": 7200
     }
@@ -181,7 +182,29 @@ def get_without_password_login_url(user_id, room_id):
         response = s.getLoginUrl(params=params)
         if response.get('ok'):
             break
+
         if i == NUMBER_OF_TRIES - 1:
             raise Exception("1")
 
     return response.get('result')
+
+
+def create_2members_chat_room(username1, nickname1, username2, nickname2, roomid):
+    if nickname1 == "" or nickname1 is None:
+        nickname1 = "کاربر"
+
+    if nickname2 == "" or nickname2 is None:
+        nickname2 = "مشاور"
+
+    user1_id = create_user_or_get_current_id(username1, "sneeds_temppass", nickname1)
+    user2_id = create_user_or_get_current_id(username2, "sneeds_temppass", nickname2)
+
+    room_id = create_room_or_get(roomid)
+
+    make_user_room_presentor(user1_id, room_id)
+    make_user_room_presentor(user2_id, room_id)
+
+    user1_url = get_login_url_without_password(user1_id, room_id)
+    user2_url = get_login_url_without_password(user2_id, room_id)
+
+    return user1_url, user2_url
