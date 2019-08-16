@@ -119,7 +119,7 @@ class UpdateMessageAPIView(UpdateAPIView, DestroyAPIView):
         except ObjectDoesNotExist:
             return Response({"details": "Requested message does not exist, may be deleted or haven't sent yet."}, status=status.HTTP_404_NOT_FOUND)
 
-    def destroy(self, request, *args, **kwargs):  # TODO: the file which is uploaded by the tweet should be deleted
+    def destroy(self, request, *args, **kwargs):
         tweets = self.get_queryset()
         person_id = self.kwargs['personId']
         tweet_id = self.kwargs['tweetId']
