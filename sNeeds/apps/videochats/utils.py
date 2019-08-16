@@ -1,4 +1,4 @@
-import random
+import time
 
 from sNeeds.utils import skyroom
 from sNeeds.settings.passwords import ALL_SKYROOM_USERS_PASSWORD
@@ -195,8 +195,8 @@ def get_login_url_without_password(user_id, room_id):
 
 
 def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
-    username1 = "sneeds_user_{}_for_roomid_{}".format(str(user1id), str(roomid))
-    username2 = "sneeds_user_{}_for_roomid_{}".format(str(user1id), str(roomid))
+    username1 = "sneeds_user_{}_for_room_id_{}".format(str(user1id), str(roomid))
+    username2 = "sneeds_user_{}_for_room_id_{}".format(str(user2id), str(roomid))
 
     if nickname1 == "" or nickname1 is None:
         nickname1 = "کاربر"
@@ -204,8 +204,8 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
     if nickname2 == "" or nickname2 is None:
         nickname2 = "مشاور"
 
-    user1_id = create_user_or_get_current_id(username1, ALL_SKYROOM_USERS_PASSWORD, nickname1, user1email, expiry_date=1565948998)
-    user2_id = create_user_or_get_current_id(username2, ALL_SKYROOM_USERS_PASSWORD, nickname2, user2email, expiry_date=1565948998)
+    user1_id = create_user_or_get_current_id(username1, ALL_SKYROOM_USERS_PASSWORD, nickname1, user1email)
+    user2_id = create_user_or_get_current_id(username2, ALL_SKYROOM_USERS_PASSWORD, nickname2, user2email)
 
     room_id = create_room_or_get(roomid)
 
@@ -215,5 +215,38 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
     user1_url = get_login_url_without_password(user1_id, room_id)
     user2_url = get_login_url_without_password(user2_id, room_id)
 
-    return user1_url, user2_url
+    return_dict = {
+        "user1_id": user1_id,
+        "user2_id": user2_id,
+        "room_id": room_id,
+        "user1_url": user1_url,
+        "user2_url": user2_url,
+    }
 
+    return return_dict
+
+
+def delete_room(room_id):
+    params = {
+        "room_id": room_id
+    }
+
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.deleteRoom(params=params)
+        if response.get('ok'):
+            break
+
+    return response.get('result')
+
+
+def delete_user(user_id):
+    params = {
+        "user_id": user_id
+    }
+
+    for i in range(0, NUMBER_OF_TRIES):
+        response = s.deleteUser(params=params)
+        if response.get('ok'):
+            break
+
+    return response.get('result')
