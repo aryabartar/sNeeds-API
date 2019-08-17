@@ -12,6 +12,7 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 from .models import Room
 from .serializers import RoomSerializer
+from .permissions import RoomOwnerPermission
 
 
 class RoomListView(generics.ListAPIView):
@@ -24,10 +25,11 @@ class RoomListView(generics.ListAPIView):
             qs = Room.objects.filter(sold_time_slot__consultant__user=user)
         else:
             qs = Room.objects.filter(sold_time_slot__sold_to=user)
-            print("here")
         return qs
 
 
 class RoomDetailAPIView(generics.RetrieveAPIView):
+    queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = []
+    lookup_field = 'id'
+    permission_classes = [permissions.IsAuthenticated, RoomOwnerPermission]

@@ -12,12 +12,16 @@ class RoomSerializer(serializers.ModelSerializer):
         lookup_field='id', read_only=True,
     )
 
+    url = serializers.HyperlinkedIdentityField(
+        view_name="videochat:room-detail", lookup_field='id'
+    )
+
     login_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Room
         fields = [
-            'id', 'sold_time_slot', 'sold_time_slot_url', 'login_url', 'created'
+            'id', 'url', 'sold_time_slot', 'sold_time_slot_url', 'login_url', 'created'
         ]
 
     def get_login_url(self, obj):
