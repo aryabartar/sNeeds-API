@@ -26,3 +26,8 @@ class RoomListView(generics.ListAPIView):
             qs = Room.objects.filter(sold_time_slot__sold_to=user)
             print("here")
         return qs
+
+
+class RoomDetailAPIView(generics.RetrieveAPIView):
+    serializer_class = RoomSerializer
+    permission_classes = []
