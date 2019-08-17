@@ -1,8 +1,10 @@
-from django.db import models
-from sNeeds.apps.customAuth.models import CustomUser
-from os.path import isfile
 from os import remove
+from os.path import isfile
+
+from django.db import models
 from django.dispatch import receiver
+
+from sNeeds.apps.customAuth.models import CustomUser
 
 
 def path_for_uploading_file(instance, filename):
@@ -10,16 +12,16 @@ def path_for_uploading_file(instance, filename):
 
 
 class TweetModel(models.Model):
-    sender = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='sender')
-    receiver = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='receiver')
-    date_created = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='sender')
+    receiver = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='receiver')
+    text = models.CharField(max_length=256, blank=False, null=False)
+    file = models.FileField(upload_to=path_for_uploading_file, null=True, blank=True)
+
     seen = models.BooleanField(default=False, blank=False, null=False)
     edited = models.BooleanField(default=False)
-    file = models.FileField(upload_to=path_for_uploading_file, null=True, blank=True)
-    text = models.CharField(max_length=256, blank=False, null=False)
 
-    def __str__(self):
-        return self.text
+    date_created = models.DateTimeField(auto_now_add=True)
+
 
 @receiver(models.signals.post_delete, sender=TweetModel)
 def auto_delete_file_on_delete(sender, instance, **kwargs):
@@ -30,6 +32,7 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
     if instance.file:
         if isfile(instance.file.path):
             remove(instance.file.path)
+
 
 @receiver(models.signals.pre_save, sender=TweetModel)
 def auto_delete_file_on_change(sender, instance, **kwargs):

@@ -4,3 +4,8 @@ from .models import TweetModel
 
 # Register your models here.
 admin.site.register(TweetModel)
+
+
+# @admin.register(ConsultantDiscount)
+# class ConsultantDiscountAdmin(admin.ModelAdmin):
+#     list_display = ('percent',)
