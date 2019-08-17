@@ -6,6 +6,9 @@ from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room,
 
 def post_save_room_receiver(sender, instance, created, *args, **kwargs):
     if created:
+        instance.sold_time_slot.used = True
+        instance.sold_time_slot.save()
+
         user = instance.sold_time_slot.sold_to
         consultant_user = instance.sold_time_slot.consultant.user
         sold_time_slot_id = instance.sold_time_slot.id
