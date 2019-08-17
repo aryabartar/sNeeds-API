@@ -12,6 +12,9 @@ class RoomSerializer(serializers.ModelSerializer):
         lookup_field='id', read_only=True,
     )
 
+    starts = serializers.SerializerMethodField()
+    ends = serializers.SerializerMethodField()
+
     url = serializers.HyperlinkedIdentityField(
         view_name="videochat:room-detail", lookup_field='id'
     )
@@ -21,7 +24,7 @@ class RoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Room
         fields = [
-            'id', 'url', 'sold_time_slot', 'sold_time_slot_url', 'login_url', 'created'
+            'id', 'url', 'sold_time_slot', 'sold_time_slot_url', 'login_url', 'starts', 'ends'
         ]
 
     def get_login_url(self, obj):
@@ -32,3 +35,9 @@ class RoomSerializer(serializers.ModelSerializer):
             return obj.consultant_login_url
         else:
             return obj.user_login_url
+
+    def get_starts(self, obj):
+        return obj.sold_time_slot.start_time
+
+    def get_ends(self, obj):
+        return obj.sold_time_slot.end_time
