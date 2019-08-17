@@ -24,4 +24,5 @@ class RoomListView(generics.ListAPIView):
             qs = Room.objects.filter(sold_time_slot__consultant__user=user)
         else:
             qs = Room.objects.filter(sold_time_slot__sold_to=user)
+            print("here")
         return qs
