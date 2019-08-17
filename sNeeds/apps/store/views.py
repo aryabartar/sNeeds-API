@@ -28,6 +28,7 @@ class TimeSlotSailList(generics.ListCreateAPIView):
 class SoldTimeSlotSaleList(generics.ListAPIView):
     queryset = SoldTimeSlotSale.objects.all()
     serializer_class = serializers.SoldTimeSlotSaleSerializer
+    filterset_fields = ['used', ]
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

@@ -511,6 +511,8 @@ NOTE: Only allowed for comment creator.
 
 NOTE: Don't use this endpoint unless you need to check rate for specific sold_time_slot is created or exists.
 
+FILTERS: used filter
+
 ```json
 [
     {
