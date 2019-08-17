@@ -1,15 +1,37 @@
-
 from rest_framework import serializers
 from .models import TweetModel
 
+from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
-class IndexPageSerializer(serializers.ModelSerializer):
+
+class TweetSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="tweets:tweet-detail", lookup_field='id'
+    )
+    sender = serializers.SerializerMethodField()
+    receiver = serializers.SerializerMethodField()
+
     class Meta:
         model = TweetModel
         fields = [
+            'id',
+            'url',
             'sender',
             'receiver'
         ]
+
+    def get_sender(self, obj):
+        request = self.context.get("request")
+        print(request.data)
+        return SafeUserDataSerializer(
+            obj.sender, context={"request": request}
+        ).data
+
+    def get_receiver(self, obj):
+        request = self.context.get("request")
+        return SafeUserDataSerializer(
+            obj.receiver, context={"request": request}
+        ).data
 
 
 class TextMessageModelSerializerSender(serializers.ModelSerializer):
@@ -20,7 +42,7 @@ class TextMessageModelSerializerSender(serializers.ModelSerializer):
             'file',
             'sender',
             'receiver',
-            ]
+        ]
 
 
 class TextMessageModelSerializerReceiver(serializers.ModelSerializer):
@@ -35,7 +57,7 @@ class TextMessageModelSerializerReceiver(serializers.ModelSerializer):
             'date_created',
             'edited',
             'seen'
-            ]
+        ]
         read_only_fields = ['sender',
                             'date_created',
                             'edited',

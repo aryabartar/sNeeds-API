@@ -17,8 +17,10 @@ from django.urls import path
 
 from . import views
 
+app_name = "tweets"
+
 urlpatterns = [
     path('tweets/', views.TweetListAPIView.as_view()),
     # path('<int:personId>/', CreateRetrieveMessageAPIView.as_view()),
-    path('tweets/<int:tweetId>/', views.UpdateMessageAPIView.as_view()),
+    path('tweets/<int:id>/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
 ]

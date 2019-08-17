@@ -11,14 +11,15 @@ from sNeeds.apps.customAuth.models import CustomUser
 
 from .models import TweetModel
 from .serializers import (
+    TweetSerializer,
     TextMessageModelSerializerSender,
     TextMessageModelSerializerReceiver,
-    IndexPageSerializer
 )
+from .permissions import TweetOwnerPermission
 
 
 class TweetListAPIView(ListCreateAPIView):
-    serializer_class = IndexPageSerializer
+    serializer_class = TweetSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
@@ -27,13 +28,15 @@ class TweetListAPIView(ListCreateAPIView):
         qs = TweetModel.objects.filter(
             Q(sender_id__exact=user.id) | Q(receiver_id__exact=user.id)
         )
+
         return qs
 
 
 class TweetDetailAPIView(RetrieveAPIView):
+    lookup_field = 'id'
     queryset = TweetModel.objects.all()
-    serializer_class = IndexPageSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = TweetSerializer
+    permission_classes = [TweetOwnerPermission, permissions.IsAuthenticated]
 
 
 class CreateRetrieveMessageAPIView(
