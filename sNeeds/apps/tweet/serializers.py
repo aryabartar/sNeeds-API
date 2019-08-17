@@ -17,7 +17,9 @@ class TweetSerializer(serializers.ModelSerializer):
             'id',
             'url',
             'sender',
-            'receiver'
+            'receiver',
+            'file',
+            'text',
         ]
 
     def get_sender(self, obj):

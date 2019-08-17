@@ -20,7 +20,13 @@ from . import views
 app_name = "tweets"
 
 urlpatterns = [
-    path('tweets/', views.TweetListAPIView.as_view()),
-    # path('<int:personId>/', CreateRetrieveMessageAPIView.as_view()),
-    path('tweets/<int:id>/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
+    # path('tweets/', views.TweetListAPIView.as_view()),
+    # # path('<int:personId>/', CreateRetrieveMessageAPIView.as_view()),
+    # path('tweets/<int:id>/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
+
+
+    path('tickets/', views.TweetListAPIView.as_view()),
+    path('tickets/<int:id>/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
+    path('tickets/<int:id>/messages/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
+    path('tickets/<int:id>/messages/<int:id>/', views.TweetDetailAPIView.as_view(), name="tweet-detail"),
 ]

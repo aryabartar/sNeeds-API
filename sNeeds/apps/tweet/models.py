@@ -5,22 +5,26 @@ from django.db import models
 from django.dispatch import receiver
 
 from sNeeds.apps.customAuth.models import CustomUser
+from sNeeds.apps.account.models import ConsultantProfile
 
 
 def path_for_uploading_file(instance, filename):
     return "tweet/{email}/{filename}".format(email=instance.sender.email, filename=filename)
 
 
-class TweetModel(models.Model):
-    sender = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='sender')
-    receiver = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='receiver')
+class Ticket(models.Model):
+    title = models.CharField(max_length=256)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='sender')
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True, related_name='sender')
+    created = models.DateTimeField(auto_now_add=True)
+
+
+class TicketMessage(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     text = models.CharField(max_length=256, blank=False, null=False)
     file = models.FileField(upload_to=path_for_uploading_file, null=True, blank=True)
 
-    seen = models.BooleanField(default=False, blank=False, null=False)
-    edited = models.BooleanField(default=False)
-
-    date_created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True)
 
 
 @receiver(models.signals.post_delete, sender=TweetModel)
