@@ -48,7 +48,10 @@ class Test(APIView):
             used=False
         )
 
+        for obj in qs:
+            Room.objects.create(sold_time_slot=obj)
 
+        qs.update(used=True)
 
         print(qs)
         return Response({}, 200)

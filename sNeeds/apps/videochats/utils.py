@@ -16,7 +16,7 @@ def _get_all_users():
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     all_users = response.get("result")
     return all_users
@@ -57,7 +57,7 @@ def create_user_or_get_current_id(username, password, nickname, email, expiry_da
                 break
 
             if i == NUMBER_OF_TRIES - 1:
-                raise SkyroomConnectException("Can not connect to SkyRoom server")
+                raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
         user_id = response.get("result")
 
@@ -73,7 +73,7 @@ def _get_all_rooms():
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     all_rooms = response.get("result")
     return all_rooms
@@ -115,7 +115,7 @@ def create_room_or_get(room_id, max_users):
             if response.get('ok'):
                 break
             if i == NUMBER_OF_TRIES - 1:
-                raise SkyroomConnectException("Can not connect to SkyRoom server")
+                raise SkyroomConnectException("Error using Skyroom, error:", str(response))
         room_id = response.get("result")
     else:
         room_id = _get_room_id_in_all_rooms(title, all_rooms)
@@ -132,7 +132,7 @@ def _get_user_all_rooms(user_id):
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     return response.get("result")
 
@@ -155,7 +155,7 @@ def _remove_user_from_room(user_id, room_id):
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def make_user_room_presentor(user_id, room_id):
@@ -176,7 +176,7 @@ def make_user_room_presentor(user_id, room_id):
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def get_login_url_without_password(user_id, room_id, ttl):
@@ -193,7 +193,7 @@ def get_login_url_without_password(user_id, room_id, ttl):
             break
 
         if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Can not connect to SkyRoom server")
+            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     return response.get('result')
 
