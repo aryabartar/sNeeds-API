@@ -167,7 +167,6 @@ from .JWTAuthConfig import JWT_AUTH
 
 # Loading API keys
 from .APIs import API_KEYS
+from .celery.celery_config import *
 
 SKYROOM_API_KEY = API_KEYS.get("skyroom")
-
-from sNeeds.settings.celery import celery

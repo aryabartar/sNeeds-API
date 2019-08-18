@@ -3,4 +3,4 @@ from celery import task
 
 @task()
 def task_number_one():
-    # Do something...
+    print("hey")
