@@ -9,8 +9,8 @@ CELERY_TIMEZONE = 'UTC'
 
 # Other Celery settings
 CELERY_BEAT_SCHEDULE = {
-    'task-number-one': {
-        'task': 'sNeeds.apps.videochats.tasks.task_number_one',
+    'create-room': {
+        'task': 'sNeeds.apps.videochats.tasks.create_rooms_from_sold_time_slots',
         'schedule': crontab(minute='*/1'),
     },
 }

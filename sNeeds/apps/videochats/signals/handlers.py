@@ -2,36 +2,16 @@ from django.db.models.signals import post_save, post_delete, pre_save, m2m_chang
 
 from sNeeds.apps.videochats.models import Room
 from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room, delete_user
+from sNeeds.apps.videochats.tasks import create_room_with_users_in_skyroom
 
 
 def post_save_room_receiver(sender, instance, created, *args, **kwargs):
     if created:
         instance.sold_time_slot.used = True
         instance.sold_time_slot.save()
-
-        user = instance.sold_time_slot.sold_to
-        consultant_user = instance.sold_time_slot.consultant.user
-        sold_time_slot_id = instance.sold_time_slot.id
-
-        data = create_2members_chat_room(
-            user.id,
-            user.first_name,
-            user.email,
-            consultant_user.id,
-            consultant_user.first_name,
-            consultant_user.email,
-            sold_time_slot_id
-        )
-
-        instance.room_id = data['room_id']
-
-        instance.user_id = data['user1_id']
-        instance.consultant_id = data['user2_id']
-
-        instance.user_login_url = data['user1_url']
-        instance.consultant_login_url = data['user2_url']
-
-        instance.save()
+        print("2")
+        create_room_with_users_in_skyroom.delay(instance.id)
+        print(3)
 
 
 def post_delete_room_receiver(sender, instance, *args, **kwargs):

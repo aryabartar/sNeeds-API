@@ -21,6 +21,7 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
             instance.consultant.user.get_full_name(),
             instance.id
         )
+        pass
 
 
 def post_save_time_slot_receiver(sender, instance, *args, **kwargs):

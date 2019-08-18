@@ -42,16 +42,7 @@ class Test(APIView):
     def get(self, request):
         from sNeeds.apps.store.models import SoldTimeSlotSale
 
-        qs = SoldTimeSlotSale.objects.filter(
-            start_time__lte=now() + timezone.timedelta(minutes=5),
-            start_time__gte=now(),
-            used=False
-        )
 
-        for obj in qs:
-            Room.objects.create(sold_time_slot=obj)
-
-        qs.update(used=True)
 
         print(qs)
         return Response({}, 200)
