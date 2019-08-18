@@ -2,6 +2,9 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.utils import timezone
+from django.utils.timezone import now
+from django.conf import settings
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -33,3 +36,19 @@ class RoomDetailAPIView(generics.RetrieveAPIView):
     serializer_class = RoomSerializer
     lookup_field = 'id'
     permission_classes = [permissions.IsAuthenticated, RoomOwnerPermission]
+
+
+class Test(APIView):
+    def get(self, request):
+        from sNeeds.apps.store.models import SoldTimeSlotSale
+
+        qs = SoldTimeSlotSale.objects.filter(
+            start_time__lte=now() + timezone.timedelta(minutes=5),
+            start_time__gte=now(),
+            used=False
+        )
+
+
+
+        print(qs)
+        return Response({}, 200)

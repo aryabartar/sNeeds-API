@@ -1,5 +1,3 @@
-import time
-
 from sNeeds.utils import skyroom
 from sNeeds.settings.passwords import ALL_SKYROOM_USERS_PASSWORD
 

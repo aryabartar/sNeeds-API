@@ -171,3 +171,5 @@ from .celery.celery_config import *
 
 SKYROOM_API_KEY = API_KEYS.get("skyroom")
 SENDINBLUE_API_KEY = API_KEYS.get("sendinblue")
+
+CLASS_DURATION = 60  # minutes

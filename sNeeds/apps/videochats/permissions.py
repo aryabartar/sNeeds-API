@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from sNeeds.apps.store.models import SoldTimeSlotSale
-
 
 class RoomOwnerPermission(permissions.BasePermission):
     message = "This user has not room permission."
