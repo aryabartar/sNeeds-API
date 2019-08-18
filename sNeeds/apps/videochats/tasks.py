@@ -1,6 +1,10 @@
 from __future__ import absolute_import, unicode_literals
 from celery import task
+from celery.utils.log import get_task_logger
+
+logger = get_task_logger(__name__)
 
 @task()
 def task_number_one():
-    print("hey")
+    logger.info("Saved image from Flickr")
+    print("hey\n\nsdsd\n")

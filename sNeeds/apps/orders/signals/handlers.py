@@ -1,6 +1,5 @@
 from django.db.models.signals import post_save, pre_save
 
-from sNeeds.utils import sendemail
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.orders.models import SoldOrder, Order
 from sNeeds.apps.orders.utils import unique_order_id_generator

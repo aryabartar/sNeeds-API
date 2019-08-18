@@ -1,14 +1,15 @@
 import requests
 import json
 
+from django.conf import settings
+
 url = "https://api.sendinblue.com/v3/smtp/email"
 
 headers = {
     'accept': "application/json",
     'content-type': "application/json",
-    'api-key': "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"
+    'api-key': settings.SENDINBLUE_API_KEY
 }
-
 
 
 def reset_password(send_to, name, resetlink):
