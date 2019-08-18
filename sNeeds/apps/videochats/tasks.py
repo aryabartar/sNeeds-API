@@ -52,3 +52,10 @@ def create_room_with_users_in_skyroom(room_id):
     room.consultant_login_url = data['user2_url']
 
     room.save()
+
+
+@shared_task
+def delete_room_and_users(user_id, consultant_id, room_id):
+    delete_user(user_id)
+    delete_user(consultant_id)
+    delete_room(room_id)
