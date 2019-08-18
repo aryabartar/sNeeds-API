@@ -165,9 +165,9 @@ REST_FRAMEWORK = {
 
 from .JWTAuthConfig import JWT_AUTH
 
-CELERY_BROKER_URL = 'amqp://localhost'
-
 # Loading API keys
 from .APIs import API_KEYS
 
 SKYROOM_API_KEY = API_KEYS.get("skyroom")
+
+from sNeeds.settings.celery import celery
