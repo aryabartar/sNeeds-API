@@ -3,8 +3,39 @@ from .models import TicketMessage
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
+from .models import Ticket
+
 
 class TicketSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ticket
+        fields = [
+            'id',
+            'title',
+            'user',
+            'consultant',
+            'created',
+        ]
+
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'created': {'read_only': True},
+        }
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        user = request.user
+
+        obj = Ticket.objects.create(
+            title=validated_data.get('title'),
+            user=user,
+            consultant=validated_data.get('consultant'),
+        )
+
+        return obj
+
+
+class TicketMessageSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name="ticket:ticketMessages-detail", lookup_field='id'
     )
