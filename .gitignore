@@ -9,6 +9,8 @@ sneeds-django/sneeds/local.py
 sneeds/local.py
 APIs.py
 passwords.py
+*.pid
+*.db
 
 *.egg-info
 *.pot
