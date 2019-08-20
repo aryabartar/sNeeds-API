@@ -36,13 +36,3 @@ class RoomDetailAPIView(generics.RetrieveAPIView):
     serializer_class = RoomSerializer
     lookup_field = 'id'
     permission_classes = [permissions.IsAuthenticated, RoomOwnerPermission]
-
-
-class Test(APIView):
-    def get(self, request):
-        from sNeeds.apps.store.models import SoldTimeSlotSale
-
-
-
-        print(qs)
-        return Response({}, 200)
