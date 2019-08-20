@@ -14,9 +14,10 @@ logger = get_task_logger(__name__)
 
 @task()
 def create_rooms_from_sold_time_slots():
+    # 5 minutes before and 2 minutes after
     qs = SoldTimeSlotSale.objects.filter(
         start_time__lte=timezone.now() + timezone.timedelta(minutes=5),
-        start_time__gte=timezone.now(),
+        start_time__gte=timezone.now() - timezone.timedelta(minutes=2),
         used=False
     )
 
