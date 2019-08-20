@@ -15,10 +15,7 @@ class Ticket(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        title_splited = self.title.split(' ')
-        title = ' '.join(title_splited[:5])
-        title += "..."
-        return title
+        return self.title
 
 
 class TicketMessage(models.Model):
@@ -29,7 +26,4 @@ class TicketMessage(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        text_splited = self.text.split(' ')
-        text = ' '.join(text_splited[:5])
-        text += "..."
-        return text
+        return self.text
