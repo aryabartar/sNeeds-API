@@ -13,4 +13,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.videochats.tasks.create_rooms_from_sold_time_slots',
         'schedule': crontab(minute='*/1'),
     },
+    'delete-room': {
+        'task': 'sNeeds.apps.videochats.tasks.delete_used_rooms',
+        'schedule': crontab(minute='*/1'),
+    }
 }

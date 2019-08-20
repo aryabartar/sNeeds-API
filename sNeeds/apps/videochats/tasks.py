@@ -26,6 +26,14 @@ def create_rooms_from_sold_time_slots():
     qs.update(used=True)
 
 
+@task()
+def delete_used_rooms():
+    qs = Room.objects.filter(
+        sold_time_slot__end_time__lte=timezone.now() - timezone.timedelta(minutes=5)
+    )
+    qs.delete()
+
+
 @shared_task
 def create_room_with_users_in_skyroom(room_id):
     room = Room.objects.get(id=room_id)

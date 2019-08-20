@@ -9,6 +9,7 @@ def post_save_room_receiver(sender, instance, created, *args, **kwargs):
     if created:
         instance.sold_time_slot.used = True
         instance.sold_time_slot.save()
+
         create_room_with_users_in_skyroom.delay(instance.id)
 
 
