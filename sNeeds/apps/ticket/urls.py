@@ -20,7 +20,7 @@ from . import views
 app_name = "ticket"
 
 urlpatterns = [
-    path('tickets/', views.TicketListAPIView.as_view()),
+    path('tickets/', views.TicketList.as_view()),
     # path('tickets/<int:id>/', views.TicketDetailAPIView.as_view()),
     path('tickets/<int:id>/messages/', views.ListTicket.as_view(), name="ticketMessages-detail"),
     # path('tickets/<int:ticket-id>/messages/<int:message-id>/', views.ListTicket.as_view(), name="ticketMessages-detail"),

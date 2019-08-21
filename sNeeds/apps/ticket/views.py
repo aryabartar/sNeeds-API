@@ -12,7 +12,7 @@ from .serializers import TicketSerializer, TicketMessageSerializer
 from .permissions import TicketOwnerPermission
 
 
-class TicketListAPIView(generics.ListCreateAPIView):
+class TicketList(generics.ListCreateAPIView):
     serializer_class = TicketSerializer
     permission_classes = [permissions.IsAuthenticated]
 
