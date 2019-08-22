@@ -11,11 +11,15 @@ from .custom_serializer import ConsultantSerializer
 class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = ConsultantSerializer()
+    url = serializers.HyperlinkedIdentityField(
+        view_name="ticket:ticket-detail", lookup_field='id'
+    )
 
     class Meta:
         model = Ticket
         fields = [
             'id',
+            'url',
             'title',
             'user',
             'consultant',
@@ -32,14 +36,6 @@ class TicketSerializer(serializers.ModelSerializer):
         return SafeUserDataSerializer(
             obj.user, context={"request": request}
         ).data
-
-    def get_consultant(self, obj):
-        request = self.context.get("request")
-
-        return ConsultantProfileSerializer(
-            obj.consultant, context={"request": request}
-        ).data
-
 
     def create(self, validated_data):
         request = self.context.get("request")

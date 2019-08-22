@@ -1,10 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 
 from rest_framework import status, generics, mixins, permissions
-
-from sNeeds.apps.account.models import ConsultantProfile
-from sNeeds.apps.customAuth.models import CustomUser
 
 from .models import TicketMessage, Ticket
 from .serializers import TicketSerializer, TicketMessageSerializer
@@ -12,7 +8,7 @@ from .serializers import TicketSerializer, TicketMessageSerializer
 from .permissions import TicketOwnerPermission
 
 
-class TicketList(generics.ListCreateAPIView):
+class TicketListView(generics.ListCreateAPIView):
     serializer_class = TicketSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -25,8 +21,19 @@ class TicketList(generics.ListCreateAPIView):
         return qs
 
 
+class TicketDetailView(generics.RetrieveAPIView):
+    serializer_class = TicketSerializer
+    permissions_classes = [permissions.IsAuthenticated, TicketOwnerPermission]
+
+    def get_queryset(self):
+        print(self.kwargs)
+        ticket_id = self.kwargs['id']
+        qs = Ticket.objects.get(pk=ticket_id)
+        return qs
+
+
 class ListTicket(generics.ListCreateAPIView):
-    lookup_field = 'id'
+    # lookup_field = 'id'
     serializer_class = TicketMessageSerializer
     permission_classes = [TicketOwnerPermission, permissions.IsAuthenticated]
 
