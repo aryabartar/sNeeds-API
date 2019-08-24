@@ -20,9 +20,8 @@ from . import views
 app_name = "ticket"
 
 urlpatterns = [
-    path('tickets/', views.TicketListView.as_view()),
-    path('tickets/<ticket_id>/', views.TicketDetailView.as_view(), name="ticket_brief-detail"),
-    path('tickets/<int:ticket_id>/messages/', views.TicketMessagesListView.as_view(), name="ticket_comprehensive-detail"),
-    path('tickets/<int:ticket_id>/messages/<int:ticket_message_id>/', views.TicketMessageDetailView.as_view()
-         , name="ticketMessages-detail"),
+    path('tickets/', views.TicketListView.as_view(), name="ticket-list"),
+    path('tickets/<int:id>/', views.TicketDetailView.as_view(), name="ticket-detail"),
+    path('messages/', views.MessageListView.as_view() , name="message-list"),
+    path('messages/<int:id>/', views.MessageDetailView.as_view() , name="message-detail"),
 ]

@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import TicketMessage
 
+from .models import TicketMessage
 from .models import Ticket
-from .custom_serializer import ConsultantSerializer, TicketUrlSerializer, TicketMessageUrlSerializer
+from .custom_serializer import ConsultantSerializer
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.account.serializers import ConsultantProfileSerializer
@@ -11,19 +11,15 @@ from sNeeds.apps.account.serializers import ConsultantProfileSerializer
 class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = ConsultantSerializer()
-    brief_detail_url = TicketUrlSerializer(
-        view_name="ticket:ticket_brief-detail"
-    )
-    comprehensive_detail_url = TicketUrlSerializer(
-        view_name="ticket:ticket_comprehensive-detail"
+    url = serializers.HyperlinkedIdentityField(
+        view_name="ticket:ticket-detail", lookup_field='id'
     )
 
     class Meta:
         model = Ticket
         fields = [
             'id',
-            'brief_detail_url',
-            'comprehensive_detail_url',
+            'url',
             'title',
             'user',
             'consultant',
@@ -33,8 +29,7 @@ class TicketSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user': {'read_only': True},
             'created': {'read_only': True},
-            'brief_detail_url': {'read_only': True},
-            'comprehensive_detail_url': {'read_only': True},
+            'url': {'read_only': True},
         }
 
     def get_user(self, obj):
@@ -56,12 +51,12 @@ class TicketSerializer(serializers.ModelSerializer):
         return obj
 
 
-class TicketMessageSerializer(serializers.ModelSerializer):
-    url = TicketMessageUrlSerializer(
-        view_name="ticket:ticketMessages-detail"
-    )
+class MessageSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = serializers.SerializerMethodField()
+    url = serializers.HyperlinkedIdentityField(
+        view_name="ticket:message-detail", lookup_field='id'
+    )
 
     class Meta:
         model = TicketMessage
