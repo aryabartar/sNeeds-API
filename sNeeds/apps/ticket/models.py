@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from sNeeds.apps.customAuth.models import CustomUser
 from sNeeds.apps.account.models import ConsultantProfile

@@ -21,7 +21,8 @@ app_name = "ticket"
 
 urlpatterns = [
     path('tickets/', views.TicketListView.as_view()),
-    path('tickets/<int:ticket-id>/', views.TicketDetailView.as_view()),
-    # path('tickets/<int:ticket-id>/messages/', views.ListTicket.as_view(), name="ticketMessages-detail"),
-    # path('tickets/<int:ticket-id>/messages/<int:message-id>/', views.ListTicket.as_view(), name="ticketMessages-detail"),
+    path('tickets/<ticket_id>/', views.TicketDetailView.as_view(), name="ticket_brief-detail"),
+    path('tickets/<int:ticket_id>/messages/', views.TicketMessagesListView.as_view(), name="ticket_comprehensive-detail"),
+    path('tickets/<int:ticket_id>/messages/<int:ticket_message_id>/', views.TicketMessageDetailView.as_view()
+         , name="ticketMessages-detail"),
 ]

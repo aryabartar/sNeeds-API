@@ -8,14 +8,17 @@ class TicketOwnerPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         user = request.user
-        id = view.kwargs.get('id', None)
 
-        if id is None:
+        ticket_id = view.kwargs.get('ticket_id', None)
+
+        if ticket_id is None:
+            return False
+
+        if request.user.is_anonymous:
             return False
 
         try:
-            Ticket.objects.get(id=id, user=user)
-
+            Ticket.objects.get(id=ticket_id, user=user)
         except Ticket.DoesNotExist:
             return False
 
@@ -23,6 +26,9 @@ class TicketOwnerPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user = request.user
+
+        if request.user.is_anonymous:
+            return False
 
         if obj.ticket.user == user or obj.ticket.consultant == user:
             return True
