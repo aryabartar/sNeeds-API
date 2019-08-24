@@ -18,16 +18,16 @@ class TicketListView(generics.ListCreateAPIView):
         user = self.request.user
 
         qs = Ticket.objects.filter(
-            Q(consultant_id=user.id) | Q(user_id=user.id)
+            Q(consultant__user=user) | Q(user=user)
         )
 
         return qs
 
 
-class TicketDetailView(generics.RetrieveAPIView): #  TODO:permissions are not working!!!!
-    serializer_class = TicketSerializer
-    permissions_classes = [permissions.IsAuthenticated & TicketOwnerPermission & permissions.IsAdminUser]
+class TicketDetailView(generics.RetrieveAPIView):
     queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = [TicketOwnerPermission, permissions.IsAuthenticated]
     lookup_field = 'id'
 
 
