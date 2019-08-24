@@ -2,7 +2,7 @@ from django.db.models import Q
 
 from rest_framework import permissions
 
-from sNeeds.apps.ticket.models import Ticket, TicketMessage
+from sNeeds.apps.ticket.models import Ticket, Message
 
 
 class TicketOwnerPermission(permissions.BasePermission):
@@ -27,22 +27,24 @@ class TicketOwnerPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user = request.user
+        ticket_id = view.kwargs.get('id')
 
-        if obj.user == user or obj.consultant.user == user:
+        if obj.id == ticket_id and (obj.user == user or obj.consultant.user == user):
             return True
 
         return False
 
 
-class TicketMessageOwnerPermission(permissions.BasePermission):
+class MessageOwnerPermission(permissions.BasePermission):
     message = "You are not owner of this Message."
 
     def has_permission(self, request, view):
         user = request.user
+        message_id = view.kwargs.get('id')
 
         try:
-            TicketMessage.objects.filter(
-                Q(ticket__consultant__user=user) | Q(ticket__user=user)
+            Message.objects.filter(
+                Q(pk=message_id) & (Q(ticket__consultant__user=user) | Q(ticket__user=user))
             )
         except Ticket.DoesNotExist:
             return False
@@ -51,8 +53,9 @@ class TicketMessageOwnerPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user = request.user
+        message_id = view.kwargs.get('id')
 
-        if obj.ticket.user == user or obj.ticket.consultant == user:
+        if obj.id == message_id and (obj.ticket.user == user or obj.ticket.consultant.user == user):
             return True
 
         return False

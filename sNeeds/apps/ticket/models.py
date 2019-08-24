@@ -1,5 +1,4 @@
 from django.db import models
-from django.urls import reverse
 
 from sNeeds.apps.customAuth.models import CustomUser
 from sNeeds.apps.account.models import ConsultantProfile
@@ -19,7 +18,7 @@ class Ticket(models.Model):
         return self.title
 
 
-class TicketMessage(models.Model):
+class Message(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     text = models.CharField(max_length=256, blank=False, null=False)
     file = models.FileField(upload_to=path_for_uploading_file, null=True, blank=True)

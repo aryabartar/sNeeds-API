@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from .models import Ticket, TicketMessage
 
 from sNeeds.apps.account.serializers import ConsultantProfileSerializer
 from sNeeds.apps.account.models import ConsultantProfile

@@ -2,10 +2,10 @@ from django.db.models import Q
 
 from rest_framework import status, generics, mixins, permissions
 
-from .models import TicketMessage, Ticket
+from .models import Message, Ticket
 from .serializers import TicketSerializer, MessageSerializer
 
-from .permissions import TicketOwnerPermission, TicketMessageOwnerPermission
+from .permissions import TicketOwnerPermission, MessageOwnerPermission
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -33,14 +33,14 @@ class TicketDetailView(generics.RetrieveAPIView):
 
 class MessageListView(generics.ListCreateAPIView):
     serializer_class = MessageSerializer
-    permission_classes = [TicketMessageOwnerPermission, permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filter_fields = ['ticket']
 
     def get_queryset(self):
         user = self.request.user
 
-        qs = TicketMessage.objects.filter(
+        qs = Message.objects.filter(
             Q(ticket__user=user) | Q(ticket__consultant__user=user)
         )
 
@@ -48,7 +48,7 @@ class MessageListView(generics.ListCreateAPIView):
 
 
 class MessageDetailView(generics.RetrieveAPIView):
-    queryset = TicketMessage.objects.all()
+    queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    permission_classes = [TicketMessageOwnerPermission, permissions.IsAuthenticated]
+    permission_classes = [MessageOwnerPermission, permissions.IsAuthenticated]
     lookup_field = 'id'

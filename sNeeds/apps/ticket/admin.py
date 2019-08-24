@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import TicketMessage, Ticket
+from .models import Message, Ticket
 
 
 def get_title(obj):
@@ -8,7 +8,7 @@ def get_title(obj):
 get_title.short_description = 'title'
 
 
-@admin.register(TicketMessage)
+@admin.register(Message)
 class ConsultantDiscountAdmin(admin.ModelAdmin):
     list_display = ('id', 'text', get_title, 'created')
 

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import TicketMessage
+from .models import Message
 from .models import Ticket
 from .custom_serializer import ConsultantSerializer
 
@@ -59,7 +59,7 @@ class MessageSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = TicketMessage
+        model = Message
         fields = [
             'id',
             'url',
