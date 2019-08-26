@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.discounts',
     'sNeeds.apps.videochats',
     'sNeeds.apps.ticket',
+    'sNeeds.apps.consultant',
 
     'django_cleanup',  # should go after your apps
 ]

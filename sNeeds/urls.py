@@ -33,4 +33,5 @@ urlpatterns = [
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochats/', include('sNeeds.apps.videochats.urls')),
                   path('ticket/', include('sNeeds.apps.ticket.urls')),
+                  path('consultant/', include('sNeeds.apps.consultant.urls'))
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
