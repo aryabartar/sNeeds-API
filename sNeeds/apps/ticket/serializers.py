@@ -11,7 +11,7 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    consultant = ConsultantFieldSerializer(queryset=ConsultantProfile.objects.all())
+    consultant = ConsultantFieldSerializer()
     url = serializers.HyperlinkedIdentityField(
         view_name="ticket:ticket-detail", lookup_field='id'
     )

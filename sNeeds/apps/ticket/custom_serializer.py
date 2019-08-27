@@ -7,13 +7,23 @@ from sNeeds.apps.account.serializers import SafeConsultantProfileSerializer
 from sNeeds.apps.account.models import ConsultantProfile
 
 
-class ConsultantFieldSerializer(serializers.PrimaryKeyRelatedField):
+class ConsultantFieldSerializer(serializers.Field):
     def to_representation(self, value):
-        tmp = super(ConsultantFieldSerializer, self).to_representation(value)
-        sal = ConsultantProfile.objects.get(pk=tmp)
-        return str(SafeConsultantProfileSerializer(
-            sal, context={"request": self.context['request']}
-        ).data)
+        return SafeConsultantProfileSerializer(
+            value, context={'request': self.context['request']}
+        ).data
+
+    def to_internal_value(self, id):
+        try:
+            id = int(id)
+        except ValueError:
+            raise serializers.ValidationError("Provide id of consultant in numbers, please.")
+        try:
+            consultant = ConsultantProfile.objects.get(pk=id)
+        except ConsultantProfile.DoesNotExist:
+            raise serializers.ValidationError("Such a consultant does not exist")
+        return consultant
+
 
 
 class TicketUrlSerializer(serializers.HyperlinkedIdentityField):
