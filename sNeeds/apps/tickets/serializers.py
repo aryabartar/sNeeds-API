@@ -69,6 +69,7 @@ class MessageSerializer(serializers.ModelSerializer):
             'consultant',
             'file',
             'text',
+            'created',
         ]
 
     def get_user(self, obj):
