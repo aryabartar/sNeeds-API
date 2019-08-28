@@ -5,8 +5,7 @@ from .models import Ticket
 from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKeyRelatedField
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
-from sNeeds.apps.account.serializers import SafeConsultantProfileSerializer, ConsultantProfileSerializer
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -80,6 +79,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_consultant(self, obj):
         request = self.context.get("request")
-        return SafeConsultantProfileSerializer(
+        return ShortConsultantProfileSerializer(
             obj.ticket.consultant, context={"request": request}
         ).data
