@@ -12,7 +12,7 @@ class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = ConsultantFieldSerializer()
     url = serializers.HyperlinkedIdentityField(
-        view_name="ticket:ticket-detail", lookup_field='id'
+        view_name="tickets:ticket-detail", lookup_field='id'
     )
 
     class Meta:
@@ -56,7 +56,7 @@ class MessageSerializer(serializers.ModelSerializer):
     consultant = serializers.SerializerMethodField()
     ticket = UserFilteredPrimaryKeyRelatedField(queryset=Ticket.objects.all())
     url = serializers.HyperlinkedIdentityField(
-        view_name="ticket:message-detail", lookup_field='id'
+        view_name="tickets:message-detail", lookup_field='id'
     )
 
     class Meta:

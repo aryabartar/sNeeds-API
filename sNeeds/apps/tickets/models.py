@@ -5,7 +5,7 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 
 def path_for_uploading_file(instance, filename):
-    return "media/ticket/{title}/{filename}".format(title=instance.ticket.title, filename=filename)
+    return "media/tickets/{title}/{filename}".format(title=instance.ticket.title, filename=filename)
 
 
 class Ticket(models.Model):
