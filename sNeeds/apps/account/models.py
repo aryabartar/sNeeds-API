@@ -4,15 +4,15 @@ from django.conf import settings
 
 
 def get_image_upload_path(sub_dir):
-    return "files/account/" + sub_dir
+    return "images/account/" + sub_dir
+
+
+def get_consultant_image_path(instance, filename):
+    return "images/account/consultants/{}/image/{}".format(instance.user.email, filename)
 
 
 def get_consultant_resume_path(instance, filename):
     return "files/account/consultants/{}/resume/{}".format(instance.user.email, filename)
-
-
-def get_consultant_image_path(instance, filename):
-    return "files/account/consultants/{}/image/{}".format(instance.user.email, filename)
 
 
 class Country(models.Model):
