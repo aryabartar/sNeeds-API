@@ -174,3 +174,7 @@ SKYROOM_API_KEY = API_KEYS.get("skyroom")
 SENDINBLUE_API_KEY = API_KEYS.get("sendinblue")
 
 CLASS_DURATION = 60  # minutes
+
+DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DROPBOX_OAUTH2_TOKEN = API_KEYS.get("DROPBOX_OAUTH2_TOKEN")
+DROPBOX_ROOT_PATH = ''

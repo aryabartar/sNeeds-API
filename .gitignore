@@ -11,6 +11,7 @@ APIs.py
 passwords.py
 *.pid
 *.db
+keys.py
 
 *.egg-info
 *.pot
