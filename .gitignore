@@ -10,6 +10,7 @@ sneeds/local.py
 APIs.py
 passwords.py
 keys.py
+ff.py
 
 *.egg-info
 *.pot
