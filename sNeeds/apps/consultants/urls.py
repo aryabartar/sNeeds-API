@@ -17,7 +17,7 @@ from django.urls import path
 
 from . import views
 
-app_name = "consultant"
+app_name = "consultants"
 
 urlpatterns = [
     path('create/', views.ConsultantCreateView.as_view())
