@@ -80,3 +80,29 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     def get_comment_number(self, obj):
         qs = Comment.objects.filter(consultant=obj)
         return qs.count()
+
+
+class ShortConsultantProfileSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="account:consultant-profile-detail",
+        lookup_field='slug',
+        read_only=True
+    )
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = models.ConsultantProfile
+        fields = (
+            'id',
+            'url',
+            'profile_picture',
+            'first_name',
+            'last_name',
+        )
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name

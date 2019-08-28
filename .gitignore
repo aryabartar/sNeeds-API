@@ -12,6 +12,7 @@ passwords.py
 *.pid
 *.db
 keys.py
+celery*
 
 *.egg-info
 *.pot
