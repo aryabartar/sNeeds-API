@@ -2,15 +2,16 @@ from rest_framework import serializers
 
 from .models import Message
 from .models import Ticket
-from .custom_serializer import ConsultantSerializer
+from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKeyRelatedField
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
-from sNeeds.apps.account.serializers import ConsultantProfileSerializer
+from sNeeds.apps.account.serializers import SafeConsultantProfileSerializer, ConsultantProfileSerializer
+from sNeeds.apps.account.models import ConsultantProfile
 
 
 class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
-    consultant = ConsultantSerializer()
+    consultant = ConsultantFieldSerializer()
     url = serializers.HyperlinkedIdentityField(
         view_name="ticket:ticket-detail", lookup_field='id'
     )
@@ -54,6 +55,7 @@ class TicketSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = serializers.SerializerMethodField()
+    ticket = UserFilteredPrimaryKeyRelatedField(queryset=Ticket.objects.all())
     url = serializers.HyperlinkedIdentityField(
         view_name="ticket:message-detail", lookup_field='id'
     )
@@ -78,6 +80,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_consultant(self, obj):
         request = self.context.get("request")
-        return ConsultantProfileSerializer(
+        return SafeConsultantProfileSerializer(
             obj.ticket.consultant, context={"request": request}
         ).data
