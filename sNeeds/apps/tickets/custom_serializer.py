@@ -3,13 +3,13 @@ from django.db.models import Q
 from rest_framework import serializers
 from rest_framework.reverse import reverse
 
-from sNeeds.apps.account.serializers import SafeConsultantProfileSerializer
+from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.account.models import ConsultantProfile
 
 
 class ConsultantFieldSerializer(serializers.Field):
     def to_representation(self, value):
-        return SafeConsultantProfileSerializer(
+        return ShortConsultantProfileSerializer(
             value, context={'request': self.context['request']}
         ).data
 
@@ -23,7 +23,6 @@ class ConsultantFieldSerializer(serializers.Field):
         except ConsultantProfile.DoesNotExist:
             raise serializers.ValidationError("Such a consultant does not exist")
         return consultant
-
 
 
 class TicketUrlSerializer(serializers.HyperlinkedIdentityField):

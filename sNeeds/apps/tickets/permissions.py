@@ -2,7 +2,7 @@ from django.db.models import Q
 
 from rest_framework import permissions
 
-from sNeeds.apps.ticket.models import Ticket, Message
+from sNeeds.apps.tickets.models import Ticket, Message
 
 
 class TicketOwnerPermission(permissions.BasePermission):

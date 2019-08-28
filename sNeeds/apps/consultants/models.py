@@ -1,11 +1,8 @@
 from django.db import models
-from django.core import validators
-
-from sNeeds.apps.account.models import ConsultantProfile
 
 
 def path_for_uploading_file(instance, filename):
-    return "media/tmp_consultant/{email}/{filename}".format(email=instance.email, filename=filename)
+    return "media/consultants/{email}/{filename}".format(email=instance.email, filename=filename)
 
 
 class TMPConsultant(models.Model):

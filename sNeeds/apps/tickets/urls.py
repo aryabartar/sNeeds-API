@@ -17,8 +17,11 @@ from django.urls import path
 
 from . import views
 
-app_name = "consultant"
+app_name = "tickets"
 
 urlpatterns = [
-    path('create/', views.ConsultantCreateView.as_view())
+    path('tickets/', views.TicketListView.as_view(), name="ticket-list"),
+    path('tickets/<int:id>/', views.TicketDetailView.as_view(), name="ticket-detail"),
+    path('messages/', views.MessageListView.as_view() , name="message-list"),
+    path('messages/<int:id>/', views.MessageDetailView.as_view() , name="message-detail"),
 ]

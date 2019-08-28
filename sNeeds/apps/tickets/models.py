@@ -5,7 +5,7 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 
 def path_for_uploading_file(instance, filename):
-    return "media/ticket/{title}/{filename}".format(title=instance.ticket.title, filename=filename)
+    return "media/tickets/{title}/{filename}".format(title=instance.ticket.title, filename=filename)
 
 
 class Ticket(models.Model):
@@ -22,7 +22,7 @@ class Message(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE)
     text = models.CharField(max_length=256, blank=False, null=False)
     file = models.FileField(upload_to=path_for_uploading_file, null=True, blank=True)
-
+    sender = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -5,7 +5,7 @@ from .models import Ticket
 from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKeyRelatedField
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
-from sNeeds.apps.account.serializers import SafeConsultantProfileSerializer, ConsultantProfileSerializer
+from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.account.models import ConsultantProfile
 
 
@@ -13,7 +13,7 @@ class TicketSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = ConsultantFieldSerializer()
     url = serializers.HyperlinkedIdentityField(
-        view_name="ticket:ticket-detail", lookup_field='id'
+        view_name="tickets:ticket-detail", lookup_field='id'
     )
 
     class Meta:
@@ -57,8 +57,10 @@ class MessageSerializer(serializers.ModelSerializer):
     consultant = serializers.SerializerMethodField()
     ticket = UserFilteredPrimaryKeyRelatedField(queryset=Ticket.objects.all())
     url = serializers.HyperlinkedIdentityField(
-        view_name="ticket:message-detail", lookup_field='id'
+        view_name="tickets:message-detail", lookup_field='id'
     )
+    is_consultant = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Message
@@ -70,7 +72,10 @@ class MessageSerializer(serializers.ModelSerializer):
             'consultant',
             'file',
             'text',
+            'created',
+            'is_consultant'
         ]
+
 
     def get_user(self, obj):
         request = self.context.get("request")
@@ -80,6 +85,16 @@ class MessageSerializer(serializers.ModelSerializer):
 
     def get_consultant(self, obj):
         request = self.context.get("request")
-        return SafeConsultantProfileSerializer(
+        return ShortConsultantProfileSerializer(
             obj.ticket.consultant, context={"request": request}
         ).data
+
+    def get_is_consultant(self, obj):
+        sender = obj.sender
+        return ConsultantProfile.objects.filter(user=sender).count() > 0
+
+    def create(self, validated_data):
+        message = super(MessageSerializer, self).create(validated_data)
+        message.sender = self.context.get("request").user
+        message.save()
+        return message

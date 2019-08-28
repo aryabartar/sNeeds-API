@@ -1,12 +1,16 @@
 from django.db.models import Q
 
 from rest_framework import status, generics, mixins, permissions
+from rest_framework import filters
+from django_filters import rest_framework as custom_filters
 
 from .models import Message, Ticket
 from .serializers import TicketSerializer, MessageSerializer
 
 from .permissions import TicketOwnerPermission, MessageOwnerPermission
 from .filtersets import MessageFilter
+
+
 
 
 class TicketListView(generics.ListCreateAPIView):
@@ -33,7 +37,9 @@ class TicketDetailView(generics.RetrieveAPIView):
 class MessageListView(generics.ListCreateAPIView):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = [filters.OrderingFilter, custom_filters.DjangoFilterBackend, ]
     filterset_class = MessageFilter
+    ordering_fields = ['created']
 
     def get_queryset(self):
         user = self.request.user
