@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.http import JsonResponse
+from django.conf import settings
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -13,7 +14,7 @@ from .models import PayPayment
 
 from sNeeds.apps.orders.models import Order, SoldOrder
 
-MERCHANT = 'd40321dc-8bb0-11e7-b63c-005056a205be'
+MERCHANT = settings.ZARINPAL_MERCHANT
 
 
 class SendRequest(APIView):
