@@ -6,6 +6,7 @@ from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKey
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from sNeeds.apps.account.models import ConsultantProfile
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -58,6 +59,8 @@ class MessageSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name="tickets:message-detail", lookup_field='id'
     )
+    is_consultant = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Message
@@ -70,7 +73,9 @@ class MessageSerializer(serializers.ModelSerializer):
             'file',
             'text',
             'created',
+            'is_consultant'
         ]
+
 
     def get_user(self, obj):
         request = self.context.get("request")
@@ -83,3 +88,13 @@ class MessageSerializer(serializers.ModelSerializer):
         return ShortConsultantProfileSerializer(
             obj.ticket.consultant, context={"request": request}
         ).data
+
+    def get_is_consultant(self, obj):
+        sender = obj.sender
+        return ConsultantProfile.objects.filter(user=sender).count() > 0
+
+    def create(self, validated_data):
+        message = super(MessageSerializer, self).create(validated_data)
+        message.sender = self.context.get("request").user
+        message.save()
+        return message
