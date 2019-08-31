@@ -8,6 +8,11 @@ venv/
 sneeds-django/sneeds/local.py
 sneeds/local.py
 APIs.py
+passwords.py
+*.pid
+*.db
+keys.py
+celery*
 
 *.egg-info
 *.pot

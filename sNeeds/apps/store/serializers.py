@@ -3,7 +3,7 @@ from rest_framework import serializers
 from .models import TimeSlotSale, SoldTimeSlotSale
 
 from sNeeds.apps.account.models import ConsultantProfile
-from sNeeds.apps.account.serializers import ConsultantProfileSerializer
+from sNeeds.apps.account.serializers import ConsultantProfileSerializer, ShortConsultantProfileSerializer
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
 
@@ -18,21 +18,24 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
         view_name='account:consultant-profile-detail'
     )
 
-    consultant_slug = serializers.SlugRelatedField(
-        source='consultant',
-        slug_field='slug',
-        read_only=True
-    )
+    consultant = serializers.SerializerMethodField()
 
     class Meta:
         model = TimeSlotSale
         fields = (
-            'id', 'url', 'consultant', 'consultant_url', 'consultant_slug', 'start_time', 'end_time', 'price',)
+            'id', 'url', 'consultant', 'consultant_url', 'start_time', 'end_time', 'price',)
 
         extra_kwargs = {
             'id': {'read_only': True},
             'consultant': {'read_only': True}
         }
+
+    def get_consultant(self, obj):
+        request = self.context.get('request')
+
+        return ShortConsultantProfileSerializer(
+            obj.consultant, context={'request': request}
+        ).data
 
     def create(self, validated_data):
         request = self.context.get('request', None)
@@ -72,6 +75,6 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
     def get_consultant(self, obj):
         request = self.context.get('request')
 
-        return ConsultantProfileSerializer(
+        return ShortConsultantProfileSerializer(
             obj.consultant, context={'request': request}
         ).data

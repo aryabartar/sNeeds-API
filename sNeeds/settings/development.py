@@ -167,9 +167,12 @@ REST_FRAMEWORK = {
 
 from .JWTAuthConfig import JWT_AUTH
 
-CELERY_BROKER_URL = 'amqp://localhost'
-
 # Loading API keys
 from .APIs import API_KEYS
+from .celery.celery_config import *
 
+# Skyroom
 SKYROOM_API_KEY = API_KEYS.get("skyroom")
+SENDINBLUE_API_KEY = API_KEYS.get("sendinblue")
+
+

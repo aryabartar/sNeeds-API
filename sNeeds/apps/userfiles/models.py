@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
 
-
 User = get_user_model()
 
 USER_FILE_CHOICES = (
@@ -11,8 +10,8 @@ USER_FILE_CHOICES = (
 )
 
 
-def get_file_upload_path(sub_dir):
-    return "file/account/" + sub_dir
+def get_file_upload_path(instance, filename):
+    return "files/userfiles/{}/{}/{}".format(instance.user.email, instance.type, filename)
 
 
 class UserFileModelManager(models.Manager):
@@ -27,7 +26,7 @@ class UserFileModelManager(models.Manager):
 
 class UserFile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=get_file_upload_path("user_upload_file"))
+    file = models.FileField(upload_to=get_file_upload_path)
     type = models.CharField(max_length=256, choices=USER_FILE_CHOICES)
 
     objects = UserFileModelManager()
@@ -36,4 +35,4 @@ class UserFile(models.Model):
         unique_together = ('user', 'type')
 
     def __str__(self):
-        return self.user.__str__()
+        return str(self.user)
