@@ -38,7 +38,7 @@ class AbstractTimeSlotSale(models.Model):
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    price = models.IntegerField()
+    price = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
