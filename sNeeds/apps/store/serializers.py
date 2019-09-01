@@ -28,12 +28,19 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = TimeSlotSale
 		fields = (
-			'id', 'url', 'consultant', 'consultant_url', 'start_time', 'end_time',
-			'price',)
+			'id',
+			'url',
+			'consultant',
+			'consultant_url',
+			'start_time',
+			'end_time',
+			'price',
+		)
 
 		extra_kwargs = {
 			'id': {'read_only': True},
-			'consultant': {'read_only': True}
+			'consultant': {'read_only': True},
+			'end_time': {'read_only': True},
 		}
 
 	def get_consultant(self, obj):
@@ -47,11 +54,11 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 		request = self.context.get('request', None)
 		user = request.user
 		consultant_profile = ConsultantProfile.objects.get(user=user)
-
+		end_time = validated_data.get('start_time') + datetime.timedelta(hours=1)
 		obj = TimeSlotSale.objects.create(
 			consultant=consultant_profile,
 			start_time=validated_data['start_time'],
-			end_time=validated_data['end_time'],
+			end_time=end_time,
 			price=validated_data['price'],
 		)
 
@@ -60,15 +67,9 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 	def validate_start_time(self, obj):
 		if obj < (timezone.now() + datetime.timedelta(days=1)):
 			raise ValidationError(
-				"Start time should be selected at least "
-				"from a day after today."
+				"Start time should be selected at least from a day after today."
 			)
 		return obj
-
-	def validate(self, data):
-		if data['start_time'] >= data['end_time']:
-			raise serializers.ValidationError("finish must occur after start")
-		return data
 
 
 class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
