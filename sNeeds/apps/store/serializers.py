@@ -58,12 +58,17 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 		return obj
 
 	def validate_start_time(self, obj):
-		if obj < (timezone.now()+ datetime.timedelta(days=1)):
+		if obj < (timezone.now() + datetime.timedelta(days=1)):
 			raise ValidationError(
 				"Start time should be selected at least "
 				"from a day after today."
 			)
 		return obj
+
+	def validate(self, data):
+		if data['start_time'] >= data['end_time']:
+			raise serializers.ValidationError("finish must occur after start")
+		return data
 
 
 class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
