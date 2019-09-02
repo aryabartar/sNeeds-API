@@ -174,5 +174,4 @@ from .celery.celery_config import *
 # Skyroom
 SKYROOM_API_KEY = API_KEYS.get("skyroom")
 SENDINBLUE_API_KEY = API_KEYS.get("sendinblue")
-
-
+ZARINPAL_MERCHANT = API_KEYS.get("zarinpal_merchant")
