@@ -22,6 +22,7 @@ class AuthView(APIView):
         "password":"****:)"
         }
     '''
+    permission_classes = [NotLoggedInPermission]
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:

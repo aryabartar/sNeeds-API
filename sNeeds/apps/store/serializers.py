@@ -55,6 +55,7 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 		user = request.user
 		consultant_profile = ConsultantProfile.objects.get(user=user)
 		end_time = validated_data.get('start_time') + datetime.timedelta(hours=1)
+
 		obj = TimeSlotSale.objects.create(
 			consultant=consultant_profile,
 			start_time=validated_data['start_time'],
