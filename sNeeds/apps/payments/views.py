@@ -42,7 +42,6 @@ class SendRequest(APIView):
             "http://193.176.241.131/payment/accept/",
         )
 
-
         if result.Status != 100:
             return Response({"detail": 'Error code: ' + str(result.Status)}, 200)
 
