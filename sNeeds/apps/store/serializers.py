@@ -63,7 +63,7 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 				price=validated_data['price'],
 			)
 		except ValidationError as ex:
-			raise ex
+			raise serializers.ValidationError({"details": ex.messages})
 		return obj
 
 	def validate_start_time(self, obj):

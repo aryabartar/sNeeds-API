@@ -51,13 +51,6 @@ class AbstractTimeSlotSale(models.Model):
     def get_consultant_username(self):
         return self.consultant.user.username
 
-    def clean(self, *args, **kwargs):
-        if self.end_time <= self.start_time:
-            raise ValidationError('Start time should be lass than end time', code='invalid')
-
-
-        super(AbstractTimeSlotSale, self).clean(*args, **kwargs)
-
     def save(self, *args, **kwargs):
         self.full_clean()
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
@@ -67,13 +60,17 @@ class TimeSlotSale(AbstractTimeSlotSale):
     objects = TimeSlotSaleManager.as_manager()
 
     def clean(self, *args, **kwargs):
-        if TimeSlotSale.objects.filter(
-                Q(start_time__lte=self.start_time) & Q(end_time__gte=self.start_time)
-            ) or TimeSlotSale.objects.filter(
-                Q(start_time__lte=self.end_time) & Q(end_time__gte=self.end_time)
-                ):
+        start_time = self.start_time
+        end_time = self.end_time
+        consultant = self.consultant
+        time_slot_sale_of_consultant = TimeSlotSale.objects.filter(consultant=consultant)
+        if time_slot_sale_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time) \
+          or time_slot_sale_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time):
             raise ValidationError(_("Selected time cannot be chosen because "
-                                  "the time you chose conflicts with other times you have chosen before"))
+                                    "the time you chose conflicts with other times you have chosen before"))
+
+        if end_time <= start_time:
+            raise ValidationError(_("End Time should be after Start time"), code='invalid')
 
 
 class SoldTimeSlotSale(AbstractTimeSlotSale):
