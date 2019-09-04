@@ -31,6 +31,10 @@ def validate_phone_number(phone):
         raise serializers.ValidationError("Phone number is more than 11 characters")
     if len(phone) < 10:
         raise serializers.ValidationError("Phone number is less than 10 characters")
+    try:
+        int(phone)
+    except ValueError:
+        raise serializers.ValidationError("Phone number should be numbers only")
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):

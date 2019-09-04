@@ -2,6 +2,8 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models.signals import pre_delete
+from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.account.models import ConsultantProfile
 
@@ -53,6 +55,7 @@ class AbstractTimeSlotSale(models.Model):
         if self.end_time <= self.start_time:
             raise ValidationError('Start time should be lass than end time', code='invalid')
 
+
         super(AbstractTimeSlotSale, self).clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):
@@ -62,6 +65,15 @@ class AbstractTimeSlotSale(models.Model):
 
 class TimeSlotSale(AbstractTimeSlotSale):
     objects = TimeSlotSaleManager.as_manager()
+
+    def clean(self, *args, **kwargs):
+        if TimeSlotSale.objects.filter(
+                Q(start_time__lte=self.start_time) & Q(end_time__gte=self.start_time)
+            ) or TimeSlotSale.objects.filter(
+                Q(start_time__lte=self.end_time) & Q(end_time__gte=self.end_time)
+                ):
+            raise ValidationError(_("Selected time cannot be chosen because "
+                                  "the time you chose conflicts with other times you have chosen before"))
 
 
 class SoldTimeSlotSale(AbstractTimeSlotSale):
