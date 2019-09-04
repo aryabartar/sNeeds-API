@@ -13,6 +13,7 @@ passwords.py
 *.db
 keys.py
 celery*
+secure/
 
 *.egg-info
 *.pot
