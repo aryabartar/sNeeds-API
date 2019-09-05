@@ -2,6 +2,9 @@ from sNeeds.utils import skyroom
 from sNeeds.settings.passwords import PASSWORDS
 
 from .exceptions import SkyroomConnectException
+from .models import Room
+
+import datetime
 
 NUMBER_OF_TRIES = 5
 LOGIN_LINK_TTL = 4200  # 70 minutes
@@ -97,6 +100,10 @@ def _get_room_id_in_all_rooms(room_title, all_rooms):
 def create_room_or_get(room_id, max_users):
     name = "مشاوره اسنیدز {}".format(room_id)
     title = "مشاوره اسنیدز {}".format(room_id)
+    sold_time = Room.objects.get(room_id__exact=room_id)
+    start_time = sold_time.sold_time_slot.start_time
+    end_time = sold_time.sold_time_slot.end_time
+    room_session_duration = start_time - end_time
 
     params = {
         "name": name,
@@ -104,7 +111,7 @@ def create_room_or_get(room_id, max_users):
         "guest_login": False,
         "op_login_first": False,
         "max_users": max_users,
-        "session_duration": ROOM_SESSION_DURATION
+        "session_duration": room_session_duration
     }
 
     all_rooms = _get_all_rooms()
@@ -200,6 +207,9 @@ def get_login_url_without_password(user_id, room_id, ttl):
 
 
 def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
+    sold_time_slot = Room.objects.get(room_id__exact=roomid).sold_time_slot
+    login_link_ttl = (sold_time_slot.start_time - sold_time_slot.end_time).seconds
+
     username1 = "sneeds_user_{}_for_room_id_{}".format(str(user1id), str(roomid))
     username2 = "sneeds_user_{}_for_room_id_{}".format(str(user2id), str(roomid))
 
@@ -217,8 +227,8 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
     make_user_room_presentor(user1_id, room_id)
     make_user_room_presentor(user2_id, room_id)
 
-    user1_url = get_login_url_without_password(user1_id, room_id, LOGIN_LINK_TTL)
-    user2_url = get_login_url_without_password(user2_id, room_id, LOGIN_LINK_TTL)
+    user1_url = get_login_url_without_password(user1_id, room_id, login_link_ttl)
+    user2_url = get_login_url_without_password(user2_id, room_id, login_link_ttl)
 
     return_dict = {
         "user1_id": user1_id,
