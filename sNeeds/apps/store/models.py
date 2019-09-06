@@ -64,11 +64,11 @@ class TimeSlotSale(AbstractTimeSlotSale):
         end_time = self.end_time
         consultant = self.consultant
         time_slot_sale_of_consultant = TimeSlotSale.objects.filter(consultant=consultant)
-        solt_time_slot = SoldTimeSlotSale.objects.filter(consultant=consultant)
+        sold_time_slot_of_consultant = SoldTimeSlotSale.objects.filter(consultant=consultant)
         if time_slot_sale_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time) \
           or time_slot_sale_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time) \
-            or solt_time_slot.filter(start_time__lte=start_time).filter(end_time__gte=start_time)\
-              or solt_time_slot.filter(start_time__lte=end_time).filter(end_time__gte=end_time):
+            or sold_time_slot_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time)\
+              or sold_time_slot_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time):
                 raise ValidationError(_("Selected time cannot be chosen because "
                                         "the time you chose conflicts with other times you have chosen before"))
 

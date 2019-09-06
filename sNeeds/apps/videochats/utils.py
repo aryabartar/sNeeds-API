@@ -3,13 +3,12 @@ from sNeeds.settings.passwords import PASSWORDS
 
 from .exceptions import SkyroomConnectException
 from .models import Room
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 import datetime
 
 NUMBER_OF_TRIES = 5
-LOGIN_LINK_TTL = 4200  # 70 minutes
 ROOM_MAX_USERS = 2
-ROOM_SESSION_DURATION = 70  # 70 minutes
 s = skyroom.SkyroomAPI()
 ALL_SKYROOM_USERS_PASSWORD = PASSWORDS.get("ALL_SKYROOM_USERS_PASSWORD")
 
@@ -100,10 +99,9 @@ def _get_room_id_in_all_rooms(room_title, all_rooms):
 def create_room_or_get(room_id, max_users):
     name = "مشاوره اسنیدز {}".format(room_id)
     title = "مشاوره اسنیدز {}".format(room_id)
-    sold_time = Room.objects.get(room_id__exact=room_id)
-    start_time = sold_time.sold_time_slot.start_time
-    end_time = sold_time.sold_time_slot.end_time
-    room_session_duration = start_time - end_time
+
+    sold_session = SoldTimeSlotSale.objects.get(id=room_id)
+    room_session_duration = (sold_session.end_time - sold_session.start_time).seconds // 60
 
     params = {
         "name": name,
@@ -207,8 +205,8 @@ def get_login_url_without_password(user_id, room_id, ttl):
 
 
 def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
-    sold_time_slot = Room.objects.get(room_id__exact=roomid).sold_time_slot
-    login_link_ttl = (sold_time_slot.start_time - sold_time_slot.end_time).seconds // 60
+    sold_time_slot = SoldTimeSlotSale.objects.get(id=roomid)
+    login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time).seconds // 60
     login_link_ttl *= 60
 
     username1 = "sneeds_user_{}_for_room_id_{}".format(str(user1id), str(roomid))
