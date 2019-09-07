@@ -21,5 +21,6 @@ def delete_time_slots():
     """
     Deletes time slots with less than 24 hours to start.
     """
+    print("trying to delete")
     qs = SoldTimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1))
     qs.delete()

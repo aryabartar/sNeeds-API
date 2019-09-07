@@ -6,6 +6,9 @@ from .models import Cart, SoldCart
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
+from datetime import datetime
+from pytz import UTC
+
 
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
@@ -49,6 +52,16 @@ class CartSerializer(serializers.ModelSerializer):
         time_slot_sales = validated_data.get('time_slot_sales', [])
         cart_obj = Cart.objects.new_cart_with_time_sales(time_slot_sales, user=user)
         return cart_obj
+
+    def validate_time_slot_sales(self, list_of_sessions):
+        expired_sessions = []
+        for session in list_of_sessions:
+            start_time = session.start_time.replace(tzinfo=None)
+            if datetime.now() > start_time:
+                expired_sessions.append(session)
+        if expired_sessions:
+            raise ValidationError("این بسته ها منقضی شده است:" + str([session.id for session in expired_sessions]))
+        return list_of_sessions
 
 
 class SoldCartSerializer(serializers.ModelSerializer):
