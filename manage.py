@@ -5,7 +5,13 @@ import sys
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sNeeds.settings.development')
+    DEPLOYMENT = int(os.environ.get('DJANGO_DEPLOYMENT', default=0))
+
+    if DEPLOYMENT == 0:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sNeeds.settings.development')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sNeeds.settings.deployment')
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

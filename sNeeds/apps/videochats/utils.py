@@ -1,5 +1,6 @@
+from django.conf import settings
+
 from sNeeds.utils import skyroom
-from sNeeds.settings.passwords import PASSWORDS
 
 from .exceptions import SkyroomConnectException
 from .models import Room
@@ -10,7 +11,7 @@ import datetime
 NUMBER_OF_TRIES = 5
 ROOM_MAX_USERS = 2
 s = skyroom.SkyroomAPI()
-ALL_SKYROOM_USERS_PASSWORD = PASSWORDS.get("ALL_SKYROOM_USERS_PASSWORD")
+ALL_SKYROOM_USERS_PASSWORD = settings.ALL_SKYROOM_USERS_PASSWORD
 
 
 def _get_all_users():
