@@ -1,0 +1,13 @@
+amqp==2.5.0
+appdirs==1.4.3
+attrs==19.1.0
+autopep8==1.4.4
+Babel==2.7.0
+billiard==3.6.0.0
+bitcoin==1.1.42
+cached-property==1.5.1
+celery==4.3.0
+certifi==2019.6.16
+chardet==3.0.4
+coreapi==2.3.3
+coreschema==0.0.4

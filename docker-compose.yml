@@ -2,10 +2,34 @@ version: '3.7'
 
 services:
   web:
+
     build:
       context: .
       dockerfile: docker/python/Dockerfile
+
+    environment:
+      - SECRET_KEY:idjfidfji
+      - DJANGO_DEPLOYMENT:0
+
     volumes:
       - ./code:/code
+
     ports:
-      - 8001:8000
+      - 8000:8000
+
+  postgres:
+    image: postgres:11.5
+
+    environment:
+      POSTGRE_DB: sneeds
+      POSTGRES_USER: sneeds
+      POSTGRES_PASSWORD: temp
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+    ports:
+      - 6543:5432
+
+volumes:
+  pgdata:
