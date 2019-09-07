@@ -14,7 +14,7 @@ passwords.py
 keys.py
 celery*
 secure/
-
+secure.py
 *.egg-info
 *.pot
 *.py[co]
