@@ -5,10 +5,12 @@ MAINTAINER bartararya@gmail.com
 #ENV PYTHONDONTWRITEBYTECODE 1
 #ENV PYTHONUNBUFFERED 1
 
-COPY . /app
+RUN mkdir /code
 
-WORKDIR /app
+WORKDIR /code
+
+COPY ./code /code
 
 RUN pip install -r requirements.txt
-
-CMD ['python', 'manage.py', 'runserver', '0.0.0.0:8000']
+#RUN python manage.py runserver 0.0.0.0:8000
+#CMD ['python3', 'manage.py', 'runserver', '0.0.0.0:8000']
