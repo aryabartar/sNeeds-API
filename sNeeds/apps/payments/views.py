@@ -1,17 +1,18 @@
 from zeep import Client
 
 from django.urls import reverse
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
+
 from django.conf import settings
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import PayPayment
-
 from sNeeds.apps.orders.models import Order, SoldOrder
+
+from .models import PayPayment
 
 ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
 
@@ -40,8 +41,6 @@ class SendRequest(APIView):
             order.cart.user.phone_number,
             "http://193.176.241.131/payment/accept/",
         )
-
-        print(result)
 
         if result.Status != 100:
             return Response({"detail": 'Error code: ' + str(result.Status)}, 200)

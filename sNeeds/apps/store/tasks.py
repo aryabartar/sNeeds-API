@@ -4,7 +4,16 @@ from django.utils import timezone
 
 from sNeeds.utils import sendemail
 
-from .models import SoldTimeSlotSale
+from .models import TimeSlotSale
+
+
+@task()
+def delete_time_slots():
+    """
+    Deletes time slots with less than 24 hours to start.
+    """
+    qs = TimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1))
+    qs.delete()
 
 
 @shared_task
@@ -14,12 +23,3 @@ def send_notify_sold_time_slot_mail(send_to, name, sold_time_slot_id):
         name,
         sold_time_slot_id
     )
-
-
-@task()
-def delete_time_slots():
-    """
-    Deletes time slots with less than 24 hours to start.
-    """
-    qs = SoldTimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1))
-    qs.delete()
