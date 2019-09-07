@@ -2,6 +2,7 @@
 media/*
 db.sqlite3
 .idea/
+.vscode/
 media/
 files/
 venv/
