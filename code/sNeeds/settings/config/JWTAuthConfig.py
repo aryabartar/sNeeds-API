@@ -1,6 +1,7 @@
 import datetime
+import os
 
-from sNeeds.settings.secure.keys import SECRET_KEY
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 JWT_AUTH = {
     'JWT_ENCODE_HANDLER':
