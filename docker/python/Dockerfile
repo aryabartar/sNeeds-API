@@ -17,4 +17,7 @@ RUN pip install -r requirements2.txt
 RUN pip install -r requirements3.txt
 RUN pip install -r requirements4.txt
 
-RUN python manage.py runserver 0.0.0.0:8000
+ENV SECRET_KEY ALIII
+
+CMD ["python",  "manage.py",  "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "migrate"]

@@ -8,14 +8,20 @@ services:
       dockerfile: docker/python/Dockerfile
 
     environment:
-      - SECRET_KEY:idjfidfji
-      - DJANGO_DEPLOYMENT:0
+      SECRET_KEY: idjfidfji
+      DJANGO_DEPLOYMENT: 0
 
     volumes:
       - ./code:/code
 
     ports:
       - 8000:8000
+
+    tty: true
+
+    depends_on:
+      - postgres
+
 
   postgres:
     image: postgres:11.5
