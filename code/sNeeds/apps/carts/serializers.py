@@ -5,9 +5,7 @@ from .models import Cart, SoldCart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
-
-from datetime import datetime
-from pytz import UTC
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -54,13 +52,43 @@ class CartSerializer(serializers.ModelSerializer):
         return cart_obj
 
     def validate_time_slot_sales(self, list_of_sessions):
-        expired_sessions = []
-        for session in list_of_sessions:
-            start_time = session.start_time.replace(tzinfo=None)
-            if datetime.now() > start_time:
-                expired_sessions.append(session)
-        if expired_sessions:
-            raise ValidationError("این بسته ها منقضی شده است:" + str([session.id for session in expired_sessions]))
+        sold_slots = SoldTimeSlotSale.objects.filter(sold_to=self.context.get('request').user).filter(used=False)
+        print(sold_slots)
+        for i in range(len(list_of_sessions)):
+            if (sold_slots.filter(start_time__lte=list_of_sessions[i].start_time).filter(end_time__gte=list_of_sessions[i].start_time)
+            or sold_slots.filter(start_time__lte=list_of_sessions[i].end_time).filter(end_time__gte=list_of_sessions[i].end_time)):
+                raise ValidationError(
+                    {
+                        "detail": "Time Conflict between "
+                                  + str(list_of_sessions[i].id) +
+                                  " and "
+                                  + str(sold_slots.first().id) +
+                                  " which is a bought session.",
+                        "detail_fa": "جلسه مشاوره  "
+                                     + str(list_of_sessions[i].id) +
+                                     " با "
+                                     + str(sold_slots.first().id) +
+                                     " که خریداری کردید؛ تداخل دارد."
+                    }
+                )
+
+            for j in range(i+1, len(list_of_sessions)):
+                print("j" + str(j) + "i" + str(i))
+                if list_of_sessions[j].start_time <= list_of_sessions[i].start_time <= list_of_sessions[j].end_time \
+                  or list_of_sessions[j].start_time <= list_of_sessions[i].start_time <= list_of_sessions[j].end_time:
+                    raise ValidationError(
+                        {
+                            "detail": "Time Conflict between "
+                                      + str(list_of_sessions[i].id)
+                                      + " and " +
+                                      str(list_of_sessions[j].id),
+                            "detail_fa": "جلسه مشاوره  "
+                                         + str(list_of_sessions[i].id) +
+                                         " با "
+                                         + str(list_of_sessions[j].id) +
+                                         " در سبد خرید شما؛ تداخل دارد."
+                        }
+                    )
         return list_of_sessions
 
 
