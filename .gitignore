@@ -13,7 +13,6 @@ passwords.py
 *.pid
 *.db
 keys.py
-celery*
 secure/
 secure.py
 *.egg-info

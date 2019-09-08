@@ -1,0 +1,14 @@
+
+inflection==0.3.1
+isodate==0.6.0
+itypes==1.1.0
+Jinja2==2.10.1
+kombu==4.6.3
+lxml==4.3.4
+MarkupSafe==1.1.1
+Pillow==6.1.0
+psycopg2==2.8.3
+pycodestyle==2.5.0
+pycoin==0.90.20190630
+PyJWT==1.7.1
+python-dateutil==2.8.0
