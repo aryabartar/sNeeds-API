@@ -3,6 +3,8 @@
 echo " > Run migrations"
 python manage.py migrate
 
+
+
 # For creating admin
 echo " > Create admin"
 
@@ -17,11 +19,11 @@ password = '$PASS';
 
 if User.objects.filter(email=email).count()==0:
     User.objects.create_superuser(email, password);
-    User.objects.create_superuser(email, password);
     print('Superuser created.');
 else:
     print('Superuser creation skipped, user exists.');
 "
 printf "$script" | python manage.py shell
+
 
 exec "$@"

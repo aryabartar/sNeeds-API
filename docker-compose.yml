@@ -22,25 +22,3 @@ services:
       - 8000:8000
 
     tty: true
-
-    depends_on:
-      - postgres
-
-
-
-  postgres:
-    image: postgres:11.5
-
-    environment:
-      POSTGRE_DB: sneeds
-      POSTGRES_USER: sneeds
-      POSTGRES_PASSWORD: temp
-
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-    ports:
-      - 6543:5432
-
-volumes:
-  pgdata:
