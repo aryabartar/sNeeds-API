@@ -9,6 +9,8 @@ services:
 
     entrypoint: /scripts/web_entrypoint.sh
 
+    command: python manage.py runserver 0.0.0.0:8000
+
     environment:
       SECRET_KEY: idjfidfji
       DJANGO_DEPLOYMENT: 0
