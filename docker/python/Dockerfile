@@ -5,21 +5,15 @@ MAINTAINER bartararya@gmail.com
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN mkdir /code
+RUN mkdir /code && mkdir /code/requirements
 
 WORKDIR /code
 
-COPY ./code/requirements1.txt /code/requirements1.txt
-RUN pip install -r requirements1.txt
+COPY ./code/requirements/base.txt /code/requirements/base.txt
+RUN pip install -r ./requirements/base.txt
 
-COPY ./code/requirements2.txt /code/requirements2.txt
-RUN pip install -r requirements2.txt
-
-COPY ./code/requirements3.txt /code/requirements3.txt
-RUN pip install -r requirements3.txt
-
-COPY ./code/requirements4.txt /code/requirements4.txt
-RUN pip install -r requirements4.txt
+COPY ./code/requirements/deployment.txt ./code/requirements/deployment.txt
+RUN pip install -r ./requirements/deployment.txt
 
 
 RUN mkdir scripts

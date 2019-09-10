@@ -22,9 +22,6 @@ services:
 
     tty: true
 
-    depends_on:
-      - postgres
-
     networks:
       - backend
 
