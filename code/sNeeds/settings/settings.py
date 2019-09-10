@@ -130,6 +130,18 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST_IP'),
+        'PORT': os.environ.get('DB_HOST_PORT'),
+    }
+}
+
 from .config.JWTAuthConfig import JWT_AUTH
 
 # Loading API keys

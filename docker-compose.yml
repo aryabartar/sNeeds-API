@@ -12,8 +12,15 @@ services:
     command: gunicorn -w 4 sNeeds.wsgi -b 0.0.0.0:8000
 
     environment:
-      SECRET_KEY: idjfidfji
-      DJANGO_DEPLOYMENT: 0
+      SECRET_KEY: temp_secret_key
+      DJANGO_DEPLOYMENT: 1
+
+      #DB config
+      DB_NAME: sneeds
+      DB_USER: sneeds
+      DB_PASSWORD: temp
+      DB_HOST_IP: 192.168.192.1
+      DB_HOST_PORT: 5432
 
     volumes:
       - ./code:/code
@@ -40,7 +47,7 @@ services:
       - static_files:/static_files
 
     ports:
-      - 9090:80
+      - 8080:80
 
 networks:
   backend:
