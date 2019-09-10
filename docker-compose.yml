@@ -17,6 +17,7 @@ services:
 
     volumes:
       - ./code:/code
+      - static_files:/code/files
 
     ports:
       - 8000:8000
@@ -35,8 +36,14 @@ services:
     networks:
       - backend
 
+    volumes:
+      - static_files:/static_files
+
     ports:
-      - 80:80
+      - 9090:80
 
 networks:
   backend:
+
+volumes:
+  static_files:
