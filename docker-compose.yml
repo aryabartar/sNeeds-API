@@ -17,7 +17,7 @@ services:
 
     volumes:
       - ./code:/code
-      - static_files:/code/files
+      - static_files:/static_files
 
     ports:
       - 8000:8000
