@@ -32,6 +32,9 @@ services:
       context: .
       dockerfile: docker/nginx/Dockerfile
 
+    networks:
+      - backend
+
     ports:
       - 80:80
 
