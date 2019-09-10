@@ -85,7 +85,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -127,7 +126,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
 
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -138,27 +136,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_HOST_PORT'),
     }
 }
-
-
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'file': {
-#             'level': 'DEBUG',
-#             'class': 'logging.FileHandler',
-#             'filename': '/path/to/django/debug.log',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
-
 
 from .config.JWTAuthConfig import JWT_AUTH
 

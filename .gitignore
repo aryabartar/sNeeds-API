@@ -12,6 +12,7 @@ APIs.py
 passwords.py
 *.pid
 *.db
+*.log
 keys.py
 secure/
 

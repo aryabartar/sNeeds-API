@@ -14,7 +14,8 @@ services:
     environment:
       SECRET_KEY: temp_secret_key
       DJANGO_DEPLOYMENT: 1
-      DJANGO_SETTINGS_MODULE: sNeeds.settings.deployment
+      #TODO: Make this implemented
+      DJANGO_SETTINGS_MODULE: sNeeds.settings.deployment # Used by gunicorn
 
       #DB config
       DB_NAME: sneeds
