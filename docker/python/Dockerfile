@@ -9,10 +9,10 @@ RUN mkdir /code && mkdir /code/requirements
 
 WORKDIR /code
 
-COPY ./code/requirements/base.txt /code/requirements/base.txt
+COPY ./code/requirements/base.txt ./requirements/base.txt
 RUN pip install -r ./requirements/base.txt
 
-COPY ./code/requirements/deployment.txt ./code/requirements/deployment.txt
+COPY ./code/requirements/deployment.txt ./requirements/deployment.txt
 RUN pip install -r ./requirements/deployment.txt
 
 
