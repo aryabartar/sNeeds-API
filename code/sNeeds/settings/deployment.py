@@ -10,5 +10,4 @@ ALLOWED_HOSTS = [
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
-
 STATIC_ROOT = "/static_files/"
