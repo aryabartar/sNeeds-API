@@ -2,7 +2,7 @@ from .settings import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['193.176.241.131', '127.0.0.1', 'localhost', '0.0.0.0']
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 # Database
@@ -14,7 +14,7 @@ DATABASES = {
         'NAME': 'sneeds',
         'USER': 'sneeds',
         'PASSWORD': 'temp',
-        'HOST': 'postgres',
+        'HOST': '192.168.192.1',
         'PORT': '5432',
     }
 }

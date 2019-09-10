@@ -1,8 +1,7 @@
 version: '3.7'
 
 services:
-  web:
-
+  django:
     build:
       context: .
       dockerfile: docker/python/Dockerfile
@@ -22,3 +21,16 @@ services:
       - 8000:8000
 
     tty: true
+
+    depends_on:
+      - postgres
+
+    networks:
+      - backend
+
+
+volumes:
+  pgdata:
+
+networks:
+  backend:
