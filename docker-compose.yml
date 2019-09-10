@@ -26,6 +26,14 @@ services:
     networks:
       - backend
 
+  nginx:
+
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+
+    ports:
+      - 80:80
 
 networks:
   backend:
