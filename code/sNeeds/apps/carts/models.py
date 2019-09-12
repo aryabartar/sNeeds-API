@@ -95,7 +95,6 @@ class Cart(AbstractCart):
         self._update_total_time_slot_number()
 
     def update_price(self):
-        print("3")
         time_slot_sales = self.time_slot_sales.all()
         total = 0
         for t in time_slot_sales:
@@ -103,8 +102,6 @@ class Cart(AbstractCart):
 
         self.subtotal = total
         self._update_total()
-
-        print("total: ", self.total)
         self.save()
 
     @transaction.atomic

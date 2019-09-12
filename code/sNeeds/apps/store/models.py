@@ -1,8 +1,6 @@
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.db.models.signals import pre_delete
-from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.account.models import ConsultantProfile
