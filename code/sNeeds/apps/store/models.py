@@ -2,6 +2,8 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models.signals import pre_delete
+from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.account.models import ConsultantProfile
 
@@ -38,7 +40,7 @@ class AbstractTimeSlotSale(models.Model):
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    price = models.IntegerField()
+    price = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
@@ -49,12 +51,6 @@ class AbstractTimeSlotSale(models.Model):
     def get_consultant_username(self):
         return self.consultant.user.username
 
-    def clean(self, *args, **kwargs):
-        if self.end_time <= self.start_time:
-            raise ValidationError('Start time should be lass than end time', code='invalid')
-
-        super(AbstractTimeSlotSale, self).clean(*args, **kwargs)
-
     def save(self, *args, **kwargs):
         self.full_clean()
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
@@ -62,6 +58,22 @@ class AbstractTimeSlotSale(models.Model):
 
 class TimeSlotSale(AbstractTimeSlotSale):
     objects = TimeSlotSaleManager.as_manager()
+
+    def clean(self, *args, **kwargs):
+        start_time = self.start_time
+        end_time = self.end_time
+        consultant = self.consultant
+        time_slot_sale_of_consultant = TimeSlotSale.objects.filter(consultant=consultant)
+        sold_time_slot_of_consultant = SoldTimeSlotSale.objects.filter(consultant=consultant)
+        if time_slot_sale_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time) \
+          or time_slot_sale_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time) \
+            or sold_time_slot_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time)\
+              or sold_time_slot_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time):
+                raise ValidationError(_("Selected time cannot be chosen because "
+                                        "the time you chose conflicts with other times you have chosen before"))
+
+        if end_time <= start_time:
+            raise ValidationError(_("End Time should be after Start time"), code='invalid')
 
 
 class SoldTimeSlotSale(AbstractTimeSlotSale):

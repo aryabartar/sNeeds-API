@@ -87,48 +87,67 @@
 ```json
 [
     {
-        "id": 10,
-        "url": "http://127.0.0.1:8000/ticket/messages/10/",
-        "ticket": 12,
+        "id": 4,
+        "url": "http://127.0.0.1:8000/ticket/messages/4/",
+        "ticket": 2,
         "user": {
             "id": 3,
-            "first_name": "ali",
-            "last_name": "javan"
+            "first_name": "",
+            "last_name": ""
         },
         "consultant": {
             "id": 1,
-            "url": "http://127.0.0.1:8000/account/consultant-profiles/what_is_this/",
-            "profile_picture": "http://127.0.0.1:8000/files/media/account/consultant_profile_pictures/sample.jpg",
-            "first_name": "Mohammadreza",
-            "last_name": "Ghofrani",
-            "universities": [],
-            "field_of_studies": [],
-            "rate": null
+            "url": "http://127.0.0.1:8000/account/consultant-profiles/aslug/",
+            "profile_picture": "http://127.0.0.1:8000/files/images/account/consultants/eng.mrgh%40gmail.com/image/sample.png",
+            "first_name": "",
+            "last_name": ""
         },
         "file": null,
-        "text": "How it is going?"
+        "text": "Fine Thanks",
+        "created": "2019-09-02T11:54:09.668538Z",
+        "is_consultant": false
     },
     {
-        "id": 11,
-        "url": "http://127.0.0.1:8000/ticket/messages/11/",
-        "ticket": 13,
+        "id": 3,
+        "url": "http://127.0.0.1:8000/ticket/messages/3/",
+        "ticket": 2,
         "user": {
             "id": 3,
-            "first_name": "ali",
-            "last_name": "javan"
+            "first_name": "",
+            "last_name": ""
         },
         "consultant": {
             "id": 1,
-            "url": "http://127.0.0.1:8000/account/consultant-profiles/what_is_this/",
-            "profile_picture": "http://127.0.0.1:8000/files/media/account/consultant_profile_pictures/sample.jpg",
-            "first_name": "Mohammadreza",
-            "last_name": "Ghofrani",
-            "universities": [],
-            "field_of_studies": [],
-            "rate": null
+            "url": "http://127.0.0.1:8000/account/consultant-profiles/aslug/",
+            "profile_picture": "http://127.0.0.1:8000/files/images/account/consultants/eng.mrgh%40gmail.com/image/sample.png",
+            "first_name": "",
+            "last_name": ""
         },
         "file": null,
-        "text": "Today is Tuesday."
+        "text": "How are you?",
+        "created": "2019-09-02T11:53:49.729218Z",
+        "is_consultant": true
+    },
+    {
+        "id": 2,
+        "url": "http://127.0.0.1:8000/ticket/messages/2/",
+        "ticket": 2,
+        "user": {
+            "id": 3,
+            "first_name": "",
+            "last_name": ""
+        },
+        "consultant": {
+            "id": 1,
+            "url": "http://127.0.0.1:8000/account/consultant-profiles/aslug/",
+            "profile_picture": "http://127.0.0.1:8000/files/images/account/consultants/eng.mrgh%40gmail.com/image/Screenshot_from_2019-08-31_11-10-58.png",
+            "first_name": "",
+            "last_name": ""
+        },
+        "file": null,
+        "text": "Hello",
+        "created": "2019-09-02T11:53:30.593494Z",
+        "is_consultant": false
     }
 ]
 ```
@@ -147,25 +166,24 @@
 >ticket/messages/12/
 ```json
 {
-    "id": 12,
-    "url": "http://127.0.0.1:8000/ticket/messages/12/",
-    "ticket": 13,
+    "id": 2,
+    "url": "http://127.0.0.1:8000/ticket/messages/2/",
+    "ticket": 2,
     "user": {
         "id": 3,
-        "first_name": "ali",
-        "last_name": "javan"
+        "first_name": "",
+        "last_name": ""
     },
     "consultant": {
         "id": 1,
-        "url": "http://127.0.0.1:8000/account/consultant-profiles/what_is_this/",
-        "profile_picture": "http://127.0.0.1:8000/files/media/account/consultant_profile_pictures/sample.jpg",
-        "first_name": "Mohammadreza",
-        "last_name": "Ghofrani",
-        "universities": [],
-        "field_of_studies": [],
-        "rate": null
+        "url": "http://127.0.0.1:8000/account/consultant-profiles/aslug/",
+        "profile_picture": "http://127.0.0.1:8000/files/images/account/consultants/eng.mrgh%40gmail.com/image/sample.png",
+        "first_name": "",
+        "last_name": ""
     },
     "file": null,
-    "text": "I'm using edge"
+    "text": "Hello",
+    "created": "2019-09-02T11:53:30.593494Z",
+    "is_consultant": false
 }
 ```

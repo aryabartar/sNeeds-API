@@ -15,12 +15,11 @@ passwords.py
 *.log
 keys.py
 secure/
-
+secure.py
 *.egg-info
 *.pot
 *.py[co]
 .tox/
-.vscode/
 __pycache__
 MANIFEST
 dist/

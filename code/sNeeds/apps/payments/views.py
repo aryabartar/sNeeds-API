@@ -70,7 +70,7 @@ class Verify(APIView):
             except PayPayment.DoesNotExist:
                 return Response({"detail": "PayPayment does not exists."}, status=400)
 
-            result = client.service.PaymentVerification(MERCHANT, authority, int(payment.order.total))
+            result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
 
             if result.Status == 100:
                 SoldOrder.objects.sell_order(payment.order)

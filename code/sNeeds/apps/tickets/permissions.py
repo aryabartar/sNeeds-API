@@ -42,6 +42,9 @@ class MessageOwnerPermission(permissions.BasePermission):
         user = request.user
         message_id = view.kwargs.get('id')
 
+        if user.is_anonymous:
+            return False
+
         try:
             Message.objects.filter(
                 Q(pk=message_id) & (Q(ticket__consultant__user=user) | Q(ticket__user=user))

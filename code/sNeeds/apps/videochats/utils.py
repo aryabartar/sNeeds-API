@@ -3,11 +3,13 @@ from django.conf import settings
 from sNeeds.utils import skyroom
 
 from .exceptions import SkyroomConnectException
+from .models import Room
+from sNeeds.apps.store.models import SoldTimeSlotSale
+
+import datetime
 
 NUMBER_OF_TRIES = 5
-LOGIN_LINK_TTL = 4200  # 70 minutes
 ROOM_MAX_USERS = 2
-ROOM_SESSION_DURATION = 70  # 70 minutes
 s = skyroom.SkyroomAPI()
 ALL_SKYROOM_USERS_PASSWORD = settings.ALL_SKYROOM_USERS_PASSWORD
 
@@ -99,13 +101,16 @@ def create_room_or_get(room_id, max_users):
     name = "مشاوره اسنیدز {}".format(room_id)
     title = "مشاوره اسنیدز {}".format(room_id)
 
+    sold_session = SoldTimeSlotSale.objects.get(id=room_id)
+    room_session_duration = (sold_session.end_time - sold_session.start_time).seconds // 60
+
     params = {
         "name": name,
         "title": title,
         "guest_login": False,
         "op_login_first": False,
         "max_users": max_users,
-        "session_duration": ROOM_SESSION_DURATION
+        "session_duration": room_session_duration
     }
 
     all_rooms = _get_all_rooms()
@@ -201,6 +206,10 @@ def get_login_url_without_password(user_id, room_id, ttl):
 
 
 def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
+    sold_time_slot = SoldTimeSlotSale.objects.get(id=roomid)
+    login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time).seconds // 60
+    login_link_ttl *= 60
+
     username1 = "sneeds_user_{}_for_room_id_{}".format(str(user1id), str(roomid))
     username2 = "sneeds_user_{}_for_room_id_{}".format(str(user2id), str(roomid))
 
@@ -218,8 +227,8 @@ def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2
     make_user_room_presentor(user1_id, room_id)
     make_user_room_presentor(user2_id, room_id)
 
-    user1_url = get_login_url_without_password(user1_id, room_id, LOGIN_LINK_TTL)
-    user2_url = get_login_url_without_password(user2_id, room_id, LOGIN_LINK_TTL)
+    user1_url = get_login_url_without_password(user1_id, room_id, login_link_ttl)
+    user2_url = get_login_url_without_password(user2_id, room_id, login_link_ttl)
 
     return_dict = {
         "user1_id": user1_id,

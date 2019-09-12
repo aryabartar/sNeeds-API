@@ -19,6 +19,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Imported key to prevent circular imports.
 from .secure import keys
 
+os.environ['SECRET_KEY'] = "9_rmdxg28emf182!s4n*&(f@hr%#r&n(o_(*z+pk4zou6%q5_!"
+
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Application definition
