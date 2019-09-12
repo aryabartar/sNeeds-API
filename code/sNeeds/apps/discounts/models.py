@@ -45,6 +45,10 @@ class ConsultantDiscount(models.Model):
 
     objects = ConsultantDiscountManager()
 
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+    active = models.BooleanField(default=False)
+
     def __str__(self):
         return "{}%".format(str(self.percent))
 

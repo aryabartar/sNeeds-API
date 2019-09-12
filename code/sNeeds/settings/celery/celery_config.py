@@ -20,5 +20,13 @@ CELERY_BEAT_SCHEDULE = {
     'delete-time-slots': {
         'task': 'sNeeds.apps.store.tasks.delete_time_slots',
         'schedule': crontab(minute='*/1'),
+    },
+    'activate-consultant-discount': {
+        'task': 'sNeeds.apps.discounts.tasks.activate_consultant_discount',
+        'schedule': crontab(minute='*/1')
+    },
+    'deactivate-consultant-discount': {
+        'task': 'sNeeds.apps.discounts.tasks.deactivate_consultant_discount',
+        'schedule': crontab(minute='*/1')
     }
 }
