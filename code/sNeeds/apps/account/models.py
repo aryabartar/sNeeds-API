@@ -46,6 +46,18 @@ class FieldOfStudy(models.Model):
         return self.name
 
 
+# class StudyField(models.Model):
+#     StudyFields = [
+#         ('Math', 'ریاضی و فیزیک'),
+#         ('Natural Science', 'علوم تجربی'),
+#         ('Human Science', 'علوم انسانی')
+#     ]
+#     name = models.CharField(max_length=16, choices=StudyFields)
+#
+#     def __str__(self):
+#         return self.name
+
+
 class ConsultantProfile(models.Model):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
@@ -65,3 +77,4 @@ class ConsultantProfile(models.Model):
 
     def __str__(self):
         return self.user.__str__()
+

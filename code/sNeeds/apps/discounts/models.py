@@ -25,7 +25,7 @@ class TimeSlotSaleNumberDiscountModelManager(models.Manager):
 
 
 class TimeSlotSaleNumberDiscount(models.Model):
-    number = models.IntegerField(unique=True)
+    number = models.PositiveIntegerField(unique=True)
     discount = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
