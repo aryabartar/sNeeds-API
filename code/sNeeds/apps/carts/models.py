@@ -64,7 +64,6 @@ class Cart(AbstractCart):
 
         time_slot_sales = self.time_slot_sales.all()
         cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
-        print(cart_consultant_discount_qs)
         total = 0
 
         for t in time_slot_sales:
@@ -77,7 +76,7 @@ class Cart(AbstractCart):
                     percent += obj.consultant_discount.percent
 
             total += t.price * ((100.0 - percent) / 100)
-
+        print("percent: " + str(percent))
         self.total = total
 
     def _update_total_time_slot_number(self):

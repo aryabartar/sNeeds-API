@@ -39,6 +39,9 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         consultant_discount = ConsultantDiscount.objects.get_with_code_or_none(code)
         if consultant_discount is None:
             raise ValidationError({"detail": "Code is not valid"})
+        if not consultant_discount.active:
+            raise ValidationError({"detail": "Code is not valid",
+                                   "detail_fa": "این کد نامعتبر است"})
         return code
 
     def validate(self, attrs):
@@ -55,6 +58,21 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
 
         if qs.exists():
             raise ValidationError({"detail": "This discount is already used in this cart"})
+
+        # Checking that user cannot use multiple discounts for a consultant
+        applied_discount = CartConsultantDiscount.objects.filter(cart=cart).values_list('consultant_discount',
+                                                                                        flat=True)
+        unused_discount_consultants = ConsultantDiscount.objects.get(code=code).consultant
+        for discount_id in applied_discount:
+            applied_discount_consultants = list(ConsultantDiscount.objects.get(id=discount_id).consultant.all())
+            for consultant in applied_discount_consultants:
+                if unused_discount_consultants.filter(id=consultant.id):
+                    raise ValidationError({
+                        "detail": "You already have used a discount for consultant " + str(consultant.id),
+                        "detail_fa": "شما هم اکنون برای مشاور " +
+                                     str(consultant.id) +
+                                     " کد تخفیف استفاده کرده اید."
+                    })
 
         return attrs
 
