@@ -59,6 +59,19 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         if qs.exists():
             raise ValidationError({"detail": "This discount is already used in this cart"})
 
+        # Checking that user has bought a session with the code's consultant or not
+        discount_consultant = ConsultantDiscount.objects.get(code=code).consultant.all()
+        exist = False
+        for consultant in discount_consultant:
+            for time in cart.time_slot_sales.all():
+                if time.consultant == consultant:
+                    exist = True
+                    break
+            if exist:
+                break
+        if not exist:
+            raise ValidationError({"detail": "You don't have any session with the consultants of discount"})
+
         # Checking that user cannot use multiple discounts for a consultant
         applied_discount = CartConsultantDiscount.objects.filter(cart=cart).values_list('consultant_discount',
                                                                                         flat=True)
