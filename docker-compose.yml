@@ -26,6 +26,8 @@ services:
       SUPERUSER_USERNAME: a@g.com
       SUPERUSER_PASSWORD: 111111
 
+    depends_on:
+      - redis
 
     volumes:
       - ./code:/code
@@ -53,6 +55,10 @@ services:
 
     ports:
       - 8080:80
+
+  redis:
+    image: redis:5.0.5-alpine
+
 
 networks:
   backend:
