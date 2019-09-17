@@ -53,12 +53,22 @@ services:
     volumes:
       - static_files:/static_files
 
+    depends_on:
+      - django
+
     ports:
       - 8080:80
 
   redis:
     image: redis:5.0.5-alpine
 
+    container_name: redis
+
+    ports:
+      - 6379:6379
+
+    networks:
+      - backend
 
 networks:
   backend:
