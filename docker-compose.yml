@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
 
-  django:
+  django: &django
     build:
       context: .
       dockerfile: docker/python/Dockerfile
@@ -28,6 +28,7 @@ services:
 
     depends_on:
       - redis
+      - celery
 
     volumes:
       - ./code:/code
@@ -40,6 +41,13 @@ services:
 
     networks:
       - backend
+
+  celery:
+    <<: *django
+    command: celery -A sNeeds worker --loglevel=info
+    ports: []
+    depends_on:
+      - redis
 
   nginx:
 
