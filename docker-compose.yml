@@ -21,8 +21,11 @@ services:
       DB_NAME: sneeds
       DB_USER: sneeds
       DB_PASSWORD: temp
-      DB_HOST_IP: 192.168.192.1
+      DB_HOST_IP: 172.17.0.1
       DB_HOST_PORT: 5432
+      SUPERUSER_USERNAME: a@g.com
+      SUPERUSER_PASSWORD: 111111
+
 
     volumes:
       - ./code:/code
