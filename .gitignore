@@ -10,9 +10,12 @@ sneeds-django/sneeds/local.py
 sneeds/local.py
 APIs.py
 passwords.py
+code/sNeeds/settings/deployment.py
+
 *.pid
 *.db
 *.log
+
 keys.py
 secure/
 secure.py
