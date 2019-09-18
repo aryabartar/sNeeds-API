@@ -12,19 +12,19 @@ services:
     command: gunicorn -w 4 sNeeds.wsgi -b 0.0.0.0:8000
 
     environment:
-      SECRET_KEY: temp_secret_key
+      SECRET_KEY: ${SECRET_KEY}
       DJANGO_DEPLOYMENT: 1
       #TODO: Make this implemented
       DJANGO_SETTINGS_MODULE: sNeeds.settings.deployment # Used by gunicorn
 
       #DB config
-      DB_NAME: sneeds
-      DB_USER: sneeds
-      DB_PASSWORD: temp
-      DB_HOST_IP: 172.17.0.1
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST_IP: ${DB_HOST_IP}
       DB_HOST_PORT: 5432
-      SUPERUSER_USERNAME: a@g.com
-      SUPERUSER_PASSWORD: 111111
+      SUPERUSER_USERNAME: ${SUPERUSER_USERNAME}
+      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD}
 
     depends_on:
       - redis
