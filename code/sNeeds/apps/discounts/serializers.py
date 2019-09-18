@@ -59,6 +59,12 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         if qs.exists():
             raise ValidationError({"detail": "This discount is already used in this cart"})
 
+        # Checking that if entered code wasn't in the database throws a ValidationError
+        try:
+            ConsultantDiscount.objects.get(code=code)
+        except ConsultantDiscount.DoesNotExist:
+            raise ValidationError({"detail": "This discount doesn't exist."})
+
         # Checking that user has bought a session with the code's consultant or not
         discount_consultant = ConsultantDiscount.objects.get(code=code).consultant.all()
         exist = False
