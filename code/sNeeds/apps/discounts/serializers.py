@@ -51,7 +51,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             raise ValidationError("Code is not valid")
 
         # Checking that discount is applied in the cart
-        qs = CartConsultantDiscount.objects.filter(cart=cart, consultant_discount__code=code)
+        qs = CartConsultantDiscount.objects.filter(cart=cart, consultant_discount__code__iexact=code)
         if qs.exists():
             raise ValidationError("This discount is already used in this cart")
 
