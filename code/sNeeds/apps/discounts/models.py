@@ -2,6 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.contrib.postgres.fields import CICharField
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.account.models import ConsultantProfile
@@ -10,7 +11,9 @@ from sNeeds.apps.account.models import ConsultantProfile
 class ConsultantDiscountManager(models.Manager):
     def get_with_code_or_none(self, code):
         try:
+            print("number " + str(code))
             obj = self.get(code__iexact=code)
+            print("obj " + str(obj))
             return obj
         except:
             return None
@@ -42,7 +45,7 @@ class ConsultantDiscount(models.Model):
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    code = models.CharField(max_length=128, unique=True)
+    code = CICharField(max_length=128, unique=True)
 
     objects = ConsultantDiscountManager()
 
@@ -52,6 +55,10 @@ class ConsultantDiscount(models.Model):
 
     def __str__(self):
         return "{}%".format(str(self.percent))
+
+    def clean(self, *args, **kwargs):
+        if self.start_time >= self.end_time:
+            raise ValidationError("Start time should be after End time.")
 
 
 def validate_consultant_discount(discount):

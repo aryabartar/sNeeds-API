@@ -46,7 +46,10 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
 
         # Checking that the discount user entered is valid or not
         # Checking that code is exist or is active
+        discount = ConsultantDiscount.objects.get(code=code)
+        print(discount)
         discount = ConsultantDiscount.objects.get_with_code_or_none(code)
+        print(discount)
         if discount is None or not discount.active:
             raise ValidationError("Code is not valid")
 
