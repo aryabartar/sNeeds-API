@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.utils.translation import gettext as _
 
 from .models import CartConsultantDiscount, ConsultantDiscount, TimeSlotSaleNumberDiscount
 
@@ -42,22 +43,22 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         try:
             cart = user.cart
         except:
-            raise ValidationError("User has no cart.")
+            raise ValidationError(_("User has no cart."))
 
         # Checking that the discount user entered is valid or not
         # Checking that code is exist or is active
         try:
             discount = ConsultantDiscount.objects.get(code=code)
         except ConsultantDiscount.DoesNotExist:
-            raise ValidationError("Code is not valid")
+            raise ValidationError(_("Code is not valid"))
 
         if not discount.active:
-            raise ValidationError("Code is not valid")
+            raise ValidationError(_("Code is not valid"))
 
         # Checking that discount is applied in the cart
         qs = CartConsultantDiscount.objects.filter(cart=cart, consultant_discount__code__iexact=code)
         if qs.exists():
-            raise ValidationError("This discount is already used in this cart")
+            raise ValidationError(_("This discount is already used in this cart"))
 
         # Checking that user has bought a session with the code's consultant or not
         discount_consultant = discount.consultant.all()
@@ -71,7 +72,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
                 break
 
         if not exist:
-            raise ValidationError("You don't have any session with the consultants of discount")
+            raise ValidationError(_("You don't have any session with the consultants of discount"))
 
         # Checking that user cannot use multiple discounts for a consultant
         applied_discount = CartConsultantDiscount.objects.filter(cart=cart).values_list('consultant_discount',
@@ -80,7 +81,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             applied_discount_consultants = list(ConsultantDiscount.objects.get(id=id).consultant.all())
             for consultant in applied_discount_consultants:
                 if discount.consultant.filter(id=consultant.id):
-                    raise ValidationError("You already have used a discount for consultant " + str(consultant.id))
+                    raise ValidationError(_("You already have used a discount for consultant %(number)d " %{'number': consultant.id}))
 
         return code
 
