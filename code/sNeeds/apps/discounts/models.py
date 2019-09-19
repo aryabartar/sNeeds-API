@@ -8,17 +8,6 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.account.models import ConsultantProfile
 
 
-class ConsultantDiscountManager(models.Manager):
-    def get_with_code_or_none(self, code):
-        try:
-            print("number " + str(code))
-            obj = self.get(code__iexact=code)
-            print("obj " + str(obj))
-            return obj
-        except:
-            return None
-
-
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
     def get_discount_or_zero(self, number):
         try:
@@ -46,8 +35,6 @@ class ConsultantDiscount(models.Model):
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
     code = CICharField(max_length=128, unique=True)
-
-    objects = ConsultantDiscountManager()
 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
