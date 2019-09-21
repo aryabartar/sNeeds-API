@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-21 17:22+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: sNeeds/apps/comments/serializers.py:45
+msgid "Request is None"
+msgstr "درخواستی وجود ندارد"
+
+#: sNeeds/apps/comments/serializers.py:48
+msgid "Authentication credentials are not provided."
+msgstr "هویت شما محرز نشده است"
+
+#: sNeeds/apps/comments/serializers.py:83
+msgid "This time slot is not sold to this user"
+msgstr "این جلسه مشاوره به کاربر وارد شده فروخته نشده است"
+
+#: sNeeds/apps/comments/serializers.py:91
+msgid "Rate exists"
+msgstr "قبلا ارزیابی شده است"
+
+#: sNeeds/apps/customAuth/admin.py:17
+msgid "Personal info"
+msgstr ""
+
+#: sNeeds/apps/customAuth/admin.py:18
+msgid "Permissions"
+msgstr ""
+
+#: sNeeds/apps/customAuth/admin.py:20
+msgid "Important dates"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:43
+msgid "email address"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:44
+msgid "first name"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:45
+msgid "last name"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:46
+msgid "phone number"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:47
+msgid "address"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:50
+msgid "staff status"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:52
+msgid "Designates whether the user can log into this admin site."
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:56
+msgid "active"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:59
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:63
+msgid "date joined"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:72
+msgid "user"
+msgstr ""
+
+#: sNeeds/apps/customAuth/models.py:73
+msgid "users"
+msgstr ""
+
+#: sNeeds/apps/discounts/serializers.py:46
+msgid "User has no cart."
+msgstr "شما سبد خریدی ندارید"
+
+#: sNeeds/apps/discounts/serializers.py:53
+#: sNeeds/apps/discounts/serializers.py:56
+msgid "Code is not valid"
+msgstr "کد نامعتبر است"
+
+#: sNeeds/apps/discounts/serializers.py:61
+msgid "This discount is already used in this cart"
+msgstr "این کد تخفیف هم اکنون بر روی سبد خرید اعمال شده است"
+
+#: sNeeds/apps/discounts/serializers.py:75
+msgid "You don't have any session with the consultants of discount"
+msgstr "شما هیچ جلسه ای را با مشاوران این کد تخفیف انتخاب نکرده اید"
+
+#: sNeeds/apps/discounts/serializers.py:84
+#, python-format
+msgid "You already have used a discount for consultant %(number)d "
+msgstr "شما هم اکنون برای مشاور %(number)d یک کد تخفیف را استفاده کرده اید"
+
+#: sNeeds/apps/store/models.py:71
+msgid ""
+"Selected time cannot be chosen because the time you chose conflicts with "
+"these times you have chosen before "
+msgstr "شما در این زمان جلسه مشاوره دیگری ایجاد کرده اید به شماره های "
+
+#: sNeeds/apps/store/models.py:83
+msgid ""
+"Selected time cannot be chosen because the time you chose conflicts with "
+"other times you have sold before "
+msgstr "شما در این زمان جلسه مشاوره ای دیگری دارید به شماره(های) "
+
+#: sNeeds/apps/store/models.py:87
+msgid "End Time should be after Start time"
+msgstr "زمان پایان یک جلسه نمی تواند پیش از شروع آن باشد :)"
