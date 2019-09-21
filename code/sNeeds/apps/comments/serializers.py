@@ -1,3 +1,5 @@
+from django.utils.translation import gettext as _
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -40,10 +42,10 @@ class CommentSerializer(serializers.ModelSerializer):
         user = request.user
 
         if not request:
-            raise ValidationError({"detail": "Request is None"})
+            raise ValidationError({"detail": _("Request is None")})
 
-        if not user:
-            raise ValidationError({"detail": "Authentication credentials are not provided."})
+        if user.is_anonymous:
+            raise ValidationError({"detail": _("Authentication credentials are not provided.")})
 
         return attrs
 
@@ -78,7 +80,7 @@ class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
         sold_time_slot = attrs['sold_time_slot']
 
         if sold_time_slot.sold_to != user:
-            raise ValidationError({"detail": "This time slot is not sold to this user"})
+            raise ValidationError({"detail": _("This time slot is not sold to this user")})
 
         return attrs
 
@@ -86,7 +88,7 @@ class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
         sold_time_slot = validated_data['sold_time_slot']
 
         if SoldTimeSlotRate.objects.filter(sold_time_slot=sold_time_slot).exists():
-            raise ValidationError({"detail": "Rate exists"})
+            raise ValidationError({"detail": _("Rate exists")})
 
         obj = SoldTimeSlotRate.objects.create(
             sold_time_slot=sold_time_slot,

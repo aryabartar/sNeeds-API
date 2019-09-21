@@ -149,6 +149,7 @@ REST_FRAMEWORK = {
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, '..', 'translations'),
 ]
+
 from .config.JWTAuthConfig import JWT_AUTH
 
 # Loading API keys
