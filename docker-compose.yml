@@ -41,6 +41,7 @@ services:
 
     networks:
       - backend
+      - backend-internal-network
 
   celery:
     <<: *django
@@ -50,7 +51,6 @@ services:
       - redis
 
   nginx:
-
     build:
       context: .
       dockerfile: docker/nginx/Dockerfile
@@ -69,16 +69,16 @@ services:
 
   redis:
     image: redis:5.0.5-alpine
-
     container_name: redis
-
     ports:
       - 6379:6379
-
     networks:
-      - backend
+      - backend-internal-network
 
 networks:
+  backend-internal-network:
+    driver: overlay
+    internal: true
   backend:
 
 volumes:
