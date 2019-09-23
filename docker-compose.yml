@@ -45,7 +45,7 @@ services:
 
   celery:
     <<: *django
-    command: celery -A sNeeds worker --loglevel=info
+    command: celery -A sNeeds worker --loglevel=info && celery -A sNeeds beat --loglevel=info
     ports: []
     depends_on:
       - redis
