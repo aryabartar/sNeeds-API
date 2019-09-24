@@ -1,0 +1,223 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-09-23 19:15+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: sNeeds/apps/carts/serializers.py:50
+#, fuzzy
+#| msgid "User has no cart."
+msgid "User has an active cart."
+msgstr "شما سبد خریدی ندارید"
+
+#: sNeeds/apps/carts/serializers.py:62
+#, fuzzy, python-format
+#| msgid ""
+#| "Time Conflict between %(number)d and %(number)d which is a bought session"
+msgid ""
+"Time Conflict between %(selected_time_slot)d and %(sold_time_slot)d which is "
+"a bought session"
+msgstr "جلسه %(selected_time_slot)d با جلسه %(sold_time_slot)d که خریداری کردید تداخل دارد "
+
+#: sNeeds/apps/carts/serializers.py:73
+#, fuzzy, python-format
+#| msgid "Time Conflict between %(number)d and %(number)d"
+msgid ""
+"Time Conflict between %(selected_time_slot_1)d and %(selected_time_slot_2)d"
+msgstr "جلسه انتخاب شده %(selected_time_slot_1)d با %(selected_time_slot_2)d تداخل دارد"
+
+#: sNeeds/apps/comments/serializers.py:45
+msgid "Request is None"
+msgstr "درخواستی وجود ندارد"
+
+#: sNeeds/apps/comments/serializers.py:48
+#, fuzzy
+#| msgid "User has no cart."
+msgid "User is None."
+msgstr "کاربر یافت نشد"
+
+#: sNeeds/apps/comments/serializers.py:83
+msgid "This time slot is not sold to this user"
+msgstr "این جلسه از آن شما نیست"
+
+#: sNeeds/apps/consultants/serializers.py:28
+msgid "A Consultant with this phone number exists. Are you not a Consultant?"
+msgstr "مشاوری با این شماره تلفن وجود دارد. آیا شما هم اکنون مشاور نیستید؟"
+
+#: sNeeds/apps/consultants/serializers.py:30
+msgid "A Consultant with phone number is in assessment."
+msgstr "مشاوری با این شماره در دست بررسی است"
+
+#: sNeeds/apps/consultants/serializers.py:32
+msgid "Phone number should be 11 numbers"
+msgstr "تلفن همراه باید ۱۱ رقمی باشد"
+
+#: sNeeds/apps/consultants/serializers.py:36
+msgid "Phone number should be numbers."
+msgstr "شماره تلفن همراه فقط از اعداد تشکیل می یابد"
+
+#: sNeeds/apps/consultants/serializers.py:41
+msgid "A Consultant with this email exists. Are you not a Consultant?"
+msgstr ""
+"مشاوری با این رایانامه هم اکنون وجود دارد. آیا شما هم اکنون مشاور نیستید؟"
+
+#: sNeeds/apps/consultants/serializers.py:43
+msgid "A Consultant with this email is in assessment."
+msgstr "مشاوری با این رایانامه در دست بررسی است"
+
+#: sNeeds/apps/customAuth/admin.py:17
+msgid "Personal info"
+msgstr "اطلاعات شخصی"
+
+#: sNeeds/apps/customAuth/admin.py:18
+msgid "Permissions"
+msgstr "دسترسی ها"
+
+#: sNeeds/apps/customAuth/admin.py:20
+msgid "Important dates"
+msgstr "تاریخ های مهم"
+
+#: sNeeds/apps/customAuth/models.py:17
+msgid "The given email must be set"
+msgstr "قسمت ایمیل نباید خالی بماند"
+
+#: sNeeds/apps/customAuth/models.py:43
+msgid "email address"
+msgstr "نشانی رایانامه"
+
+#: sNeeds/apps/customAuth/models.py:44
+msgid "first name"
+msgstr "نام"
+
+#: sNeeds/apps/customAuth/models.py:45
+msgid "last name"
+msgstr "نام خانوادگی"
+
+#: sNeeds/apps/customAuth/models.py:46
+msgid "phone number"
+msgstr "شماره تلفن همراه"
+
+#: sNeeds/apps/customAuth/models.py:47
+msgid "address"
+msgstr "نشانی"
+
+#: sNeeds/apps/customAuth/models.py:50
+msgid "staff status"
+msgstr "وضعیت کارکنان"
+
+#: sNeeds/apps/customAuth/models.py:52
+msgid "Designates whether the user can log into this admin site."
+msgstr "اگر این قسمت فعال باشد کاربر می تواند به قسمت مدیریت دسترسی پیدا کند"
+
+#: sNeeds/apps/customAuth/models.py:56
+msgid "active"
+msgstr "فعال"
+
+#: sNeeds/apps/customAuth/models.py:59
+msgid ""
+"Designates whether this user should be treated as active. Unselect this "
+"instead of deleting accounts."
+msgstr ""
+"اگر این قسمت فعال باشد کاربر به عنوان کاربر فعال تلقی می شود. به جای حذف "
+"کاربر از این قسمت استفاده کنید."
+
+#: sNeeds/apps/customAuth/models.py:63
+msgid "date joined"
+msgstr "زمان پیوستن"
+
+#: sNeeds/apps/customAuth/models.py:72
+msgid "user"
+msgstr "کاربر"
+
+#: sNeeds/apps/customAuth/models.py:73
+msgid "users"
+msgstr "کاربر ها"
+
+#: sNeeds/apps/customAuth/serializers.py:28
+msgid "User with this email already exists"
+msgstr "کاربری با این ایمیل هم اکنون وجود دارد"
+
+#: sNeeds/apps/customAuth/serializers.py:33
+msgid "Phone number is more than 11 characters"
+msgstr "شماره تلفن همراه نباید بیش از ۱۱ شماره باشد"
+
+#: sNeeds/apps/customAuth/serializers.py:35
+msgid "Phone number is less than 10 characters"
+msgstr "شماره تلفن همراه نباید از ۱۰ شماره کمتر باشد"
+
+#: sNeeds/apps/customAuth/serializers.py:39
+msgid "Phone number should be numbers only"
+msgstr "شماره تلفن باید صرفا از اعداد تشکیل شده باشد"
+
+#: sNeeds/apps/customAuth/serializers.py:84
+#: sNeeds/apps/customAuth/serializers.py:128
+msgid "Passwords must match"
+msgstr "رمز و تکرار آن یکسان نیست"
+
+#: sNeeds/apps/discounts/serializers.py:46 sNeeds/apps/orders/serializers.py:43
+msgid "User has no cart."
+msgstr "شما سبد خریدی ندارید"
+
+#: sNeeds/apps/discounts/serializers.py:53
+#: sNeeds/apps/discounts/serializers.py:56
+msgid "Code is not valid"
+msgstr "کد نامعتبر است"
+
+#: sNeeds/apps/discounts/serializers.py:61
+msgid "This discount is already used in this cart"
+msgstr "این کد تخفیف هم اکنون بر روی سبد خرید اعمال شده است"
+
+#: sNeeds/apps/discounts/serializers.py:75
+msgid "You don't have any session with the consultants of discount"
+msgstr "شما هیچ جلسه ای را با مشاوران این کد تخفیف انتخاب نکرده اید"
+
+#: sNeeds/apps/discounts/serializers.py:85
+#, python-format
+msgid "You already have used a discount for consultant %(number)d "
+msgstr "شما هم اکنون برای مشاور %(number)d یک کد تخفیف را استفاده کرده اید"
+
+#: sNeeds/apps/store/models.py:72
+msgid ""
+"Selected time cannot be chosen because the time you chose conflicts with "
+"these times you have chosen before "
+msgstr "شما در این زمان جلسه مشاوره دیگری ایجاد کرده اید به شماره های "
+
+#: sNeeds/apps/store/models.py:87
+msgid ""
+"Selected time cannot be chosen because the time you chose conflicts with "
+"other times you have sold before "
+msgstr "شما در این زمان جلسه مشاوره دیگری دارید به شماره(های) "
+
+#: sNeeds/apps/store/models.py:93
+msgid "End Time should be after Start time"
+msgstr "زمان پایان یک جلسه نمی تواند پیش از شروع آن باشد :)"
+
+#: sNeeds/apps/store/serializers.py:73
+msgid "Start time should be selected at least from a day after today."
+msgstr "شروع جلسه باید حداقل از یک روز بعد باشد"
+
+#: sNeeds/apps/userfiles/serializers.py:28
+#, fuzzy, python-format
+#| msgid "File limit exceeds 5MB."
+msgid "File limit exceeds %(size)d MB."
+msgstr "حجم فایل نباید از %(number)d مگابایت بیشتر باشد"
+
+#: sNeeds/apps/userfiles/serializers.py:34
+#: sNeeds/apps/userfiles/serializers.py:38
+#, python-format
+msgid "User with already has an resume %(resume)s"
+msgstr "شما هم اکنون یک رزومه دارید: %(resume)s"

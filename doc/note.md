@@ -40,7 +40,7 @@ Vary: Accept
     ]
 }
 ```
-> This way errors are translated to other languages. Some of the errors like This one is available on Spanish language:
+> This way errors are translated to other languages. Some of the errors like This one is available on other languages such as Spanish language:
 ```
   curl -X POST \
   http://127.0.0.1:8000/discount/cart-consultant-discounts/ \
