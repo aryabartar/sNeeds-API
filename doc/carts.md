@@ -193,4 +193,6 @@ body:
     "updated": "2019-07-25T09:40:28.396160Z"
 }
 ```
-
+####Special Errors
+> If user chooses two time-slots that have conflict with each other, then an error is thrown in this way:
+ 
