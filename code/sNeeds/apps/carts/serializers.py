@@ -55,7 +55,6 @@ class CartSerializer(serializers.ModelSerializer):
 
     def validate_time_slot_sales(self, list_of_sessions):
         sold_slots = SoldTimeSlotSale.objects.filter(sold_to=self.context.get('request').user).filter(used=False)
-        print(list_of_sessions)
         for i in range(len(list_of_sessions)):
             if (sold_slots.filter(start_time__lte=list_of_sessions[i].start_time).filter(end_time__gte=list_of_sessions[i].start_time)
             or sold_slots.filter(start_time__lte=list_of_sessions[i].end_time).filter(end_time__gte=list_of_sessions[i].end_time)):
@@ -76,7 +75,6 @@ class CartSerializer(serializers.ModelSerializer):
                             "selected_time_slot_2": list_of_sessions[j].id
                         }
                     )
-                print("here")
         return list_of_sessions
 
 

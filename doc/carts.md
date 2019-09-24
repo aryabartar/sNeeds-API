@@ -195,4 +195,34 @@ body:
 ```
 ####Special Errors
 > If user chooses two time-slots that have conflict with each other, then an error is thrown in this way:
- 
+```json
+HTTP 400 Bad Request
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "time_slot_sales": {
+        "detail": "Time Conflict between 1 and 2",
+        "selected_time_slot_1": "1",
+        "selected_time_slot_2": "2"
+    }
+}
+```
+> And if One of them was a bought time-slot:
+```json
+HTTP 400 Bad Request
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "time_slot_sales": {
+        "detail": "Time Conflict between 1 and 1 which is a bought session",
+        "selected_time_slot": "1",
+        "sold_time_slot": "1"
+    }
+}
+```
+Explanation: in the above example user has a bought time slot which its id is 1 
+and tries to buy another time slot which also its id is 1.
