@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -39,7 +40,7 @@ class OrderSerializer(serializers.ModelSerializer):
         try:
             cart = Cart.objects.get(user=user)
         except:
-            raise ValidationError({"detail": "User has no cart."})
+            raise ValidationError({"detail": _("User has no cart.")})
 
         order_obj = Order.objects.create(cart=cart)
 

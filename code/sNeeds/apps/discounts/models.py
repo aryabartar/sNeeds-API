@@ -34,7 +34,7 @@ class ConsultantDiscount(models.Model):
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    code = CICharField(max_length=128, unique=True)
+    code = CICharField(max_length=128, unique=True) #TODO: CHANge
 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()

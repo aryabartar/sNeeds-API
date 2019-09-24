@@ -1,3 +1,5 @@
+from django.utils.translation import gettext as _
+
 from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validators
 from django.core import exceptions
@@ -23,18 +25,18 @@ def validate_user_password(password):
 def validate_email(email):
     qs = User.objects.filter(email__iexact=email)
     if qs.exists():
-        raise serializers.ValidationError("User with this email already exists")
+        raise serializers.ValidationError(_("User with this email already exists"))
 
 
 def validate_phone_number(phone):
     if len(phone) > 11:
-        raise serializers.ValidationError("Phone number is more than 11 characters")
+        raise serializers.ValidationError(_("Phone number is more than 11 characters"))
     if len(phone) < 10:
-        raise serializers.ValidationError("Phone number is less than 10 characters")
+        raise serializers.ValidationError(_("Phone number is less than 10 characters"))
     try:
         int(phone)
     except ValueError:
-        raise serializers.ValidationError("Phone number should be numbers only")
+        raise serializers.ValidationError(_("Phone number should be numbers only"))
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -79,7 +81,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         pw = data.get('password')
         pw2 = data.pop('password2')
         if pw != pw2:
-            raise serializers.ValidationError("Passwords must match")
+            raise serializers.ValidationError(_("Passwords must match"))
         return data
 
     def create(self, validated_data):
@@ -123,7 +125,7 @@ class UserSerializer(serializers.ModelSerializer):
         pw2 = data.get('password2', -1)
 
         if pw != pw2:
-            raise serializers.ValidationError("Passwords must match")
+            raise serializers.ValidationError(_("Passwords must match"))
 
         try:
             data.pop('password2')

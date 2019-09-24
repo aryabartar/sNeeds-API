@@ -81,7 +81,11 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             applied_discount_consultants = list(ConsultantDiscount.objects.get(id=id).consultant.all())
             for consultant in applied_discount_consultants:
                 if discount.consultant.filter(id=consultant.id):
-                    raise ValidationError(_("You already have used a discount for consultant %(number)d " %{'number': consultant.id}))
+                    raise ValidationError({
+                        "detail": _("You already have used a discount for consultant %(number)d " %{'number': consultant.id}),
+                        "consultant_id": consultant.id
+                        }
+                    )
 
         return code
 

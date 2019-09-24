@@ -1,8 +1,10 @@
+from django.utils.translation import gettext as _
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import Comment, AdminComment, SoldTimeSlotRate
-from sNeeds.apps.store.models import SoldTimeSlotSale
+
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -40,10 +42,10 @@ class CommentSerializer(serializers.ModelSerializer):
         user = request.user
 
         if not request:
-            raise ValidationError({"detail": "Request is None"})
+            raise ValidationError({"detail": _("Request is None")})
 
         if not user:
-            raise ValidationError({"detail": "Authentication credentials are not provided."})
+            raise ValidationError({"detail": _("User is None.")})
 
         return attrs
 
@@ -78,7 +80,7 @@ class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
         sold_time_slot = attrs['sold_time_slot']
 
         if sold_time_slot.sold_to != user:
-            raise ValidationError({"detail": "This time slot is not sold to this user"})
+            raise ValidationError({"detail": _("This time slot is not sold to this user")})
 
         return attrs
 

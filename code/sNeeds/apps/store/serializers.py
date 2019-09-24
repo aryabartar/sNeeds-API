@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
@@ -63,13 +64,13 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 				price=validated_data['price'],
 			)
 		except ValidationError as ex:
-			raise serializers.ValidationError({"detail": ex.messages})
+			raise serializers.ValidationError({"detail": ex.messages}) #TODO: Check that this is translated or not
 		return obj
 
 	def validate_start_time(self, obj):
 		if obj < (timezone.now() + datetime.timedelta(days=1)):
 			raise ValidationError(
-				"Start time should be selected at least from a day after today."
+				_("Start time should be selected at least from a day after today.")
 			)
 		return obj
 
