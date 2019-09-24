@@ -11,6 +11,7 @@ from sNeeds.apps.account.serializers import ConsultantProfileSerializer, ShortCo
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
 import datetime
+from json import loads, dumps
 
 
 class TimeSlotSaleSerializer(serializers.ModelSerializer):
@@ -64,7 +65,7 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
 				price=validated_data['price'],
 			)
 		except ValidationError as ex:
-			raise serializers.ValidationError({"detail": ex.messages}) #TODO: Check that this is translated or not
+			raise serializers.ValidationError(ex.message_dict) #TODO: This error message is not translating
 		return obj
 
 	def validate_start_time(self, obj):

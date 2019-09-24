@@ -194,6 +194,10 @@ body:
 }
 ```
 ####Special Errors
+> This error is thrown in the following endpoints
+>> cart/carts/ [POST]  
+>> cart/carts/{ID}/ [PUT]  
+
 > If user chooses two time-slots that have conflict with each other, then an error is thrown in this way:
 ```json
 HTTP 400 Bad Request
