@@ -19,8 +19,6 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       DB_HOST_IP: ${DB_HOST_IP}
       DB_HOST_PORT: 5432
-      SUPERUSER_USERNAME: ${SUPERUSER_USERNAME}
-      SUPERUSER_PASSWORD: ${SUPERUSER_PASSWORD}
 
     depends_on:
       - redis
