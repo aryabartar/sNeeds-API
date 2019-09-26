@@ -38,6 +38,7 @@ services:
     tty: true
 
     networks:
+      - backend
       - backend-internal-network
 
   celery:
