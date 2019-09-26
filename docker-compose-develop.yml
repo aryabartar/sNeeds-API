@@ -5,7 +5,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: docker/python/Dockerfile
+      dockerfile: docker/python/develop/Dockerfile
 
     command: python manage.py runserver 0.0.0.0:8000
 

@@ -5,7 +5,7 @@ services:
   django: &django
     build:
       context: .
-      dockerfile: docker/python/Dockerfile
+      dockerfile: docker/python/deploy/Dockerfile
 
     entrypoint: /scripts/web_entrypoint_deploy.sh
 
