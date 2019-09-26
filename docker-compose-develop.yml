@@ -7,15 +7,11 @@ services:
       context: .
       dockerfile: docker/python/Dockerfile
 
-    entrypoint: /scripts/web_entrypoint_deploy.sh
-
-    command: gunicorn -w 4 sNeeds.wsgi -b 0.0.0.0:8000
+    command: python manage.py runserver
 
     environment:
       SECRET_KEY: ${SECRET_KEY}
-      DJANGO_DEPLOYMENT: 1
-      #TODO: Make this implemented
-      DJANGO_SETTINGS_MODULE: sNeeds.settings.deployment # Used by gunicorn
+      DJANGO_DEPLOYMENT: 0
 
       #DB config
       DB_NAME: ${DB_NAME}
@@ -32,7 +28,6 @@ services:
 
     volumes:
       - ./code:/code
-      - static_files:/static_files
 
     ports:
       - 8000:8000
@@ -41,31 +36,13 @@ services:
 
     networks:
       - backend
-      - backend-internal-network
 
   celery:
     <<: *django
-    command: celery -A sNeeds worker --loglevel=info && celery -A sNeeds beat --loglevel=info
+    command: celery -A sNeeds worker --loglevel=info
     ports: []
     depends_on:
       - redis
-
-  nginx:
-    build:
-      context: .
-      dockerfile: docker/nginx/Dockerfile
-
-    networks:
-      - backend
-
-    volumes:
-      - static_files:/static_files
-
-    depends_on:
-      - django
-
-    ports:
-      - 8080:80
 
   redis:
     image: redis:5.0.5-alpine
@@ -73,13 +50,8 @@ services:
     ports:
       - 6379:6379
     networks:
-      - backend-internal-network
+      - backend
 
 networks:
-  backend-internal-network:
-    driver: overlay
-    internal: true
   backend:
 
-volumes:
-  static_files:
