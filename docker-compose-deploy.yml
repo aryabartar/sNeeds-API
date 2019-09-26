@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: docker/python/deploy/Dockerfile
 
-    entrypoint: /scripts/web_entrypoint_deploy.sh
+    entrypoint: /scripts/web_entrypoint.sh
 
     command: gunicorn -w 4 sNeeds.wsgi -b 0.0.0.0:8000
 
@@ -43,7 +43,7 @@ services:
 
   celery:
     <<: *django
-    command: celery -A sNeeds worker --loglevel=info && celery -A sNeeds beat --loglevel=info
+    command: bash -c "celery -A sNeeds worker --loglevel=info && celery -A sNeeds beat --loglevel=info"
     ports: []
     depends_on:
       - redis

@@ -1,7 +1,6 @@
 #!/bin/sh
 # For running migrations
-echo " > Run migrations (bash)"
+echo " > Running migrations"
 python manage.py migrate
-
 
 exec "$@"

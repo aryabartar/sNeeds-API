@@ -19,5 +19,3 @@ RUN pip install -r ./requirements/deployment.txt
 RUN mkdir scripts
 COPY ./docker/python/web_entrypoint.sh /scripts/web_entrypoint.sh
 RUN chmod +x /scripts/web_entrypoint.sh
-
-
