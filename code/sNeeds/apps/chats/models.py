@@ -1,6 +1,7 @@
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.core.validators import FileExtensionValidator
 
 from sNeeds.apps.account.models import ConsultantProfile
 
@@ -32,8 +33,11 @@ class AbstractFile(models.Model):
     class Meta:
         abstract = True
 
+
 class File(AbstractFile):
-    file = models.FileField()
+    file = models.FileField(
+        validators=[FileExtensionValidator(allowed_extensions=['.pdf', '.doc', '.docx', '.xlsx', '.xls'])]
+    )
 
 
 class Voice(AbstractFile):
