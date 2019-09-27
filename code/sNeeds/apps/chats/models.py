@@ -19,30 +19,28 @@ class Chat(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, null=True, on_delete=models.SET_NULL)
 
 
-class Message(models.Model):
+class AbstractMessage(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
-    message = models.CharField(max_length=2048)
     created = models.DateTimeField(auto_now_add=True)
-
-
-class AbstractFile(models.Model):
-    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
 
     class Meta:
         abstract = True
 
 
-class File(AbstractFile):
+class Message(AbstractMessage):
+    message = models.CharField(max_length=2048)
+
+
+class File(AbstractMessage):
     file = models.FileField(
-        validators=[FileExtensionValidator(allowed_extensions=['.pdf', '.doc', '.docx', '.xlsx', '.xls'])]
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'xlsx', 'xls'])]
     )
 
 
-class Voice(AbstractFile):
+class Voice(AbstractMessage):
     file = models.FileField()
 
 
-class Image(AbstractFile):
+class Image(AbstractMessage):
     image = models.ImageField()
