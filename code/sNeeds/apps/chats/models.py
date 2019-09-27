@@ -22,7 +22,12 @@ class Chat(models.Model):
 class AbstractMessage(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
+    updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
+
+    def clean(self):
+        if self.sender != self.chat.user and self.sender != self.chat.consultant:
+            raise ValidationError("Sender is not user or consultant.")
 
     class Meta:
         abstract = True
