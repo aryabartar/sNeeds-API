@@ -31,6 +31,9 @@ class Chat(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     consultant = models.ForeignKey(ConsultantProfile, null=True, on_delete=models.SET_NULL)
 
+    class Meta:
+        unique_together = ['user', 'consultant']
+
 
 class AbstractMessage(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
