@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -12,6 +13,18 @@ FILE_TYPES = (
     ('picture', 'Picture'),
     ('voice', 'Voice'),
 )
+
+
+def get_file_upload_path(instance, filename):
+    return "files/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
+
+
+def get_image_upload_path(instance, filename):
+    return "images/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
+
+
+def get_voice_upload_path(instance, filename):
+    return "voices/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
 class Chat(models.Model):
@@ -39,13 +52,18 @@ class Message(AbstractMessage):
 
 class File(AbstractMessage):
     file = models.FileField(
+        upload_to=get_file_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'xlsx', 'xls'])]
     )
 
 
 class Voice(AbstractMessage):
-    file = models.FileField()
+    file = models.FileField(
+        upload_to=get_voice_upload_path
+    )
 
 
 class Image(AbstractMessage):
-    image = models.ImageField()
+    image = models.ImageField(
+        upload_to=get_image_upload_path,
+    )
