@@ -20,13 +20,13 @@ class Chat(models.Model):
 
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='%(class)_message_sender')
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
     message = models.CharField(max_length=2048)
     created = models.DateTimeField(auto_now_add=True)
 
 
 class File(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
-    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
     file = models.FileField()
     type = models.CharField(choices=FILE_TYPES, max_length=256)
