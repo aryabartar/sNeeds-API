@@ -53,17 +53,18 @@ class Message(AbstractMessage):
 class File(AbstractMessage):
     file = models.FileField(
         upload_to=get_file_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'xlsx', 'xls'])]
     )
 
 
 class Voice(AbstractMessage):
     file = models.FileField(
-        upload_to=get_voice_upload_path
+        upload_to=get_voice_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
     )
 
 
 class Image(AbstractMessage):
     image = models.ImageField(
         upload_to=get_image_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
