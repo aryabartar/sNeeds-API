@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: docker/python/develop/Dockerfile
 
-    command: python manage.py runserver 0.0.0.0:8000
+    command: echo "Django is UP :D"
     entrypoint: /scripts/web_entrypoint.sh
 
     environment:
@@ -30,8 +30,6 @@ services:
 
     ports:
       - 8000:8000
-
-    tty: true
 
     networks:
       - backend
