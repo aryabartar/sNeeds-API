@@ -25,8 +25,18 @@ class Message(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
-class File(models.Model):
+class AbstractFile(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
+
+
+class File(AbstractFile):
     file = models.FileField()
-    type = models.CharField(choices=FILE_TYPES, max_length=256)
+
+
+class Voice(AbstractFile):
+    file = models.FileField()
+
+
+class Image(AbstractFile):
+    image = models.ImageField()
