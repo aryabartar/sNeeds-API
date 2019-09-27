@@ -24,10 +24,6 @@ services:
       DB_HOST_IP: ${DB_HOST_IP}
       DB_HOST_PORT: 5432
 
-    depends_on:
-      - redis
-      - celery
-
     volumes:
       - ./code:/code
       - static_files:/static_files
@@ -35,11 +31,16 @@ services:
     ports:
       - 8000:8000
 
-    tty: true
-
     networks:
       - backend
       - backend-internal-network
+
+    tty: true
+
+    depends_on:
+      - redis
+      - celery
+
 
   celery:
     <<: *django
