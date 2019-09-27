@@ -8,6 +8,7 @@ services:
       dockerfile: docker/python/develop/Dockerfile
 
     command: python manage.py runserver 0.0.0.0:8000
+    entrypoint: /scripts/web_entrypoint.sh
 
     environment:
       SECRET_KEY: ${SECRET_KEY}
@@ -39,6 +40,7 @@ services:
     <<: *django
     command: bash -c "celery -A sNeeds worker --loglevel=info && celery -A sNeeds beat --loglevel=info"
     ports: []
+    entrypoint: []
     depends_on:
       - redis
 
