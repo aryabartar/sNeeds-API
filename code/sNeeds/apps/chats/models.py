@@ -29,6 +29,8 @@ class AbstractFile(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
 
+    class Meta:
+        abstract = True
 
 class File(AbstractFile):
     file = models.FileField()
