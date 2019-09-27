@@ -5,12 +5,13 @@ from .models import Chat
 
 
 class ChatSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="chat:chat-detail", lookup_field='id')
     other_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
         fields = [
-            'id', 'other_name'
+            'id', 'url', 'other_name'
         ]
 
     def get_other_name(self, obj):
