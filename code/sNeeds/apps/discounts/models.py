@@ -29,12 +29,21 @@ class TimeSlotSaleNumberDiscount(models.Model):
         return str(self.number)
 
 
+def uniqueness_validator(code):
+    code_lower = code.lower()
+    try:
+        ConsultantDiscount.objects.get(code__iexact=code_lower)
+    except ConsultantDiscount.DoesNotExist:
+        return True
+    raise ValidationError(_("Entered code is not unique."))
+
+
 class ConsultantDiscount(models.Model):
     consultant = models.ManyToManyField(ConsultantProfile)
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    code = CICharField(max_length=128, unique=True) #TODO: CHANge
+    code = models.CharField(max_length=128, validators=[uniqueness_validator])
 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
