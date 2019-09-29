@@ -6,7 +6,6 @@ from rest_framework.exceptions import ValidationError
 from .models import Cart, SoldCart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
-from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldTimeSlotSale
 
 
@@ -18,19 +17,13 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'url', 'user', 'time_slot_sales', 'time_slot_sales_detail',
-                  'subtotal', 'time_slot_sales_dis'
-                              'count', 'total', ]
+                  'subtotal', 'count', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
         }
-
-    def get_time_slot_sales_discount(self, obj):
-        time_slot_sale_count = obj.get_time_slot_sales_count()
-        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
-        return count_discount
 
     def get_time_slot_sales_detail(self, obj):
         return TimeSlotSaleSerializer(

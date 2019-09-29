@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from django.contrib.postgres.fields import CICharField
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.account.models import ConsultantProfile
@@ -29,13 +28,16 @@ class TimeSlotSaleNumberDiscount(models.Model):
         return str(self.number)
 
 
-def uniqueness_validator(code):
-    code_lower = code.lower()
-    try:
-        ConsultantDiscount.objects.get(code__iexact=code_lower)
-    except ConsultantDiscount.DoesNotExist:
-        return True
-    raise ValidationError(_("Entered code is not unique."))
+class CICharField(models.CharField):
+    def get_prep_value(self, value):
+        return str(value).lower()
+# def uniqueness_validator(code):
+#     code_lower = code.lower()
+#     try:
+#         ConsultantDiscount.objects.get(code__iexact=code_lower)
+#     except ConsultantDiscount.DoesNotExist:
+#         return True
+#     raise ValidationError(_("This code exists in database."))
 
 
 class ConsultantDiscount(models.Model):
@@ -43,7 +45,7 @@ class ConsultantDiscount(models.Model):
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
-    code = models.CharField(max_length=128, validators=[uniqueness_validator])
+    code = CICharField(max_length=128, unique=True)
 
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
