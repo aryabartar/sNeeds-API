@@ -39,7 +39,8 @@ class MessageManager(models.Manager):
         queryset = self.get_queryset()
 
         qs = None
-        for chat in queryset:
+        for chat in chats_qs:
+
             if qs is None:
                 qs = queryset.filter(chat=chat)
             else:

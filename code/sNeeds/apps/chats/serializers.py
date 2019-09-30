@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Chat
+from .models import Chat, Message
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -22,3 +22,9 @@ class ChatSerializer(serializers.ModelSerializer):
             return obj.consultant.user.get_full_name()
 
         return obj.user.get_full_name()
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = "__all__"
