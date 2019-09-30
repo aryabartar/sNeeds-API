@@ -39,3 +39,10 @@ class MessageListAPIView(generics.ListCreateAPIView):
         chats_qs = Chat.objects.get_all_user_chats(user)
         messages_qs = Message.objects.get_chats_messages(chats_qs)
         return messages_qs
+
+
+class MessageDetailAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = Message.objects.all()
+    serializer_class = serializers.MessageSerializer
+    permission_classes = (permissions.IsAuthenticated,)

@@ -45,5 +45,6 @@ class MessageSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
+
         obj = Message.objects.create(sender=user, **validated_data)
         return obj
