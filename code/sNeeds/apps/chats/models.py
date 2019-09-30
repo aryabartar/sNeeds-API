@@ -80,6 +80,7 @@ class Message(AbstractMessage):
 
     objects = MessageManager()
 
+
 class File(AbstractMessage):
     file = models.FileField(
         upload_to=get_file_upload_path,

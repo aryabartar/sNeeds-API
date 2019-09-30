@@ -27,4 +27,16 @@ class ChatSerializer(serializers.ModelSerializer):
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = ['id', 'chat', 'message', 'updated', 'created']
+        extra_kwargs = {
+            'sender': {'read_only': True},
+        }
+
+    def validate(self, attrs):
+        # Check user is valid for sending
+
+    def create(self, validated_data):
+        request = self.context.get('request')
+        user = request.user
+        obj = Message.objects.create(sender=user, **validated_data)
+        return obj
