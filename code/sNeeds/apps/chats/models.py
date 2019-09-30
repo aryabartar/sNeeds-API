@@ -34,6 +34,20 @@ class ChatManager(models.Manager):
         return qs
 
 
+class MessageManager(models.Manager):
+    def get_chats_messages(self, chats_qs):
+        queryset = self.get_queryset()
+
+        qs = None
+        for chat in queryset:
+            if qs is None:
+                qs = queryset.filter(chat=chat)
+            else:
+                qs = qs | queryset.filter(chat=chat)
+
+        return qs
+
+
 class Chat(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     consultant = models.ForeignKey(ConsultantProfile, null=True, on_delete=models.SET_NULL)
@@ -50,6 +64,8 @@ class AbstractMessage(models.Model):
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    objects = MessageManager()
+
     def clean(self):
         if self.sender != self.chat.user and self.sender != self.chat.consultant:
             raise ValidationError("Sender is not user or consultant.")
@@ -61,6 +77,7 @@ class AbstractMessage(models.Model):
 class Message(AbstractMessage):
     message = models.CharField(max_length=2048)
 
+    objects = MessageManager()
 
 class File(AbstractMessage):
     file = models.FileField(

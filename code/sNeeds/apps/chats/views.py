@@ -31,4 +31,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
 class MessageListAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
-        chats_qs = Chat.objects.all()
+        user = self.request.user
+        chats_qs = Chat.objects.get_all_user_chats(user)
+        messages_qs = Message.objects.get_chats_messages(chats_qs)
+        return messages_qs
