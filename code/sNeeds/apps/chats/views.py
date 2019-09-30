@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from .permissions import ChatOwnerPermission
 
-from .models import Chat
+from .models import Chat, Message
 from . import serializers
 
 
@@ -17,7 +17,7 @@ class ChatListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Chat.objects.filter(Q(user=user) | Q(consultant__user=user))
+        qs = Chat.objects.get_all_user_chats(user)
         return qs
 
 
@@ -26,3 +26,9 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     queryset = Chat.objects.all()
     serializer_class = serializers.ChatSerializer
     permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
+
+
+class MessageListAPIView(generics.ListCreateAPIView):
+
+    def get_queryset(self):
+        chats_qs = Chat.objects.all()

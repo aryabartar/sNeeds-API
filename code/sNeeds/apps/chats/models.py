@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.utils import timezone
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
@@ -27,9 +28,17 @@ def get_voice_upload_path(instance, filename):
     return "voices/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
+class ChatManager(models.Manager):
+    def get_all_user_chats(self, user):
+        qs = self.get_queryset().filter(Q(user=user) | Q(consultant__user=user))
+        return qs
+
+
 class Chat(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     consultant = models.ForeignKey(ConsultantProfile, null=True, on_delete=models.SET_NULL)
+
+    objects = ChatManager()
 
     class Meta:
         unique_together = ['user', 'consultant']
