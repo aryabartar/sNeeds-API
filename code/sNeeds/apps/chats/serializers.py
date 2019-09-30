@@ -6,28 +6,34 @@ from .models import Chat, Message
 
 class ChatSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="chat:chat-detail", lookup_field='id')
-    other_name = serializers.SerializerMethodField()
+    other_person = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
         fields = [
-            'id', 'url', 'other_name'
+            'id', 'url', 'other_person'
         ]
 
-    def get_other_name(self, obj):
+    def get_other_person(self, obj):
+        from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
+
         request = self.context.get('request')
         user = request.user
 
         if user == obj.user:
-            return obj.consultant.user.get_full_name()
+            other_person = obj.consultant.user
+        else:
+            other_person = obj.user
 
-        return obj.user.get_full_name()
+        return SafeUserDataSerializer(other_person).data
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="chat:message-detail", lookup_field='id')
+
     class Meta:
         model = Message
-        fields = ['id', 'chat', 'message', 'updated', 'created']
+        fields = ['id', 'url', 'chat', 'message', 'updated', 'created']
         extra_kwargs = {
             'sender': {'read_only': True},
         }
