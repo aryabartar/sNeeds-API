@@ -6,11 +6,9 @@ db.sqlite3
 media/
 files/
 venv/
-sneeds-django/sneeds/local.py
 sneeds/local.py
 APIs.py
 passwords.py
-code/sNeeds/settings/deployment.py
 
 *.pid
 *.db
