@@ -30,10 +30,11 @@ class ChatSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="chat:message-detail", lookup_field='id')
+    chat = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", lookup_field='id', read_only=True)
 
     class Meta:
         model = Message
-        fields = ['id', 'url', 'chat', 'message', 'updated', 'created']
+        fields = ['id', 'url', 'chat',  'updated', 'created']
         extra_kwargs = {
             'sender': {'read_only': True},
         }

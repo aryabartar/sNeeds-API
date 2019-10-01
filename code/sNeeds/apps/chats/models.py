@@ -59,7 +59,7 @@ class Chat(models.Model):
         unique_together = ['user', 'consultant']
 
 
-class AbstractMessage(models.Model):
+class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
     updated = models.DateTimeField(auto_now=True)
@@ -71,31 +71,31 @@ class AbstractMessage(models.Model):
         if self.sender != self.chat.user and self.sender != self.chat.consultant:
             raise ValidationError("Sender is not user or consultant.")
 
-    class Meta:
-        abstract = True
+
+class TextMessage(Message):
+    # text_message = models.CharField(max_length=2048)
+    #
+    # objects = MessageManager()
+    pass
+
+class File(Message):
+    # file_field = models.FileField(
+    #     upload_to=get_file_upload_path,
+    # )
+    pass
 
 
-class Message(AbstractMessage):
-    message = models.CharField(max_length=2048)
-
-    objects = MessageManager()
-
-
-class File(AbstractMessage):
-    file = models.FileField(
-        upload_to=get_file_upload_path,
-    )
+class Voice(Message):
+    # file_field = models.FileField(
+    #     upload_to=get_voice_upload_path,
+    #     validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
+    # )
+    pass
 
 
-class Voice(AbstractMessage):
-    file = models.FileField(
-        upload_to=get_voice_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
-    )
-
-
-class Image(AbstractMessage):
-    image = models.ImageField(
-        upload_to=get_image_upload_path,
-        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
-    )
+class Image(Message):
+    # image_field = models.ImageField(
+    #     upload_to=get_image_upload_path,
+    #     validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
+    # )
+    pass
