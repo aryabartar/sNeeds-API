@@ -76,7 +76,6 @@ class Cart(AbstractCart):
                     percent += obj.consultant_discount.percent
 
             total += t.price * ((100.0 - percent) / 100)
-
         self.total = total
 
     def _update_total_time_slot_number(self):

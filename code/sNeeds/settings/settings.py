@@ -19,8 +19,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Imported key to prevent circular imports.
 from .secure import keys
 
-os.environ['SECRET_KEY'] = "9_rmdxg28emf182!s4n*&(f@hr%#r&n(o_(*z+pk4zou6%q5_!"
-
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # Application definition
@@ -61,6 +59,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',  # For per-request translation
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -139,6 +138,10 @@ DATABASES = {
         'PORT': os.environ.get('DB_HOST_PORT'),
     }
 }
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, '..', 'translations'),
+]
 
 from .config.JWTAuthConfig import JWT_AUTH
 

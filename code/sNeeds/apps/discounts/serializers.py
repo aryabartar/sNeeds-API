@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
+from django.utils.translation import gettext as _
 
 from .models import CartConsultantDiscount, ConsultantDiscount, TimeSlotSaleNumberDiscount
 
@@ -36,34 +37,67 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         return consultant_discount_serialize.data
 
     def validate_code(self, code):
-        consultant_discount = ConsultantDiscount.objects.get_with_code_or_none(code)
-        if consultant_discount is None:
-            raise ValidationError({"detail": "Code is not valid"})
-        return code
-
-    def validate(self, attrs):
         request = self.context.get("request", None)
         user = request.user
-
+        # Checking that user already has a card
         try:
             cart = user.cart
         except:
-            raise ValidationError({"detail": "User has no cart."})
+            raise ValidationError(_("User has no cart."))
 
-        code = attrs.get("consultant_discount", {}).get('code')
-        qs = CartConsultantDiscount.objects.filter(cart=cart, consultant_discount__code=code)
+        # Checking that the discount user entered is valid or not
+        # Checking that code is exist or is active
+        try:
+            discount = ConsultantDiscount.objects.get(code__iexact=code)
+        except ConsultantDiscount.DoesNotExist:
+            raise ValidationError(_("Code is not valid"))
 
+        if not discount.active:
+            raise ValidationError(_("Code is not valid"))
+
+        # Checking that discount is applied in the cart
+        qs = CartConsultantDiscount.objects.filter(cart=cart, consultant_discount__code__iexact=code)
         if qs.exists():
-            raise ValidationError({"detail": "This discount is already used in this cart"})
+            raise ValidationError(_("This discount is already used in this cart"))
 
-        return attrs
+        # Checking that user has bought a session with the code's consultant or not
+        discount_consultant = discount.consultant.all()
+        exist = False
+        for consultant in discount_consultant:
+            for time in cart.time_slot_sales.all():
+                if time.consultant == consultant:
+                    exist = True
+                    break
+            if exist:
+                break
+
+        if not exist:
+            raise ValidationError(_("You don't have any session with the consultants of discount"))
+
+        # Checking that user cannot use multiple discounts for a consultant
+        applied_discount = CartConsultantDiscount.objects.filter(cart=cart).values_list('consultant_discount',
+                                                                                        flat=True)
+        for id in applied_discount:
+            applied_discount_consultants = list(ConsultantDiscount.objects.get(id=id).consultant.all())
+            for consultant in applied_discount_consultants:
+                if discount.consultant.filter(id=consultant.id):
+                    raise ValidationError({
+                        "detail": _("You already have used a discount for consultant %(number)d " %{'number': consultant.id}),
+                        "consultant_id": consultant.id
+                        }
+                    )
+
+        return code
 
     def create(self, validated_data):
         request = self.context.get("request", None)
         user = request.user
 
         code = validated_data.get("consultant_discount", {}).get('code')
-        consultant_discount = ConsultantDiscount.objects.get_with_code_or_none(code)
+        try:
+            consultant_discount = ConsultantDiscount.objects.get(code__iexact=code)
+        except ConsultantDiscount.DoesNotExist:
+            consultant_discount = None
 
         cart = user.cart
 

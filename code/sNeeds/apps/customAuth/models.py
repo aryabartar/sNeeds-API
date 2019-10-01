@@ -14,7 +14,7 @@ class CustomUserManager(BaseUserManager):
         """
         now = timezone.now()
         if not email:
-            raise ValueError('The given email must be set')
+            raise ValueError(_('The given email must be set'))
         email = self.normalize_email(email)
         user = self.model(email=email,
                           is_staff=is_staff, is_active=True,

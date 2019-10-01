@@ -142,3 +142,41 @@ FILTER: used
     "used": true
 }
 ```
+####Special Errors
+> This error is thrown in the following endpoints
+>> store/time-slot-sales/ [POST]
+
+> If consultant tries to make a time-slot in a time which would cause time conflict between his time conflicts
+> the following error is thrown:
+> if there was a conflict between sold time slot and the current chosen time
+```json
+HTTP 400 Bad Request
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "detail": [
+        "Selected time cannot be chosen because the time you chose conflicts with other times you have sold before 1"
+    ],
+    "conflicting_time_slots": [
+        "1"
+    ]
+}
+```
+> if there was a conflict between another time slot which is not sold and the current chosen time
+```json
+HTTP 400 Bad Request
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "detail": [
+        "Selected time cannot be chosen because the time you chose conflicts with other times you have chosen before 4"
+    ],
+    "conflicting_time_slots": [
+        "4"
+    ]
+}
+```
