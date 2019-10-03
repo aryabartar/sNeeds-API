@@ -9,11 +9,6 @@ from sNeeds.apps.account.models import ConsultantProfile
 
 User = get_user_model()
 
-FILE_TYPES = (
-    ('file', 'File'),
-    ('picture', 'Picture'),
-    ('voice', 'Voice'),
-)
 
 
 def get_file_upload_path(instance, filename):
