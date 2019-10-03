@@ -10,7 +10,6 @@ from sNeeds.apps.account.models import ConsultantProfile
 User = get_user_model()
 
 
-
 def get_file_upload_path(instance, filename):
     return "files/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
@@ -73,20 +72,20 @@ class TextMessage(Message):
     objects = MessageManager()
 
 
-class File(Message):
+class FileMessage(Message):
     file_field = models.FileField(
         upload_to=get_file_upload_path,
     )
 
 
-class Voice(Message):
+class VoiceMessage(Message):
     file_field = models.FileField(
         upload_to=get_voice_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
     )
 
 
-class Image(Message):
+class ImageMessage(Message):
     image_field = models.ImageField(
         upload_to=get_image_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]

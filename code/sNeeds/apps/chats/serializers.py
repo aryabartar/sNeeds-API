@@ -55,3 +55,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
         obj = Message.objects.create(sender=user, **validated_data)
         return obj
+
+# class TextMessageSerializer(MessageSerializer):
+#
+#     class Meta:
+#
