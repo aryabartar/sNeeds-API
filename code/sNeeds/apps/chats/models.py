@@ -73,29 +73,26 @@ class Message(models.Model):
 
 
 class TextMessage(Message):
-    # text_message = models.CharField(max_length=2048)
-    #
-    # objects = MessageManager()
-    pass
+    text_message = models.CharField(max_length=2048)
+
+    objects = MessageManager()
+
 
 class File(Message):
-    # file_field = models.FileField(
-    #     upload_to=get_file_upload_path,
-    # )
-    pass
+    file_field = models.FileField(
+        upload_to=get_file_upload_path,
+    )
 
 
 class Voice(Message):
-    # file_field = models.FileField(
-    #     upload_to=get_voice_upload_path,
-    #     validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
-    # )
-    pass
+    file_field = models.FileField(
+        upload_to=get_voice_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=['mp3'])]
+    )
 
 
 class Image(Message):
-    # image_field = models.ImageField(
-    #     upload_to=get_image_upload_path,
-    #     validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
-    # )
-    pass
+    image_field = models.ImageField(
+        upload_to=get_image_upload_path,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
+    )
