@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Chat, Message
+from .models import Chat, Message, TextMessage
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -29,12 +29,11 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="chat:message-detail", lookup_field='id')
-    chat = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", lookup_field='id', read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", lookup_field='id', read_only=True)
 
     class Meta:
         model = Message
-        fields = ['id', 'url', 'chat',  'updated', 'created']
+        fields = ['id', 'chat_url', 'sender', 'updated', 'created']
         extra_kwargs = {
             'sender': {'read_only': True},
         }
@@ -53,10 +52,13 @@ class MessageSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         user = request.user
 
-        obj = Message.objects.create(sender=user, **validated_data)
+        obj = TextMessage.objects.create(sender=user, **validated_data)
         return obj
 
-# class TextMessageSerializer(MessageSerializer):
-#
-#     class Meta:
-#
+
+class TextMessageSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name="chat:message-detail", lookup_field='id')
+
+    class Meta(MessageSerializer.Meta):
+        model = TextMessage
+        fields = MessageSerializer.Meta.fields + ['url']
