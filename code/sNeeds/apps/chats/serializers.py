@@ -29,9 +29,6 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-                                                   read_only=True)
-
     class Meta:
         model = Message
         fields = ['id', 'chat', 'chat_url', 'sender', 'updated', 'created']
@@ -59,8 +56,8 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class TextMessageSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="chat:text-message-detail", lookup_field='id')
-    # chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-    #                                                read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
+                                                   read_only=True)
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
