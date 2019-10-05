@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: docker/python/develop/Dockerfile
 
-    command: echo "Django is UP :D"
+    command: bash
     entrypoint: /scripts/web_entrypoint.sh
 
     environment:
@@ -29,7 +29,10 @@ services:
       - ./code:/code
 
     ports:
-      - 9000:9000
+      - 9000:8000
+
+    stdin_open: true
+    tty: true
 
     networks:
       - backend
@@ -44,7 +47,6 @@ services:
 
   redis:
     image: redis:5.0.5-alpine
-    container_name: redis
     ports:
       - 6379:6379
     networks:
