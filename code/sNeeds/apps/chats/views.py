@@ -6,13 +6,13 @@ from rest_framework.views import APIView
 
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
-from .models import Chat, Message
-from . import serializers
+from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
+from .serializers import (ChatSerializer, TextMessageSerializer, VoiceMessageSerializer, FileMessageSerializer, ImageMessageSerializer)
 
 
 class ChatListAPIView(generics.ListAPIView):
     queryset = Chat.objects.all()
-    serializer_class = serializers.ChatSerializer
+    serializer_class = ChatSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
@@ -24,7 +24,7 @@ class ChatListAPIView(generics.ListAPIView):
 class ChatDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = Chat.objects.all()
-    serializer_class = serializers.ChatSerializer
+    serializer_class = ChatSerializer
     permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
 
 
@@ -40,6 +40,16 @@ class MessageListAPIView(APIView):
         except:
             return Response(data={"detail": "Not found."}, status=404)
 
-        message_qs = Message.objects.filter(chat=chat_obj)
+        message_qs = Message.objects.filter(chat=chat_obj).order_by('created')
+
+        for obj in message_qs:
+            if isinstance(obj, TextMessage):
+                print(TextMessageSerializer(obj, context={"request": request}).data)
+            elif isinstance(obj, VoiceMessage):
+                print(2)
+            elif isinstance(obj, FileMessage):
+                print(3)
+            elif isinstance(obj, ImageMessage):
+                print(4)
         print(message_qs)
         return Response('jjj')

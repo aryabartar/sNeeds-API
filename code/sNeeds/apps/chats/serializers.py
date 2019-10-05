@@ -55,36 +55,40 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class TextMessageSerializer(serializers.ModelSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-                                                   read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(
+        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
+    )
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
-        fields = MessageSerializer.Meta.fields + ['url', 'text_message', ]
+        fields = MessageSerializer.Meta.fields + ['text_message', ]
 
 
 class VoiceMessageSerializer(serializers.ModelSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-                                                   read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(
+        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
+    )
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = MessageSerializer.Meta.fields + ['url', 'file_field', ]
+        fields = MessageSerializer.Meta.fields + ['file_field', ]
 
 
 class FileMessageSerializer(serializers.ModelSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-                                                   read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(
+        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
+    )
 
     class Meta(MessageSerializer.Meta):
         model = FileMessage
-        fields = MessageSerializer.Meta.fields + ['url', 'file_field', ]
+        fields = MessageSerializer.Meta.fields + [ 'file_field', ]
 
 
 class ImageMessageSerializer(serializers.ModelSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
-                                                   read_only=True)
+    chat_url = serializers.HyperlinkedRelatedField(
+        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
+    )
 
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
-        fields = MessageSerializer.Meta.fields + ['url', 'image_field', ]
+        fields = MessageSerializer.Meta.fields + [ 'image_field', ]
