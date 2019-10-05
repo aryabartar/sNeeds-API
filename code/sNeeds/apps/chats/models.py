@@ -5,7 +5,11 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 
+from polymorphic.models import PolymorphicModel
+from polymorphic.managers import PolymorphicManager
+
 from sNeeds.apps.account.models import ConsultantProfile
+
 
 User = get_user_model()
 
@@ -28,7 +32,7 @@ class ChatManager(models.Manager):
         return qs
 
 
-class MessageManager(models.Manager):
+class MessageManager(PolymorphicManager):
     def get_chats_messages(self, chats_qs):
         queryset = self.get_queryset()
 
@@ -53,7 +57,7 @@ class Chat(models.Model):
         unique_together = ['user', 'consultant']
 
 
-class Message(models.Model):
+class Message(PolymorphicModel):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
     updated = models.DateTimeField(auto_now=True)
