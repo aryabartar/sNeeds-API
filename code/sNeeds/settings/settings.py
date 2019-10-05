@@ -24,18 +24,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
     'drf_yasg',  # for filtering get queries in DRF
     'corsheaders',
     'django_rest_passwordreset',
+    'polymorphic',  # For django-polymorphic
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
@@ -51,6 +45,13 @@ INSTALLED_APPS = [
     'sNeeds.apps.tickets',
     'sNeeds.apps.consultants',
     'sNeeds.apps.chats',
+
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 
     'django_cleanup',  # should go after your apps
 ]

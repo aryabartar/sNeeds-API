@@ -90,5 +90,3 @@ class MyAccountInfoView(APIView):
                 "consultant": consultant_id
             },
             200)
-
-

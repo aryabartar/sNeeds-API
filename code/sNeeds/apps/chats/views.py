@@ -28,20 +28,17 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
 
 
-class TextMessageListAPIView(generics.ListCreateAPIView):
-    lookup_field = 'id'
-    serializer_class = serializers.TextMessageSerializer
+class MessageListAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_queryset(self):
-        user = self.request.user
-        chats_qs = Chat.objects.get_all_user_chats(user)
-        messages_qs = TextMessage.objects.get_chats_messages(chats_qs)
-        return messages_qs
+    def get(self, request, *args, **kwargs):
+        chat_id = kwargs.get('id')
+        chat_obj = None
+
+        try:
+            chat_obj = Chat.objects.get(id=chat_id)
+        except:
+            return Response(data={"detail": "Not found."}, status=404)
 
 
-class TextMessageDetailAPIView(generics.RetrieveAPIView):
-    lookup_field = 'id'
-    queryset = TextMessage.objects.all()
-    serializer_class = serializers.TextMessageSerializer
-    permission_classes = (MessageOwnerPermission, permissions.IsAuthenticated,)
+        return Response('jjj')
