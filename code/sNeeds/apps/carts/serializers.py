@@ -12,7 +12,6 @@ from sNeeds.apps.store.models import SoldTimeSlotSale
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
     time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
-    time_slot_sales_discount = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
