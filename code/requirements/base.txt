@@ -20,7 +20,6 @@ django-rest-passwordreset==1.0.0
 djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
 drf-yasg==1.16.0
-flower==0.9.3
 future==0.17.1
 idna==2.8
 inflection==0.3.1
