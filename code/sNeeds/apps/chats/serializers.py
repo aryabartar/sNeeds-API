@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Chat, Message, TextMessage
+from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -55,10 +55,36 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class TextMessageSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="chat:text-message-detail", lookup_field='id')
     chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
                                                    read_only=True)
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
         fields = MessageSerializer.Meta.fields + ['url', 'text_message', ]
+
+
+class VoiceMessageSerializer(serializers.ModelSerializer):
+    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
+                                                   read_only=True)
+
+    class Meta(MessageSerializer.Meta):
+        model = VoiceMessage
+        fields = MessageSerializer.Meta.fields + ['url', 'file_field', ]
+
+
+class FileMessageSerializer(serializers.ModelSerializer):
+    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
+                                                   read_only=True)
+
+    class Meta(MessageSerializer.Meta):
+        model = FileMessage
+        fields = MessageSerializer.Meta.fields + ['url', 'file_field', ]
+
+
+class ImageMessageSerializer(serializers.ModelSerializer):
+    chat_url = serializers.HyperlinkedRelatedField(view_name="chat:chat-detail", source='chat', lookup_field='id',
+                                                   read_only=True)
+
+    class Meta(MessageSerializer.Meta):
+        model = ImageMessage
+        fields = MessageSerializer.Meta.fields + ['url', 'image_field', ]

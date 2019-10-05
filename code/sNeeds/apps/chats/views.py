@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
-from .models import Chat, TextMessage
+from .models import Chat, Message
 from . import serializers
 
 
@@ -40,5 +40,6 @@ class MessageListAPIView(APIView):
         except:
             return Response(data={"detail": "Not found."}, status=404)
 
-
+        message_qs = Message.objects.filter(chat=chat_obj)
+        print(message_qs)
         return Response('jjj')
