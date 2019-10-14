@@ -29,12 +29,20 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    is_sender_me = serializers.SerializerMethodField()
+
     class Meta:
         model = Message
-        fields = ['id', 'chat', 'chat_url', 'sender', 'updated', 'created']
+        fields = ['id', 'chat', 'chat_url', 'sender', 'is_sender_me',  'updated', 'created']
         extra_kwargs = {
             'sender': {'read_only': True},
         }
+
+    def get_is_sender_me(self):
+        request = self.get("request")
+        user = request.user
+        print(self.data)
+        return 11
 
     def validate(self, attrs):
         request = self.context.get('request')
@@ -81,7 +89,7 @@ class FileMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = FileMessage
-        fields = MessageSerializer.Meta.fields + [ 'file_field', ]
+        fields = MessageSerializer.Meta.fields + ['file_field', ]
 
 
 class ImageMessageSerializer(serializers.ModelSerializer):
@@ -91,4 +99,4 @@ class ImageMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
-        fields = MessageSerializer.Meta.fields + [ 'image_field', ]
+        fields = MessageSerializer.Meta.fields + ['image_field', ]
