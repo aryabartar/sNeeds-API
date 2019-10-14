@@ -16,7 +16,7 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = ['id', 'url', 'user', 'time_slot_sales', 'time_slot_sales_detail',
-                  'subtotal', 'count', 'total', ]
+                  'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
