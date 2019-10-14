@@ -64,8 +64,8 @@ class TimeSlotSale(AbstractTimeSlotSale):
         print(SoldTimeSlotSale.objects.all())
         sold_time_slot_of_consultant = SoldTimeSlotSale.objects.filter(consultant=consultant)
         conflicting_sold_sessions = (
-          sold_time_slot_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time) |
-          sold_time_slot_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time)
+          sold_time_slot_of_consultant.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
+          sold_time_slot_of_consultant.filter(start_time__lt=end_time).filter(end_time__gt=end_time)
         )
         if conflicting_sold_sessions:
             sessions_str = ','.join(str(session.id) for session in conflicting_sold_sessions)
@@ -78,8 +78,8 @@ class TimeSlotSale(AbstractTimeSlotSale):
 
         time_slot_sale_of_consultant = TimeSlotSale.objects.filter(consultant=consultant)
         conflicting_sessions = (
-            time_slot_sale_of_consultant.filter(start_time__lte=start_time).filter(end_time__gte=start_time) |
-            time_slot_sale_of_consultant.filter(start_time__lte=end_time).filter(end_time__gte=end_time)
+            time_slot_sale_of_consultant.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
+            time_slot_sale_of_consultant.filter(start_time__lt=end_time).filter(end_time__gt=end_time)
         )
         if conflicting_sessions:
             sessions_str = ','.join(str(session.id) for session in conflicting_sessions)
