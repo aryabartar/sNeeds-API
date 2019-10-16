@@ -40,16 +40,20 @@ class MessageListAPIView(APIView):
         except:
             return Response(data={"detail": "Not found."}, status=404)
 
-        message_qs = Message.objects.filter(chat=chat_obj).order_by('created')
+        message_qs = Message.objects.filter(chat=chat_obj).order_by('-created')
+
+        message_list = []
 
         for obj in message_qs:
             if isinstance(obj, TextMessage):
-                print(TextMessageSerializer(obj, context={"request": request}).data)
-            elif isinstance(obj, VoiceMessage):
-                print(2)
-            elif isinstance(obj, FileMessage):
-                print(3)
-            elif isinstance(obj, ImageMessage):
-                print(4)
-        print(message_qs)
-        return Response('jjj')
+                message_list.append(TextMessageSerializer(obj, context={"request": request}).data)
+            # elif isinstance(obj, VoiceMessage):
+            #     message_list.append(VoiceMessageSerializer(obj, context={"request": request}).data)
+            # elif isinstance(obj, FileMessage):
+            #     message_list.append(FileMessageSerializer(obj, context={"request": request}).data)
+            # elif isinstance(obj, ImageMessage):
+            #     message_list.append(ImageMessageSerializer(obj, context={"request": request}).data)
+
+        return Response(message_list, 200)
+
+
