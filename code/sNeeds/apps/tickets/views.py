@@ -5,12 +5,12 @@ from rest_framework import filters
 from django_filters import rest_framework as custom_filters
 
 from .models import Message, Ticket
-from .serializers import TicketSerializer, MessageSerializer
+from .serializers import TicketSerializer, MessageSerializer, TicketConsultantsSerializer
 
 from .permissions import TicketOwnerPermission, MessageOwnerPermission
 from .filtersets import MessageFilter
 
-
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 
 class TicketListView(generics.ListCreateAPIView):
@@ -56,3 +56,11 @@ class MessageDetailView(generics.RetrieveAPIView):
     serializer_class = MessageSerializer
     permission_classes = [MessageOwnerPermission, permissions.IsAuthenticated]
     lookup_field = 'id'
+
+
+class TicketConsultantsView(generics.ListAPIView):
+    serializer_class = TicketConsultantsSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return SoldTimeSlotSale.objects.filter(sold_to=user).order_by('consultant').distinct('consultant')

@@ -63,6 +63,7 @@ class TicketSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"detail": _("You don't have any time slots with this consultant.")})
         return obj
 
+
 class MessageSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
     consultant = serializers.SerializerMethodField()
@@ -71,7 +72,6 @@ class MessageSerializer(serializers.ModelSerializer):
         view_name="tickets:message-detail", lookup_field='id'
     )
     is_consultant = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Message
@@ -86,7 +86,6 @@ class MessageSerializer(serializers.ModelSerializer):
             'created',
             'is_consultant'
         ]
-
 
     def get_user(self, obj):
         request = self.context.get("request")
@@ -109,3 +108,24 @@ class MessageSerializer(serializers.ModelSerializer):
         message.sender = self.context.get("request").user
         message.save()
         return message
+
+
+class TicketConsultantsSerializer(serializers.ModelSerializer):
+    consultant = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = SoldTimeSlotSale
+        exclude = [
+            'id',
+            'start_time',
+            'end_time',
+            'price',
+            'sold_to',
+            'used'
+        ]
+
+    def get_consultant(self, obj):
+        request = self.context.get("request")
+        return ShortConsultantProfileSerializer(
+            obj.consultant, context={"request": request}
+        ).data

@@ -61,7 +61,6 @@ class TimeSlotSale(AbstractTimeSlotSale):
         start_time = self.start_time
         end_time = self.end_time
         consultant = self.consultant
-        print(SoldTimeSlotSale.objects.all())
         sold_time_slot_of_consultant = SoldTimeSlotSale.objects.filter(consultant=consultant)
         conflicting_sold_sessions = (
           sold_time_slot_of_consultant.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
