@@ -109,23 +109,3 @@ class MessageSerializer(serializers.ModelSerializer):
         message.save()
         return message
 
-
-class TicketConsultantsSerializer(serializers.ModelSerializer):
-    consultant = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = SoldTimeSlotSale
-        exclude = [
-            'id',
-            'start_time',
-            'end_time',
-            'price',
-            'sold_to',
-            'used'
-        ]
-
-    def get_consultant(self, obj):
-        request = self.context.get("request")
-        return ShortConsultantProfileSerializer(
-            obj.consultant, context={"request": request}
-        ).data
