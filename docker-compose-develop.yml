@@ -29,7 +29,8 @@ services:
       - ./code:/code
 
     ports:
-      - 9000:8000
+      - 9000:8000 #For django
+      - 9555:5555 #When flower is up on port 5555
 
     stdin_open: true
     tty: true
