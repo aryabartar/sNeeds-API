@@ -1,3 +1,5 @@
+from django.utils.translation import gettext as _
+
 from rest_framework import serializers
 
 from .models import Message
@@ -7,6 +9,7 @@ from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKey
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -51,6 +54,15 @@ class TicketSerializer(serializers.ModelSerializer):
 
         return obj
 
+    def validate_consultant(self, obj):
+        request = self.context.get("request")
+        user = request.user
+
+        user_time_slots = SoldTimeSlotSale.objects.filter(sold_to=user).filter(consultant=obj)
+        if not user_time_slots:
+            raise serializers.ValidationError({"detail": _("You don't have any time slots with this consultant.")})
+        return obj
+
 
 class MessageSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
@@ -60,7 +72,6 @@ class MessageSerializer(serializers.ModelSerializer):
         view_name="tickets:message-detail", lookup_field='id'
     )
     is_consultant = serializers.SerializerMethodField()
-
 
     class Meta:
         model = Message
@@ -75,7 +86,6 @@ class MessageSerializer(serializers.ModelSerializer):
             'created',
             'is_consultant'
         ]
-
 
     def get_user(self, obj):
         request = self.context.get("request")
@@ -98,3 +108,4 @@ class MessageSerializer(serializers.ModelSerializer):
         message.sender = self.context.get("request").user
         message.save()
         return message
+

@@ -10,7 +10,8 @@ from .serializers import TicketSerializer, MessageSerializer
 from .permissions import TicketOwnerPermission, MessageOwnerPermission
 from .filtersets import MessageFilter
 
-
+from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from sNeeds.apps.account.models import ConsultantProfile
 
 
 class TicketListView(generics.ListCreateAPIView):
@@ -56,3 +57,11 @@ class MessageDetailView(generics.RetrieveAPIView):
     serializer_class = MessageSerializer
     permission_classes = [MessageOwnerPermission, permissions.IsAuthenticated]
     lookup_field = 'id'
+
+
+class TicketConsultantsView(generics.ListAPIView):
+    serializer_class = ShortConsultantProfileSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return ConsultantProfile.objects.filter(soldtimeslotsale__sold_to=user).distinct()

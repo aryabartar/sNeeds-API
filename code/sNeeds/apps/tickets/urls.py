@@ -22,6 +22,7 @@ app_name = "tickets"
 urlpatterns = [
     path('tickets/', views.TicketListView.as_view(), name="ticket-list"),
     path('tickets/<int:id>/', views.TicketDetailView.as_view(), name="ticket-detail"),
-    path('messages/', views.MessageListView.as_view() , name="message-list"),
-    path('messages/<int:id>/', views.MessageDetailView.as_view() , name="message-detail"),
+    path('messages/', views.MessageListView.as_view(), name="message-list"),
+    path('messages/<int:id>/', views.MessageDetailView.as_view(), name="message-detail"),
+    path('consultants/', views.TicketConsultantsView.as_view(), name="ticketconsultant-list"),
 ]
