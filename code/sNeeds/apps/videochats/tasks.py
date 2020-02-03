@@ -35,7 +35,7 @@ def delete_used_rooms():
     qs.delete()
 
 
-@shared_task
+# @shared_task
 def create_room_with_users_in_skyroom(room_id):
     room = Room.objects.get(id=room_id)
     user = room.sold_time_slot.sold_to

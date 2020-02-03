@@ -40,12 +40,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
+    USER_TYPE_CHOICES = (
+        (1, 'student'),
+        (2, 'consultant'),
+    )
+
     email = models.EmailField(_('email address'), unique=True, max_length=256)
     first_name = models.CharField(_('first name'), max_length=30, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
     phone_number = models.CharField(_('phone number'), max_length=11, blank=True, null=True)
     address = models.CharField(_('address'), max_length=256, blank=True, null=True)
 
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
@@ -95,3 +101,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         for (key, value) in kwargs.items():
             setattr(instance, key, value)
         instance.save()
+
+
+class StudentProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+
+
+
