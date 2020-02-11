@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, get_user_model
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 
 from rest_framework import status, permissions, generics, mixins
 from rest_framework.views import APIView
@@ -19,11 +21,18 @@ class AuthView(APIView):
     Post format:
         {
         "email":"bartararya@gmail.com",
-        "password":"****:)"
+        "password":"****"
         }
     '''
     permission_classes = [NotLoggedInPermission]
 
+    @swagger_auto_schema( request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'email': openapi.Schema(type=openapi.TYPE_STRING, description='email'),
+            'password': openapi.Schema(type=openapi.TYPE_STRING, description='password'),
+        }
+    ))
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return Response({'detail': 'You are already authenticated'}, status=400)
