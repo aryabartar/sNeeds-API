@@ -17,13 +17,6 @@ User = get_user_model()
 
 
 class AuthView(APIView):
-    '''
-    Post format:
-        {
-        "email":"bartararya@gmail.com",
-        "password":"****"
-        }
-    '''
     permission_classes = [NotLoggedInPermission]
 
     @swagger_auto_schema( request_body=openapi.Schema(
