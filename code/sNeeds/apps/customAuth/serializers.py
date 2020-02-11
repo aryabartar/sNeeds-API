@@ -29,10 +29,6 @@ def validate_email(email):
 
 
 def validate_phone_number(phone):
-    if len(phone) > 11:
-        raise serializers.ValidationError(_("Phone number is more than 11 characters"))
-    if len(phone) < 10:
-        raise serializers.ValidationError(_("Phone number is less than 10 characters"))
     try:
         int(phone)
     except ValueError:
@@ -40,7 +36,6 @@ def validate_phone_number(phone):
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
     token_response = serializers.SerializerMethodField()
 
     class Meta:
@@ -48,11 +43,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         fields = [
             'email',
             'password',
-            'password2',
-            'first_name',
-            'last_name',
             'phone_number',
-            'address',
             'token_response',
         ]
 
@@ -77,20 +68,11 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         validate_phone_number(value)
         return value
 
-    def validate(self, data):
-        pw = data.get('password')
-        pw2 = data.pop('password2')
-        if pw != pw2:
-            raise serializers.ValidationError(_("Passwords must match"))
-        return data
-
     def create(self, validated_data):
         user_obj = User(
             email=validated_data.get('email'),
-            first_name=validated_data.get('first_name'),
-            last_name=validated_data.get('last_name'),
             phone_number=validated_data.get('phone_number'),
-            address=validated_data.get('address'),
+            user_type=1,  # Only student can register with serializer
         )
         user_obj.set_password(validated_data.get('password'))
         user_obj.save()

@@ -50,7 +50,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('first name'), null=True, max_length=30, blank=True)
     last_name = models.CharField(_('last name'), null=True, max_length=150, blank=True)
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES)
+    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)  # default is student
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
