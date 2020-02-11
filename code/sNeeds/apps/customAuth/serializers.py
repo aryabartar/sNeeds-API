@@ -32,7 +32,7 @@ def validate_phone_number(phone):
     try:
         int(phone)
     except ValueError:
-        raise serializers.ValidationError(_("Phone number should be numbers only"))
+        raise serializers.ValidationError(_("Phone number should be number only"))
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -47,7 +47,10 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'token_response',
         ]
 
-        extra_kwargs = {'password': {'write_only': True}, }
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'phone_number': {'required': True}
+        }
 
     def get_token_response(self, obj):  # instance of the model
         user = obj
@@ -89,7 +92,6 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'phone_number',
-            'address',
             'password',
             'password2',
         ]
@@ -98,7 +100,6 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name': {'required': False},
             'last_name': {'required': False},
             'phone_number': {'required': False},
-            'address': {'required': False},
             'password': {'write_only': True, 'required': False},
         }
 
