@@ -83,8 +83,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, required=False, write_only=True)
-
     class Meta:
         model = User
         fields = [
@@ -93,7 +91,6 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'phone_number',
             'password',
-            'password2',
         ]
         extra_kwargs = {
             'email': {'read_only': True},
@@ -103,22 +100,9 @@ class UserSerializer(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': False},
         }
 
-    def validate(self, data):
-        pw = data.get('password', -1)
-        pw2 = data.get('password2', -1)
-
-        if pw != pw2:
-            raise serializers.ValidationError(_("Passwords must match"))
-
-        try:
-            data.pop('password2')
-        except:
-            pass
-
-        return data
-
     def update(self, instance, validated_data):
         password = validated_data.get('password', None)
+
         try:
             password = validated_data.pop('password')
         except:
