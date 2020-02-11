@@ -18,9 +18,14 @@ from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
 
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api-auth/', include('rest_framework.urls')),
+
                   path('docs/', include('sNeeds.apps.docs.urls')),
                   path('auth/', include('sNeeds.apps.customAuth.urls')),
                   path('account/', include('sNeeds.apps.account.urls')),
