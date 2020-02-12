@@ -1,4 +1,6 @@
-from django.conf import settings
+from enum import Enum
+from enumfields import EnumIntegerField
+
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -44,17 +46,17 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
-    USER_TYPE_CHOICES = (
-        (1, 'student'),
-        (2, 'consultant'),
-    )
+
+    class UserTypeChoices(Enum):
+        student = 1
+        consultant = 2
 
     email = models.EmailField(_('email address'), unique=True, max_length=256)
     phone_number = models.CharField(_('phone number'), unique=True, max_length=11, blank=True, null=True)
     first_name = models.CharField(_('first name'), null=True, max_length=30, blank=True)
     last_name = models.CharField(_('last name'), null=True, max_length=150, blank=True)
 
-    user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=1)  # default is student
+    user_type = EnumIntegerField(enum=UserTypeChoices, default=UserTypeChoices.student)  # default is student
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,

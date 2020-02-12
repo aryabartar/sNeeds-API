@@ -19,7 +19,7 @@ User = get_user_model()
 class AuthView(APIView):
     permission_classes = [NotLoggedInPermission]
 
-    @swagger_auto_schema( request_body=openapi.Schema(
+    @swagger_auto_schema(request_body=openapi.Schema(
         type=openapi.TYPE_OBJECT,
         properties={
             'email': openapi.Schema(type=openapi.TYPE_STRING, description='email'),
@@ -72,3 +72,37 @@ class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
         if request.user.id != kwargs.get('id', None):
             return Response({"detail": "You are not logged in as this user."}, 403)
         return self.update(request)
+
+
+class MyAccountInfoView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        return self.request.user
+
+    def get(self, request):
+        my_account = self.get_object()
+        serializer = serializers.MyAccountSerializer(my_account, context={"request": request})
+        return Response(serializer.data)
+
+        #
+        # consultant = None
+        # try:
+        #     consultant = request.user.consultant_profile
+        # except:
+        #     pass
+        #
+        # if consultant:
+        #     is_consultant = True
+        #     consultant_id = consultant.id
+        # else:
+        #     is_consultant = False
+        #     consultant_id = None
+        #
+        # return Response(
+        #     {
+        #         "user_pk": request.user.pk,
+        #         "is_consultant": is_consultant,
+        #         "consultant": consultant_id
+        #     },
+        #     200)

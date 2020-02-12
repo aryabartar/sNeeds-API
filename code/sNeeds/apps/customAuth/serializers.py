@@ -1,13 +1,14 @@
 from django.utils.translation import gettext as _
 
-from django.contrib.auth import get_user_model
 import django.contrib.auth.password_validation as validators
+from django.contrib.auth import get_user_model
 from django.core import exceptions
 
 from rest_framework import serializers
 from rest_framework_jwt import utils as jwt_utils
 
 from .utils import jwt_response_payload_handler
+from .fields import EnumField
 
 User = get_user_model()
 
@@ -131,3 +132,20 @@ class SafeUserDataSerializer(serializers.ModelSerializer):
             'first_name': {'read_only': True},
             'last_name': {'read_only': False},
         }
+
+
+class MyAccountSerializer(serializers.ModelSerializer):
+    consultant = serializers.SerializerMethodField()
+    user_type = EnumField(enum=User.UserTypeChoices)
+
+    class Meta:
+        model = User
+
+        fields = [
+            'id',
+            'user_type',
+            'consultant',
+        ]
+
+    def get_consultant(self, obj):
+        return 1

@@ -13,8 +13,6 @@ urlpatterns = [
     path('field-of-studies/', views.FieldOfStudyList.as_view(), name="field-of-study-list"),
     path('field-of-studies/<str:slug>/', views.FieldOfStudyDetail.as_view(), name="field-of-study-detail"),
 
-    path('my-account/', views.MyAccountInfoView.as_view()),
     path('consultant-profiles/', views.ConsultantProfileList.as_view(), name="consultant-profile-list"),
     path('consultant-profiles/<str:slug>/', views.ConsultantProfileDetail.as_view(), name="consultant-profile-detail"),
-
-]
+    ]

@@ -14,4 +14,7 @@ urlpatterns = [
 
     path('accounts/', views.UserListView.as_view()),
     path('accounts/<int:id>/', views.UserDetailView.as_view()),
+
+    path('my-account/', views.MyAccountInfoView.as_view()),
+
 ]

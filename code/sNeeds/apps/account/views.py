@@ -68,28 +68,3 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
-
-class MyAccountInfoView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get(self, request):
-        consultant = None
-        try:
-            consultant = request.user.consultant_profile
-        except:
-            pass
-
-        if consultant:
-            is_consultant = True
-            consultant_id = consultant.id
-        else:
-            is_consultant = False
-            consultant_id = None
-
-        return Response(
-            {
-                "user_pk": request.user.pk,
-                "is_consultant": is_consultant,
-                "consultant": consultant_id
-            },
-            200)
