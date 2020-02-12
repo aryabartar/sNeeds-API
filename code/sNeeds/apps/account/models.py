@@ -31,7 +31,7 @@ class University(models.Model):
 
     def __str__(self):
         return self.name
-
+sd
 
 class FieldOfStudy(models.Model):
     name = models.CharField(max_length=256, unique=True)
