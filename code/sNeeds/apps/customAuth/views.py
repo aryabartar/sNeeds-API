@@ -85,24 +85,3 @@ class MyAccountInfoView(APIView):
         serializer = serializers.MyAccountSerializer(my_account, context={"request": request})
         return Response(serializer.data)
 
-        #
-        # consultant = None
-        # try:
-        #     consultant = request.user.consultant_profile
-        # except:
-        #     pass
-        #
-        # if consultant:
-        #     is_consultant = True
-        #     consultant_id = consultant.id
-        # else:
-        #     is_consultant = False
-        #     consultant_id = None
-        #
-        # return Response(
-        #     {
-        #         "user_pk": request.user.pk,
-        #         "is_consultant": is_consultant,
-        #         "consultant": consultant_id
-        #     },
-        #     200)

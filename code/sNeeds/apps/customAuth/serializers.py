@@ -7,6 +7,8 @@ from django.core import exceptions
 from rest_framework import serializers
 from rest_framework_jwt import utils as jwt_utils
 
+from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from sNeeds.apps.customAuth.models import ConsultantProfile
 from .utils import jwt_response_payload_handler
 from .fields import EnumField
 
@@ -148,4 +150,9 @@ class MyAccountSerializer(serializers.ModelSerializer):
         ]
 
     def get_consultant(self, obj):
-        return 1
+        try:
+            consultant = ConsultantProfile.objects.get(user=obj)
+            return ShortConsultantProfileSerializer(consultant, context={"request":self.context.get('request')}).data
+        except ConsultantProfile.DoesNotExist:
+            return None
+
