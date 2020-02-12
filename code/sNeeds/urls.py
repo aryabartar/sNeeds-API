@@ -38,6 +38,6 @@ urlpatterns = [
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochat/', include('sNeeds.apps.videochats.urls')),
                   path('ticket/', include('sNeeds.apps.tickets.urls')),
-                  path('consultant/', include('sNeeds.apps.consultants.urls')),
                   path('chat/', include('sNeeds.apps.chats.urls')),
+                  #path('consultant/', include('sNeeds.apps.consultants.urls')), Not using yet
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

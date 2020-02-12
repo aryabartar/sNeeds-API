@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.store.models import SoldTimeSlotSale
 
 

@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 
 User = get_user_model()
 

@@ -2,7 +2,7 @@ from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 
 from .models import TMPConsultant
 

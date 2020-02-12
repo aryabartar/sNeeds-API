@@ -11,7 +11,7 @@ from .permissions import TicketOwnerPermission, MessageOwnerPermission
 from .filtersets import MessageFilter
 
 from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 
 
 class TicketListView(generics.ListCreateAPIView):

@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):

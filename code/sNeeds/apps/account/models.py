@@ -1,6 +1,4 @@
-from django.contrib.auth import get_user_model
-from django.db import models, connection
-from django.conf import settings
+from django.db import models
 
 
 def get_image_upload_path(sub_dir):
@@ -45,24 +43,4 @@ class FieldOfStudy(models.Model):
         self.name = self.name
         return self.name
 
-
-class ConsultantProfile(models.Model):
-    user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name="consultant_profile"
-    )
-    bio = models.TextField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to=get_consultant_image_path)
-    aparat_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
-    slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, blank=True)
-    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
-    countries = models.ManyToManyField(Country, blank=True)
-    active = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.user.__str__()
 

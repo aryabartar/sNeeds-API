@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from sNeeds.apps.store.serializers import SoldTimeSlotSaleSerializer
-from sNeeds.apps.account.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile
 
 from .models import Room
 
