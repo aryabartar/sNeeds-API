@@ -24,7 +24,7 @@ class Country(models.Model):
 
 class University(models.Model):
     name = models.CharField(max_length=256, unique=True)
-    country = models.CharField(max_length=256)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=get_image_upload_path("university-pictures"))
     slug = models.SlugField(unique=True, help_text="Lowercase pls")
