@@ -10,17 +10,13 @@ class ConsultantPermission(permissions.BasePermission):
     message = 'User should be consultant.'
 
     def has_permission(self, request, view):
-        print(request.user.user_type)
-
         if request.method in permissions.SAFE_METHODS:
             return True
 
         else:
-            try:
-                request.user.consultant_profile
+            if request.user.is_consultant():
                 return True
-            except:
-                return False
+            return False
 
 
 class TimeSlotSaleOwnerPermission(permissions.BasePermission):
