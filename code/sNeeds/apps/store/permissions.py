@@ -10,6 +10,8 @@ class ConsultantPermission(permissions.BasePermission):
     message = 'User should be consultant.'
 
     def has_permission(self, request, view):
+        print(request.user.user_type)
+
         if request.method in permissions.SAFE_METHODS:
             return True
 

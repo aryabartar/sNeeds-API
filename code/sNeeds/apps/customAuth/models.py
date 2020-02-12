@@ -87,6 +87,16 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
 
+    def is_consultant(self):
+        if self.user_type == self.UserTypeChoices.consultant:
+            return True
+        return False
+
+    def is_student(self):
+        if self.user_type == self.UserTypeChoices.student:
+            return True
+        return False
+
     def get_full_name(self):
         """
         Return the first_name plus the last_name, with a space in between.
@@ -127,6 +137,8 @@ class ConsultantProfile(models.Model):
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
     countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)
+
+    time_slot_price = models.IntegerField()
 
     def __str__(self):
         return self.user.__str__()
