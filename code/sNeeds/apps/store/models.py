@@ -74,12 +74,13 @@ class TimeSlotSale(AbstractTimeSlotSale):
         )
         if conflicting_time_slot_sales:
             sessions_str = ','.join(str(session.id) for session in conflicting_time_slot_sales)
+            # raise ValidationError("bug!")
+
             raise ValidationError({
-                "detail": _(
+                "start_time": _(
                     "Selected time cannot be chosen because "
-                    "the time you chose conflicts with other times you have chosen before " +
-                    sessions_str),
-                "conflicting_time_slots": sessions_str
+                    "the time you chose conflicts with other times you have chosen before: " +
+                    str(sessions_str)),
             })
 
         # Check 3
@@ -92,10 +93,9 @@ class TimeSlotSale(AbstractTimeSlotSale):
         if conflicting_sold_sessions:
             sessions_str = ','.join(str(session.id) for session in conflicting_sold_sessions)
             raise ValidationError({
-                "detail": _("Selected time cannot be chosen because " +
-                            "the time you chose conflicts with these times you have sold before " +
-                            str(sessions_str)),
-                "conflicting_time_slots": sessions_str
+                "start_time": _("Selected time cannot be chosen because " +
+                                "the time you chose conflicts with these times you have sold before :" +
+                                str(sessions_str)),
             })
 
 
