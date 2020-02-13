@@ -138,7 +138,7 @@ class ConsultantProfile(models.Model):
     countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)
 
-    time_slot_price = models.IntegerField()
+    time_slot_price = models.PositiveIntegerField()
 
     def __str__(self):
         return self.user.__str__()
