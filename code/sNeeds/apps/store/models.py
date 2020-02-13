@@ -53,8 +53,6 @@ class AbstractTimeSlotSale(models.Model):
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
 
 
-
-
 class TimeSlotSale(AbstractTimeSlotSale):
     objects = TimeSlotSaleManager.as_manager()
 
@@ -81,6 +79,22 @@ class TimeSlotSale(AbstractTimeSlotSale):
                     "Selected time cannot be chosen because "
                     "the time you chose conflicts with other times you have chosen before " +
                     sessions_str),
+                "conflicting_time_slots": sessions_str
+            })
+
+        # Check 3
+        consultant_sold_time_slot = SoldTimeSlotSale.objects.filter(consultant=consultant)
+        conflicting_sold_sessions = (
+                consultant_sold_time_slot.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
+                consultant_sold_time_slot.filter(start_time__lt=end_time).filter(end_time__gt=end_time) |
+                consultant_sold_time_slot.filter(start_time=start_time)  # For same start time
+        )
+        if conflicting_sold_sessions:
+            sessions_str = ','.join(str(session.id) for session in conflicting_sold_sessions)
+            raise ValidationError({
+                "detail": _("Selected time cannot be chosen because " +
+                            "the time you chose conflicts with these times you have sold before " +
+                            str(sessions_str)),
                 "conflicting_time_slots": sessions_str
             })
 
