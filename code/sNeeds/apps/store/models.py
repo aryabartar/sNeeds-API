@@ -53,6 +53,8 @@ class AbstractTimeSlotSale(models.Model):
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
 
 
+
+
 class TimeSlotSale(AbstractTimeSlotSale):
     objects = TimeSlotSaleManager.as_manager()
 
@@ -60,27 +62,20 @@ class TimeSlotSale(AbstractTimeSlotSale):
         start_time = self.start_time
         end_time = self.end_time
         consultant = self.consultant
-        sold_time_slot_of_consultant = SoldTimeSlotSale.objects.filter(consultant=consultant)
-        conflicting_sold_sessions = (
-                sold_time_slot_of_consultant.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
-                sold_time_slot_of_consultant.filter(start_time__lt=end_time).filter(end_time__gt=end_time)
-        )
-        if conflicting_sold_sessions:
-            sessions_str = ','.join(str(session.id) for session in conflicting_sold_sessions)
-            raise ValidationError({
-                "detail": _("Selected time cannot be chosen because " +
-                            "the time you chose conflicts with these times you have sold before " +
-                            str(sessions_str)),
-                "conflicting_time_slots": sessions_str
-            })
 
-        time_slot_sale_of_consultant = TimeSlotSale.objects.filter(consultant=consultant)
-        conflicting_sessions = (
-                time_slot_sale_of_consultant.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
-                time_slot_sale_of_consultant.filter(start_time__lt=end_time).filter(end_time__gt=end_time)
+        # Check 1
+        if end_time <= start_time:
+            raise ValidationError(_("End time should be after start time"), code='invalid')
+
+        # Check 2
+        consultant_time_slot_sales = TimeSlotSale.objects.filter(consultant=consultant)
+        conflicting_time_slot_sales = (
+                consultant_time_slot_sales.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
+                consultant_time_slot_sales.filter(start_time__lt=end_time).filter(end_time__gt=end_time) |
+                consultant_time_slot_sales.filter(start_time=start_time)  # For same start time
         )
-        if conflicting_sessions:
-            sessions_str = ','.join(str(session.id) for session in conflicting_sessions)
+        if conflicting_time_slot_sales:
+            sessions_str = ','.join(str(session.id) for session in conflicting_time_slot_sales)
             raise ValidationError({
                 "detail": _(
                     "Selected time cannot be chosen because "
@@ -88,8 +83,6 @@ class TimeSlotSale(AbstractTimeSlotSale):
                     sessions_str),
                 "conflicting_time_slots": sessions_str
             })
-        if end_time <= start_time:
-            raise ValidationError(_("End Time should be after Start time"), code='invalid')
 
 
 class SoldTimeSlotSale(AbstractTimeSlotSale):

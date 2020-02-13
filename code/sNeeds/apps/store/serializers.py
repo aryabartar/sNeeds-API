@@ -73,9 +73,9 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
         return obj
 
     def validate_start_time(self, obj):
-        if obj < (timezone.now() + datetime.timedelta(days=1)):
+        if obj < (timezone.now() + datetime.timedelta(hours=1)):
             raise ValidationError(
-                _("Start time should be selected at least from a day after today.")
+                _("You have to choose time later than 1 hour later.")
             )
         return obj
 
