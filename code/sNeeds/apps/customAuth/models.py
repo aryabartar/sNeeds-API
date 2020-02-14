@@ -12,7 +12,6 @@ from sNeeds.apps.account.models import get_consultant_image_path, get_consultant
 
 
 class CustomUserManager(BaseUserManager):
-
     def _create_user(self, email, password,
                      is_staff, is_superuser, **extra_fields):
         """
@@ -96,6 +95,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         if self.user_type == self.UserTypeChoices.student:
             return True
         return False
+
+    def set_user_type_consultant(self):
+        self.user_type = self.UserTypeChoices.consultant
+        self.save()
+
+    def set_user_type_student(self):
+        self.user_type = self.UserTypeChoices.student
+        self.save()
 
     def get_full_name(self):
         """
