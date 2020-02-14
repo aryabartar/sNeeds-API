@@ -1,1 +1,1 @@
-default_app_config = 'sNeeds.apps.customAuth.apps.AuthConfig'
+default_app_config = 'sNeeds.apps.customAuth.apps.CustomAuthConfig'

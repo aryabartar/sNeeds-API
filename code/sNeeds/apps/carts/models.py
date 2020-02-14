@@ -25,24 +25,16 @@ class CartManager(models.QuerySet):
         pass
 
 
-class AbstractCart(models.Model):
+class Cart(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     subtotal = models.IntegerField(default=0.00, blank=True)
     total = models.IntegerField(default=0, blank=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    objects = CartManager.as_manager()
-
-    class Meta:
-        abstract = True
-
-
-class Cart(AbstractCart):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
     time_slot_sales = models.ManyToManyField(TimeSlotSale, blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return "User {} cart | pk: {}".format(self.user, str(self.pk))
+    objects = CartManager.as_manager()
 
     def get_time_slot_sales_count(self):
         return self.time_slot_sales.all().count()
@@ -73,6 +65,11 @@ class Cart(AbstractCart):
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         self.total = self.total * ((100.0 - count_discount) / 100)
 
+    def is_acceptable_for_pay(self):
+        if self.total > 0:
+            return True
+        return False
+
     def _update_total(self):
         # For code discount
         self._update_total_cart_consultant_discount_percent()
@@ -97,4 +94,5 @@ class Cart(AbstractCart):
             self.time_slot_sales.add(ts)
         self.save()
 
-
+    def __str__(self):
+        return "User {} cart | pk: {}".format(self.user, str(self.pk))

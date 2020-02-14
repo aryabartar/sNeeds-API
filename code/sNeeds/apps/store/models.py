@@ -30,14 +30,18 @@ class TimeSlotSaleManager(models.QuerySet):
         return sold_tome_slot_sales_list
 
 
-class AbstractTimeSlotSale(models.Model):
+class ProductAbstractClass(models.Model):
+    price = models.PositiveIntegerField()
+
+
+
+class AbstractTimeSlotSale(ProductAbstractClass):
     consultant = models.ForeignKey(
         ConsultantProfile,
         on_delete=models.CASCADE
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    price = models.PositiveIntegerField()
 
     class Meta:
         abstract = True
