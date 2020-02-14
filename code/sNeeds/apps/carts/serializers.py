@@ -38,7 +38,7 @@ class CartSerializer(serializers.ModelSerializer):
             user = request.user
 
         time_slot_sales = validated_data.get('time_slot_sales', [])
-        cart_obj = Cart.objects.new_cart_with_time_sales(time_slot_sales, user=user)
+        cart_obj = Cart.objects.new_cart_with_products(time_slot_sales, user=user)
         return cart_obj
 
     def validate_time_slot_sales(self, list_of_sessions):

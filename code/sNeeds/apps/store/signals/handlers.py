@@ -11,7 +11,7 @@ def pre_delete_time_slot_sale_receiver(sender, instance, *args, **kwargs):
     When TimeSlotSale obj deletes, no signal will not trigger.
     This signal fix this problem.
     """
-    Cart.objects.filter(time_slot_sales=instance).remove_time_slot_sale(instance)
+    Cart.objects.filter(products=instance).remove_product(instance)
 
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
@@ -25,14 +25,14 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 
 
 def post_save_time_slot_receiver(sender, instance, *args, **kwargs):
-    cart_qs = Cart.objects.filter(time_slot_sales=instance)
+    cart_qs = Cart.objects.filter(products=instance)
 
     # Used when time slot sold price is changed and its signal is triggered to update this model
     for obj in cart_qs:
         obj.update_price()
 
 
-pre_delete.connect(pre_delete_time_slot_sale_receiver, sender=TimeSlotSale)
-
-post_save.connect(post_save_time_slot_receiver, sender=TimeSlotSale)
-post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)
+# pre_delete.connect(pre_delete_time_slot_sale_receiver, sender=TimeSlotSale)
+#
+# post_save.connect(post_save_time_slot_receiver, sender=TimeSlotSale)
+# post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)

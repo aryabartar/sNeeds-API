@@ -52,6 +52,8 @@ class AbstractTimeSlotSale(Product):
         return self.consultant.user.username
 
     def save(self, *args, **kwargs):
+        print(args)
+        print(kwargs)
         self.full_clean()
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
 
