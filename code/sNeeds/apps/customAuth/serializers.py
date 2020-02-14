@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework_jwt import utils as jwt_utils
 
 from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.customAuth.models import ConsultantProfile, UserTypeChoices
 from .utils import jwt_response_payload_handler
 from .fields import EnumField
 
@@ -138,7 +138,7 @@ class SafeUserDataSerializer(serializers.ModelSerializer):
 
 class MyAccountSerializer(serializers.ModelSerializer):
     consultant = serializers.SerializerMethodField()
-    user_type = EnumField(enum=User.UserTypeChoices)
+    user_type = EnumField(enum=UserTypeChoices)
 
     class Meta:
         model = User

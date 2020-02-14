@@ -38,6 +38,11 @@ class CustomUserManager(BaseUserManager):
                                  **extra_fields)
 
 
+class UserTypeChoices(Enum):
+    student = 1
+    consultant = 2
+
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
@@ -45,10 +50,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     Username and password are required. Other fields are optional.
     """
-
-    class UserTypeChoices(Enum):
-        student = 1
-        consultant = 2
 
     email = models.EmailField(_('email address'), unique=True, max_length=256)
     phone_number = models.CharField(_('phone number'), unique=True, max_length=11, blank=True, null=True)
@@ -87,21 +88,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.email = self.__class__.objects.normalize_email(self.email)
 
     def is_consultant(self):
-        if self.user_type == self.UserTypeChoices.consultant:
+        if self.user_type == UserTypeChoices.consultant:
             return True
         return False
 
     def is_student(self):
-        if self.user_type == self.UserTypeChoices.student:
+        if self.user_type == UserTypeChoices.student:
             return True
         return False
 
     def set_user_type_consultant(self):
-        self.user_type = self.UserTypeChoices.consultant
+        self.user_type = UserTypeChoices.consultant
         self.save()
 
     def set_user_type_student(self):
-        self.user_type = self.UserTypeChoices.student
+        self.user_type = UserTypeChoices.student
         self.save()
 
     def get_full_name(self):
