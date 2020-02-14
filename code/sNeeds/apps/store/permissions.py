@@ -4,9 +4,6 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 
 
 class ConsultantPermission(permissions.BasePermission):
-    """
-    Global permission check for blacklisted IPs.
-    """
     message = 'User should be consultant.'
 
     def has_permission(self, request, view):
@@ -14,7 +11,7 @@ class ConsultantPermission(permissions.BasePermission):
             return True
 
         else:
-            if request.user.is_consultant():
+            if request.user.is_authenticated and request.user.is_consultant():
                 return True
             return False
 

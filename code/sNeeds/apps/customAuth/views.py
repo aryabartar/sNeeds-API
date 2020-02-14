@@ -7,11 +7,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
 
+from . import serializers
 from .utils import jwt_response_payload_handler
 from .serializers import UserRegisterSerializer
 from .permissions import NotLoggedInPermission, SameUserPermission
-
-from . import serializers
 
 User = get_user_model()
 
