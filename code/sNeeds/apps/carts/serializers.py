@@ -3,7 +3,7 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Cart, SoldCart
+from .models import Cart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.store.models import SoldTimeSlotSale
@@ -68,22 +68,3 @@ class CartSerializer(serializers.ModelSerializer):
                         }
                     )
         return list_of_sessions
-
-
-class SoldCartSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="cart:sold-cart-detail", lookup_field='id', read_only=True)
-    sold_time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
-
-    class Meta:
-        model = SoldCart
-        fields = [
-            'id', 'url', 'user', 'sold_time_slot_sales', 'sold_time_slot_sales_detail',
-            'total', 'subtotal', 'created', 'updated',
-        ]
-
-    def get_sold_time_slot_sales_detail(self, obj):
-        return SoldTimeSlotSaleSerializer(
-            obj.sold_time_slot_sales.all(),
-            context=self.context,
-            many=True
-        ).data

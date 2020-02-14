@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 
-from sNeeds.apps.carts.models import Cart, SoldCart
+from sNeeds.apps.carts.models import Cart
 
 User = get_user_model()
 
@@ -15,23 +15,6 @@ SOLD_ORDER_STATUS_CHOICES = (
     ('canceled_refunded', 'Canceled and refunded'),
 )
 
-
-class SoldOrderManager(models.Manager):
-    @transaction.atomic
-    def sell_order(self, order):
-        cart = order.cart
-        sold_order = SoldOrder(
-            cart=None,
-            status="paid",
-            order_id=order.order_id,
-            total=order.total,
-        )
-        cart = Cart.objects.set_cart_paid(cart)
-        sold_order.cart = cart
-        sold_order.save()
-        order.delete()
-
-        return sold_order
 
 
 class AbstractOrder(models.Model):
@@ -64,17 +47,3 @@ class Order(AbstractOrder):
     def get_user(self):
         return self.cart.user
 
-
-class SoldOrder(AbstractOrder):
-    cart = models.OneToOneField(SoldCart, null=True, on_delete=models.SET_NULL, related_name="cart_order")
-    status = models.CharField(max_length=256, default='paid', choices=SOLD_ORDER_STATUS_CHOICES)
-
-    objects = SoldOrderManager()
-
-    def update_total(self):
-        self.total = self.cart.total
-        self.save()
-        return self.total
-
-    def get_user(self):
-        return self.cart.user

@@ -2,10 +2,10 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Order, SoldOrder
+from .models import Order
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.carts.serializers import CartSerializer, SoldCartSerializer
+from sNeeds.apps.carts.serializers import CartSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -46,11 +46,3 @@ class OrderSerializer(serializers.ModelSerializer):
 
         return order_obj
 
-
-class SoldOrderSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(view_name="order:sold-order-detail", lookup_field='id', read_only=True)
-    cart = SoldCartSerializer(read_only=True)
-
-    class Meta:
-        model = SoldOrder
-        fields = ['id', 'url', 'order_id', 'cart', 'status', 'total', 'created', 'updated', ]

@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
-from .models import Cart, SoldCart
-from .permissions import CartOwnerPermission, SoldCartOwnerPermission
+from .models import Cart
+from .permissions import CartOwnerPermission
 
 
 class CartListView(generics.ListCreateAPIView):
@@ -22,18 +22,3 @@ class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     permission_classes = (CartOwnerPermission, permissions.IsAuthenticated)
 
-
-class SoldCartListView(generics.ListAPIView):
-    queryset = SoldCart.objects.all()
-    serializer_class = serializers.SoldCartSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def get_queryset(self):
-        return SoldCart.objects.filter(user=self.request.user)
-
-
-class SoldCartDetailView(generics.RetrieveAPIView):
-    lookup_field = 'id'
-    queryset = SoldCart.objects.all()
-    serializer_class = serializers.SoldCartSerializer
-    permission_classes = (SoldCartOwnerPermission, permissions.IsAuthenticated)

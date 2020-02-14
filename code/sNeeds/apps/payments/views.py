@@ -10,7 +10,7 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from sNeeds.apps.orders.models import Order, SoldOrder
+from sNeeds.apps.orders.models import Order
 
 from .models import PayPayment
 
@@ -73,7 +73,6 @@ class Verify(APIView):
             result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
 
             if result.Status == 100:
-                SoldOrder.objects.sell_order(payment.order)
                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
             elif result.Status == 101:
                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)

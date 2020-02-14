@@ -22,19 +22,7 @@ class CartManager(models.QuerySet):
 
     @transaction.atomic
     def set_cart_paid(self, cart):
-        sold_cart_obj = SoldCart.objects.create(
-            user=cart.user,
-            subtotal=cart.subtotal,
-            total=cart.total,
-        )
-
-        qs = cart.time_slot_sales.all().set_time_slot_sold(sold_to=cart.user)
-        sold_cart_obj.sold_time_slot_sales.add(*qs)
-        sold_cart_obj.save()
-
-        cart.delete()
-
-        return sold_cart_obj
+        pass
 
 
 class AbstractCart(models.Model):
@@ -110,10 +98,3 @@ class Cart(AbstractCart):
         self.save()
 
 
-class SoldCart(AbstractCart):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    sold_time_slot_sales = models.ManyToManyField(SoldTimeSlotSale, blank=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return "User {} cart | pk: {}".format(self.user, str(self.pk))
