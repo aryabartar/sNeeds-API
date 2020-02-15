@@ -52,8 +52,6 @@ class AbstractTimeSlotSale(Product):
         return self.consultant.user.username
 
     def save(self, *args, **kwargs):
-        print(args)
-        print(kwargs)
         self.full_clean()
         super(AbstractTimeSlotSale, self).save(*args, **kwargs)
 
@@ -76,7 +74,8 @@ class TimeSlotSale(AbstractTimeSlotSale):
                 consultant_time_slot_sales.filter(start_time__lt=start_time).filter(end_time__gt=start_time) |
                 consultant_time_slot_sales.filter(start_time__lt=end_time).filter(end_time__gt=end_time) |
                 consultant_time_slot_sales.filter(start_time=start_time)  # For same start time
-        )
+        ).exclude(id=self.id)
+
         if conflicting_time_slot_sales:
             sessions_str = ','.join(str(session.id) for session in conflicting_time_slot_sales)
             # raise ValidationError("bug!")
