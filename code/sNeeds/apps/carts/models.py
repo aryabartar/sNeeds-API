@@ -49,10 +49,10 @@ class Cart(models.Model):
         for product in products:
             percent = 0
             for obj in cart_consultant_discount_qs:
-                consultants_qs = obj.consultant_discount.consultant.all()
 
                 # For TimeSlots
                 if isinstance(product, TimeSlotSale):
+                    consultants_qs = obj.consultant_discount.consultants.all()
                     if product.timeslotsale.consultant in consultants_qs:
                         percent += obj.consultant_discount.percent
 
