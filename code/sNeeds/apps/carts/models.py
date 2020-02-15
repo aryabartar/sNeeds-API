@@ -40,32 +40,31 @@ class Cart(models.Model):
         return self.products.all().count()
 
     def _update_total_cart_consultant_discount_percent(self):
-        # from sNeeds.apps.discounts.models import CartConsultantDiscount
-        #
-        # time_slot_sales = self.products.all()
-        # cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
-        # total = 0
-        #
-        # for t in time_slot_sales:
-        #     percent = 0
-        #
-        #     for obj in cart_consultant_discount_qs:
-        #         consultants_qs = obj.consultant_discount.consultant.all()
-        #
-        #         if t.consultant in consultants_qs:
-        #             percent += obj.consultant_discount.percent
-        #
-        #     total += t.price * ((100.0 - percent) / 100)
-        # self.total = total
-        pass
+        from sNeeds.apps.discounts.models import CartConsultantDiscount
+
+        products = self.products.all()
+        cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
+
+        total = 0
+        for product in products:
+            percent = 0
+
+            for obj in cart_consultant_discount_qs:
+                consultants_qs = obj.consultant_discount.consultant.all()
+
+                #
+                if t.consultant in consultants_qs:
+                    percent += obj.consultant_discount.percent
+
+            total += product.price * ((100.0 - percent) / 100)
+        self.total = total
 
     def _update_total_time_slot_number(self):
-        # from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
-        #
-        # time_slot_sale_count = self.get_products_count()
-        # count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
-        # self.total = self.total * ((100.0 - count_discount) / 100)
-        pass
+        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
+
+        time_slot_sale_count = self.get_products_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+        self.total = self.total * ((100.0 - count_discount) / 100)
 
     def is_acceptable_for_pay(self):
         if self.total > 0:

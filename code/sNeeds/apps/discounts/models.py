@@ -34,7 +34,7 @@ class CICharField(models.CharField):
 
 
 class ConsultantDiscount(models.Model):
-    consultant = models.ManyToManyField(ConsultantProfile)
+    consultants = models.ManyToManyField(ConsultantProfile)
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )

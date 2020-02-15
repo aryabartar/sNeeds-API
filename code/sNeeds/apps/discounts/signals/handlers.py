@@ -49,4 +49,4 @@ post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSal
 post_save.connect(post_save_cart_consultant_discount, sender=CartConsultantDiscount)
 post_delete.connect(post_delete_cart_consultant_discount, sender=CartConsultantDiscount)
 post_save.connect(post_save_consultant_discount, sender=ConsultantDiscount)
-m2m_changed.connect(m2m_changed_consultant_discount, sender=ConsultantDiscount.consultant.through)
+m2m_changed.connect(m2m_changed_consultant_discount, sender=ConsultantDiscount.consultants.through)
