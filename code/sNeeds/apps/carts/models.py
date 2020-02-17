@@ -26,7 +26,7 @@ class CartManager(models.QuerySet):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     subtotal = models.IntegerField(default=0, blank=True)
     total = models.IntegerField(default=0, blank=True)
     products = models.ManyToManyField(TimeSlotSale, blank=True)

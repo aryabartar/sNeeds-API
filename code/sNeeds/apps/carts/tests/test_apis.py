@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
+from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale
 
@@ -136,13 +137,24 @@ class CartTests(APITestCase):
                 price=self.consultant2_profile.time_slot_price
             )
 
+        def create_cart_for_users(self):
+            self.cart1 = Cart.objects.create(user=self.user1)
+            self.cart2 = Cart.objects.create(user=self.user1)
+            self.cart3 = Cart.objects.create(user=self.user2)
+
+
         create_users(self)
         create_countries(self)
         create_universities(self)
         create_field_of_studies(self)
         create_consultants(self)
+        create_cart_for_users(self)
 
         self.client = APIClient()
 
-    def test_one_plus_one_equals_two(self):
-        print(User.objects.all())
+    def test_get_cart(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+        response = client.get(url, {}, format='json')
+        print(response.data)
