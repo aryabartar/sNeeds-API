@@ -54,58 +54,30 @@ class CartSerializer(serializers.ModelSerializer):
         products_id = [p.id for p in products]
         products_qs = Product.objects.filter(id__in=products_id)
 
-        print(products_qs)
         time_slot_sales_qs = products_qs.get_time_slot_sales()
-        print(time_slot_sales_qs)
-        # for ts in time_slot_sales_list:
-        #     conflicting_sold_time_slots = SoldTimeSlotSale.objects.filter(
-        #         sold_to=user,
-        #         start_time__lt=ts.start_time,
-        #         end_time__gt=ts.start_time
-        #     ) | SoldTimeSlotSale.objects.filter(
-        #         sold_to=user,
-        #         start_time__lt=ts.end_time,
-        #         end_time__gt=ts.end_time
-        #     )
-        #
-        #     if conflicting_sold_time_slots.exists():
-        #         raise ValidationError({"detail": "Conflict with sold time slot!"})
 
-            # print(products_qs)
-        # for i in range(len(time_slot_sales_list)):
-        #     if (
-        #             sold_time_slots.filter(
-        #                 start_time__lt=time_slot_sales_list[i].start_time).filter(
-        #                 end_time__gt=time_slot_sales_list[i].start_time)
-        #             or
-        #             sold_time_slots.filter(
-        #                 start_time__lt=time_slot_sales_list[i].end_time).filter(
-        #                 end_time__gt=time_slot_sales_list[i].end_time)
-        #     ):
-        #         raise ValidationError(
-        #             {"detail": _(
-        #                 "Time Conflict between %(selected_time_slot)d and %(sold_time_slot)d which is a bought session" % {
-        #                     "selected_time_slot": time_slot_sales_list[i].id,
-        #                     "sold_time_slot": sold_time_slots.first().id}),
-        #                 "selected_time_slot": time_slot_sales_list[i].id,
-        #                 "sold_time_slot": sold_time_slots.first().id
-        #             }
-        #         )
-        #
-        #     for j in range(i + 1, len(time_slot_sales_list)):
-        #         if time_slot_sales_list[j].start_time < time_slot_sales_list[i].start_time < time_slot_sales_list[
-        #             j].end_time \
-        #                 or list_of_sessions[j].start_time < time_slot_sales_list[i].end_time < time_slot_sales_list[
-        #             j].end_time:
-        #             raise ValidationError(
-        #                 {
-        #                     "detail": _(
-        #                         "Time Conflict between %(selected_time_slot_1)d and %(selected_time_slot_2)d" % {
-        #                             "selected_time_slot_1": time_slot_sales_list[i].id,
-        #                             "selected_time_slot_2": time_slot_sales_list[j].id}),
-        #                     "selected_time_slot_1": time_slot_sales_list[i].id,
-        #                     "selected_time_slot_2": time_slot_sales_list[j].id
-        #                 }
-        #             )
+        for ts in time_slot_sales_qs:
+            conflicting_sold_time_slots = SoldTimeSlotSale.objects.filter(
+                sold_to=user,
+                start_time__lt=ts.start_time,
+                end_time__gt=ts.start_time
+            ) | SoldTimeSlotSale.objects.filter(
+                sold_to=user,
+                start_time__lt=ts.end_time,
+                end_time__gt=ts.end_time
+            )
+            if conflicting_sold_time_slots.exists():
+                raise ValidationError({"detail": "Conflict with sold time slot!"})
+
+            time_slot_sales_without_ts_qs = time_slot_sales_qs.exclude(pk=ts.pk)
+            conflicting_time_slots = time_slot_sales_without_ts_qs.filter(
+                start_time__lt=ts.start_time,
+                end_time__gt=ts.start_time
+            ) | time_slot_sales_without_ts_qs.filter(
+                start_time__lt=ts.end_time,
+                end_time__gt=ts.end_time
+            )
+            if conflicting_time_slots.exists():
+                raise ValidationError({"detail": "Conflict with time slot!"})
 
         return products
