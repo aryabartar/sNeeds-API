@@ -6,16 +6,16 @@ from rest_framework.exceptions import ValidationError
 from .models import Cart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
-from sNeeds.apps.store.models import SoldTimeSlotSale
+from sNeeds.apps.store.models import SoldTimeSlotSale, TimeSlotSale
 
 
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
-    time_slot_sales_detail = serializers.SerializerMethodField(read_only=True)
+    time_slot_sales = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'products', 'time_slot_sales_detail',
+        fields = ['id', 'url', 'user', 'time_slot_sales',
                   'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
@@ -24,9 +24,14 @@ class CartSerializer(serializers.ModelSerializer):
             'total': {'read_only': True},
         }
 
-    def get_time_slot_sales_detail(self, obj):
+    def get_time_slot_sales(self, obj):
+        time_slot_sales = []
+        for product in obj.products.all():
+            if isinstance(product, TimeSlotSale):
+                time_slot_sales.append(product.timeslotsale)
+
         return TimeSlotSaleSerializer(
-            obj.time_slot_sales,
+            time_slot_sales,
             context=self.context,
             many=True
         ).data
@@ -52,9 +57,9 @@ class CartSerializer(serializers.ModelSerializer):
                     {"detail": _(
                         "Time Conflict between %(selected_time_slot)d and %(sold_time_slot)d which is a bought session" % {
                             "selected_time_slot": list_of_sessions[i].id, "sold_time_slot": sold_slots.first().id}),
-                     "selected_time_slot": list_of_sessions[i].id,
-                     "sold_time_slot": sold_slots.first().id
-                     }
+                        "selected_time_slot": list_of_sessions[i].id,
+                        "sold_time_slot": sold_slots.first().id
+                    }
                 )
 
             for j in range(i + 1, len(list_of_sessions)):
