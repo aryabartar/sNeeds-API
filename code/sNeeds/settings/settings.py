@@ -20,7 +20,6 @@ from .secure import keys
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-
 INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
@@ -125,6 +124,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
 DATABASES = {
