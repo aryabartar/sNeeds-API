@@ -17,7 +17,7 @@ class CartManager(models.QuerySet):
     @transaction.atomic
     def new_cart_with_products(self, products, **kwargs):
         obj = self.create(**kwargs)
-        obj.time_slot_sales.add(*products)
+        obj.products.add(*products)
         return obj
 
     @transaction.atomic

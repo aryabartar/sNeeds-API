@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from . import serializers
 from . import filtersets
-from .models import TimeSlotSale, SoldTimeSlotSale
+from .models import TimeSlotSale, SoldTimeSlotSale, Product
 from .permissions import (
     ConsultantPermission,
     TimeSlotSaleOwnerPermission,
@@ -22,6 +22,8 @@ class TimeSlotSailList(generics.ListCreateAPIView):
     permission_classes = [ConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
+        print(Product.objects.get_time_slots())
+
         return self.list(request, *args, **kwargs)
 
 

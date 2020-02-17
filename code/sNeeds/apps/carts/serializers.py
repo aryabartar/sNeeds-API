@@ -15,10 +15,11 @@ class CartSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'time_slot_sales',
+        fields = ['id', 'url', 'user', 'products', 'time_slot_sales',
                   'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
+            'time_slot_sales': {'read_only': True},
             'user': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
@@ -42,12 +43,14 @@ class CartSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-        time_slot_sales = validated_data.get('time_slot_sales', [])
-        cart_obj = Cart.objects.new_cart_with_products(time_slot_sales, user=user)
+        # self.super.create
+        products = validated_data.get('products', [])
+        cart_obj = Cart.objects.new_cart_with_products(products, user=user)
         return cart_obj
 
-    def validate_time_slot_sales(self, list_of_sessions):
+    def validate_products(self, list_of_sessions):
         sold_slots = SoldTimeSlotSale.objects.filter(sold_to=self.context.get('request').user).filter(used=False)
+        print(list_of_sessions)
         for i in range(len(list_of_sessions)):
             if (sold_slots.filter(start_time__lt=list_of_sessions[i].start_time).filter(
                     end_time__gt=list_of_sessions[i].start_time)
@@ -75,4 +78,5 @@ class CartSerializer(serializers.ModelSerializer):
                             "selected_time_slot_2": list_of_sessions[j].id
                         }
                     )
+
         return list_of_sessions

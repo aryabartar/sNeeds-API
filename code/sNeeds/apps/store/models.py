@@ -8,6 +8,18 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 User = get_user_model()
 
 
+class ProductQuerySet(models.QuerySet):
+    def get_time_slots(self):
+        result_qs = []
+        for i in self.all():
+            try:
+                time_slot_sale = i.timeslotsale
+                result_qs.append(time_slot_sale)
+            except TimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
@@ -32,6 +44,8 @@ class TimeSlotSaleManager(models.QuerySet):
 
 class Product(models.Model):
     price = models.PositiveIntegerField()
+
+    objects = ProductQuerySet.as_manager()
 
 
 class AbstractTimeSlotSale(Product):
