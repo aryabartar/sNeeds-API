@@ -9,12 +9,12 @@ User = get_user_model()
 
 
 class ProductQuerySet(models.QuerySet):
-    def get_time_slots(self):
-        result_qs = []
+    def get_time_slot_sales(self):
+        result_qs = TimeSlotSale.objects.none()
         for i in self.all():
             try:
                 time_slot_sale = i.timeslotsale
-                result_qs.append(time_slot_sale)
+                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale)
             except TimeSlotSale.DoesNotExist:
                 pass
         return result_qs

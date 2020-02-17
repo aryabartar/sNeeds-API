@@ -22,8 +22,6 @@ class TimeSlotSailList(generics.ListCreateAPIView):
     permission_classes = [ConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
-        print(Product.objects.get_time_slots())
-
         return self.list(request, *args, **kwargs)
 
 
