@@ -142,7 +142,6 @@ class CartTests(APITestCase):
             self.cart2 = Cart.objects.create(user=self.user1)
             self.cart3 = Cart.objects.create(user=self.user2)
 
-
         create_users(self)
         create_countries(self)
         create_universities(self)
@@ -156,5 +155,11 @@ class CartTests(APITestCase):
         url = reverse("cart:cart-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
+
         response = client.get(url, {}, format='json')
-        print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        for item in response.data:
+            self.assertEqual(item.get("user"), self.user1.id)
+
+        self.assertEqual(len(response.data), Cart.objects.filter(user=self.user1).count())
