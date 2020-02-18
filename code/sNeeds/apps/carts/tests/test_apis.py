@@ -180,18 +180,44 @@ class CartTests(APITestCase):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
+        # Test 1
         products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale4]
         data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        self.time_slot_sale6 = TimeSlotSale.objects.create(
+        # Test 2
+        self.temp_time_slot_sale = TimeSlotSale.objects.create(
             consultant=self.consultant2_profile,
             start_time=timezone.now() + timezone.timedelta(hours=2, minutes=2),
             end_time=timezone.now() + timezone.timedelta(hours=2, minutes=10),
-            price=self.consultant1_profile.time_slot_price
+            price=self.consultant2_profile.time_slot_price
         )
-        products = [self.time_slot_sale2, self.time_slot_sale6]
+        products = [self.time_slot_sale2, self.temp_time_slot_sale]
+        data = {"products": [i.id for i in products]}
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Test 3
+        self.temp_time_slot_sale = TimeSlotSale.objects.create(
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(hours=2, minutes=5),
+            end_time=timezone.now() + timezone.timedelta(hours=3, minutes=5),
+            price=self.consultant2_profile.time_slot_price
+        )
+        products = [self.time_slot_sale2, self.temp_time_slot_sale]
+        data = {"products": [i.id for i in products]}
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        # Test 3
+        self.temp_time_slot_sale = TimeSlotSale.objects.create(
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(hours=1, minutes=5),
+            end_time=timezone.now() + timezone.timedelta(hours=2, minutes=5),
+            price=self.consultant2_profile.time_slot_price
+        )
+        products = [self.time_slot_sale2, self.temp_time_slot_sale]
         data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
