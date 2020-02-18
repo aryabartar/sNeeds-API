@@ -175,7 +175,7 @@ class CartTests(APITestCase):
             response.data.get("products")
         )
 
-    def test_post_cart_not_pass(self):
+    def test_post_cart_not_pass_time_conflict(self):
         url = reverse("cart:cart-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
@@ -197,6 +197,7 @@ class CartTests(APITestCase):
         data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.temp_time_slot_sale.delete()
 
         # Test 3
         self.temp_time_slot_sale = TimeSlotSale.objects.create(
@@ -209,15 +210,17 @@ class CartTests(APITestCase):
         data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.temp_time_slot_sale.delete()
 
-        # Test 3
+        # Test 4
         self.temp_time_slot_sale = TimeSlotSale.objects.create(
-            consultant=self.consultant2_profile,
-            start_time=timezone.now() + timezone.timedelta(hours=1, minutes=5),
-            end_time=timezone.now() + timezone.timedelta(hours=2, minutes=5),
-            price=self.consultant2_profile.time_slot_price
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(hours=6, minutes=50),
+            end_time=timezone.now() + timezone.timedelta(hours=7, minutes=50),
+            price=self.consultant1_profile.time_slot_price
         )
-        products = [self.time_slot_sale2, self.temp_time_slot_sale]
+        products = [self.time_slot_sale5, self.temp_time_slot_sale]
         data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.temp_time_slot_sale.delete()

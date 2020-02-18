@@ -97,7 +97,7 @@ class TimeSlotSale(AbstractTimeSlotSale):
             raise ValidationError({
                 "start_time": _(
                     "Selected time cannot be chosen because "
-                    "the time you chose conflicts with other times you have chosen before: " +
+                    "the time you chose conflicts with your other time slot sales: " +
                     str(sessions_str)),
             })
 
