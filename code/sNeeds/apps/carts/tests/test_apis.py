@@ -113,8 +113,8 @@ class CartTests(APITestCase):
         )
         self.time_slot_sale2 = TimeSlotSale.objects.create(
             consultant=self.consultant1_profile,
-            start_time=timezone.now() + timezone.timedelta(hours=3),
-            end_time=timezone.now() + timezone.timedelta(hours=4),
+            start_time=timezone.now() + timezone.timedelta(hours=2),
+            end_time=timezone.now() + timezone.timedelta(hours=3),
             price=self.consultant1_profile.time_slot_price
         )
         self.time_slot_sale3 = TimeSlotSale.objects.create(
@@ -181,15 +181,17 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale4]
-        data = {
-            "products": [i.id for i in products],
-        }
+        data = {"products": [i.id for i in products]}
         response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        print(response)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertEqual(
-            [i.id for i in products],
-            response.data.get("products")
+        self.time_slot_sale6 = TimeSlotSale.objects.create(
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(hours=2, minutes=2),
+            end_time=timezone.now() + timezone.timedelta(hours=2, minutes=10),
+            price=self.consultant1_profile.time_slot_price
         )
+        products = [self.time_slot_sale2, self.time_slot_sale6]
+        data = {"products": [i.id for i in products]}
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
