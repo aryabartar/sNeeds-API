@@ -11,7 +11,7 @@ class CartManager(models.QuerySet):
     def remove_product(self, product):
         qs = self._chain()
         for obj in qs:
-            obj.time_slot_sales.remove(product)
+            obj.products.remove(product)
         return qs
 
     @transaction.atomic

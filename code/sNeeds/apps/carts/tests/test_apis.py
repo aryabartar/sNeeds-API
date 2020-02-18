@@ -248,6 +248,16 @@ class CartTests(APITestCase):
         for t in products:
             expected_price += t.price
 
+        # After creation
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get("total"), expected_price)
+        self.assertEqual(response.data.get("subtotal"), expected_price)
+
+        # After deleting one product
+        deleted_product = products.pop(0)
+        expected_price -= deleted_product.price
+        deleted_product.delete()
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("total"), expected_price)
         self.assertEqual(response.data.get("subtotal"), expected_price)
