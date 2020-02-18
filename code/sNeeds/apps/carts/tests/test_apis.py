@@ -163,9 +163,7 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
-        data = {
-            "products": [i.id for i in products],
-        }
+        data = {"products": [i.id for i in products],}
         response = client.post(url, data=data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -236,3 +234,14 @@ class CartTests(APITestCase):
         client = self.client
         response = client.post(url, data={}, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cart_price_validity(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
+        data = {"products": [i.id for i in products],}
+        response = client.post(url, data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
