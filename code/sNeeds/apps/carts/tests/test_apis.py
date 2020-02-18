@@ -163,7 +163,7 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
-        data = {"products": [i.id for i in products],}
+        data = {"products": [i.id for i in products], }
         response = client.post(url, data=data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -241,7 +241,13 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
-        data = {"products": [i.id for i in products],}
+        data = {"products": [i.id for i in products], }
         response = client.post(url, data=data, format='json')
 
+        expected_price = 0
+        for t in products:
+            expected_price += t.price
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get("total"), expected_price)
+        self.assertEqual(response.data.get("subtotal"), expected_price)
