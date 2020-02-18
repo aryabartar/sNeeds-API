@@ -50,7 +50,11 @@ class CartSerializer(serializers.ModelSerializer):
 
     def validate_products(self, products):
         user = self.context.get('request').user
+        # Validate empty products
+        if len(products) == 0:
+            raise ValidationError("No products in cart")
 
+        # Validate time conflicts
         products_id = [p.id for p in products]
         products_qs = Product.objects.filter(id__in=products_id)
 

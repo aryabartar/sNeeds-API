@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale
 
@@ -138,8 +139,13 @@ class CartTests(APITestCase):
 
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
+        self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
+
         self.cart2 = Cart.objects.create(user=self.user1)
+        self.cart2.products.set([self.time_slot_sale1, self.time_slot_sale3])
+
         self.cart3 = Cart.objects.create(user=self.user2)
+        self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Setup ------
         self.client = APIClient()
@@ -254,6 +260,8 @@ class CartTests(APITestCase):
         self.assertEqual(response.data.get("subtotal"), expected_price)
 
         # After deleting one product
+        new_cart_id = response.data.get("id")
+        url = reverse("cart:cart-detail", args=(new_cart_id,))
         deleted_product = products.pop(0)
         expected_price -= deleted_product.price
         deleted_product.delete()
@@ -261,3 +269,34 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("total"), expected_price)
         self.assertEqual(response.data.get("subtotal"), expected_price)
+
+    def test_empty_cart_creation_error(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        data = {"products": [], }
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_other_user_cart_access_denied(self):
+        cart = self.cart3
+        url = reverse("cart:cart-detail", args=(cart.id,))
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_cart_detail(self):
+        cart = self.cart1
+        url = reverse("cart:cart-detail", args=(cart.id,))
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(cart.total, response.data.get("total"))
+        self.assertEqual(cart.subtotal, response.data.get("subtotal"))
+        self.assertEqual([p.id for p in cart.products.all()].sort(), response.data.get("products").sort())
