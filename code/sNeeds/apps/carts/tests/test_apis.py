@@ -224,3 +224,15 @@ class CartTests(APITestCase):
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.temp_time_slot_sale.delete()
+
+    def test_get_cart_authorization(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_post_cart_authorization(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        response = client.post(url, data={}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
