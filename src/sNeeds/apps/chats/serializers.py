@@ -47,10 +47,9 @@ class MessageSerializer(serializers.ModelSerializer):
         }
 
     def get_is_sender_me(self, obj):
-        request = self.get("request")
+        request = self.context.get("request")
         user = request.user
-        print(self.data)
-        return True
+        return obj.sender == user
 
     def validate(self, attrs):
         request = self.context.get('request')
@@ -77,13 +76,7 @@ class TextMessageSerializer(MessageSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
-        fields = ['id',
-                  'chat',
-                  'chat_url',
-                  'sender',
-                  # 'is_sender_me',
-                  'updated',
-                  'created'] + ['text_message', ]
+        fields = MessageSerializer.Meta.fields + ['text_message', ]
 
 
 class VoiceMessageSerializer(serializers.ModelSerializer):
@@ -93,13 +86,7 @@ class VoiceMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = ['id',
-                  'chat',
-                  'chat_url',
-                  'sender',
-                  # 'is_sender_me',
-                  'updated',
-                  'created'] + ['file_field', ]
+        fields = MessageSerializer.Meta.fields + ['file_field', ]
 
 
 class FileMessageSerializer(serializers.ModelSerializer):
@@ -119,13 +106,7 @@ class ImageMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
-        fields = ['id',
-                  'chat',
-                  'chat_url',
-                  'sender',
-                  # 'is_sender_me',
-                  'updated',
-                  'created'] + ['image_field', ]
+        fields = MessageSerializer.Meta.fields + ['image_field', ]
 
 
 class ProjectPolymorphicSerializer(PolymorphicSerializer):
