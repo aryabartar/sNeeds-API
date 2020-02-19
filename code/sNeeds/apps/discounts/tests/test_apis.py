@@ -176,8 +176,7 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_cart_consultant_discounts(self):
-        # Cart consultant discounts
+    def test_cart_consultant_discounts_list_number(self):
         CartConsultantDiscount.objects.create(
             cart=self.cart3,
             consultant_discount=self.consultant_discount2
@@ -189,7 +188,19 @@ class CartTests(APITestCase):
 
         response = client.get(url, {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         self.assertEqual(len(response.data), 1)
-
         self.assertEqual(response.data[0].get("cart"), self.cart_consultant_discount1.id)
+
+    def test_cart_consultant_discounts_list_get_query_parameter(self):
+        CartConsultantDiscount.objects.create(
+            cart=self.cart2,
+            consultant_discount=self.consultant_discount2
+        )
+
+        url = "/%s?%s=%i" % (reverse("discount:cart-consultant-discounts-list"), "cart" , self.cart_consultant_discount1.id)
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+        response = client.get(url, {}, format='json')
+
+        print(url)
+        print(response)
