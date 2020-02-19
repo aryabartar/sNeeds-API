@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
+from rest_polymorphic.serializers import PolymorphicSerializer
+
 from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
 
 
@@ -75,7 +77,13 @@ class TextMessageSerializer(MessageSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
-        fields = MessageSerializer.Meta.fields + ['text_message', ]
+        fields = ['id',
+                  'chat',
+                  'chat_url',
+                  'sender',
+                  # 'is_sender_me',
+                  'updated',
+                  'created'] + ['text_message', ]
 
 
 class VoiceMessageSerializer(serializers.ModelSerializer):
@@ -89,7 +97,7 @@ class VoiceMessageSerializer(serializers.ModelSerializer):
                   'chat',
                   'chat_url',
                   'sender',
-                  'is_sender_me',
+                  # 'is_sender_me',
                   'updated',
                   'created'] + ['file_field', ]
 
@@ -111,4 +119,20 @@ class ImageMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
-        fields = MessageSerializer.Meta.fields + ['image_field', ]
+        fields = ['id',
+                  'chat',
+                  'chat_url',
+                  'sender',
+                  # 'is_sender_me',
+                  'updated',
+                  'created'] + ['image_field', ]
+
+
+class ProjectPolymorphicSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        Message: MessageSerializer,
+        TextMessage: TextMessageSerializer,
+        VoiceMessage: VoiceMessageSerializer,
+        ImageMessage: ImageMessageSerializer,
+        FileMessage: FileMessageSerializer
+    }

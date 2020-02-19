@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
-from .serializers import (ChatSerializer, TextMessageSerializer, VoiceMessageSerializer, FileMessageSerializer, ImageMessageSerializer)
+from .serializers import ChatSerializer, ProjectPolymorphicSerializer
 
 
 class ChatListAPIView(generics.ListAPIView):
@@ -28,32 +28,11 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
 
 
-class MessageListAPIView(APIView):
+class MessageListAPIView(generics.ListAPIView):
     permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = ProjectPolymorphicSerializer
 
-    def get(self, request, *args, **kwargs):
-        chat_id = kwargs.get('id')
-        chat_obj = None
-
-        try:
-            chat_obj = Chat.objects.get(id=chat_id)
-        except:
-            return Response(data={"detail": "Not found."}, status=404)
-
-        message_qs = Message.objects.filter(chat=chat_obj).order_by('-created')
-
-        message_list = []
-
-        for obj in message_qs:
-            if isinstance(obj, TextMessage):
-                message_list.append(TextMessageSerializer(obj, context={"request": request}).data)
-            # elif isinstance(obj, VoiceMessage):
-            #     message_list.append(VoiceMessageSerializer(obj, context={"request": request}).data)
-            # elif isinstance(obj, FileMessage):
-            #     message_list.append(FileMessageSerializer(obj, context={"request": request}).data)
-            # elif isinstance(obj, ImageMessage):
-            #     message_list.append(ImageMessageSerializer(obj, context={"request": request}).data)
-
-        return Response(message_list, 200)
-
-
+    def get_queryset(self):
+        user = self.request.user
+        message_qs = Message.objects.filter(sender=user).order_by('-created')
+        return message_qs
