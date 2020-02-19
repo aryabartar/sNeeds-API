@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
-from .serializers import ChatSerializer, ProjectPolymorphicSerializer
+from .serializers import ChatSerializer, MessagePolymorphicSerializer
 
 
 class ChatListAPIView(generics.ListAPIView):
@@ -30,7 +30,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
 
 class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = ProjectPolymorphicSerializer
+    serializer_class = MessagePolymorphicSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -40,7 +40,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
 
 class MessageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated, )
-    serializer_class = ProjectPolymorphicSerializer
+    serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
 
     def get_queryset(self):

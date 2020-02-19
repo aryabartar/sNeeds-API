@@ -104,7 +104,7 @@ class ImageMessageSerializer(MessageSerializer):
         fields = MessageSerializer.Meta.fields + ['image_field', ]
 
 
-class ProjectPolymorphicSerializer(PolymorphicSerializer):
+class MessagePolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
         Message: MessageSerializer,
         TextMessage: TextMessageSerializer,
