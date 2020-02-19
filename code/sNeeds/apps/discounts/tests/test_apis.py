@@ -189,18 +189,26 @@ class CartTests(APITestCase):
         response = client.get(url, {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0].get("cart"), self.cart_consultant_discount1.id)
+        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
 
     def test_cart_consultant_discounts_list_get_query_parameter(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
         CartConsultantDiscount.objects.create(
             cart=self.cart2,
             consultant_discount=self.consultant_discount2
         )
+        # Test 1
+        url = reverse("discount:cart-consultant-discounts-list")
+        response = client.get(url, {}, format='json')
+        self.assertEqual(len(response.data), 2)
 
-        url = "/%s?%s=%i" % (reverse("discount:cart-consultant-discounts-list"), "cart" , self.cart_consultant_discount1.id)
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
+        # Test 2
+        url = "%s?%s=%i" % (
+            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.id)
         response = client.get(url, {}, format='json')
 
-        print(url)
-        print(response)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
