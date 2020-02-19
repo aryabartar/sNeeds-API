@@ -5,7 +5,7 @@ from rest_framework.response import Response
 
 from . import serializers
 from . import filtersets
-from .models import TimeSlotSale, SoldTimeSlotSale
+from .models import TimeSlotSale, SoldTimeSlotSale, Product
 from .permissions import (
     ConsultantPermission,
     TimeSlotSaleOwnerPermission,

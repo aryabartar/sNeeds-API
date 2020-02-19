@@ -8,6 +8,18 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 User = get_user_model()
 
 
+class ProductQuerySet(models.QuerySet):
+    def get_time_slot_sales(self):
+        result_qs = TimeSlotSale.objects.none()
+        for i in self.all():
+            try:
+                time_slot_sale = i.timeslotsale
+                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale)
+            except TimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
@@ -32,6 +44,8 @@ class TimeSlotSaleManager(models.QuerySet):
 
 class Product(models.Model):
     price = models.PositiveIntegerField()
+
+    objects = ProductQuerySet.as_manager()
 
 
 class AbstractTimeSlotSale(Product):
@@ -83,7 +97,7 @@ class TimeSlotSale(AbstractTimeSlotSale):
             raise ValidationError({
                 "start_time": _(
                     "Selected time cannot be chosen because "
-                    "the time you chose conflicts with other times you have chosen before: " +
+                    "the time you chose conflicts with your other time slot sales: " +
                     str(sessions_str)),
             })
 

@@ -11,13 +11,13 @@ class CartManager(models.QuerySet):
     def remove_product(self, product):
         qs = self._chain()
         for obj in qs:
-            obj.time_slot_sales.remove(product)
+            obj.products.remove(product)
         return qs
 
     @transaction.atomic
     def new_cart_with_products(self, products, **kwargs):
         obj = self.create(**kwargs)
-        obj.time_slot_sales.add(*products)
+        obj.products.add(*products)
         return obj
 
     @transaction.atomic
@@ -26,7 +26,7 @@ class CartManager(models.QuerySet):
 
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="cart")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     subtotal = models.IntegerField(default=0, blank=True)
     total = models.IntegerField(default=0, blank=True)
     products = models.ManyToManyField(TimeSlotSale, blank=True)
