@@ -10,7 +10,7 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
-from sNeeds.apps.discounts.models import ConsultantDiscount
+from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount
 from sNeeds.apps.store.models import TimeSlotSale
 
 User = get_user_model()
@@ -167,18 +167,29 @@ class CartTests(APITestCase):
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
+        # Cart consultant discounts
+        self.cart_consultant_discount1 = CartConsultantDiscount.objects.create(
+            cart=self.cart1,
+            consultant_discount=self.consultant_discount1
+        )
+
         # Setup ------
         self.client = APIClient()
 
-    def test_get_cart(self):
-        url = reverse("cart:cart-list")
+    def test_cart_consultant_discounts(self):
+        # Cart consultant discounts
+        CartConsultantDiscount.objects.create(
+            cart=self.cart3,
+            consultant_discount=self.consultant_discount2
+        )
+
+        url = reverse("discount:cart-consultant-discounts-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        for item in response.data:
-            self.assertEqual(item.get("user"), self.user1.id)
+        self.assertEqual(len(response.data), 1)
 
-        self.assertEqual(len(response.data), Cart.objects.filter(user=self.user1).count())
+        self.assertEqual(response.data[0].get("cart"), self.cart_consultant_discount1.id)

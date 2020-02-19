@@ -30,7 +30,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartConsultantDiscount
-        fields = ['id', 'consultant_discount', 'url', 'code', ]
+        fields = ['id', 'consultant_discount','cart', 'url', 'code', ]
 
     def get_consultant_discount(self, obj):
         consultant_discount_serialize = ConsultantDiscountSerializer(obj.consultant_discount)
