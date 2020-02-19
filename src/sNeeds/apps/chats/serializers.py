@@ -31,6 +31,9 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MessageSerializer(serializers.ModelSerializer):
+    chat_url = serializers.HyperlinkedRelatedField(
+        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
+    )
     is_sender_me = serializers.SerializerMethodField()
 
     class Meta:
@@ -70,9 +73,6 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class TextMessageSerializer(MessageSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(
-        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
-    )
 
     class Meta(MessageSerializer.Meta):
         model = TextMessage
@@ -80,9 +80,6 @@ class TextMessageSerializer(MessageSerializer):
 
 
 class VoiceMessageSerializer(MessageSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(
-        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
-    )
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
@@ -90,9 +87,6 @@ class VoiceMessageSerializer(MessageSerializer):
 
 
 class FileMessageSerializer(MessageSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(
-        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
-    )
 
     class Meta(MessageSerializer.Meta):
         model = FileMessage
@@ -100,9 +94,6 @@ class FileMessageSerializer(MessageSerializer):
 
 
 class ImageMessageSerializer(MessageSerializer):
-    chat_url = serializers.HyperlinkedRelatedField(
-        view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
-    )
 
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
