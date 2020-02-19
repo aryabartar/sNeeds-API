@@ -33,16 +33,22 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = ['id', 'chat', 'chat_url', 'sender', 'is_sender_me',  'updated', 'created']
+        fields = ['id',
+                  'chat',
+                  'chat_url',
+                  'sender',
+                  'is_sender_me',
+                  'updated',
+                  'created']
         extra_kwargs = {
             'sender': {'read_only': True},
         }
 
-    def get_is_sender_me(self):
+    def get_is_sender_me(self, obj):
         request = self.get("request")
         user = request.user
         print(self.data)
-        return 11
+        return True
 
     def validate(self, attrs):
         request = self.context.get('request')
@@ -62,7 +68,7 @@ class MessageSerializer(serializers.ModelSerializer):
         return obj
 
 
-class TextMessageSerializer(serializers.ModelSerializer):
+class TextMessageSerializer(MessageSerializer):
     chat_url = serializers.HyperlinkedRelatedField(
         view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
     )
@@ -79,7 +85,13 @@ class VoiceMessageSerializer(serializers.ModelSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = MessageSerializer.Meta.fields + ['file_field', ]
+        fields = ['id',
+                  'chat',
+                  'chat_url',
+                  'sender',
+                  'is_sender_me',
+                  'updated',
+                  'created'] + ['file_field', ]
 
 
 class FileMessageSerializer(serializers.ModelSerializer):
