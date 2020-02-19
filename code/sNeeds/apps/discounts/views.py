@@ -16,6 +16,7 @@ class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
 class CartConsultantDiscountListView(generics.ListCreateAPIView):
     serializer_class = CartConsultantDiscountSerializer
     permission_classes = [CartConsultantDiscountPermission, permissions.IsAuthenticated]
+    filterset_fields = ('cart',)
 
     def get_queryset(self):
         user = self.request.user

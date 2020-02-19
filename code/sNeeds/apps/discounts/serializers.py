@@ -14,7 +14,7 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
 class ConsultantDiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultantDiscount
-        fields = ['consultant', 'percent', ]
+        fields = ['consultants', 'percent', ]
 
 
 class CartConsultantDiscountSerializer(serializers.ModelSerializer):
@@ -82,9 +82,10 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             for consultant in applied_discount_consultants:
                 if discount.consultant.filter(id=consultant.id):
                     raise ValidationError({
-                        "detail": _("You already have used a discount for consultant %(number)d " %{'number': consultant.id}),
+                        "detail": _(
+                            "You already have used a discount for consultant %(number)d " % {'number': consultant.id}),
                         "consultant_id": consultant.id
-                        }
+                    }
                     )
 
         return code

@@ -59,8 +59,11 @@ def validate_consultant_discount(discount):
 
 class CartConsultantDiscount(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, )
-    consultant_discount = models.ForeignKey(ConsultantDiscount, on_delete=models.CASCADE,
-                                            validators=[validate_consultant_discount])
+    consultant_discount = models.ForeignKey(
+        ConsultantDiscount,
+        on_delete=models.CASCADE,
+        validators=[validate_consultant_discount],
+    )
 
     class Meta:
         unique_together = (("cart", "consultant_discount"),)
