@@ -34,6 +34,9 @@ class MessageSerializer(serializers.ModelSerializer):
     chat_url = serializers.HyperlinkedRelatedField(
         view_name="chat:chat-detail", source='chat', lookup_field='id', read_only=True
     )
+    message_url = serializers.HyperlinkedIdentityField(
+        view_name="chat:message-detail", source='chat', lookup_field='id', read_only=True
+    )
     is_sender_me = serializers.SerializerMethodField()
 
     class Meta:
@@ -41,6 +44,7 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = ['id',
                   'chat',
                   'chat_url',
+                  'message_url',
                   'sender',
                   'is_sender_me',
                   'updated',

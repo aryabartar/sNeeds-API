@@ -36,3 +36,14 @@ class MessageListAPIView(generics.ListCreateAPIView):
         user = self.request.user
         message_qs = Message.objects.filter(sender=user).order_by('-created')
         return message_qs
+
+
+class MessageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.IsAuthenticated, )
+    serializer_class = ProjectPolymorphicSerializer
+    lookup_field = 'id'
+
+    def get_queryset(self):
+        user = self.request.user
+        message_qs = Message.objects.filter(sender=user).order_by('-created')
+        return message_qs
