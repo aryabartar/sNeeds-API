@@ -28,7 +28,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
 
 
-class MessageListAPIView(generics.ListAPIView):
+class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = ProjectPolymorphicSerializer
 
