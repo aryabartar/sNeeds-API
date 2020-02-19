@@ -206,9 +206,20 @@ class CartTests(APITestCase):
 
         # Test 2
         url = "%s?%s=%i" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.id)
+            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.cart.id)
         response = client.get(url, {}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get("cart"), self.cart1.id)
+
+    def test_cart_consultant_discounts_list_get_query_parameter_permission(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = "%s?%s=%s" % (
+            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
+        response = client.get(url, {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
