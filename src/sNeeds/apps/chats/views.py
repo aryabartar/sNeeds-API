@@ -38,7 +38,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
         return message_qs
 
 
-class MessageDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+class MessageDetailAPIView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated, )
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
