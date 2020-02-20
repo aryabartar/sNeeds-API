@@ -175,8 +175,8 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         self.assertEqual(
-            [i.id for i in products],
-            response.data.get("products")
+            [i.id for i in products].sort(),
+            response.data.get("products").sort()
         )
 
     def test_post_cart_not_pass_time_conflict(self):

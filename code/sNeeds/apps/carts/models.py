@@ -2,7 +2,7 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 
 User = get_user_model()
 
@@ -29,7 +29,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     subtotal = models.IntegerField(default=0, blank=True)
     total = models.IntegerField(default=0, blank=True)
-    products = models.ManyToManyField(TimeSlotSale, blank=True)
+    products = models.ManyToManyField(Product, blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
