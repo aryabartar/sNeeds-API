@@ -36,8 +36,8 @@ class Cart(models.Model):
 
     objects = CartManager.as_manager()
 
-    def get_products_count(self):
-        return self.products.all().count()
+    def get_time_slot_sales_count(self):
+        return self.products.all().get_time_slot_sales().count()
 
     def _update_total_cart_consultant_discount_percent(self):
         from sNeeds.apps.discounts.models import CartConsultantDiscount
@@ -68,7 +68,7 @@ class Cart(models.Model):
     def _update_total_time_slot_number(self):
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
-        time_slot_sale_count = self.get_products_count()
+        time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
         self.total = self.total * ((100.0 - count_discount) / 100)
 

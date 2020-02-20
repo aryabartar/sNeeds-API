@@ -10,7 +10,7 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount
+from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
 
@@ -357,7 +357,7 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("cart"), self.cart_consultant_discount1.cart.id)
 
-    def test_cart_consultant_discount_detail_get_permission(self):
+    def test_cart_consultant_discount_detail_get_no_permission(self):
         client = self.client
         client.login(email='u2@g.com', password='user1234')
 
@@ -378,4 +378,48 @@ class CartTests(APITestCase):
 
         url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
         response = client.delete(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_cart_consultant_discount_detail_delete_no_permission(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_cart_consultant_discount_detail_delete_unauthorized(self):
+        client = self.client
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cart_consultant_discount_delete_updates_cart_total_subtotal(self):
+        self.assertEqual(self.cart1.total, 180)
+        self.assertEqual(self.cart1.subtotal, 200)
+        self.cart_consultant_discount1.delete()
+        self.assertEqual(self.cart1.total, 200)
+        self.assertEqual(self.cart1.total, 200)
+
+    def test_cart_consultant_discount_delete_updates_cart_total_subtotal(self):
+        self.assertEqual(self.cart1.total, 180)
+        self.assertEqual(self.cart1.subtotal, 200)
+        self.cart_consultant_discount1.delete()
+        self.assertEqual(self.cart1.total, 200)
+        self.assertEqual(self.cart1.total, 200)
+
+    def test_time_slot_sale_number_discount_correct_cart_total_subtotal(self):
+        self.assertEqual(self.cart1.total, 180)
+        self.assertEqual(self.cart1.subtotal, 200)
+
+        self.time_slot_sale_number_discount_1 = TimeSlotSaleNumberDiscount.objects.create(
+            number=2,
+            discount=50
+        )
+
+        self.assertEqual(Cart.objects.get(id=self.cart1.id).total, 90)
+        self.assertEqual(Cart.objects.get(id=self.cart1.id).subtotal, 200)

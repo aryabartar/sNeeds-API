@@ -13,6 +13,7 @@ def post_save_time_slot_sale_number_discount(sender, instance, *args, **kwargs):
     for obj in qs:
         obj.update_price()
 
+
 def post_delete_time_slot_sale_number_discount(sender, instance, *args, **kwargs):
     qs = Cart.objects.all()
     for obj in qs:
