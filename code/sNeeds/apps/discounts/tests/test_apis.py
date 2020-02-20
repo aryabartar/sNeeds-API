@@ -268,48 +268,31 @@ class CartTests(APITestCase):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
+        temp_cart = Cart.objects.create(user=self.user1)
+        temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
+
         temp_consultant_discount = ConsultantDiscount.objects.create(
             percent=20,
             code="temp_consultant_discount",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
         )
-        temp_consultant_discount.consultants.set([self.consultant2_profile, ])
+        temp_consultant_discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         url = reverse("discount:cart-consultant-discounts-list")
         post_data = {
-            "cart": self.cart2.id,
+            "cart": temp_cart.id,
             "code": temp_consultant_discount.code
         }
 
         response = client.post(url, post_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        url = reverse("cart:cart-detail", args=(temp_cart.id,))
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print(response.data.get("total"))
+        print(response.data.get("subtotal"))
+        # self.assertEqual(response.data.get("total"))
 
 
-    # def test_cart_consultant_discount_post_correct_price(self):
-    #     client = self.client
-    #     client.login(email='u1@g.com', password='user1234')
-    #
-    #     temp_cart = Cart.objects.create(user=self.user1)
-    #
-    #
-    #
-    #
-    #
-    #     temp_consultant_discount = ConsultantDiscount.objects.create(
-    #         percent=20,
-    #         code="temp_consultant_discount",
-    #         start_time=timezone.now(),
-    #         end_time=timezone.now() + timezone.timedelta(days=1),
-    #         active=True
-    #     )
-    #     temp_consultant_discount.consultants.set([self.consultant2_profile, ])
-    #
-    #     url = reverse("discount:cart-consultant-discounts-list")
-    #     post_data = {
-    #         "cart": self.cart2.id,
-    #         "code": temp_consultant_discount.code
-    #     }
-    #
-    #     response = client.post(url, post_data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

@@ -51,17 +51,11 @@ class ConsultantDiscount(models.Model):
             raise ValidationError("Start time should be after End time.")
 
 
-def validate_consultant_discount(discount):
-    if not ConsultantDiscount.objects.get(id=discount).active:
-        raise ValidationError("Discount {} doesn't exist.".format(discount))
-
-
 class CartConsultantDiscount(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, )
     consultant_discount = models.ForeignKey(
         ConsultantDiscount,
         on_delete=models.CASCADE,
-        validators=[validate_consultant_discount],
     )
 
     class Meta:
