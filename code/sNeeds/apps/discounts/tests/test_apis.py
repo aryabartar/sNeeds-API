@@ -371,3 +371,11 @@ class CartTests(APITestCase):
         url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_cart_consultant_discount_detail_delete(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
