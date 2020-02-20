@@ -43,18 +43,24 @@ class Cart(models.Model):
         from sNeeds.apps.discounts.models import CartConsultantDiscount
 
         products = self.products.all()
-        cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
+        try:
+            cart_consultant_discount = CartConsultantDiscount.objects.get(cart__id=self.id)
+        except CartConsultantDiscount.DoesNotExist:
+            self.total = self.subtotal
+            return
 
         total = 0
         for product in products:
             percent = 0
-            for obj in cart_consultant_discount_qs:
 
-                # For TimeSlots
-                if isinstance(product, TimeSlotSale):
-                    consultants_qs = obj.consultant_discount.consultants.all()
-                    if product.timeslotsale.consultant in consultants_qs:
-                        percent += obj.consultant_discount.percent
+            # For TimeSlots
+            try:
+                time_slot_sale = product.timeslotsale # Checks here
+                consultants_qs = cart_consultant_discount.consultant_discount.consultants.all()
+                if time_slot_sale.consultant in consultants_qs:
+                    percent += cart_consultant_discount.consultant_discount.percent
+            except TimeSlotSale.DoesNotExist:
+                pass
 
             total += product.price * ((100.0 - percent) / 100)
         self.total = total

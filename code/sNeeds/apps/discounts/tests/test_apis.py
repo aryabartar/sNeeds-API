@@ -294,5 +294,3 @@ class CartTests(APITestCase):
         print(response.data.get("total"))
         print(response.data.get("subtotal"))
         # self.assertEqual(response.data.get("total"))
-
-
