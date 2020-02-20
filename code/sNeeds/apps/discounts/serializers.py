@@ -49,20 +49,18 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         cart = attrs.get("cart")
 
         # Checking that discount is applied in the cart
-        qs = CartConsultantDiscount.objects.filter(cart=cart,)
+        qs = CartConsultantDiscount.objects.filter(cart=cart, )
         if qs.exists():
             raise ValidationError(_("This cart has an active code"))
 
         # Checking that user has bought a session with the code's consultant or not
         discount = ConsultantDiscount.objects.get(code=attrs.get("consultant_discount").get("code"))
-        discount_consultants = discount.consultants.all()
-        from sNeeds.apps.carts.models import Cart
-        cart_time_slot_sales = cart.products.all().get_time_slot_sales()
-
-
-
-        if not exist:
-            raise ValidationError(_("You don't have any session with the consultants of discount"))
+        discount_consultants_id = list(discount.consultants.all().values_list('id', flat=True))
+        cart_products_consultants_id = list(
+            cart.products.all().get_time_slot_sales().values_list('consultant', flat=True)
+        )
+        if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))):
+            raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
         return attrs
 

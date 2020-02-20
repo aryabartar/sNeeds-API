@@ -41,6 +41,8 @@ class TimeSlotSaleManager(models.QuerySet):
 
         return sold_tome_slot_sales_list
 
+    # def get_consultants(self):
+    #     self._chain()
 
 class Product(models.Model):
     price = models.PositiveIntegerField()
