@@ -416,10 +416,17 @@ class CartTests(APITestCase):
         self.assertEqual(self.cart1.total, 180)
         self.assertEqual(self.cart1.subtotal, 200)
 
-        self.time_slot_sale_number_discount_1 = TimeSlotSaleNumberDiscount.objects.create(
+        time_slot_sale_number_discount_1 = TimeSlotSaleNumberDiscount.objects.create(
             number=2,
             discount=50
         )
 
+        # self.cart was not updating!
         self.assertEqual(Cart.objects.get(id=self.cart1.id).total, 90)
+        self.assertEqual(Cart.objects.get(id=self.cart1.id).subtotal, 200)
+
+        time_slot_sale_number_discount_1.delete()
+
+        # self.cart was not updating!
+        self.assertEqual(Cart.objects.get(id=self.cart1.id).total, 180)
         self.assertEqual(Cart.objects.get(id=self.cart1.id).subtotal, 200)
