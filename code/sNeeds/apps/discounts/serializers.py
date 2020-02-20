@@ -57,8 +57,8 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         discount = ConsultantDiscount.objects.get(code=attrs.get("consultant_discount").get("code"))
         discount_consultants = discount.consultants.all()
         from sNeeds.apps.carts.models import Cart
-        Cart
-        cart.products.al
+        cart_time_slot_sales = cart.products.all().get_time_slot_sales()
+
 
 
         if not exist:
