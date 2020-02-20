@@ -356,4 +356,18 @@ class CartTests(APITestCase):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("cart"), self.cart_consultant_discount1.cart.id)
-        self.assertEqual(response.data.get("consultant_discount"), self.cart_consultant_discount1.consultant_discount.id)
+
+    def test_cart_consultant_discount_detail_get_permission(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_cart_consultant_discount_detail_get_unauthorized(self):
+        client = self.client
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
