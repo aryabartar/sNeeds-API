@@ -11,6 +11,7 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount
+from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
 
 User = get_user_model()
@@ -224,3 +225,19 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
+    def test_cart_post(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discounts-list")
+        post_data = {
+            "cart": self.cart2.id,
+            "code": self.consultant_discount1.code
+        }
+        response = client.post(url, post_data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['cart'], self.cart2.id)
+        self.assertEqual(response.data['code'], self.consultant_discount1.code)
+        self.assertDictEqual(response.data['consultant_discount'],
+                             ConsultantDiscountSerializer(self.consultant_discount1).data)

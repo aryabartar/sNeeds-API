@@ -59,7 +59,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         cart_products_consultants_id = list(
             cart.products.all().get_time_slot_sales().values_list('consultant', flat=True)
         )
-        if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))):
+        if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
         return attrs

@@ -8,8 +8,8 @@ from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount
 from sNeeds.apps.store.models import TimeSlotSale
 
 User = get_user_model()
@@ -147,156 +147,92 @@ class CartTests(APITestCase):
         self.cart3 = Cart.objects.create(user=self.user2)
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
+        # Consultant discounts
+        self.consultant_discount1 = ConsultantDiscount.objects.create(
+            percent=10,
+            code="discountcode1",
+            start_time=timezone.now(),
+            end_time=timezone.now() + timezone.timedelta(days=1),
+            active=True
+        )
+        self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
+
+        self.consultant_discount2 = ConsultantDiscount.objects.create(
+            percent=20,
+            code="discountcode2",
+            start_time=timezone.now(),
+            end_time=timezone.now() + timezone.timedelta(days=1),
+            active=True
+        )
+        self.consultant_discount2.consultants.set([self.consultant1_profile, ])
+
+        # Cart consultant discounts
+        self.cart_consultant_discount1 = CartConsultantDiscount.objects.create(
+            cart=self.cart1,
+            consultant_discount=self.consultant_discount1
+        )
+
         # Setup ------
         self.client = APIClient()
 
-    def test_get_cart(self):
-        url = reverse("cart:cart-list")
+    def test_cart_consultant_discounts_list_number(self):
+        CartConsultantDiscount.objects.create(
+            cart=self.cart3,
+            consultant_discount=self.consultant_discount2
+        )
+
+        url = reverse("discount:cart-consultant-discounts-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, {}, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
 
-        for item in response.data:
-            self.assertEqual(item.get("user"), self.user1.id)
-
-        self.assertEqual(len(response.data), Cart.objects.filter(user=self.user1).count())
-
-    def test_post_cart_pass(self):
-        url = reverse("cart:cart-list")
+    def test_cart_consultant_discounts_list_get_query_parameter(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
-        data = {"products": [i.id for i in products], }
-        response = client.post(url, data=data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-        self.assertListEqual(
-            [i.id for i in products],
-            response.data.get("products")
+        CartConsultantDiscount.objects.create(
+            cart=self.cart2,
+            consultant_discount=self.consultant_discount2
         )
-
-    def test_post_cart_not_pass_time_conflict(self):
-        url = reverse("cart:cart-list")
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
         # Test 1
-        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale4]
-        data = {"products": [i.id for i in products]}
-        response = client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        url = reverse("discount:cart-consultant-discounts-list")
+        response = client.get(url, {}, format='json')
+        self.assertEqual(len(response.data), 2)
 
         # Test 2
-        self.temp_time_slot_sale = TimeSlotSale.objects.create(
-            consultant=self.consultant2_profile,
-            start_time=timezone.now() + timezone.timedelta(hours=2, minutes=2),
-            end_time=timezone.now() + timezone.timedelta(hours=2, minutes=10),
-            price=self.consultant2_profile.time_slot_price
-        )
-        products = [self.time_slot_sale2, self.temp_time_slot_sale]
-        data = {"products": [i.id for i in products]}
-        response = client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.temp_time_slot_sale.delete()
-
-        # Test 3
-        self.temp_time_slot_sale = TimeSlotSale.objects.create(
-            consultant=self.consultant2_profile,
-            start_time=timezone.now() + timezone.timedelta(hours=2, minutes=5),
-            end_time=timezone.now() + timezone.timedelta(hours=3, minutes=5),
-            price=self.consultant2_profile.time_slot_price
-        )
-        products = [self.time_slot_sale2, self.temp_time_slot_sale]
-        data = {"products": [i.id for i in products]}
-        response = client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.temp_time_slot_sale.delete()
-
-        # Test 4
-        self.temp_time_slot_sale = TimeSlotSale.objects.create(
-            consultant=self.consultant1_profile,
-            start_time=timezone.now() + timezone.timedelta(hours=6, minutes=50),
-            end_time=timezone.now() + timezone.timedelta(hours=7, minutes=50),
-            price=self.consultant1_profile.time_slot_price
-        )
-        products = [self.time_slot_sale5, self.temp_time_slot_sale]
-        data = {"products": [i.id for i in products]}
-        response = client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.temp_time_slot_sale.delete()
-
-    def test_get_cart_authorization(self):
-        url = reverse("cart:cart-list")
-        client = self.client
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_post_cart_authorization(self):
-        url = reverse("cart:cart-list")
-        client = self.client
-        response = client.post(url, data={}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_cart_price_validity(self):
-        url = reverse("cart:cart-list")
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
-        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5]
-        data = {"products": [i.id for i in products], }
-        response = client.post(url, data=data, format='json')
-
-        expected_price = 0
-        for t in products:
-            expected_price += t.price
-
-        # After creation
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data.get("total"), expected_price)
-        self.assertEqual(response.data.get("subtotal"), expected_price)
-
-        # After deleting one product
-        new_cart_id = response.data.get("id")
-        url = reverse("cart:cart-detail", args=(new_cart_id,))
-        deleted_product = products.pop(0)
-        expected_price -= deleted_product.price
-        deleted_product.delete()
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get("total"), expected_price)
-        self.assertEqual(response.data.get("subtotal"), expected_price)
-
-    def test_empty_cart_creation_error(self):
-        url = reverse("cart:cart-list")
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
-        data = {"products": [], }
-        response = client.post(url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_other_user_cart_access_denied(self):
-        cart = self.cart3
-        url = reverse("cart:cart-detail", args=(cart.id,))
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_cart_detail(self):
-        cart = self.cart1
-        url = reverse("cart:cart-detail", args=(cart.id,))
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
-        response = client.get(url, format='json')
+        url = "%s?%s=%i" % (
+            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.cart.id)
+        response = client.get(url, {}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(cart.total, response.data.get("total"))
-        self.assertEqual(cart.subtotal, response.data.get("subtotal"))
-        self.assertEqual([p.id for p in cart.products.all()].sort(), response.data.get("products").sort())
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
+
+    def test_cart_consultant_discounts_list_get_query_parameter_permission(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = "%s?%s=%s" % (
+            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
+        response = client.get(url, {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    # TODO: Working properly
+    def test_cart_post(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = "%s?%s=%s" % (
+            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
+        response = client.get(url, {}, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_cart_post(self):
