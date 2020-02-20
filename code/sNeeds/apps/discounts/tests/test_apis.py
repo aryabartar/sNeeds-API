@@ -225,7 +225,7 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-    def test_cart_post(self):
+    def test_cart_consultant_discount_post(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -241,3 +241,15 @@ class CartTests(APITestCase):
         self.assertEqual(response.data['code'], self.consultant_discount1.code)
         self.assertDictEqual(response.data['consultant_discount'],
                              ConsultantDiscountSerializer(self.consultant_discount1).data)
+
+    def test_cart_consultant_discount_post_fail(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discounts-list")
+        post_data = {
+            "cart": self.cart3.id,
+            "code": self.consultant_discount1.code
+        }
+        response = client.post(url, post_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
