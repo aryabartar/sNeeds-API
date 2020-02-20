@@ -155,7 +155,6 @@ class CartTests(APITestCase):
             code="discountcode1",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
-            active=True
         )
         self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
@@ -164,7 +163,6 @@ class CartTests(APITestCase):
             code="discountcode2",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
-            active=True
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
@@ -275,7 +273,6 @@ class CartTests(APITestCase):
             code="temp_consultant_discount",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
-            active=True
         )
         temp_consultant_discount.consultants.set([self.consultant2_profile, ])
 
@@ -286,5 +283,33 @@ class CartTests(APITestCase):
         }
 
         response = client.post(url, post_data, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+    # def test_cart_consultant_discount_post_correct_price(self):
+    #     client = self.client
+    #     client.login(email='u1@g.com', password='user1234')
+    #
+    #     temp_cart = Cart.objects.create(user=self.user1)
+    #
+    #
+    #
+    #
+    #
+    #     temp_consultant_discount = ConsultantDiscount.objects.create(
+    #         percent=20,
+    #         code="temp_consultant_discount",
+    #         start_time=timezone.now(),
+    #         end_time=timezone.now() + timezone.timedelta(days=1),
+    #         active=True
+    #     )
+    #     temp_consultant_discount.consultants.set([self.consultant2_profile, ])
+    #
+    #     url = reverse("discount:cart-consultant-discounts-list")
+    #     post_data = {
+    #         "cart": self.cart2.id,
+    #         "code": temp_consultant_discount.code
+    #     }
+    #
+    #     response = client.post(url, post_data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

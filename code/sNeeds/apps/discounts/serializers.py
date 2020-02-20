@@ -39,7 +39,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     def validate_code(self, code):
         # Checking that code is valid and active
         try:
-            ConsultantDiscount.objects.get(code__iexact=code, active=True)
+            ConsultantDiscount.objects.get(code__iexact=code)
         except ConsultantDiscount.DoesNotExist:
             raise ValidationError(_("Code is not valid"))
 
