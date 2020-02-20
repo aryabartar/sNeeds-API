@@ -277,7 +277,7 @@ class CartTests(APITestCase):
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
         )
-        temp_consultant_discount.consultants.set([elf.consultant2_profile])
+        temp_consultant_discount.consultants.set([self.consultant2_profile])
 
         url = reverse("discount:cart-consultant-discounts-list")
         post_data = {
@@ -347,3 +347,13 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get("total"), 160)
         self.assertEqual(response.data.get("subtotal"), 180)
+
+    def test_cart_consultant_discount_detail_get(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get("cart"), self.cart_consultant_discount1.cart.id)
+        self.assertEqual(response.data.get("consultant_discount"), self.cart_consultant_discount1.consultant_discount.id)
