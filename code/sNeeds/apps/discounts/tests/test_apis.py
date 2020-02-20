@@ -264,7 +264,31 @@ class CartTests(APITestCase):
         response = client.post(url, post_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_cart_consultant_discount_post_fail_no_relevant_product_in_cart_1(self):
+    def test_cart_consultant_discount_post_fail_no_relevant_product_in_cart(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        temp_cart = Cart.objects.create(user=self.user1)
+        temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
+
+        temp_consultant_discount = ConsultantDiscount.objects.create(
+            percent=20,
+            code="temp_consultant_discount",
+            start_time=timezone.now(),
+            end_time=timezone.now() + timezone.timedelta(days=1),
+        )
+        temp_consultant_discount.consultants.set([elf.consultant2_profile])
+
+        url = reverse("discount:cart-consultant-discounts-list")
+        post_data = {
+            "cart": temp_cart.id,
+            "code": temp_consultant_discount.code
+        }
+
+        response = client.post(url, post_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_cart_consultant_discount_correct_total_subtotal_update_1(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -294,7 +318,7 @@ class CartTests(APITestCase):
         self.assertEqual(response.data.get("total"), 160)
         self.assertEqual(response.data.get("subtotal"), 200)
 
-    def test_cart_consultant_discount_post_fail_no_relevant_product_in_cart_2(self):
+    def test_cart_consultant_discount_correct_total_subtotal_update_2(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
