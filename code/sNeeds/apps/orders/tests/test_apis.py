@@ -1,3 +1,5 @@
+import json
+
 from django.utils import timezone
 import time
 
@@ -263,13 +265,9 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, format='json')
-        print(response.data)
+        print(json.dumps(response.data, indent=3))
 
-    [OrderedDict(
-        [('id', 2), ('url', 'http://testserver/order/orders/2/'), ('order_id', 'uc2pxpq481'), ('status', 'paid'),
-         ('total', 200)]), OrderedDict(
-        [('id', 1), ('url', 'http://testserver/order/orders/1/'), ('order_id', 'k36vm9wkny'), ('status', 'paid'),
-         ('total', 180)])]
+
     # def test_selling_cart_works(self):
     #     client = self.client
     #     client.login(email='u1@g.com', password='user1234')

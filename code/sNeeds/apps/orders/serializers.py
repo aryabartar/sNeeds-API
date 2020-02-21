@@ -6,17 +6,18 @@ from .models import Order
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
+from ..store.serializers import SoldTimeSlotSaleSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
-    cart = CartSerializer(read_only=True)
-    # sold_products = serializers.
+    sold_time_slot_sales = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_products', 'created', 'updated',
+        fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_time_slot_sales', 'created', 'updated',
                   'used_consultant_discount', 'time_slot_sales_number_discount', ]
+
         extra_kwargs = {
             'id': {'read_only': True},
             'order_id': {'read_only': True},
@@ -29,8 +30,11 @@ class OrderSerializer(serializers.ModelSerializer):
             'updated': {'read_only': True},
         }
 
-    def get_sold_products(self):
-        pass
+    def get_sold_time_slot_sales(self, obj):
+        sold_time_slot_sales = obj.sold_products.all().get_sold_time_slot_sales()
+        return SoldTimeSlotSaleSerializer(
+            sold_time_slot_sales, many=True, context={"request": self.context.get("request")}
+        ).data
 
     def validate(self, attrs):
         user = self.context.get('request', None).user
