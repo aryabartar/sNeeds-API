@@ -19,16 +19,21 @@ class OrderManager(models.Manager):
     @transaction.atomic
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()
-        time_slot_sales_qs = cart_products.objects.get_time_slot_sales()
-        sold_time_slot_sales_qs = time_slot_sales_qs.objects.set_time_slot_sold()
+        time_slot_sales_qs = cart_products.get_time_slot_sales()
+        sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
 
         order = Order(
+            user = cart.user,
             status='paid',
             total=cart.total,
             subtotal=cart.subtotal
         )
-        order.sold_products.set(sold_time_slot_sales_qs)
+        print("HERE")
+        print(sold_time_slot_sales_qs)
         order.save()
+        order.sold_products.add(sold_time_slot_sales_qs)
+
+        cart.delete()
         return order
 
 

@@ -91,7 +91,7 @@ class VerifyTest(APIView):
     def get(self, request):
         cart_id = request.query_params.get("id")
         print(Cart.objects.all())
-        Order.objects.sell_order(Cart.objects.get(id=19))
+        Order.objects.sell_cart_create_order(Cart.objects.get(id=19))
         return HttpResponse()
         # client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
         #

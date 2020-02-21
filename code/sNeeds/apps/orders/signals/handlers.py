@@ -18,13 +18,4 @@ def post_save_cart_total(sender, instance, created, *args, **kwargs):
             obj.update_total()
 
 
-def post_save_order(sender, instance, created, *args, **kwargs):
-    if created:
-        instance.update_total()
-
-
 pre_save.connect(pre_save_create_order_id, sender=Order)
-
-post_save.connect(post_save_order, sender=Order)
-post_save.connect(post_save_cart_total, sender=Cart)
-

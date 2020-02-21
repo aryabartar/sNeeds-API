@@ -118,6 +118,7 @@ class SoldProduct(models.Model):
 
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
