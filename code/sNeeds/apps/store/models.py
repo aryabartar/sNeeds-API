@@ -20,6 +20,18 @@ class ProductQuerySet(models.QuerySet):
         return result_qs
 
 
+class SoldProductQuerySet(models.QuerySet):
+    def get_sold_time_slot_sales(self):
+        result_qs = SoldTimeSlotSale.objects.none()
+        for i in self.all():
+            try:
+                sold_time_slot_sale = i.soldtimeslotsale
+                result_qs |= SoldTimeSlotSale.objects.filter(pk=sold_time_slot_sale.id)
+            except SoldTimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
@@ -125,6 +137,8 @@ class SoldTimeSlotSale(SoldProduct):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
+    objects = SoldProductQuerySet.as_manager()
 
     def clean(self, *args, **kwargs):
         # Check 1

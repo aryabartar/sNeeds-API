@@ -13,7 +13,7 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 
 User = get_user_model()
 
@@ -205,11 +205,45 @@ class CartTests(APITestCase):
         self.assertEqual(has_common_time_slot_sales, False)
 
     def test_selling_cart_works(self):
-        class TempTimeSlotHolder:
-            def __init__(self, user price, start_time, ):
-                self.name = name
-                self.age = age
+        class TempTimeSlotSale:
+            def __init__(self, consultant, price, start_time, end_time):
+                self.consultant = consultant
+                self.price = price
+                self.start_time = start_time
+                self.end_time = end_time
 
+        cart1_time_slot_sales_qs = self.cart1.products.all()
+
+        cart1_temp_time_slot_sales_list = []
+        for obj in cart1_time_slot_sales_qs:
+            temp_time_slot_sales_list.append(
+                TempTimeSlotSale(obj.consultant, obj.price, obj.start_time, obj.end_time)
+            )
+
+        try:
+            cart1_consultant_discount = CartConsultantDiscount.objects.get(cart=self.cart1)
+        except CartConsultantDiscount.DoesNotExist:
+            cart1_consultant_discount = None
+
+        cart1_time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(
+            number=self.cart1.products.all().get_time_slot_sales()
+        )
+
+        Order.objects.sell_cart_create_order(self.cart1)
+
+        order_sold_products =
+
+        for obj in temp_time_slot_sales_list:
+            self.assertEqual(
+                SoldTimeSlotSale.objects.filter(
+                    consultant=obj.consultant,
+                    price=obj.price,
+                    start_time=obj.start_time,
+                    end_time=obj.end_time,
+                    sold_to=self.user1
+                ).count(),
+                1
+            )
 
         TimeSlotSale
         Cart
@@ -243,7 +277,6 @@ class CartTests(APITestCase):
             has_common_time_slot_sales = True
 
         self.assertEqual(has_common_time_slot_sales, False)
-
 
     # def test_selling_cart_works(self):
     #     client = self.client
