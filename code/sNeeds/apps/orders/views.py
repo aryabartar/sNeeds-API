@@ -14,7 +14,7 @@ class OrderListView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Order.objects.filter(cart__user=user)
+        qs = Order.objects.filter(user=user)
         return qs
 
 

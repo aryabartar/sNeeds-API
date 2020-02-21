@@ -254,6 +254,22 @@ class CartTests(APITestCase):
         self.assertEqual(order.total, cart1_total)
         self.assertEqual(order.subtotal, cart1_subtotal)
 
+    def test_orders_list_get_pass(self):
+        order1 = Order.objects.sell_cart_create_order(self.cart1)
+        order2 = Order.objects.sell_cart_create_order(self.cart2)
+
+        url = reverse("order:order-list",)
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        response = client.get(url, format='json')
+        print(response.data)
+
+    [OrderedDict(
+        [('id', 2), ('url', 'http://testserver/order/orders/2/'), ('order_id', 'uc2pxpq481'), ('status', 'paid'),
+         ('total', 200)]), OrderedDict(
+        [('id', 1), ('url', 'http://testserver/order/orders/1/'), ('order_id', 'k36vm9wkny'), ('status', 'paid'),
+         ('total', 180)])]
     # def test_selling_cart_works(self):
     #     client = self.client
     #     client.login(email='u1@g.com', password='user1234')
