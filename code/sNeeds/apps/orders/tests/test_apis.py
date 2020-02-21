@@ -204,13 +204,42 @@ class CartTests(APITestCase):
 
         self.assertEqual(has_common_time_slot_sales, False)
 
-    def test_selling_order_deletes_sold_products_from_other_carts(self):
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
+    def test_selling_cart_works(self):
+        cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()
+        cart1_time_slot_sales_id = [obj.id for obj in cart1_time_slot_sales]
 
-        url = "%s?%s=%s" % (
-            reverse("payment:verify-test"),
-            "id",
-            self.cart1.id
-        )
-        response = client.get(url, format='json')
+        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
+        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
+
+        cart1_cart2_time_slot_sales_intersection = list(set(cart1_time_slot_sales_id) & set(cart2_time_slot_sales_id))
+        if len(cart1_cart2_time_slot_sales_intersection) == 0:
+            has_common_time_slot_sales = False
+        else:
+            has_common_time_slot_sales = True
+
+        self.assertEqual(has_common_time_slot_sales, True)
+
+        # Order creation
+        Order.objects.sell_cart_create_order(self.cart1)
+
+        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
+        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
+
+        if len(list(set(cart1_cart2_time_slot_sales_intersection) & set(cart2_time_slot_sales_id))) == 0:
+            has_common_time_slot_sales = False
+        else:
+            has_common_time_slot_sales = True
+
+        self.assertEqual(has_common_time_slot_sales, False)
+
+
+    # def test_selling_cart_works(self):
+    #     client = self.client
+    #     client.login(email='u1@g.com', password='user1234')
+    #
+    #     url = "%s?%s=%s" % (
+    #         reverse("payment:verify-test"),
+    #         "id",
+    #         self.cart1.id
+    #     )
+    #     response = client.get(url, format='json')
