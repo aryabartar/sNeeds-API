@@ -48,16 +48,14 @@ class Product(models.Model):
     objects = ProductQuerySet.as_manager()
 
 
-class AbstractTimeSlotSale(Product):
+class TimeSlotSale(Product):
     consultant = models.ForeignKey(
         ConsultantProfile,
         on_delete=models.CASCADE
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-
-    class Meta:
-        abstract = True
+    objects = TimeSlotSaleManager.as_manager()
 
     def __str__(self):
         return str(self.pk)
@@ -67,11 +65,7 @@ class AbstractTimeSlotSale(Product):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super(AbstractTimeSlotSale, self).save(*args, **kwargs)
-
-
-class TimeSlotSale(AbstractTimeSlotSale):
-    objects = TimeSlotSaleManager.as_manager()
+        super(TimeSlotSale, self).save(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         start_time = self.start_time
@@ -117,6 +111,10 @@ class TimeSlotSale(AbstractTimeSlotSale):
             })
 
 
-class SoldTimeSlotSale(AbstractTimeSlotSale):
+class SoldProduct(models.Model):
+    price = models.PositiveIntegerField()
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+
+class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
