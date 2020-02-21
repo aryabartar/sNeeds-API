@@ -73,6 +73,7 @@ class Verify(APIView):
             result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
 
             if result.Status == 100:
+                # Order.objects.sell_order(payment.cart)
                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
             elif result.Status == 101:
                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
@@ -81,3 +82,39 @@ class Verify(APIView):
 
         else:
             return Response({"detail": "Transaction failed or canceled by user"}, status=400)
+
+
+class VerifyTest(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request):
+        print(request.query_params.get("id"))
+        return HttpResponse()
+        # client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
+        #
+        # data = request.data
+        # if data.get('status', None) == 'OK':
+        #     user = request.user
+        #     authority = data.get('authority', None)
+        #
+        #     try:
+        #         payment = PayPayment.objects.get(
+        #             user=user,
+        #             authority=authority
+        #         )
+        #
+        #     except PayPayment.DoesNotExist:
+        #         return Response({"detail": "PayPayment does not exists."}, status=400)
+        #
+        #     result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
+        #
+        #     if result.Status == 100:
+        #         # Order.objects.sell_order(payment.cart)
+        #         return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
+        #     elif result.Status == 101:
+        #         return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
+        #     else:
+        #         return Response({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
+        #
+        # else:
+        #     return Response({"detail": "Transaction failed or canceled by user"}, status=400)

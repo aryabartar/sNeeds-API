@@ -20,9 +20,7 @@ class CartManager(models.QuerySet):
         obj.products.add(*products)
         return obj
 
-    @transaction.atomic
-    def set_cart_paid(self, cart):
-        pass
+
 
 
 class Cart(models.Model):

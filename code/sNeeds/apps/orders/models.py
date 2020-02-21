@@ -13,11 +13,28 @@ ORDER_STATUS_CHOICES = (
 )
 
 
+# class OrderManager(models.Manager):
+#     @transaction.atomic
+#     def sell_order(self, cart):
+#         self.create(
+#
+#         )
+#
+#         cart = order.cart
+#         sold_order = SoldOrder(
+#             cart=None,
+#             status="paid",
+#             order_id=order.order_id,
+#             total=order.total,
+#         )
+#
+#         return sold_order
+
+
 class Order(models.Model):
     order_id = models.CharField(max_length=12, blank=True,
                                 help_text="Leave this field blank, this will populate automatically.")
     total = models.PositiveIntegerField(default=0, null=True, blank=True)
-    cart = models.OneToOneField(Cart, null=True, on_delete=models.CASCADE, related_name="cart_order")
     status = models.CharField(max_length=256, default='paid', choices=ORDER_STATUS_CHOICES)
 
     created = models.DateTimeField(auto_now_add=True)
