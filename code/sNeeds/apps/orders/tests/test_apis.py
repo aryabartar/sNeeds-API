@@ -204,13 +204,13 @@ class CartTests(APITestCase):
 
         self.assertEqual(has_common_time_slot_sales, False)
 
-        # def test_selling_order_deletes_sold_products_from_other_carts(self):
-        #     client = self.client
-        #     client.login(email='u1@g.com', password='user1234')
-        #
-        #     url = "%s?%s=%s" % (
-        #         reverse("payment:verify-test"),
-        #         "id",
-        #         self.cart1.id
-        #     )
-        #     response = client.get(url, format='json')
+    def test_selling_order_deletes_sold_products_from_other_carts(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = "%s?%s=%s" % (
+            reverse("payment:verify-test"),
+            "id",
+            self.cart1.id
+        )
+        response = client.get(url, format='json')
