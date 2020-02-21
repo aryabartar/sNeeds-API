@@ -14,22 +14,26 @@ ORDER_STATUS_CHOICES = (
 )
 
 
-# class OrderManager(models.Manager):
-#     @transaction.atomic
-#     def sell_order(self, cart):
-#         self.create(
-#
-#         )
-#
-#         cart = order.cart
-#         sold_order = SoldOrder(
-#             cart=None,
-#             status="paid",
-#             order_id=order.order_id,
-#             total=order.total,
-#         )
-#
-#         return sold_order
+class OrderManager(models.Manager):
+    @transaction.atomic
+    def sell_cart_create_order(self, cart):
+        cart_products = cart.products.all()
+        time_slot_sales_qs = cart_products.objects.get_time_slot_sales()
+
+        print(cart_products)
+        # self.create(
+        #
+        # )
+        #
+        # cart = order.cart
+        # sold_order = SoldOrder(
+        #     cart=None,
+        #     status="paid",
+        #     order_id=order.order_id,
+        #     total=order.total,
+        # )
+        #
+        # return sold_order
 
 
 class Order(models.Model):
@@ -40,6 +44,8 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     total = models.PositiveIntegerField(default=0, null=True, blank=True)
+
+    objects = OrderManager()
 
     def get_user(self):
         return self.cart.user

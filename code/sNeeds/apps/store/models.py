@@ -24,22 +24,21 @@ class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
-        sold_tome_slot_sales_list = []
+        sold_tome_slot_sales_qs = SoldTimeSlotSale.objects.none()
 
         for obj in qs:
-            sold_tome_slot_sales_list.append(
-                SoldTimeSlotSale.objects.create(
-                    consultant=obj.consultant,
-                    start_time=obj.start_time,
-                    end_time=obj.end_time,
-                    price=obj.price,
-                    sold_to=sold_to,
-                )
+            sold_tome_slot_sales_qs |= SoldTimeSlotSale.objects.create(
+                consultant=obj.consultant,
+                start_time=obj.start_time,
+                end_time=obj.end_time,
+                price=obj.price,
+                sold_to=sold_to,
+                used=False
             )
 
         qs.delete()
 
-        return sold_tome_slot_sales_list
+        return sold_tome_slot_sales_qs
 
 
 class Product(models.Model):
@@ -119,3 +118,10 @@ class SoldProduct(models.Model):
 
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    def clean(self, *args, **kwargs):
+        # Check 1
+        if self.end_time <= self.start_time:
+            raise ValidationError(_("End time should be after start time"), code='invalid')

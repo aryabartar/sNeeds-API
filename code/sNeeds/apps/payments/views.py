@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from sNeeds.apps.orders.models import Order
 
 from .models import PayPayment
+from ..carts.models import Cart
 
 ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
 
@@ -88,7 +89,9 @@ class VerifyTest(APIView):
     permission_classes = [permissions.IsAuthenticated, ]
 
     def get(self, request):
-        print(request.query_params.get("id"))
+        cart_id = request.query_params.get("id")
+        print(Cart.objects.all())
+        Order.objects.sell_order(Cart.objects.get(id=19))
         return HttpResponse()
         # client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
         #
