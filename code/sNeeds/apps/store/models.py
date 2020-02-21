@@ -57,6 +57,7 @@ class TimeSlotSale(Product):
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
     objects = TimeSlotSaleManager.as_manager()
 
     def __str__(self):

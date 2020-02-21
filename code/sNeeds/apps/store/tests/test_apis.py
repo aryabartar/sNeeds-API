@@ -13,7 +13,7 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 
 User = get_user_model()
 
@@ -176,82 +176,34 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_selling_cart_deletes_sold_products_from_other_carts(self):
-        cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()
-        cart1_time_slot_sales_id = [obj.id for obj in cart1_time_slot_sales]
+    def test_time_slot_sales_to_sold_time_slot_sales_working(self):
+        class TempTimeSlotSale:
+            def __init__(self, consultant, price, start_time, end_time):
+                self.consultant = consultant
+                self.price = price
+                self.start_time = start_time
+                self.end_time = end_time
 
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
+        time_slot_sales_qs = TimeSlotSale.objects.all()
 
-        cart1_cart2_time_slot_sales_intersection = list(set(cart1_time_slot_sales_id) & set(cart2_time_slot_sales_id))
-        if len(cart1_cart2_time_slot_sales_intersection) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
+        temp_time_slot_sales_list = []
+        for obj in time_slot_sales_qs:
+            temp_time_slot_sales_list.append(
+                TempTimeSlotSale(obj.consultant, obj.price, obj.start_time, obj.end_time)
+            )
 
-        self.assertEqual(has_common_time_slot_sales, True)
+        time_slot_sales_qs.set_time_slot_sold(self.user1)
 
-        # Order creation
-        Order.objects.sell_cart_create_order(self.cart1)
+        self.assertEqual(TimeSlotSale.objects.all().count(), 0)
 
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
-
-        if len(list(set(cart1_cart2_time_slot_sales_intersection) & set(cart2_time_slot_sales_id))) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
-
-        self.assertEqual(has_common_time_slot_sales, False)
-
-    def test_selling_cart_works(self):
-        class TempTimeSlotHolder:
-            def __init__(self, user price, start_time, ):
-                self.name = name
-                self.age = age
-
-
-        TimeSlotSale
-        Cart
-        Order
-        cart1_time_slot_sales_qs = self.cart1.products.all().get_time_slot_sales()
-        c1_ts1_start_time =
-
-        cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()
-        cart1_time_slot_sales_id = [obj.id for obj in cart1_time_slot_sales]
-
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
-
-        cart1_cart2_time_slot_sales_intersection = list(set(cart1_time_slot_sales_id) & set(cart2_time_slot_sales_id))
-        if len(cart1_cart2_time_slot_sales_intersection) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
-
-        self.assertEqual(has_common_time_slot_sales, True)
-
-        # Order creation
-        Order.objects.sell_cart_create_order(self.cart1)
-
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
-
-        if len(list(set(cart1_cart2_time_slot_sales_intersection) & set(cart2_time_slot_sales_id))) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
-
-        self.assertEqual(has_common_time_slot_sales, False)
-
-
-    # def test_selling_cart_works(self):
-    #     client = self.client
-    #     client.login(email='u1@g.com', password='user1234')
-    #
-    #     url = "%s?%s=%s" % (
-    #         reverse("payment:verify-test"),
-    #         "id",
-    #         self.cart1.id
-    #     )
-    #     response = client.get(url, format='json')
+        for obj in temp_time_slot_sales_list:
+            self.assertEqual(
+                SoldTimeSlotSale.objects.filter(
+                    consultant=obj.consultant,
+                    price=obj.price,
+                    start_time=obj.start_time,
+                    end_time=obj.end_time,
+                    sold_to=self.user1
+                ).count(),
+                1
+            )
