@@ -8,16 +8,16 @@ from sNeeds.apps.customAuth.models import ConsultantProfile
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
-    def get_discount_or_zero(self, number):
+    def get_discount_or_zero(self, num):
         try:
-            obj = TimeSlotSaleNumberDiscount.objects.get(number=number)
+            obj = self.get(number=num)
             return obj.discount
-        except:
+        except TimeSlotSaleNumberDiscount.DoesNotExist:
             return 0
 
 
 class TimeSlotSaleNumberDiscount(models.Model):
-    number = models.PositiveIntegerField(unique=True)
+    number = models.PositiveIntegerField(primary_key=True)
     discount = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
     )

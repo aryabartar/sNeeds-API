@@ -12,6 +12,7 @@ from ..store.serializers import SoldTimeSlotSaleSerializer
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
     sold_time_slot_sales = serializers.SerializerMethodField()
+    used_consultant_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
@@ -35,6 +36,15 @@ class OrderSerializer(serializers.ModelSerializer):
         return SoldTimeSlotSaleSerializer(
             sold_time_slot_sales, many=True, context={"request": self.context.get("request")}
         ).data
+
+    def get_used_consultant_discount(self, obj):
+        if obj.used_consultant_discount is None:
+            return None
+        else:
+            return {
+                "code": obj.used_consultant_discount.code,
+                "percent": obj.used_consultant_discount.percent
+            }
 
     def validate(self, attrs):
         user = self.context.get('request', None).user

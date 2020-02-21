@@ -175,6 +175,11 @@ class CartTests(APITestCase):
             consultant_discount=self.consultant_discount1
         )
 
+        self.time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.create(
+            number=2,
+            discount=50
+        )
+
         # Setup ------
         self.client = APIClient()
 
@@ -228,7 +233,7 @@ class CartTests(APITestCase):
             cart1_consultant_discount = None
 
         cart1_time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(
-            number=self.cart1.products.all().get_time_slot_sales()
+            self.cart1.products.all().get_time_slot_sales().count()
         )
         cart1_user = self.cart1.user
         cart1_total = self.cart1.total
@@ -249,6 +254,8 @@ class CartTests(APITestCase):
                 1
             )
 
+        print("*", cart1_time_slot_sale_number_discount)
+        print(TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(2))
         self.assertEqual(order.user, cart1_user)
         self.assertEqual(order.status, "paid")
         self.assertEqual(order.used_consultant_discount, cart1_consultant_discount)
@@ -260,13 +267,12 @@ class CartTests(APITestCase):
         order1 = Order.objects.sell_cart_create_order(self.cart1)
         order2 = Order.objects.sell_cart_create_order(self.cart2)
 
-        url = reverse("order:order-list",)
+        url = reverse("order:order-list", )
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, format='json')
-        print(json.dumps(response.data, indent=3))
-
+        # print(json.dumps(response.data, indent=3))
 
     # def test_selling_cart_works(self):
     #     client = self.client
