@@ -216,7 +216,7 @@ class CartTests(APITestCase):
 
         cart1_temp_time_slot_sales_list = []
         for obj in cart1_time_slot_sales_qs:
-            temp_time_slot_sales_list.append(
+            cart1_temp_time_slot_sales_list.append(
                 TempTimeSlotSale(obj.consultant, obj.price, obj.start_time, obj.end_time)
             )
 
@@ -228,55 +228,32 @@ class CartTests(APITestCase):
         cart1_time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(
             number=self.cart1.products.all().get_time_slot_sales()
         )
+        cart1_user = self.cart1.user
 
-        Order.objects.sell_cart_create_order(self.cart1)
+        order = Order.objects.sell_cart_create_order(self.cart1)
 
-        order_sold_products =
-
-        for obj in temp_time_slot_sales_list:
+        order_sold_time_slot_sales = order.sold_products.all().get_sold_time_slot_sales()
+        for sold_time_slot_sale in order_sold_time_slot_sales:
             self.assertEqual(
-                SoldTimeSlotSale.objects.filter(
-                    consultant=obj.consultant,
-                    price=obj.price,
-                    start_time=obj.start_time,
-                    end_time=obj.end_time,
-                    sold_to=self.user1
-                ).count(),
+                order_sold_time_slot_sales.filter(
+                    sold_to=cart1_user,
+                    consultant=sold_time_slot_sale.consultant,
+                    price=sold_time_slot_sale.price,
+                    start_time=sold_time_slot_sale.start_time,
+                    end_time=sold_time_slot_sale.end_time
+                ),
                 1
             )
 
-        TimeSlotSale
-        Cart
-        Order
-        cart1_time_slot_sales_qs = self.cart1.products.all().get_time_slot_sales()
-        c1_ts1_start_time =
+        self.assertEqual(order.user, cart1_user)
+        self.status(order.status, "paid")
+        self.assertEqual(order.used_discount, cart1_consultant_discount)
 
-        cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()
-        cart1_time_slot_sales_id = [obj.id for obj in cart1_time_slot_sales]
-
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
-
-        cart1_cart2_time_slot_sales_intersection = list(set(cart1_time_slot_sales_id) & set(cart2_time_slot_sales_id))
-        if len(cart1_cart2_time_slot_sales_intersection) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
-
-        self.assertEqual(has_common_time_slot_sales, True)
-
-        # Order creation
-        Order.objects.sell_cart_create_order(self.cart1)
-
-        cart2_time_slot_sales = self.cart2.products.all().get_time_slot_sales()
-        cart2_time_slot_sales_id = [obj.id for obj in cart2_time_slot_sales]
-
-        if len(list(set(cart1_cart2_time_slot_sales_intersection) & set(cart2_time_slot_sales_id))) == 0:
-            has_common_time_slot_sales = False
-        else:
-            has_common_time_slot_sales = True
-
-        self.assertEqual(has_common_time_slot_sales, False)
+    time_slot_sales_number_discount = models.FloatField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
+    )
+    subtotal = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
 
     # def test_selling_cart_works(self):
     #     client = self.client
