@@ -90,34 +90,5 @@ class VerifyTest(APIView):
 
     def get(self, request):
         cart_id = request.query_params.get("id")
-        print(Cart.objects.all())
-        Order.objects.sell_cart_create_order(Cart.objects.get(id=19))
+        Order.objects.sell_cart_create_order(Cart.objects.get(id=cart_id))
         return HttpResponse()
-        # client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
-        #
-        # data = request.data
-        # if data.get('status', None) == 'OK':
-        #     user = request.user
-        #     authority = data.get('authority', None)
-        #
-        #     try:
-        #         payment = PayPayment.objects.get(
-        #             user=user,
-        #             authority=authority
-        #         )
-        #
-        #     except PayPayment.DoesNotExist:
-        #         return Response({"detail": "PayPayment does not exists."}, status=400)
-        #
-        #     result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
-        #
-        #     if result.Status == 100:
-        #         # Order.objects.sell_order(payment.cart)
-        #         return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
-        #     elif result.Status == 101:
-        #         return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
-        #     else:
-        #         return Response({"detail": "Transaction failed", "status": str(result.Status)}, status=400)
-        #
-        # else:
-        #     return Response({"detail": "Transaction failed or canceled by user"}, status=400)

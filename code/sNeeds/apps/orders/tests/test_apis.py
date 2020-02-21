@@ -8,8 +8,11 @@ from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount
+from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
+from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale
 
 User = get_user_model()
@@ -153,7 +156,6 @@ class CartTests(APITestCase):
             code="discountcode1",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
-            active=True
         )
         self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
@@ -162,7 +164,6 @@ class CartTests(APITestCase):
             code="discountcode2",
             start_time=timezone.now(),
             end_time=timezone.now() + timezone.timedelta(days=1),
-            active=True
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
@@ -175,64 +176,15 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_cart_consultant_discounts_list_number(self):
-        CartConsultantDiscount.objects.create(
-            cart=self.cart3,
-            consultant_discount=self.consultant_discount2
-        )
-
-        url = reverse("discount:cart-consultant-discounts-list")
+    def test_cart_to_order_buy_is_correct(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        response = client.get(url, {}, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
-
-    def test_cart_consultant_discounts_list_get_query_parameter(self):
-        client = self.client
-        client.login(email='u1@g.com', password='user1234')
-
-        CartConsultantDiscount.objects.create(
-            cart=self.cart2,
-            consultant_discount=self.consultant_discount2
+        url = "%s?%s=%s" % (
+            reverse("payment:verify-test"),
+            "id",
+            self.cart1.id
         )
-        # Test 1
-        url = reverse("discount:cart-consultant-discounts-list")
-        response = client.get(url, {}, format='json')
-        self.assertEqual(len(response.data), 2)
+        response = client.get(url, format='json')
 
-        # Test 2
-        url = "%s?%s=%i" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.cart.id)
-        response = client.get(url, {}, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0].get("cart"), self.cart1.id)
-
-    def test_cart_consultant_discounts_list_get_query_parameter_permission(self):
-        client = self.client
-        client.login(email='u2@g.com', password='user1234')
-
-        url = "%s?%s=%s" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
-        response = client.get(url, {}, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
-
-    # TODO: Working properly
-    def test_cart_post(self):
-        client = self.client
-        client.login(email='u2@g.com', password='user1234')
-
-        url = "%s?%s=%s" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
-        response = client.get(url, {}, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
-
-    def test_cart_post(self):
+        self.assertEqual(1, 2)

@@ -28,10 +28,8 @@ class OrderManager(models.Manager):
             total=cart.total,
             subtotal=cart.subtotal
         )
-        print("HERE")
-        print(sold_time_slot_sales_qs)
         order.save()
-        order.sold_products.add(sold_time_slot_sales_qs)
+        order.sold_products.set(sold_time_slot_sales_qs)
 
         cart.delete()
         return order
