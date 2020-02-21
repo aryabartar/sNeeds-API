@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models, transaction
 
 from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.discounts.models import ConsultantDiscount
 from sNeeds.apps.store.models import SoldProduct
 
 User = get_user_model()
@@ -34,12 +35,14 @@ class OrderManager(models.Manager):
 class Order(models.Model):
     order_id = models.CharField(max_length=12, blank=True,
                                 help_text="Leave this field blank, this will populate automatically.")
+    user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     status = models.CharField(max_length=256, default='paid', choices=ORDER_STATUS_CHOICES)
     sold_products = models.ManyToManyField(SoldProduct, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    total = models.PositiveIntegerField()
+    discount = models.ForeignKey(ConsultantDiscount, null=True, on_delete=models.SET_NULL)
     subtotal = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
 
     objects = OrderManager()
 
