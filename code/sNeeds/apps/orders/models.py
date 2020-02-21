@@ -24,13 +24,13 @@ class OrderManager(models.Manager):
         sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
 
         try:
-            used_discount = CartConsultantDiscount.objects.get(cart=cart)
+            used_consultant_discount = CartConsultantDiscount.objects.get(cart=cart).consultant_discount
         except CartConsultantDiscount.DoesNotExist:
-            used_discount = None
+            used_consultant_discount = None
 
         try:
             time_slot_sales_number_discount = TimeSlotSaleNumberDiscount.objects.get(
-                cart.get_time_slot_sales_count()
+                number=cart.get_time_slot_sales_count()
             )
         except TimeSlotSaleNumberDiscount.DoesNotExist:
             time_slot_sales_number_discount = 0
@@ -40,7 +40,7 @@ class OrderManager(models.Manager):
             status='paid',
             total=cart.total,
             subtotal=cart.subtotal,
-            used_discount=used_discount,
+            used_consultant_discount=used_consultant_discount,
             time_slot_sales_number_discount=time_slot_sales_number_discount
         )
 

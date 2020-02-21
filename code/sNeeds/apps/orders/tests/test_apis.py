@@ -212,7 +212,7 @@ class CartTests(APITestCase):
                 self.start_time = start_time
                 self.end_time = end_time
 
-        cart1_time_slot_sales_qs = self.cart1.products.all()
+        cart1_time_slot_sales_qs = self.cart1.products.all().get_time_slot_sales()
 
         cart1_temp_time_slot_sales_list = []
         for obj in cart1_time_slot_sales_qs:
@@ -221,7 +221,7 @@ class CartTests(APITestCase):
             )
 
         try:
-            cart1_consultant_discount = CartConsultantDiscount.objects.get(cart=self.cart1)
+            cart1_consultant_discount = CartConsultantDiscount.objects.get(cart=self.cart1).consultant_discount
         except CartConsultantDiscount.DoesNotExist:
             cart1_consultant_discount = None
 
@@ -229,6 +229,8 @@ class CartTests(APITestCase):
             number=self.cart1.products.all().get_time_slot_sales()
         )
         cart1_user = self.cart1.user
+        cart1_total = self.cart1.total
+        cart1_subtotal = self.cart1.subtotal
 
         order = Order.objects.sell_cart_create_order(self.cart1)
 
@@ -241,19 +243,16 @@ class CartTests(APITestCase):
                     price=sold_time_slot_sale.price,
                     start_time=sold_time_slot_sale.start_time,
                     end_time=sold_time_slot_sale.end_time
-                ),
+                ).count(),
                 1
             )
 
         self.assertEqual(order.user, cart1_user)
-        self.status(order.status, "paid")
-        self.assertEqual(order.used_discount, cart1_consultant_discount)
-
-    time_slot_sales_number_discount = models.FloatField(
-        default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
-    )
-    subtotal = models.PositiveIntegerField()
-    total = models.PositiveIntegerField()
+        self.assertEqual(order.status, "paid")
+        self.assertEqual(order.used_consultant_discount, cart1_consultant_discount)
+        self.assertEqual(order.time_slot_sales_number_discount, cart1_time_slot_sale_number_discount)
+        self.assertEqual(order.total, cart1_total)
+        self.assertEqual(order.subtotal, cart1_subtotal)
 
     # def test_selling_cart_works(self):
     #     client = self.client

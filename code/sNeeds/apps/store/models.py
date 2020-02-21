@@ -131,6 +131,7 @@ class SoldProduct(models.Model):
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     created = models.DateTimeField(auto_now_add=True)
 
+    objects = SoldProductQuerySet.as_manager()
 
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
