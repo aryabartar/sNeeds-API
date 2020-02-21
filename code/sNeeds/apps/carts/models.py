@@ -21,8 +21,6 @@ class CartManager(models.QuerySet):
         return obj
 
 
-
-
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     subtotal = models.IntegerField(default=0, blank=True)
@@ -53,7 +51,7 @@ class Cart(models.Model):
 
             # For TimeSlots
             try:
-                time_slot_sale = product.timeslotsale # Checks here
+                time_slot_sale = product.timeslotsale  # Checks here
                 consultants_qs = cart_consultant_discount.consultant_discount.consultants.all()
                 if time_slot_sale.consultant in consultants_qs:
                     percent += cart_consultant_discount.consultant_discount.percent
@@ -101,4 +99,3 @@ class Cart(models.Model):
 
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
-

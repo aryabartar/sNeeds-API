@@ -114,6 +114,7 @@ class TimeSlotSale(Product):
 class SoldProduct(models.Model):
     price = models.PositiveIntegerField()
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    created = models.DateTimeField(auto_now_add=True)
 
 
 class SoldTimeSlotSale(SoldProduct):
