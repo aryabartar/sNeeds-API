@@ -133,6 +133,7 @@ class SoldProduct(models.Model):
 
     objects = SoldProductQuerySet.as_manager()
 
+
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)

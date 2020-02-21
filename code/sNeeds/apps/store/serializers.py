@@ -93,8 +93,7 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoldTimeSlotSale
         fields = [
-            'id', 'url', 'consultant', 'start_time', 'end_time',
-            'price', 'sold_to', 'used',
+            'id', 'url', 'price', 'sold_to', 'used', 'consultant', 'start_time', 'end_time',
         ]
 
     def get_sold_to(self, obj):
