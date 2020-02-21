@@ -19,31 +19,27 @@ class OrderManager(models.Manager):
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()
         time_slot_sales_qs = cart_products.objects.get_time_slot_sales()
+        sold_time_slot_sales_qs = time_slot_sales_qs.objects.set_time_slot_sold()
 
-        print(cart_products)
-        # self.create(
-        #
-        # )
-        #
-        # cart = order.cart
-        # sold_order = SoldOrder(
-        #     cart=None,
-        #     status="paid",
-        #     order_id=order.order_id,
-        #     total=order.total,
-        # )
-        #
-        # return sold_order
+        order = Order(
+            status='paid',
+            total=cart.total,
+            subtotal=cart.subtotal
+        )
+        order.sold_products.set(sold_time_slot_sales_qs)
+        order.save()
+        return order
 
 
 class Order(models.Model):
     order_id = models.CharField(max_length=12, blank=True,
                                 help_text="Leave this field blank, this will populate automatically.")
     status = models.CharField(max_length=256, default='paid', choices=ORDER_STATUS_CHOICES)
-    products = models.ManyToManyField(SoldProduct, blank=True)
+    sold_products = models.ManyToManyField(SoldProduct, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    total = models.PositiveIntegerField(default=0, null=True, blank=True)
+    total = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
 
     objects = OrderManager()
 
