@@ -93,5 +93,3 @@ class ImageMessage(Message):
         upload_to=get_image_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
-
-    objects = MessageManager
