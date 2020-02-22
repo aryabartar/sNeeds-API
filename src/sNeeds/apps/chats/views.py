@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import filters
 
+from django_filters.rest_framework import DjangoFilterBackend
+
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
@@ -32,8 +34,10 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
 class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessagePolymorphicSerializer
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter,
+                       DjangoFilterBackend]
     ordering_fields = ['created']
+    filterset_fields = ["chat", "sender"]
 
     def get_queryset(self):
         user = self.request.user
