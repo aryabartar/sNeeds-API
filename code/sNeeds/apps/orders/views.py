@@ -7,10 +7,15 @@ from .models import Order
 from .permissions import OrderOwnerPermission
 
 
-class OrderListView(generics.ListCreateAPIView):
+class OrderListView(generics.ListAPIView):
+    """
+    Ordering samples:
+
+    """
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    ordering_fields = ['created', ]
 
     def get_queryset(self):
         user = self.request.user
@@ -23,4 +28,3 @@ class OrderDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = serializers.OrderSerializer
     lookup_field = 'id'
     permission_classes = (OrderOwnerPermission, permissions.IsAuthenticated)
-

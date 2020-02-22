@@ -284,7 +284,7 @@ class CartTests(APITestCase):
 
     def test_orders_list_get_pass_with_permissions(self):
         order1 = Order.objects.sell_cart_create_order(self.cart1)
-        order2 = Order.objects.sell_cart_create_order(self.cart2)
+        order3 = Order.objects.sell_cart_create_order(self.cart3)
 
         url = reverse("order:order-list", )
         client = self.client
@@ -295,17 +295,23 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertListEqual(
             sorted([obj.get("id") for obj in response.data]),
-            sorted([order1.id])
+            sorted([order3.id])
         )
-        self.assertFalse(order2.id in [obj.get("id") for obj in response.data])
+        self.assertFalse(order3.id in [obj.get("id") for obj in response.data])
 
-    # def test_selling_cart_works(self):
+    # def test_orders_list_get_pass_with_permissions(self):
+    #     order1 = Order.objects.sell_cart_create_order(self.cart1)
+    #     order2 = Order.objects.sell_cart_create_order(self.cart2)
+    #
+    #     url = reverse("order:order-list", )
     #     client = self.client
     #     client.login(email='u1@g.com', password='user1234')
     #
-    #     url = "%s?%s=%s" % (
-    #         reverse("payment:verify-test"),
-    #         "id",
-    #         self.cart1.id
-    #     )
     #     response = client.get(url, format='json')
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertListEqual(
+    #         sorted([obj.get("id") for obj in response.data]),
+    #         sorted([order1.id])
+    #     )
+    #     self.assertFalse(order2.id in [obj.get("id") for obj in response.data])
