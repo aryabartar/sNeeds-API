@@ -72,8 +72,6 @@ class Message(PolymorphicModel):
 class TextMessage(Message):
     text_message = models.CharField(max_length=2048)
 
-    objects = MessageManager()
-
 
 class FileMessage(Message):
     file_field = models.FileField(
