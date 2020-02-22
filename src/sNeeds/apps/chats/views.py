@@ -3,6 +3,7 @@ from django.db.models import Q
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import filters
 
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
@@ -31,6 +32,8 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
 class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessagePolymorphicSerializer
+    filter_backends = [filters.OrderingFilter]
+    ordering_fields = ['created']
 
     def get_queryset(self):
         user = self.request.user
