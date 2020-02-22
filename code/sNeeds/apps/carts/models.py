@@ -66,6 +66,7 @@ class Cart(models.Model):
 
         time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+
         self.total = self.total * ((100.0 - count_discount) / 100)
 
     def is_acceptable_for_pay(self):

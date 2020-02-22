@@ -145,6 +145,7 @@ class CartTests(APITestCase):
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
+        self.cart1.save()
 
         self.cart2 = Cart.objects.create(user=self.user1)
         self.cart2.products.set([self.time_slot_sale1, self.time_slot_sale3])
@@ -219,6 +220,8 @@ class CartTests(APITestCase):
                 self.start_time = start_time
                 self.end_time = end_time
 
+        self.cart1.refresh_from_db()
+
         cart1_time_slot_sales_qs = self.cart1.products.all().get_time_slot_sales()
 
         cart1_temp_time_slot_sales_list = []
@@ -235,10 +238,12 @@ class CartTests(APITestCase):
         cart1_time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(
             self.cart1.products.all().get_time_slot_sales().count()
         )
+
         cart1_user = self.cart1.user
         cart1_total = self.cart1.total
         cart1_subtotal = self.cart1.subtotal
 
+        self.cart1.refresh_from_db()
         order = Order.objects.sell_cart_create_order(self.cart1)
 
         order_sold_time_slot_sales = order.sold_products.all().get_sold_time_slot_sales()
@@ -254,8 +259,6 @@ class CartTests(APITestCase):
                 1
             )
 
-        print("*", cart1_time_slot_sale_number_discount)
-        print(TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(2))
         self.assertEqual(order.user, cart1_user)
         self.assertEqual(order.status, "paid")
         self.assertEqual(order.used_consultant_discount, cart1_consultant_discount)

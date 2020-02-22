@@ -21,7 +21,6 @@ class OrderManager(models.Manager):
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()
         time_slot_sales_qs = cart_products.get_time_slot_sales()
-        sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
 
         try:
             used_consultant_discount = CartConsultantDiscount.objects.get(cart=cart).consultant_discount
@@ -29,11 +28,13 @@ class OrderManager(models.Manager):
             used_consultant_discount = None
 
         try:
-            time_slot_sales_number_discount = TimeSlotSaleNumberDiscount.objects.get(
+            time_slot_sales_number_discount_number = TimeSlotSaleNumberDiscount.objects.get(
                 number=cart.get_time_slot_sales_count()
-            )
+            ).discount
         except TimeSlotSaleNumberDiscount.DoesNotExist:
-            time_slot_sales_number_discount = 0
+            time_slot_sales_number_discount_number = 0
+
+        sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
 
         order = Order(
             user=cart.user,
@@ -41,7 +42,7 @@ class OrderManager(models.Manager):
             total=cart.total,
             subtotal=cart.subtotal,
             used_consultant_discount=used_consultant_discount,
-            time_slot_sales_number_discount=time_slot_sales_number_discount
+            time_slot_sales_number_discount=time_slot_sales_number_discount_number
         )
 
         order.save()
