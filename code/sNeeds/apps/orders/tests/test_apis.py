@@ -275,7 +275,29 @@ class CartTests(APITestCase):
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, format='json')
-        # print(json.dumps(response.data, indent=3))
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            sorted([obj.get("id") for obj in response.data]),
+            sorted([order1.id, order2.id])
+        )
+
+    def test_orders_list_get_pass_with_permissions(self):
+        order1 = Order.objects.sell_cart_create_order(self.cart1)
+        order2 = Order.objects.sell_cart_create_order(self.cart2)
+
+        url = reverse("order:order-list", )
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual(
+            sorted([obj.get("id") for obj in response.data]),
+            sorted([order1.id])
+        )
+        self.assertFalse(order2.id in [obj.get("id") for obj in response.data])
 
     # def test_selling_cart_works(self):
     #     client = self.client
