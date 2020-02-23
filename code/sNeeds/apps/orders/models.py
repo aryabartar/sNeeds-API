@@ -60,7 +60,7 @@ class Order(models.Model):
     sold_products = models.ManyToManyField(SoldProduct, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    used_consultant_discount = models.ForeignKey(ConsultantDiscount, null=True, on_delete=models.SET_NULL)
+    used_consultant_discount = models.ForeignKey(ConsultantDiscount, null=True, blank=True, on_delete=models.SET_NULL)
     time_slot_sales_number_discount = models.FloatField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
     )

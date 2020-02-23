@@ -1,4 +1,4 @@
-from rest_framework import status, generics, mixins, permissions
+from rest_framework import status, generics, mixins, permissions, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -15,6 +15,7 @@ class OrderListView(generics.ListAPIView):
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created', ]
 
     def get_queryset(self):
