@@ -48,7 +48,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
             "ImageMessage": ImageMessage,
             "VoiceMessage": VoiceMessage
         }
-        if message_type:
+        if message_type in message_types:
             qs = Message.objects.filter(
                 polymorphic_ctype=ContentType.objects.get_for_model(message_types[message_type])
             )
