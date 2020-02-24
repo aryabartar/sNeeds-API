@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.contrib.contenttypes.models import ContentType
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -40,8 +41,21 @@ class MessageListAPIView(generics.ListCreateAPIView):
     filterset_fields = ["chat", "sender"]
 
     def get_queryset(self):
+        message_type = self.request.query_params.get("messageType", None)
+        message_types = {
+            "TextMessage": TextMessage,
+            "FileMessage": FileMessage,
+            "ImageMessage": ImageMessage,
+            "VoiceMessage": VoiceMessage
+        }
+        if message_type:
+            qs = Message.objects.filter(
+                polymorphic_ctype=ContentType.objects.get_for_model(message_types[message_type])
+            )
+        else:
+            qs = Message.objects.all()
         user = self.request.user
-        message_qs = Message.objects.filter(sender=user).order_by('-created')
+        message_qs = qs.filter(sender=user).order_by('-created')
         return message_qs
 
 

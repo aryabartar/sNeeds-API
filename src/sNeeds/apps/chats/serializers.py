@@ -105,6 +105,7 @@ class ImageMessageSerializer(MessageSerializer):
 
 
 class MessagePolymorphicSerializer(PolymorphicSerializer):
+    resource_type_field_name = "messageType"
     model_serializer_mapping = {
         Message: MessageSerializer,
         TextMessage: TextMessageSerializer,
