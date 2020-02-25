@@ -5,7 +5,8 @@ import time
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from rest_framework import status
+from django.utils.datetime_safe import datetime
+from rest_framework import status, serializers
 from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
@@ -16,6 +17,7 @@ from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDisco
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
+from sNeeds.apps.store.serializers import SoldTimeSlotSaleSerializer
 
 User = get_user_model()
 
@@ -331,3 +333,41 @@ class CartTests(APITestCase):
             [obj.get("id") for obj in response.data],
             [order2.id, order1.id]
         )
+
+    def test_orders_detail_pass(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        order1 = Order.objects.sell_cart_create_order(self.cart1)
+
+        url = reverse("order:order-detail", args=(order1.id,))
+
+        response = client.get(url, format='json')
+        request = response.wsgi_request
+        response_data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_data.get("id"), order1.id)
+        self.assertEqual(response_data.get("order_id"), order1.order_id)
+        self.assertEqual(response_data.get("status"), order1.status)
+        self.assertEqual(
+            response_data.get("sold_time_slot_sales"),
+            SoldTimeSlotSaleSerializer(
+                order1.sold_products.all().get_sold_time_slot_sales(), context={"request": request}, many=True
+            ).data
+        )
+        self.assertEqual(
+            response.data.get("created"),
+            serializers.DateTimeField().to_representation(order1.created)
+        )
+        self.assertEqual(
+            response.data.get("updated"),
+            serializers.DateTimeField().to_representation(order1.updated)
+        )
+        self.assertEqual(
+            response_data.get("used_consultant_discount"),
+            {"code": order1.used_consultant_discount.code, "percent": order1.used_consultant_discount.percent}
+        )
+        self.assertEqual(response_data.get("time_slot_sales_number_discount"), order1.time_slot_sales_number_discount)
+        self.assertEqual(response_data.get("subtotal"), order1.subtotal)
+        self.assertEqual(response_data.get("total"), order1.total)

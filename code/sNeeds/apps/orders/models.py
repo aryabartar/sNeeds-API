@@ -70,7 +70,7 @@ class Order(models.Model):
     objects = OrderManager()
 
     def get_user(self):
-        return self.cart.user
+        return self.user
 
     def __str__(self):
         return "Order: {} | pk: {} ".format(str(self.order_id), str(self.pk))
