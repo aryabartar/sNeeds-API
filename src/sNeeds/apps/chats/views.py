@@ -1,7 +1,7 @@
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views import generic
+from django.views import generic, View
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -14,6 +14,7 @@ from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
+from .forms import MessageFilterForm
 
 
 class ChatListAPIView(generics.ListAPIView):
@@ -83,14 +84,38 @@ class AdminChatListView(UserPassesTestMixin, generic.ListView):
         return False
 
 
+class AdminChatFormView(generic.detail.SingleObjectMixin, generic.FormView):
+    template_name = "chats/admin_chat_detail.html"
+    form_class = MessageFilterForm
+    object = Message
+
+
 class AdminChatDetailView(UserPassesTestMixin, generic.DetailView):
     template_name = "chats/admin_chat_detail.html"
     model = Chat
     slug_field = 'id'
     slug_url_kwarg = 'id'
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        chat_id = self.kwargs['id']
+        data['chat_messages'] = Message.objects.filter(chat=chat_id)
+        data['form'] = MessageFilterForm()
+        return data
+
     def test_func(self):
         if not self.request.user.is_anonymous:
             if self.request.user.is_superuser:
                 return True
         return False
+
+
+class AdminChatView(View):
+
+    def get(self, request, *args, **kwargs):
+        view = AdminChatDetailView.as_view()
+        return view(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        view = AdminChatFormView.as_view()
+        return view(request, *args, **kwargs)

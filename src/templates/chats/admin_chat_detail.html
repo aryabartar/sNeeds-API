@@ -5,7 +5,24 @@
     <title>Admin chat detail view</title>
 </head>
 <body>
-    <h1>Consultant: {{ object.consultant }}</h1>
-    <p> User: {{ object.user }}</p>
+    <form method="POST">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+    {% for message in chat_messages %}
+        <ul>
+            <li> {{ message.sender }}</li>
+            <li> {{ message.updated }}</li>
+            <li> {{ message.created }}</li>
+            {% if message.text_message %}
+                <li> {{ message.text_message }}</li>
+            {% elif message.file_field %}
+                <li> {{ message.file_field }}</li>
+            {% elif message.image_field %}
+                <li> {{ message.image_field }}</li>
+            {% endif %}
+        </ul>
+    {% endfor %}
+
 </body>
 </html>
