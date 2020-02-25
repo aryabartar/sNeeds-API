@@ -371,3 +371,15 @@ class CartTests(APITestCase):
         self.assertEqual(response_data.get("time_slot_sales_number_discount"), order1.time_slot_sales_number_discount)
         self.assertEqual(response_data.get("subtotal"), order1.subtotal)
         self.assertEqual(response_data.get("total"), order1.total)
+
+    def test_orders_detail_permission(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        order1 = Order.objects.sell_cart_create_order(self.cart1)
+
+        url = reverse("order:order-detail", args=(order1.id,))
+
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
