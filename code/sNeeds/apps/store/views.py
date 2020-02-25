@@ -21,9 +21,6 @@ class TimeSlotSailList(generics.ListCreateAPIView):
     filterset_class = filtersets.TimeSlotSaleFilter
     permission_classes = [ConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
 
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
 
 class SoldTimeSlotSaleList(generics.ListAPIView):
     queryset = SoldTimeSlotSale.objects.all()

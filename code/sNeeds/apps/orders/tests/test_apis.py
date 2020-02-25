@@ -379,7 +379,6 @@ class CartTests(APITestCase):
         order1 = Order.objects.sell_cart_create_order(self.cart1)
 
         url = reverse("order:order-detail", args=(order1.id,))
-
         response = client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

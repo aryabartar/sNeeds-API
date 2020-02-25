@@ -143,6 +143,5 @@ class SoldTimeSlotSale(SoldProduct):
     objects = SoldProductQuerySet.as_manager()
 
     def clean(self, *args, **kwargs):
-        # Check 1
         if self.end_time <= self.start_time:
             raise ValidationError(_("End time should be after start time"), code='invalid')
