@@ -1,0 +1,15 @@
+<html>
+    <header>
+        <title> Chat admin view</title>
+    </header>
+    <body>
+    <h1>Chats</h1>
+        <ul>
+        {% for chat in object_list %}
+            <li>{{ chat.consultant }} {{ chat.user }} <a href="{% url 'chat:admin-chat-detail' id=chat.id%}">link</a> </li>
+        {% empty %}
+            <li>No chats yet.</li>
+        {% endfor %}
+        </ul>
+    </body>
+</html>

@@ -1,5 +1,7 @@
 from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.views import generic
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -68,3 +70,27 @@ class MessageDetailAPIView(generics.RetrieveAPIView):
         user = self.request.user
         message_qs = Message.objects.filter(sender=user).order_by('-created')
         return message_qs
+
+
+class AdminChatListView(UserPassesTestMixin, generic.ListView):
+    template_name = "chats/admin_chat_list.html"
+    model = Chat
+
+    def test_func(self):
+        if not self.request.user.is_anonymous:
+            if self.request.user.is_superuser:
+                return True
+        return False
+
+
+class AdminChatDetailView(UserPassesTestMixin, generic.DetailView):
+    template_name = "chats/admin_chat_detail.html"
+    model = Chat
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+
+    def test_func(self):
+        if not self.request.user.is_anonymous:
+            if self.request.user.is_superuser:
+                return True
+        return False

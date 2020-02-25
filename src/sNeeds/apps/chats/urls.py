@@ -9,4 +9,6 @@ urlpatterns = [
     path('chats/<int:id>/', views.ChatDetailAPIView.as_view(), name="chat-detail"),
     path('messages/', views.MessageListAPIView.as_view(), name="message-list"),
     path('messages/<int:id>/', views.MessageDetailAPIView.as_view(), name="message-detail"),
+    path('admin/', views.AdminChatListView.as_view(), name="admin-chat-list"),
+    path('admin/<int:id>/', views.AdminChatDetailView.as_view(), name="admin-chat-detail"),
 ]
