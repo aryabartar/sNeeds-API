@@ -130,7 +130,8 @@ def is_valid_queryparam(param):
 def filter(request, id):
     qs = Message.objects.filter(chat_id=id)
     text_message_search_character_query = request.GET.get('text_message_search_character')
-    send_date = request.GET.get('send_date')
+    send_date_min = request.GET.get('send_date_min')
+    send_date_max = request.GET.get('send_date_max')
     # title_or_author_query = request.GET.get('title_or_author')
     # view_count_min = request.GET.get('view_count_min')
     # view_count_max = request.GET.get('view_count_max')
@@ -142,8 +143,10 @@ def filter(request, id):
 
     if is_valid_queryparam(text_message_search_character_query):
         qs = qs.filter(textmessage__text_message__icontains=text_message_search_character_query)
-    if is_valid_queryparam(send_date):
-        qs = qs.filter(created__gte=send_date)
+    if is_valid_queryparam(send_date_min):
+        qs = qs.filter(created__gte=send_date_min)
+    if is_valid_queryparam(send_date_max):
+        qs = qs.filter(created__lt=send_date_max)
     #
     # elif is_valid_queryparam(id_exact_query):
     #     qs = qs.filter(id=id_exact_query)
