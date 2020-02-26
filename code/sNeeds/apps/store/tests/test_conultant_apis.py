@@ -201,3 +201,4 @@ class CartTests(APITestCase):
             serializers.DateTimeField().to_representation(ts_obj.end_time)
         )
         self.assertEqual(response.data.get("price"), 100)
+        self.assertEqual(response.data.get("consultant").get("id"), self.consultant1_profile.id)
