@@ -202,3 +202,19 @@ class CartTests(APITestCase):
         )
         self.assertEqual(response.data.get("price"), 100)
         self.assertEqual(response.data.get("consultant").get("id"), self.consultant1_profile.id)
+
+    def test_time_slot_sale_post_fail(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("store:time-slot-sale-list")
+
+        TimeSlotSale.objects.all().delete()
+
+        data = {
+            "start_time": datetime.strftime(timezone.now() + timezone.timedelta(minutes=50), '%Y-%m-%dT%H:%M:%SZ')
+        }
+        response = client.post(url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
