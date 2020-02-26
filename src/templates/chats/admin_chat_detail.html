@@ -78,7 +78,7 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <input class="form-control py-2 border-right-0 border"
-                                                       type="search" name="text_message_contains"
+                                                       type="search" name="text_message_search_character"
                                                        placeholder="Search messages..."/>
                                                 <span class="input-group-append">
                                             <div class="input-group-text bg-transparent">
@@ -122,10 +122,10 @@
 
     <div class="row">
         <ul>
-            {% for journal in queryset %}
+            {% for message in queryset %}
                 <li>
-                    {{ journal.title }}
-                    <span>Author: {{ journal.author.name }}</span>
+                    {{ message.textMessage }}
+                    <span>Author: {{ message.text_message }}</span>
                     <span>
                 {% for cat in journal.categories.all %}
                     {{ cat }}
