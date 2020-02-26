@@ -21,11 +21,14 @@ class TimeSlotSailList(generics.ListCreateAPIView):
     filterset_class = filtersets.TimeSlotSaleFilter
     permission_classes = [ConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        return super(TimeSlotSailList, self).get_queryset().order_by('-start_time')
+
 
 class SoldTimeSlotSaleList(generics.ListAPIView):
     queryset = SoldTimeSlotSale.objects.all()
     serializer_class = serializers.SoldTimeSlotSaleSerializer
-    filterset_fields = ['used', ]
+    filterset_fields = ['used', 'consultant']
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):

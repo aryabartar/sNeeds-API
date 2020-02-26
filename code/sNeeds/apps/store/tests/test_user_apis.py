@@ -399,6 +399,31 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def sold_time_slot_sale_list_get_consultant_filter(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = "%s?%s=%s" % (
+            reverse("store:sold-time-slot-sale-list"),
+            "consultant",
+            self.consultant1_profile.id
+        )
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+
+        url = "%s?%s=%s" % (
+            reverse("store:sold-time-slot-sale-list"),
+            "consultant",
+            self.consultant2_profile.id
+        )
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
     def sold_time_slot_sale_detail_get_success(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
