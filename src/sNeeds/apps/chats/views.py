@@ -64,7 +64,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
 
 
 class MessageDetailAPIView(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated, )
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
 
@@ -132,6 +132,7 @@ def filter(request, id):
     text_message_search_character_query = request.GET.get('text_message_search_character')
     send_date_min = request.GET.get('send_date_min')
     send_date_max = request.GET.get('send_date_max')
+    sender = request.GET.get('sender')
     # title_or_author_query = request.GET.get('title_or_author')
     # view_count_min = request.GET.get('view_count_min')
     # view_count_max = request.GET.get('view_count_max')
@@ -147,6 +148,8 @@ def filter(request, id):
         qs = qs.filter(created__gte=send_date_min)
     if is_valid_queryparam(send_date_max):
         qs = qs.filter(created__lt=send_date_max)
+    if is_valid_queryparam(sender) and sender != 'Choose...': #TODO: If possible make better
+        qs = qs.filter(sender__email=sender)
     #
     # elif is_valid_queryparam(id_exact_query):
     #     qs = qs.filter(id=id_exact_query)
@@ -180,10 +183,25 @@ def filter(request, id):
     return qs
 
 
+# TODO: raise a proper error on not exist
+def get_chat_user(id):
+    chat_users = []
+    try:
+        chat = Chat.objects.get(id=id)
+    except Chat.DoesNotExist:
+        chat = None
+
+    if chat:
+        chat_users.append(chat.consultant)
+        chat_users.append(chat.user)
+    return chat_users
+
+
 def admin_chat_peek(request, id):
     qs = filter(request, id)
+    chat_users = get_chat_user(id)
     context = {
         'queryset': qs,
+        'chat_users': chat_users
     }
     return render(request, "chats/admin_chat_detail.html", context)
-

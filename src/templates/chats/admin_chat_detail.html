@@ -101,7 +101,7 @@
                                             <label for="Sender">sender</label>
                                             <select id="Sender" class="form-control" name="sender">
                                                 <option selected>Choose...</option>
-                                                {% for user in associated_user %}
+                                                {% for user in chat_users %}
                                                     <option value="{{ user }}">{{ user }}</option>
                                                 {% endfor %}
                                             </select>
