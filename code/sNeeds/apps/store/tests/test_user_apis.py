@@ -425,3 +425,13 @@ class CartTests(APITestCase):
             sts_obj.price
         )
         self.assertEqual(data.get("sold_to"), sts_obj.sold_to.id)
+
+    def sold_time_slot_sale_detail_get_permission_fail(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
