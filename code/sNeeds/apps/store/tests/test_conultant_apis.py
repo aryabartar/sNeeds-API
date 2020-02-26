@@ -271,7 +271,7 @@ class CartTests(APITestCase):
             1
         )
 
-    def test_time_slot_sale_list_get_success(self):
+    def sold_time_slot_sale_list_get_success(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
 

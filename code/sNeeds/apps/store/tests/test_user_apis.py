@@ -143,6 +143,30 @@ class CartTests(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
+        self.sold_time_slot_sale1 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user1,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale2 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=2),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale3 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant2_profile.time_slot_price
+        )
+
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
@@ -356,7 +380,7 @@ class CartTests(APITestCase):
             1
         )
 
-    def test_time_slot_sale_list_get_success(self):
+    def sold_time_slot_sale_list_get_success(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -366,3 +390,38 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for sold_time_slot in response.data:
             self.assertEqual(sold_time_slot.get("sold_to"), self.user1.id)
+
+    def sold_time_slot_sale_list_get_success(self):
+        client = self.client
+
+        url = reverse("store:sold-time-slot-sale-list")
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def sold_time_slot_sale_detail_get_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        sts_obj = self.sold_time_slot_sale1
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+
+        response = client.get(url, format="json")
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("id"), sts_obj.id)
+        self.assertEqual(data.get("consultant").get("id"), sts_obj.consultant.id)
+        self.assertEqual(
+            data.get("start_time"),
+            serializers.DateTimeField().to_representation(sts_obj.start_time)
+        )
+        self.assertEqual(
+            data.get("end_time"),
+            serializers.DateTimeField().to_representation(sts_obj.start_time)
+        )
+        self.assertEqual(
+            data.get("price"),
+            sts_obj.price
+        )
+        self.assertEqual(data.get("sold_to"), sts_obj.sold_to.id)
