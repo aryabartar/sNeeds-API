@@ -179,7 +179,7 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_time_slot_sale_post_success(self):
+    def test_time_slot_sale_list_post_success(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
         url = reverse("store:time-slot-sale-list")
@@ -203,7 +203,7 @@ class CartTests(APITestCase):
         self.assertEqual(response.data.get("price"), 100)
         self.assertEqual(response.data.get("consultant").get("id"), self.consultant1_profile.id)
 
-    def test_time_slot_sale_post_fail(self):
+    def test_time_slot_sale_list_post_fail(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
         url = reverse("store:time-slot-sale-list")
@@ -217,4 +217,17 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_time_slot_sale_detail_delete_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
 
+        ts_obj_id = TimeSlotSale.objects.filter(consultant=self.consultant1_profile).first().id
+
+        url = reverse("store:time-slot-sale-detail", args=(ts_obj_id,))
+        response = client.delete(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(
+            TimeSlotSale.objects.filter(id=ts_obj_id).count,
+            0
+        )
