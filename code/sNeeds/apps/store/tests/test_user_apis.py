@@ -314,3 +314,18 @@ class CartTests(APITestCase):
         response = client.post(url, data=data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_time_slot_sale_detail_delete_permission_fail(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        ts_obj_id = TimeSlotSale.objects.filter(consultant=self.consultant1_profile).first().id
+
+        url = reverse("store:time-slot-sale-detail", args=(ts_obj_id,))
+        response = client.delete(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            TimeSlotSale.objects.filter(id=ts_obj_id).count(),
+            1
+        )
