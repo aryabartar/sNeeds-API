@@ -355,3 +355,14 @@ class CartTests(APITestCase):
             TimeSlotSale.objects.filter(id=ts_obj_id).count(),
             1
         )
+
+    def test_time_slot_sale_list_get_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("store:sold-time-slot-sale-list")
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for sold_time_slot in response.data:
+            self.assertEqual(sold_time_slot.get("sold_to"), self.user1.id)
