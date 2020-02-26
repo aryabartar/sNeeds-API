@@ -431,7 +431,13 @@ class CartTests(APITestCase):
         client.login(email='u2@g.com', password='user1234')
 
         url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
-
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.logout()
+
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

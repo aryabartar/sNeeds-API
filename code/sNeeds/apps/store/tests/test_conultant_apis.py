@@ -144,11 +144,11 @@ class CartTests(APITestCase):
         )
 
         self.sold_time_slot_sale1 = SoldTimeSlotSale.objects.create(
-            sold_to = self.user1,
+            sold_to=self.user1,
             consultant=self.consultant1_profile,
             start_time=timezone.now() + timezone.timedelta(days=2),
             end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
-            price = self.consultant1_profile.time_slot_price
+            price=self.consultant1_profile.time_slot_price
         )
 
         self.sold_time_slot_sale2 = SoldTimeSlotSale.objects.create(
@@ -282,3 +282,20 @@ class CartTests(APITestCase):
         for sold_time_slot in response.data:
             self.assertEqual(sold_time_slot.get("consultant").get("id"), self.consultant1_profile.id)
 
+    def sold_time_slot_sale_detail_get_permission_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def sold_time_slot_sale_detail_get_permission_fail(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale2,))
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
