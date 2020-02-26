@@ -15,6 +15,6 @@ class TimeSlotSaleFilter(filters.FilterSet):
     class Meta:
         model = models.TimeSlotSale
         fields = [
-            'consultant', 'start_time_range', 'end_time_range'
+            'consultant', 'start_time_range', 'end_time_range',
             'min_price', 'max_price', 'price'
         ]
