@@ -1,22 +1,20 @@
-from django_filters import rest_framework as filters
+from django_filters import rest_framework as filters, DateTimeFromToRangeFilter
 
 from . import models
+
+from sNeeds.utils.custom.filterset import CustomDateTimeFromToRangeFilter
 
 
 class TimeSlotSaleFilter(filters.FilterSet):
     min_price = filters.NumberFilter(field_name="price", lookup_expr='gte')
     max_price = filters.NumberFilter(field_name="price", lookup_expr='lte')
 
-    min_start_time = filters.DateTimeFilter(field_name="start_time", lookup_expr="gte")
-    max_start_time = filters.DateTimeFilter(field_name="start_time", lookup_expr="lte")
-
-    min_end_time = filters.DateTimeFilter(field_name="end_time", lookup_expr="gte")
-    max_end_time = filters.DateTimeFilter(field_name="end_time", lookup_expr="lte")
+    start_time_range = CustomDateTimeFromToRangeFilter(field_name="start_time")
+    end_time_range = CustomDateTimeFromToRangeFilter(field_name="end_time")
 
     class Meta:
         model = models.TimeSlotSale
         fields = [
-            'consultant', 'min_start_time', 'max_start_time',
-            'min_end_time', 'max_end_time',
-            'end_time', 'min_price', 'max_price', 'price'
+            'consultant', 'start_time_range', 'end_time_range'
+            'min_price', 'max_price', 'price'
         ]

@@ -187,3 +187,15 @@ class CartTests(APITestCase):
             len(response.data),
             TimeSlotSale.objects.all().count()
         )
+
+    def test_time_slot_sales_list_get_success_(self):
+        client = self.client
+        url = reverse("store:time-slot-sale-list")
+
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            len(response.data),
+            TimeSlotSale.objects.all().count()
+        )
