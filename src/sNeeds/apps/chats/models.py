@@ -80,7 +80,7 @@ class FileMessage(Message):
 
 
 class VoiceMessage(Message):
-    file_field = models.FileField(
+    voice_field = models.FileField(
         upload_to=get_voice_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['mp3', 'm4a'])]  # TODO: may be changed
     )

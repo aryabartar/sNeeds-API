@@ -121,22 +121,66 @@
     </div>
 
     <div class="row">
-        <ul>
-            {% for message in queryset %}
-                <li>
-                    {{ message.textMessage }}
-                    <span>Author: {{ message.text_message }}</span>
-                    <span>
-                {% for cat in journal.categories.all %}
-                    {{ cat }}
-                {% endfor %}
-              </span>
-                    <span>Publish date: {{ journal.publish_date }}</span>
-                    <span>View count: {{ journal.views }}</span>
-                    <span>Reviewed: {{ journal.reviewed }}</span>
-                </li>
-            {% endfor %}
-        </ul>
+        {% for message in queryset %}
+            {% if message.sender.is_consultant %}
+                <div class="container">
+                    <div class="card left bg-light mt-2" style="width: 18rem">
+                        <h6 class="card-footer text">{{ message.sender }}</h6>
+
+                        {% if message.image_field %}
+                            <img src="{{ message.image_field.url }}" alt="{{ message.image_field.url }}"
+                                 class="card-img-top">
+                        {% endif %}
+
+                        <div class="card-body">
+                            {% if message.text_message %}
+                                <p class="card-text">{{ message.text_message }}</p>
+                            {% elif message.file_field %}
+                                <a href="{{ message.file_field.url }}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-file"></i>
+                                </a>
+                            {% elif message.voice_field %}
+                            <a href="{{ message.voice_field.url }}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-file-audio"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                        <h6 class="card-footer text-muted">{{ message.created }}</h6>
+
+                    </div>
+                </div>
+
+            {% else %}
+
+                <div class="container">
+                    <div class="card float-right bg-light mt-2" style="width: 18rem">
+                        <h6 class="card-footer text">{{ message.sender }}</h6>
+
+                        {% if message.image_field %}
+                            <img src="{{ message.image_field.url }}" alt="{{ message.image_field.url }}"
+                                 class="card-img-top">
+                        {% endif %}
+
+                        <div class="card-body">
+                            {% if message.text_message %}
+                                <p class="card-text">{{ message.text_message }}</p>
+                            {% elif message.file_field %}
+                                <a href="{{ message.file_field.url }}" class="btn btn-submit btn-lg">
+                                    <i class="fas fa-file"></i>
+                                </a>
+                            {% elif message.voice_field %}
+                                <a href="{{ message.voice_field.url }}" class="btn btn-submit btn-lg">
+                                    <i class="fas fa-file-audio"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <h6 class="card-footer text-muted">{{ message.created }}</h6>
+
+                    </div>
+                </div>
+
+            {% endif %}
+        {% endfor %}
     </div>
 
 </main>
