@@ -7,12 +7,12 @@ from sNeeds.utils import sendemail
 from .models import TimeSlotSale
 
 
-@task()
+@shared_task
 def delete_time_slots():
     """
     Deletes time slots with less than 24 hours to start.
     """
-    qs = TimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1))
+    qs = TimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(hours=12))
     qs.delete()
 
 
