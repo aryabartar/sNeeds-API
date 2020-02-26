@@ -143,6 +143,30 @@ class CartTests(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
+        self.sold_time_slot_sale1 = SoldTimeSlotSale.objects.create(
+            sold_to = self.user1,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price = self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale2 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=2),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale3 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant2_profile.time_slot_price
+        )
+
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
@@ -246,3 +270,15 @@ class CartTests(APITestCase):
             TimeSlotSale.objects.filter(id=ts_obj_id).count(),
             1
         )
+
+    def test_time_slot_sale_list_get_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        url = reverse("store:sold-time-slot-sale-list")
+        response = client.get(url, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for sold_time_slot in response.data:
+            self.assertEqual(sold_time_slot.get("consultant").get("id"), self.consultant1_profile.id)
+

@@ -134,6 +134,7 @@ class SoldProduct(models.Model):
     objects = SoldProductQuerySet.as_manager()
 
 
+# TODO: sold and unsold intersections
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
