@@ -288,7 +288,6 @@ class CartTests(APITestCase):
             TimeSlotSale.objects.filter(price__lte=100, price__gte=100).count()
         )
 
-
         url = "%s?%s=%s&%s=%s" % (
             reverse("store:time-slot-sale-list"),
             "price_min",
@@ -303,3 +302,15 @@ class CartTests(APITestCase):
             len(response.data),
             TimeSlotSale.objects.filter(price__lte=1000, price__gte=10).count()
         )
+
+    def test_time_slot_sale_post_permission_denied(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("store:time-slot-sale-list")
+        data = {
+            "start-time": datetime.strftime(timezone.now() + timezone.timedelta(days=1), '%Y-%m-%dT%H:%M:%SZ')
+        }
+        response = client.post(url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

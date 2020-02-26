@@ -1,9 +1,12 @@
+import json
+
 from django.utils import timezone
 import time
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from rest_framework import status
+from django.utils.datetime_safe import datetime
+from rest_framework import status, serializers
 from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
@@ -176,34 +179,25 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_time_slot_sales_to_sold_time_slot_sales_working(self):
-        class TempTimeSlotSale:
-            def __init__(self, consultant, price, start_time, end_time):
-                self.consultant = consultant
-                self.price = price
-                self.start_time = start_time
-                self.end_time = end_time
+    def test_time_slot_sale_post_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("store:time-slot-sale-list")
 
-        time_slot_sales_qs = TimeSlotSale.objects.all()
+        data = {
+            "start_time": datetime.strftime(timezone.now() + timezone.timedelta(days=4), '%Y-%m-%dT%H:%M:%SZ')
+        }
+        response = client.post(url, data=data, format="json")
 
-        temp_time_slot_sales_list = []
-        for obj in time_slot_sales_qs:
-            temp_time_slot_sales_list.append(
-                TempTimeSlotSale(obj.consultant, obj.price, obj.start_time, obj.end_time)
-            )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        time_slot_sales_qs.set_time_slot_sold(self.user1)
-
-        self.assertEqual(TimeSlotSale.objects.all().count(), 0)
-
-        for obj in temp_time_slot_sales_list:
-            self.assertEqual(
-                SoldTimeSlotSale.objects.filter(
-                    consultant=obj.consultant,
-                    price=obj.price,
-                    start_time=obj.start_time,
-                    end_time=obj.end_time,
-                    sold_to=self.user1
-                ).count(),
-                1
-            )
+        ts_obj = TimeSlotSale.objects.get(id=response.data.get("id"))
+        self.assertEqual(
+            response.data.get("start_time"),
+            serializers.DateTimeField().to_representation(ts_obj.start_time)
+        )
+        self.assertEqual(
+            response.data.get("end_time"),
+            serializers.DateTimeField().to_representation(ts_obj.end_time)
+        )
+        self.assertEqual(response.data.get("price"), 100)
