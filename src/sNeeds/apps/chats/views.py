@@ -90,7 +90,7 @@ class AdminChatFormView(generic.detail.SingleObjectMixin, generic.FormView):
     object = Message
 
 
-class AdminChatDetailView(UserPassesTestMixin, generic.DetailView):
+class AdminChatDetailView(generic.DetailView):
     template_name = "chats/admin_chat_detail.html"
     model = Chat
     slug_field = 'id'
@@ -103,14 +103,8 @@ class AdminChatDetailView(UserPassesTestMixin, generic.DetailView):
         data['form'] = MessageFilterForm()
         return data
 
-    def test_func(self):
-        if not self.request.user.is_anonymous:
-            if self.request.user.is_superuser:
-                return True
-        return False
 
-
-class AdminChatView(View):
+class AdminChatView(UserPassesTestMixin, View):
 
     def get(self, request, *args, **kwargs):
         view = AdminChatDetailView.as_view()
@@ -119,3 +113,9 @@ class AdminChatView(View):
     def post(self, request, *args, **kwargs):
         view = AdminChatFormView.as_view()
         return view(request, *args, **kwargs)
+
+    def test_func(self):
+        if not self.request.user.is_anonymous:
+            if self.request.user.is_superuser:
+                return True
+        return False
