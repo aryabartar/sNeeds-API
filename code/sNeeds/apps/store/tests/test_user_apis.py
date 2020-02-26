@@ -6,7 +6,7 @@ import time
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.utils.datetime_safe import datetime
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
@@ -303,7 +303,7 @@ class CartTests(APITestCase):
             TimeSlotSale.objects.filter(price__lte=1000, price__gte=10).count()
         )
 
-    def test_time_slot_sale_post_permission_denied(self):
+    def test_time_slot_sale_list_post_permission_denied(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -314,6 +314,32 @@ class CartTests(APITestCase):
         response = client.post(url, data=data, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def time_slot_sale_detail_get_success(self):
+        client = self.client
+
+        ts_obj = TimeSlotSale.objects.all().first()
+        url = reverse("store:time-slot-sale-detail", args=(ts_obj,))
+
+        response = client.get(url, format="json")
+
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("id"), ts_obj.id)
+        self.assertEqual(data.get("consultant").get("id"), ts_obj.consultant.id)
+        self.assertEqual(
+            data.get("start_time"),
+            serializers.DateTimeField().to_representation(ts_obj.start_time)
+        )
+        self.assertEqual(
+            data.get("end_time"),
+            serializers.DateTimeField().to_representation(ts_obj.start_time)
+        )
+        self.assertEqual(
+            data.get("price"),
+            ts_obj.price
+        )
 
     def test_time_slot_sale_detail_delete_permission_fail(self):
         client = self.client
