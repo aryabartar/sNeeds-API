@@ -273,14 +273,33 @@ class CartTests(APITestCase):
 
     def test_time_slot_sales_list_get_min_max_price(self):
         client = self.client
-        url = "%s?%s=%s" % (
+        url = "%s?%s=%s&%s=%s" % (
             reverse("store:time-slot-sale-list"),
-            "consultant",
-            self.consultant2_profile.id
+            "price_min",
+            100,
+            "price_max",
+            100
         )
+
         response = client.get(url, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             len(response.data),
-            TimeSlotSale.objects.filter(consultant=self.consultant2_profile).count()
+            TimeSlotSale.objects.filter(price__lte=100, price__gte=100).count()
+        )
+
+
+        url = "%s?%s=%s&%s=%s" % (
+            reverse("store:time-slot-sale-list"),
+            "price_min",
+            10,
+            "price_max",
+            1000
+        )
+
+        response = client.get(url, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            len(response.data),
+            TimeSlotSale.objects.filter(price__lte=1000, price__gte=10).count()
         )
