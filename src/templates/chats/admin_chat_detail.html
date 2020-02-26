@@ -1,28 +1,157 @@
-<!DOCTYPE html>
+{#<!DOCTYPE html>#}
+{#<html lang="en">#}
+{#<head>#}
+{#    <meta charset="UTF-8">#}
+{#    <title>Admin chat detail view</title>#}
+{#</head>#}
+{#<body>#}
+{#    <form method="POST">{% csrf_token %}#}
+{#        {{ form.as_p }}#}
+{#        <button type="submit" class="save btn btn-default">Filter</button>#}
+{#    </form>#}
+{#    {% for message in chat_messages %}#}
+{#        <ul>#}
+{#            <li> {{ message.sender }}</li>#}
+{#            <li> {{ message.updated }}</li>#}
+{#            <li> {{ message.created }}</li>#}
+{#            {% if message.text_message %}#}
+{#                <li> {{ message.text_message }}</li>#}
+{#            {% elif message.file_field %}#}
+{#                <li> {{ message.file_field }}</li>#}
+{#            {% elif message.image_field %}#}
+{#                <li> {{ message.image_field }}</li>#}
+{#            {% endif %}#}
+{#        </ul>#}
+{#    {% endfor %}#}
+{##}
+{#</body>#}
+{#</html>#}
+
+{% load static %}
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Admin chat detail view</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title>Messages</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'template.css' %}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+          integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
+          crossorigin="anonymous">
 </head>
 <body>
-    <form method="POST">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
-    {% for message in chat_messages %}
-        <ul>
-            <li> {{ message.sender }}</li>
-            <li> {{ message.updated }}</li>
-            <li> {{ message.created }}</li>
-            {% if message.text_message %}
-                <li> {{ message.text_message }}</li>
-            {% elif message.file_field %}
-                <li> {{ message.file_field }}</li>
-            {% elif message.image_field %}
-                <li> {{ message.image_field }}</li>
-            {% endif %}
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">sNeeds</a>
+            </li>
         </ul>
-    {% endfor %}
+    </div>
+</nav>
+
+<main role="main" class="container">
+
+    <div id="accordion">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        Filters
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+                <div class="card-body">
+                    <h3>Filter Messages</h3>
+                    <form method="GET" action=".">
+                        <div class="container">
+                            <div class="row">
+                                <div class="form-row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input class="form-control py-2 border-right-0 border"
+                                                       type="search" name="text_message_contains"
+                                                       placeholder="Search messages..."/>
+                                                <span class="input-group-append">
+                                            <div class="input-group-text bg-transparent">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="sendDate">date</label>
+                                            <input type="date" class="form-control" id="sendDate" name="send_date">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="Sender">sender</label>
+                                            <select id="Sender" class="form-control" name="sender">
+                                                <option selected>Choose...</option>
+                                                {% for user in associated_user %}
+                                                    <option value="{{ user }}">{{ user }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-4">
+                                    <label for="messageTypeSelector">type</label>
+                                    <select multiple class="form-control" id="messageTypeSelector">
+                                        {% for message_type in message_types %}
+                                            <option value="{{ message_type }}"> {{ message_type }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="row">
+        <ul>
+            {% for journal in queryset %}
+                <li>
+                    {{ journal.title }}
+                    <span>Author: {{ journal.author.name }}</span>
+                    <span>
+                {% for cat in journal.categories.all %}
+                    {{ cat }}
+                {% endfor %}
+              </span>
+                    <span>Publish date: {{ journal.publish_date }}</span>
+                    <span>View count: {{ journal.views }}</span>
+                    <span>Reviewed: {{ journal.reviewed }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</main>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 
 </body>
+
 </html>

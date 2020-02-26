@@ -88,6 +88,7 @@ class AdminChatFormView(generic.detail.SingleObjectMixin, generic.FormView):
     template_name = "chats/admin_chat_detail.html"
     form_class = MessageFilterForm
     object = Message
+    success_url = "/chat/admin/"
 
 
 class AdminChatDetailView(generic.DetailView):
