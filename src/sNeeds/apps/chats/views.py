@@ -15,7 +15,6 @@ from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
-from .forms import MessageFilterForm
 
 
 class ChatListAPIView(generics.ListAPIView):
@@ -98,6 +97,7 @@ def filter_chats(request):
         qs = qs.filter(consultant__user__email__icontains=consultant_email)
 
     return qs
+
 
 @user_passes_test(test_func=check_is_admin)
 def admin_chat_peek(request):
