@@ -1,8 +1,8 @@
-from django.db.models import Q
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.views import generic, View
-from django.shortcuts import render
+from django.shortcuts import render,reverse
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -123,6 +123,12 @@ class AdminChatView(UserPassesTestMixin, View):
         return False
 
 
+def check_is_admin(user):
+    if not user.is_anonymous:
+        return user.is_superuser
+    return False
+
+
 def is_valid_queryparam(param):
     return param != '' and param is not None and param != []
 
@@ -142,7 +148,7 @@ def filter_chats(request):
 
     return qs
 
-
+@user_passes_test(test_func=check_is_admin)
 def admin_chat_peek(request):
     qs = filter_chats(request)
     context = {
@@ -197,6 +203,7 @@ def get_chat_user(id):
     return chat_users
 
 
+@user_passes_test(test_func=check_is_admin)
 def admin_chat_messages_peek(request, id):
     qs = filter_messages(request, id)
     chat_users = get_chat_user(id)
