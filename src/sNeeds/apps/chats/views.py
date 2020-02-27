@@ -130,9 +130,12 @@ def is_valid_queryparam(param):
 def filter_chats(request):
     qs = Chat.objects.all()
     chat_id = request.GET.get('chat_id')
+    user_email = request.GET.get('user_email')
 
     if is_valid_queryparam(chat_id):
         qs = qs.filter(id=chat_id)
+    if is_valid_queryparam(user_email):
+        qs = qs.filter(user__email__icontains=user_email)
 
     return qs
 
