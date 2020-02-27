@@ -179,16 +179,13 @@ def get_login_url_without_password(user_id, room_id, ttl):
         "language": "fa",
         "ttl": ttl
     }
-
-    for i in range(0, NUMBER_OF_TRIES):
-        response = s.getLoginUrl(params=params)
-        if response.get('ok'):
-            break
-
-        if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
-
-    return response.get('result')
+    response = s.getLoginUrl(params=params)
+    if response.get("ok"):
+        return response.get("result")
+    elif " مورد نظر پیدا نشد" in response.get("error_message"):
+        raise SkyroomConnectException("Error while creating login link.")
+    else:
+        raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def create_2members_chat_room(
@@ -202,7 +199,6 @@ def create_2members_chat_room(
 
     if nickname2 == "" or nickname2 is None:
         nickname2 = "مشاور"
-
     user1_id = create_user_or_get_current_id(username1, ALL_SKYROOM_USERS_PASSWORD, nickname1, user1email)
     user2_id = create_user_or_get_current_id(username2, ALL_SKYROOM_USERS_PASSWORD, nickname2, user2email)
 
