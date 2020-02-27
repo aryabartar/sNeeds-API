@@ -26,20 +26,87 @@
 </nav>
 
 <main role="main" class="container">
-    <div class="card-columns">
-        {% for chat in queryset %}
-            <div class="card text-center">
-                <div class="card-header">{{ chat.id }}</div>
+
+    <div id="accordion">
+
+        <div class="card mb-3">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn" data-toggle="collapse" data-target="#collapseOne"
+                            aria-expanded="true" aria-controls="collapseOne">
+                        Filters
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
-                    <p class="card-text"><strong>consultant:</strong> {{ chat.consultant }}</p>
-                    <p class="card-text"><strong>user:</strong> {{ chat.user }}</p>
-                    <a href="{% url 'chat:admin-chat-detail' id=chat.id %}">
-                        <button type="button" class="btn btn-primary">Peek</button>
-                    </a>
+                    <h3>Filter Chats</h3>
+                    <form method="GET" action=".">
+                        <div class="container">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input class="form-control py-2 border-right-0 border"
+                                                       type="search" name="chat_id"
+                                                       placeholder="Enter Chat id..."/>
+                                                <span class="input-group-append">
+                                            <div class="input-group-text bg-transparent">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input class="form-control py-2 border-right-0 border"
+                                                       type="search" name="user_email"
+                                                       placeholder="User Email.."/>
+                                                <span class="input-group-append">
+                                            <div class="input-group-text bg-transparent">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input class="form-control py-2 border-right-0 border"
+                                                       type="search" name="consultant_email"
+                                                       placeholder="Consultant Email..."/>
+                                                <span class="input-group-append">
+                                            <div class="input-group-text bg-transparent">
+                                                <i class="fa fa-search"></i>
+                                            </div>
+                                        </span>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Filter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        {% endfor %}
-    </div>
+        </div>
+
+        <div class="card-columns">
+            {% for chat in queryset %}
+                <div class="card text-center">
+                    <div class="card-header">{{ chat.id }}</div>
+                    <div class="card-body">
+                        <p class="card-text"><strong>consultant:</strong> {{ chat.consultant }}</p>
+                        <p class="card-text"><strong>user:</strong> {{ chat.user }}</p>
+                        <a href="{% url 'chat:admin-chat-detail' id=chat.id %}">
+                            <button type="button" class="btn btn-primary">Peek</button>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
 
 </main>
 
