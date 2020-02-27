@@ -20,12 +20,24 @@ class ProductQuerySet(models.QuerySet):
         return result_qs
 
 
+class SoldProductQuerySet(models.QuerySet):
+    def get_sold_time_slot_sales(self):
+        result_qs = SoldTimeSlotSale.objects.none()
+        for i in self.all():
+            try:
+                sold_time_slot_sale = i.soldtimeslotsale
+                result_qs |= SoldTimeSlotSale.objects.filter(pk=sold_time_slot_sale.id)
+            except SoldTimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
-        sold_tome_slot_sales_list = []
 
+        sold_tome_slot_sales_list = []
         for obj in qs:
             sold_tome_slot_sales_list.append(
                 SoldTimeSlotSale.objects.create(
@@ -34,12 +46,14 @@ class TimeSlotSaleManager(models.QuerySet):
                     end_time=obj.end_time,
                     price=obj.price,
                     sold_to=sold_to,
+                    used=False
                 )
             )
+        sold_tome_slot_sales_qs = SoldTimeSlotSale.objects.filter(id__in=[obj.id for obj in sold_tome_slot_sales_list])
 
         qs.delete()
 
-        return sold_tome_slot_sales_list
+        return sold_tome_slot_sales_qs
 
 
 class Product(models.Model):
@@ -48,7 +62,7 @@ class Product(models.Model):
     objects = ProductQuerySet.as_manager()
 
 
-class AbstractTimeSlotSale(Product):
+class TimeSlotSale(Product):
     consultant = models.ForeignKey(
         ConsultantProfile,
         on_delete=models.CASCADE
@@ -56,8 +70,7 @@ class AbstractTimeSlotSale(Product):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
-    class Meta:
-        abstract = True
+    objects = TimeSlotSaleManager.as_manager()
 
     def __str__(self):
         return str(self.pk)
@@ -67,11 +80,7 @@ class AbstractTimeSlotSale(Product):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        super(AbstractTimeSlotSale, self).save(*args, **kwargs)
-
-
-class TimeSlotSale(AbstractTimeSlotSale):
-    objects = TimeSlotSaleManager.as_manager()
+        super(TimeSlotSale, self).save(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         start_time = self.start_time
@@ -117,6 +126,23 @@ class TimeSlotSale(AbstractTimeSlotSale):
             })
 
 
-class SoldTimeSlotSale(AbstractTimeSlotSale):
+class SoldProduct(models.Model):
+    price = models.PositiveIntegerField()
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    created = models.DateTimeField(auto_now_add=True)
+
+    objects = SoldProductQuerySet.as_manager()
+
+
+# TODO: sold and unsold intersections
+class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
+    start_time = models.DateTimeField()
+    end_time = models.DateTimeField()
+
+    objects = SoldProductQuerySet.as_manager()
+
+    def clean(self, *args, **kwargs):
+        if self.end_time <= self.start_time:
+            raise ValidationError(_("End time should be after start time"), code='invalid')

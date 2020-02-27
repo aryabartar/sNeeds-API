@@ -73,7 +73,7 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
         return obj
 
     def validate_start_time(self, obj):
-        if obj < (timezone.now() + datetime.timedelta(hours=1)):
+        if obj < (timezone.now() + datetime.timedelta(hours=12)):
             raise ValidationError(
                 _("You have to choose time later than 1 hour later.")
             )
@@ -93,8 +93,7 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoldTimeSlotSale
         fields = [
-            'id', 'url', 'consultant', 'start_time', 'end_time',
-            'price', 'sold_to', 'used',
+            'id', 'url', 'price', 'sold_to', 'used', 'consultant', 'start_time', 'end_time',
         ]
 
     def get_sold_to(self, obj):

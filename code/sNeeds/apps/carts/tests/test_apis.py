@@ -173,10 +173,9 @@ class CartTests(APITestCase):
         response = client.post(url, data=data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
         self.assertEqual(
-            [i.id for i in products],
-            response.data.get("products")
+            [i.id for i in products].sort(),
+            response.data.get("products").sort()
         )
 
     def test_post_cart_not_pass_time_conflict(self):
@@ -300,3 +299,14 @@ class CartTests(APITestCase):
         self.assertEqual(cart.total, response.data.get("total"))
         self.assertEqual(cart.subtotal, response.data.get("subtotal"))
         self.assertEqual([p.id for p in cart.products.all()].sort(), response.data.get("products").sort())
+
+    def test_remove_product_from_cart_updates_price(self):
+        self.assertEqual(
+            self.cart1.total,
+            self.time_slot_sale1.price + self.time_slot_sale2.price
+        )
+        self.cart1.products.remove(self.time_slot_sale1)
+        self.assertEqual(
+            self.cart1.total,
+            self.time_slot_sale2.price
+        )

@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from sNeeds.apps.orders.models import Order
 
 from .models import PayPayment
+from ..carts.models import Cart
 
 ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
 
@@ -73,6 +74,7 @@ class Verify(APIView):
             result = client.service.PaymentVerification(ZARINPAL_MERCHANT, authority, int(payment.order.total))
 
             if result.Status == 100:
+                # Order.objects.sell_order(payment.cart)
                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
             elif result.Status == 101:
                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)
@@ -81,3 +83,12 @@ class Verify(APIView):
 
         else:
             return Response({"detail": "Transaction failed or canceled by user"}, status=400)
+
+
+class VerifyTest(APIView):
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request):
+        cart_id = request.query_params.get("id")
+        Order.objects.sell_cart_create_order(Cart.objects.get(id=cart_id))
+        return HttpResponse()

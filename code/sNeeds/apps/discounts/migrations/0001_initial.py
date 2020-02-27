@@ -41,7 +41,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('cart', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='carts.Cart')),
-                ('consultant_discount', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='discounts.ConsultantDiscount', validators=[sNeeds.apps.discounts.models.validate_consultant_discount])),
+                ('consultant_discount', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='discounts.ConsultantDiscount')),
             ],
             options={
                 'unique_together': {('cart', 'consultant_discount')},

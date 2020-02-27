@@ -2,7 +2,7 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 
 User = get_user_model()
 
@@ -20,41 +20,43 @@ class CartManager(models.QuerySet):
         obj.products.add(*products)
         return obj
 
-    @transaction.atomic
-    def set_cart_paid(self, cart):
-        pass
-
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
+    products = models.ManyToManyField(Product, blank=True)
     subtotal = models.IntegerField(default=0, blank=True)
     total = models.IntegerField(default=0, blank=True)
-    products = models.ManyToManyField(TimeSlotSale, blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
     objects = CartManager.as_manager()
 
-    def get_products_count(self):
-        return self.products.all().count()
+    def get_time_slot_sales_count(self):
+        return self.products.all().get_time_slot_sales().count()
 
     def _update_total_cart_consultant_discount_percent(self):
         from sNeeds.apps.discounts.models import CartConsultantDiscount
 
         products = self.products.all()
-        cart_consultant_discount_qs = CartConsultantDiscount.objects.filter(cart__id=self.id)
+        try:
+            cart_consultant_discount = CartConsultantDiscount.objects.get(cart__id=self.id)
+        except CartConsultantDiscount.DoesNotExist:
+            self.total = self.subtotal
+            return
 
         total = 0
         for product in products:
             percent = 0
-            for obj in cart_consultant_discount_qs:
 
-                # For TimeSlots
-                if isinstance(product, TimeSlotSale):
-                    consultants_qs = obj.consultant_discount.consultants.all()
-                    if product.timeslotsale.consultant in consultants_qs:
-                        percent += obj.consultant_discount.percent
+            # For TimeSlots
+            try:
+                time_slot_sale = product.timeslotsale  # Checks here
+                consultants_qs = cart_consultant_discount.consultant_discount.consultants.all()
+                if time_slot_sale.consultant in consultants_qs:
+                    percent += cart_consultant_discount.consultant_discount.percent
+            except TimeSlotSale.DoesNotExist:
+                pass
 
             total += product.price * ((100.0 - percent) / 100)
         self.total = total
@@ -62,8 +64,9 @@ class Cart(models.Model):
     def _update_total_time_slot_number(self):
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
-        time_slot_sale_count = self.get_products_count()
+        time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+
         self.total = self.total * ((100.0 - count_discount) / 100)
 
     def is_acceptable_for_pay(self):
@@ -97,4 +100,3 @@ class Cart(models.Model):
 
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))
-

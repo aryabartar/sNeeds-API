@@ -16,7 +16,7 @@ class CartListView(generics.ListCreateAPIView):
         return Cart.objects.filter(user=self.request.user)
 
 
-class CartDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CartDetailView(generics.RetrieveAPIView):
     queryset = Cart.objects.all()
     serializer_class = serializers.CartSerializer
     lookup_field = 'id'
