@@ -2,6 +2,7 @@ import requests
 import json
 
 from django.conf import settings
+from sNeeds.settings.config.SkyroomConfig import  NUMBER_OF_TRIES
 
 
 class APIException(Exception):
@@ -38,11 +39,11 @@ class SkyroomAPI(object):
         if params:
             data['params'] = params
 
-        for _ in range(0, 3):
+        for _ in range(0, NUMBER_OF_TRIES):
             try:
                 content_data = requests.post(url, headers=self.headers, auth=None, json=data).content
 
-                for i in range(0,3):
+                for i in range(0,NUMBER_OF_TRIES):
                     try:
                         response = json.loads(content_data.decode("utf-8"))
 

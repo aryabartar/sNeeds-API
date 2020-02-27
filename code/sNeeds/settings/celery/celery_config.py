@@ -13,12 +13,12 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_BEAT_SCHEDULE = {
     'create-room': {
         'task': 'sNeeds.apps.videochats.tasks.create_rooms_from_sold_time_slots',
-        'schedule': timedelta(seconds=1),
+        'schedule': timedelta(seconds=10),
     },
-    # 'delete-room': {
-    #     'task': 'sNeeds.apps.videochats.tasks.delete_used_rooms',
-    #     'schedule': crontab(minute='*/1'),
-    # },
+    'delete-room': {
+        'task': 'sNeeds.apps.videochats.tasks.delete_used_rooms',
+        'schedule': timedelta(seconds=10),
+    },
     'delete-time-slots': {
         'task': 'sNeeds.apps.store.tasks.delete_time_slots',
         'schedule':  timedelta(minutes=1),

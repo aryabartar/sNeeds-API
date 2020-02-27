@@ -5,19 +5,19 @@ from django.utils import timezone
 from celery import task, shared_task
 from celery.utils.log import get_task_logger
 
+from sNeeds.settings.config.SkyroomConfig import BEFORE_AFTER_CLASS_TIME_MINUTES
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.videochats.models import Room
-from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room
+from sNeeds.apps.videochats.utils import create_2members_chat_room
 
 logger = get_task_logger(__name__)
 
 
 @task()
 def create_rooms_from_sold_time_slots():
-    # 5 minutes before and 2 minutes after
     qs = SoldTimeSlotSale.objects.filter(
-        start_time__lte=timezone.now() + timezone.timedelta(minutes=5),
-        start_time__gte=timezone.now() - timezone.timedelta(minutes=2),
+        start_time__lte=timezone.now() + timezone.timedelta(minutes=BEFORE_AFTER_CLASS_TIME_MINUTES),
+        start_time__gte=timezone.now() - timezone.timedelta(minutes=BEFORE_AFTER_CLASS_TIME_MINUTES),
         used=False
     )
 
@@ -35,7 +35,7 @@ def delete_used_rooms():
     qs.delete()
 
 
-# @shared_task
+@shared_task
 def create_room_with_users_in_skyroom(room_id):
     room = Room.objects.get(id=room_id)
     user = room.sold_time_slot.sold_to

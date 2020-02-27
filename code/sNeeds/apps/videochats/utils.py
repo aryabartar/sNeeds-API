@@ -1,17 +1,14 @@
-from django.conf import settings
+import datetime
 
 from sNeeds.utils import skyroom
+from sNeeds.apps.store.models import SoldTimeSlotSale
+from sNeeds.settings.config.SkyroomConfig import ALL_SKYROOM_USERS_PASSWORD, NUMBER_OF_TRIES, ROOM_MAX_USERS, \
+    BEFORE_AFTER_CLASS_TIME_MINUTES
 
 from .exceptions import SkyroomConnectException
 from .models import Room
-from sNeeds.apps.store.models import SoldTimeSlotSale
 
-import datetime
-
-NUMBER_OF_TRIES = 5
-ROOM_MAX_USERS = 2
 s = skyroom.SkyroomAPI()
-ALL_SKYROOM_USERS_PASSWORD = settings.ALL_SKYROOM_USERS_PASSWORD
 
 
 def _get_all_users():
@@ -94,7 +91,8 @@ def create_room_or_get(room_id, max_users):
     title = "مشاوره اسنیدز {}".format(room_id)
 
     sold_session = SoldTimeSlotSale.objects.get(id=room_id)
-    room_session_duration = (sold_session.end_time - sold_session.start_time).seconds // 60
+    room_session_duration = (sold_session.end_time - sold_session.start_time + datetime.timedelta(
+        minutes=2 * BEFORE_AFTER_CLASS_TIME_MINUTES)).seconds // 60
 
     params = {
         "name": name,
