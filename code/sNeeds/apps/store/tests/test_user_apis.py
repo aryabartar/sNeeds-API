@@ -335,7 +335,7 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def time_slot_sale_detail_get_success(self):
+    def test_time_slot_sale_detail_get_success(self):
         client = self.client
 
         ts_obj = TimeSlotSale.objects.all().first()
@@ -354,7 +354,7 @@ class CartTests(APITestCase):
         )
         self.assertEqual(
             data.get("end_time"),
-            serializers.DateTimeField().to_representation(ts_obj.start_time)
+            serializers.DateTimeField().to_representation(ts_obj.end_time)
         )
         self.assertEqual(
             data.get("price"),
@@ -376,7 +376,7 @@ class CartTests(APITestCase):
             1
         )
 
-    def sold_time_slot_sale_list_get_success(self):
+    def test_sold_time_slot_sale_list_get_success(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -387,7 +387,7 @@ class CartTests(APITestCase):
         for sold_time_slot in response.data:
             self.assertEqual(sold_time_slot.get("sold_to"), self.user1.id)
 
-    def sold_time_slot_sale_list_get_success(self):
+    def test_sold_time_slot_sale_list_get_success(self):
         client = self.client
 
         url = reverse("store:sold-time-slot-sale-list")
@@ -395,7 +395,7 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def sold_time_slot_sale_list_get_consultant_filter(self):
+    def test_sold_time_slot_sale_list_get_consultant_filter(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -420,12 +420,12 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-    def sold_time_slot_sale_detail_get_success(self):
+    def test_sold_time_slot_sale_detail_get_success(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         sts_obj = self.sold_time_slot_sale1
-        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1.id,))
 
         response = client.get(url, format="json")
         data = response.data
@@ -439,26 +439,26 @@ class CartTests(APITestCase):
         )
         self.assertEqual(
             data.get("end_time"),
-            serializers.DateTimeField().to_representation(sts_obj.start_time)
+            serializers.DateTimeField().to_representation(sts_obj.end_time)
         )
         self.assertEqual(
             data.get("price"),
             sts_obj.price
         )
-        self.assertEqual(data.get("sold_to"), sts_obj.sold_to.id)
+        self.assertEqual(data.get("sold_to").get("id"), sts_obj.sold_to.id)
 
-    def sold_time_slot_sale_detail_get_permission_fail(self):
+    def test_sold_time_slot_sale_detail_get_permission_fail(self):
         client = self.client
         client.login(email='u2@g.com', password='user1234')
 
-        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1.id,))
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         client.logout()
 
-        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1.id,))
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

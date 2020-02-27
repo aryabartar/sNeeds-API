@@ -267,7 +267,7 @@ class CartTests(APITestCase):
             1
         )
 
-    def sold_time_slot_sale_list_get_success(self):
+    def test_sold_time_slot_sale_list_get_success(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
 
@@ -278,20 +278,20 @@ class CartTests(APITestCase):
         for sold_time_slot in response.data:
             self.assertEqual(sold_time_slot.get("consultant").get("id"), self.consultant1_profile.id)
 
-    def sold_time_slot_sale_detail_get_permission_success(self):
+    def test_sold_time_slot_sale_detail_get_permission_success(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
 
-        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1,))
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale1.id,))
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def sold_time_slot_sale_detail_get_permission_fail(self):
+    def test_sold_time_slot_sale_detail_get_permission_fail(self):
         client = self.client
-        client.login(email='c1@g.com', password='user1234')
+        client.login(email='c2@g.com', password='user1234')
 
-        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale2,))
+        url = reverse("store:sold-time-slot-sale-detail", args=(self.sold_time_slot_sale2.id,))
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
