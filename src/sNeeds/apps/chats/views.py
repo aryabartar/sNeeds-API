@@ -123,6 +123,14 @@ class AdminChatView(UserPassesTestMixin, View):
         return False
 
 
+def admin_chat_peek(request):
+    qs = Chat.objects.all()
+    context = {
+        'queryset': qs,
+    }
+    return render(request, "chats/admin_chat_list.html", context)
+
+
 def is_valid_queryparam(param):
     return param != '' and param is not None and param != []
 
@@ -173,7 +181,7 @@ def get_chat_user(id):
     return chat_users
 
 
-def admin_chat_peek(request, id):
+def admin_chat_messages_peek(request, id):
     qs = filter(request, id)
     chat_users = get_chat_user(id)
     context = {
