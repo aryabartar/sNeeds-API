@@ -216,9 +216,9 @@ class CartTests(APITestCase):
             end_time=timezone.now() + timezone.timedelta(hours=1),
             price=self.consultant1_profile.time_slot_price
         )
-
+        self.assertEqual(1,2)
         delete_time_slots.delay()
-        self.assertTrue(
+        self.assertEqual(
             TimeSlotSale.objects.filter(id=ts.id),
             0
         )
