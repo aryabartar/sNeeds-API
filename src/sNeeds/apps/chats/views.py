@@ -123,19 +123,29 @@ class AdminChatView(UserPassesTestMixin, View):
         return False
 
 
-def admin_chat_peek(request):
+def is_valid_queryparam(param):
+    return param != '' and param is not None and param != []
+
+
+def filter_chats(request):
     qs = Chat.objects.all()
+    chat_id = request.GET.get('chat_id')
+
+    if is_valid_queryparam(chat_id):
+        qs = qs.filter(id=chat_id)
+
+    return qs
+
+
+def admin_chat_peek(request):
+    qs = filter_chats(request)
     context = {
         'queryset': qs,
     }
     return render(request, "chats/admin_chat_list.html", context)
 
 
-def is_valid_queryparam(param):
-    return param != '' and param is not None and param != []
-
-
-def filter(request, id):
+def filter_messages(request, id):
     qs = Message.objects.filter(chat_id=id)
     text_message_search_character_query = request.GET.get('text_message_search_character')
     send_date_min = request.GET.get('send_date_min')
