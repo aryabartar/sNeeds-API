@@ -198,7 +198,7 @@ def get_chat_user(id):
 
 
 def admin_chat_messages_peek(request, id):
-    qs = filter(request, id)
+    qs = filter_messages(request, id)
     chat_users = get_chat_user(id)
     context = {
         'queryset': qs,
