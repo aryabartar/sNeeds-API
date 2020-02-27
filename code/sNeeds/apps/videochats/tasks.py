@@ -7,7 +7,7 @@ from celery.utils.log import get_task_logger
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.videochats.models import Room
-from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room, delete_user
+from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room
 
 logger = get_task_logger(__name__)
 
@@ -64,6 +64,6 @@ def create_room_with_users_in_skyroom(room_id):
 
 
 @shared_task
-def delete_room_and_users(consultant_id, room_id):
-    delete_user(consultant_id)
+def delete_room(room_id):
+    from sNeeds.apps.videochats.utils import delete_room
     delete_room(room_id)

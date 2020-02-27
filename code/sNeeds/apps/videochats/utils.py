@@ -230,12 +230,14 @@ def delete_room(room_id):
         "room_id": room_id
     }
 
-    for i in range(0, NUMBER_OF_TRIES):
-        response = s.deleteRoom(params=params)
-        if response.get('ok'):
-            break
+    response = s.deleteRoom(params=params)
 
-    return response.get('result')
+    if response.get('ok'):
+        return response.get('result')
+    elif "مورد نظر پیدا نشد." in response.get("error_message"):
+        return None
+    else:
+        raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def delete_user(user_id):
