@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.carts.models import Cart
@@ -40,15 +41,8 @@ class ConsultantDiscount(models.Model):
     )
     code = CICharField(max_length=128, unique=True)
 
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
-
     def __str__(self):
         return "{}%".format(str(self.percent))
-
-    def clean(self, *args, **kwargs):
-        if self.start_time >= self.end_time:
-            raise ValidationError("Start time should be after End time.")
 
 
 class CartConsultantDiscount(models.Model):
