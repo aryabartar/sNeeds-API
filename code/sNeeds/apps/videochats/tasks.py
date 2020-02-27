@@ -43,13 +43,13 @@ def create_room_with_users_in_skyroom(room_id):
     sold_time_slot_id = room.sold_time_slot.id
 
     data = create_2members_chat_room(
-        user.id,
-        user.first_name,
-        user.email,
-        consultant_user.id,
-        consultant_user.first_name,
-        consultant_user.email,
-        sold_time_slot_id
+        user1id=user.id,
+        nickname1=user.first_name,
+        user1email=user.email,
+        user2id=consultant_user.id,
+        nickname2=consultant_user.first_name,
+        user2email=consultant_user.email,
+        roomid=sold_time_slot_id
     )
 
     room.room_id = data['room_id']

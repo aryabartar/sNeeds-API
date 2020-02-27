@@ -179,34 +179,15 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_time_slot_sales_to_sold_time_slot_sales_working(self):
-        class TempTimeSlotSale:
-            def __init__(self, consultant, price, start_time, end_time):
-                self.consultant = consultant
-                self.price = price
-                self.start_time = start_time
-                self.end_time = end_time
-
-        time_slot_sales_qs = TimeSlotSale.objects.all()
-
-        temp_time_slot_sales_list = []
-        for obj in time_slot_sales_qs:
-            temp_time_slot_sales_list.append(
-                TempTimeSlotSale(obj.consultant, obj.price, obj.start_time, obj.end_time)
-            )
-
-        time_slot_sales_qs.set_time_slot_sold(self.user1)
-
-        self.assertEqual(TimeSlotSale.objects.all().count(), 0)
-        for obj in temp_time_slot_sales_list:
-            self.assertEqual(
-                SoldTimeSlotSale.objects.filter(
-                    consultant=obj.consultant,
-                    price=obj.price,
-                    start_time=obj.start_time,
-                    end_time=obj.end_time,
-                    sold_to=self.user1
-                ).count(),
-                1
-            )
-
+    def test_celery_task_delete_old_time_slot_sales(self):
+        ts = TimeSlotSale.objects.create(
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() - timezone.timedelta(minutes=1),
+            end_time=timezone.now() + timezone.timedelta(minutes=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+        delete_time_slots()
+        self.assertEqual(
+            TimeSlotSale.objects.filter(id=ts.id).count(),
+            0
+        )

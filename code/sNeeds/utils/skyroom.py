@@ -38,26 +38,33 @@ class SkyroomAPI(object):
         if params:
             data['params'] = params
 
-        try:
-            content_data = requests.post(url, headers=self.headers, auth=None, json=data).content
-
+        for _ in range(0, 3):
             try:
-                response = json.loads(content_data.decode("utf-8"))
+                content_data = requests.post(url, headers=self.headers, auth=None, json=data).content
 
-                if response['ok']:
-                    response = {"ok": response['ok'], "result": response['result']}
+                for i in range(0,3):
+                    try:
+                        response = json.loads(content_data.decode("utf-8"))
 
-                else:
-                    response = {"ok": False, "error_message": response['error_message']}
+                        if response['ok']:
+                            response = {"ok": response['ok'], "result": response['result']}
 
-            except ValueError as e:
+                        else:
+                            response = {"ok": False, "error_message": response['error_message']}
+
+                        return response
+
+                    except ValueError as e:
+                        continue
+
                 response = {"ok": False, "error_message": "ارور اتصال به سرور اسکای‌روم"}
+                return response
 
-            return response
+            except requests.exceptions.RequestException as e:
+                continue
 
-        except requests.exceptions.RequestException as e:
-            response = {"ok": False, "error_message": "ارور اتصال نامشخص"}
-            return response
+        response = {"ok": False, "error_message": "ارور اتصال نامشخص"}
+        return response
 
     # 1.Service Management
 

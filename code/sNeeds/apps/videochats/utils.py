@@ -15,15 +15,12 @@ ALL_SKYROOM_USERS_PASSWORD = settings.ALL_SKYROOM_USERS_PASSWORD
 
 
 def _get_all_users():
-    for i in range(0, NUMBER_OF_TRIES):
-        response = s.getUsers()
-        if response.get('ok'):
-            break
-        if i == NUMBER_OF_TRIES - 1:
-            raise SkyroomConnectException("Error using Skyroom, error:", str(response))
-
-    all_users = response.get("result")
-    return all_users
+    response = s.getUsers()
+    if response.get('ok'):
+        all_users = response.get("result")
+        return all_users
+    else:
+        raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def _check_user_in_all_users(username, all_users):
@@ -50,23 +47,18 @@ def create_user_or_get_current_id(username, password, nickname, email, expiry_da
         "status": 1,
         "is_public": False
     }
-    all_users = _get_all_users()
 
-    if not _check_user_in_all_users(username, all_users):
+    response = s.createUser(params=params)
 
-        for i in range(0, NUMBER_OF_TRIES):
-            response = s.createUser(params=params)
-
-            if response.get('ok'):
-                break
-
-            if i == NUMBER_OF_TRIES - 1:
-                raise SkyroomConnectException("Error using Skyroom, error:", str(response))
-
+    if response.get("ok"):
         user_id = response.get("result")
 
-    else:
+    elif response.get("error_message") == "نام کاربری تکراری است":
+        all_users = _get_all_users()
         user_id = _get_user_id_in_all_users(username, all_users)
+
+    else:
+        raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     return user_id
 
@@ -205,7 +197,8 @@ def get_login_url_without_password(user_id, room_id, ttl):
     return response.get('result')
 
 
-def create_2members_chat_room(user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
+def create_2members_chat_room(
+        user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
     sold_time_slot = SoldTimeSlotSale.objects.get(id=roomid)
     login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time).seconds // 60
     login_link_ttl *= 60
@@ -265,3 +258,9 @@ def delete_user(user_id):
             break
 
     return response.get('result')
+
+
+print("here")
+print(create_user_or_get_current_id(
+    "test11@g.com", "12334444", "Arya", "test11@g.com")
+)
