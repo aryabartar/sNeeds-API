@@ -1,3 +1,4 @@
+from django.test import override_settings
 from django.utils import timezone
 import time
 
@@ -14,6 +15,7 @@ from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDisco
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
+from sNeeds.apps.store.tasks import delete_time_slots
 
 User = get_user_model()
 
@@ -154,16 +156,12 @@ class CartTests(APITestCase):
         self.consultant_discount1 = ConsultantDiscount.objects.create(
             percent=10,
             code="discountcode1",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.consultant_discount2 = ConsultantDiscount.objects.create(
             percent=20,
             code="discountcode2",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
@@ -207,3 +205,20 @@ class CartTests(APITestCase):
                 ).count(),
                 1
             )
+
+    @override_settings(CELERY_EAGER_PROPAGATES_EXCEPTIONS=True,
+                       CELERY_ALWAYS_EAGER=True,
+                       BROKER_BACKEND='memory')
+    def celery_delete_old_time_slot_sales(self):
+        ts = TimeSlotSale.objects.create(
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() - timezone.timedelta(minutes=1),
+            end_time=timezone.now() + timezone.timedelta(hours=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        delete_time_slots.delay()
+        self.assertTrue(
+            TimeSlotSale.objects.filter(id=ts.id),
+            0
+        )
