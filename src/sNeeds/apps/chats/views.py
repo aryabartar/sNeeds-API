@@ -13,7 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
-from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage)
+from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
 from .forms import MessageFilterForm
 
@@ -124,7 +124,7 @@ class AdminChatView(UserPassesTestMixin, View):
 
 
 def is_valid_queryparam(param):
-    return param != '' and param is not None
+    return param != '' and param is not None and param != []
 
 
 def filter(request, id):
@@ -133,14 +133,7 @@ def filter(request, id):
     send_date_min = request.GET.get('send_date_min')
     send_date_max = request.GET.get('send_date_max')
     sender = request.GET.get('sender')
-    # title_or_author_query = request.GET.get('title_or_author')
-    # view_count_min = request.GET.get('view_count_min')
-    # view_count_max = request.GET.get('view_count_max')
-    # date_min = request.GET.get('date_min')
-    # date_max = request.GET.get('date_max')
-    # category = request.GET.get('category')
-    # reviewed = request.GET.get('reviewed')
-    # not_reviewed = request.GET.get('notReviewed')
+    selected_message_types = request.GET.getlist('message_type_selector')
 
     if is_valid_queryparam(text_message_search_character_query):
         qs = qs.filter(textmessage__text_message__icontains=text_message_search_character_query)
@@ -148,37 +141,20 @@ def filter(request, id):
         qs = qs.filter(created__gte=send_date_min)
     if is_valid_queryparam(send_date_max):
         qs = qs.filter(created__lt=send_date_max)
-    if is_valid_queryparam(sender) and sender != 'Choose...': #TODO: If possible make better
+    if is_valid_queryparam(sender) and sender != 'Choose...':  # TODO: If possible make better
         qs = qs.filter(sender__email=sender)
-    #
-    # elif is_valid_queryparam(id_exact_query):
-    #     qs = qs.filter(id=id_exact_query)
-    #
-    # elif is_valid_queryparam(title_or_author_query):
-    #     qs = qs.filter(Q(title__icontains=title_or_author_query)
-    #                    | Q(author__name__icontains=title_or_author_query)
-    #                    ).distinct()
-    #
-    # if is_valid_queryparam(view_count_min):
-    #     qs = qs.filter(views__gte=view_count_min)
-    #
-    # if is_valid_queryparam(view_count_max):
-    #     qs = qs.filter(views__lt=view_count_max)
-    #
-    # if is_valid_queryparam(date_min):
-    #     qs = qs.filter(publish_date__gte=date_min)
-    #
-    # if is_valid_queryparam(date_max):
-    #     qs = qs.filter(publish_date__lt=date_max)
-    #
-    # if is_valid_queryparam(category) and category != 'Choose...':
-    #     qs = qs.filter(categories__name=category)
+    if is_valid_queryparam(selected_message_types):
+        # Converting each type in message_type_selector to its model in django
+        model_of_selected_types = []
+        for message_type in selected_message_types:
+            model_of_selected_types.append(MESSAGE_TYPES[message_type])
 
-    # if reviewed == 'on':
-    #     qs = qs.filter(reviewed=True)
-    #
-    # elif not_reviewed == 'on':
-    #     qs = qs.filter(reviewed=False)
+        # Converting each model to its associated ContentType
+        content_type_for_selected_types = []
+        for model in model_of_selected_types:
+            content_type_for_selected_types.append(ContentType.objects.get_for_model(model))
+
+        qs = qs.filter(polymorphic_ctype__in=content_type_for_selected_types)
 
     return qs
 
@@ -202,6 +178,7 @@ def admin_chat_peek(request, id):
     chat_users = get_chat_user(id)
     context = {
         'queryset': qs,
-        'chat_users': chat_users
+        'chat_users': chat_users,
+        'message_types': MESSAGE_TYPES.keys()
     }
     return render(request, "chats/admin_chat_detail.html", context)

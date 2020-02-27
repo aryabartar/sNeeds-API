@@ -91,3 +91,11 @@ class ImageMessage(Message):
         upload_to=get_image_upload_path,
         validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])]
     )
+
+
+MESSAGE_TYPES = {
+    TextMessage.__name__: TextMessage,
+    FileMessage.__name__: FileMessage,
+    VoiceMessage.__name__: VoiceMessage,
+    ImageMessage.__name__: ImageMessage
+}

@@ -110,8 +110,9 @@
                                     </div>
                                 </div>
                                 <div class="form-group col-lg-4">
-                                    <label for="messageTypeSelector">type</label>
-                                    <select multiple class="form-control" id="messageTypeSelector">
+                                    <label for="messageTypeSelector">message type</label>
+                                    <select multiple class="form-control" id="messageTypeSelector"
+                                            name="message_type_selector">
                                         {% for message_type in message_types %}
                                             <option value="{{ message_type }}"> {{ message_type }}</option>
                                         {% endfor %}
