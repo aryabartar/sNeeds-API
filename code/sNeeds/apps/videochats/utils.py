@@ -105,21 +105,15 @@ def create_room_or_get(room_id, max_users):
         "session_duration": room_session_duration
     }
 
-    all_rooms = _get_all_rooms()
+    response = s.createRoom(params=params)
 
-    if not _check_room_in_all_rooms(title, all_rooms):
-        for i in range(0, NUMBER_OF_TRIES):
-
-            response = s.createRoom(params=params)
-            if response.get('ok'):
-                break
-            if i == NUMBER_OF_TRIES - 1:
-                raise SkyroomConnectException("Error using Skyroom, error:", str(response))
-        room_id = response.get("result")
+    if response.get('ok'):
+        return response.get("result")
+    elif response.get("error_message") == "اتاقی با همین نام وجود دارد. از نام دیگری استفاده نمایید.":
+        all_rooms = _get_all_rooms()
+        return _get_room_id_in_all_rooms(title, all_rooms)
     else:
-        room_id = _get_room_id_in_all_rooms(title, all_rooms)
-
-    return room_id
+        raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
 
 def _get_user_all_rooms(user_id):
@@ -198,13 +192,10 @@ def get_login_url_without_password(user_id, room_id, ttl):
 
 
 def create_2members_chat_room(
-        user1id, nickname1, user1email, user2id, nickname2, user2email, roomid):
+        username1, nickname1, user1email, username2, nickname2, user2email, roomid):
     sold_time_slot = SoldTimeSlotSale.objects.get(id=roomid)
     login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time).seconds // 60
     login_link_ttl *= 60
-
-    username1 = "sneeds_user_{}_for_room_id_{}".format(str(user1id), str(roomid))
-    username2 = "sneeds_user_{}_for_room_id_{}".format(str(user2id), str(roomid))
 
     if nickname1 == "" or nickname1 is None:
         nickname1 = "کاربر"
@@ -258,9 +249,3 @@ def delete_user(user_id):
             break
 
     return response.get('result')
-
-
-print("here")
-print(create_user_or_get_current_id(
-    "test11@g.com", "12334444", "Arya", "test11@g.com")
-)

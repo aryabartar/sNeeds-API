@@ -16,7 +16,7 @@ def post_save_room_receiver(sender, instance, created, *args, **kwargs):
 
 def post_delete_room_receiver(sender, instance, *args, **kwargs):
     delete_room_and_users.delay(
-        instance.user_id, instance.consultant_id, instance.room_id
+        instance.consultant_id, instance.room_id
     )
 
 

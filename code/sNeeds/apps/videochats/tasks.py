@@ -43,10 +43,10 @@ def create_room_with_users_in_skyroom(room_id):
     sold_time_slot_id = room.sold_time_slot.id
 
     data = create_2members_chat_room(
-        user1id=user.id,
+        username1=user.email,
         nickname1=user.first_name,
         user1email=user.email,
-        user2id=consultant_user.id,
+        username2=consultant_user.email,
         nickname2=consultant_user.first_name,
         user2email=consultant_user.email,
         roomid=sold_time_slot_id
@@ -64,7 +64,6 @@ def create_room_with_users_in_skyroom(room_id):
 
 
 @shared_task
-def delete_room_and_users(user_id, consultant_id, room_id):
-    delete_user(user_id)
+def delete_room_and_users(consultant_id, room_id):
     delete_user(consultant_id)
     delete_room(room_id)
