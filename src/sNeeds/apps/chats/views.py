@@ -74,55 +74,6 @@ class MessageDetailAPIView(generics.RetrieveAPIView):
         return message_qs
 
 
-class AdminChatListView(UserPassesTestMixin, generic.ListView):
-    template_name = "chats/admin_chat_list.html"
-    model = Chat
-
-    def test_func(self):
-        if not self.request.user.is_anonymous:
-            if self.request.user.is_superuser:
-                return True
-        return False
-
-
-class AdminChatFormView(generic.detail.SingleObjectMixin, generic.FormView):
-    template_name = "chats/admin_chat_detail.html"
-    form_class = MessageFilterForm
-    object = Message
-    success_url = "/chat/admin/"
-
-
-class AdminChatDetailView(generic.DetailView):
-    template_name = "chats/admin_chat_detail.html"
-    model = Chat
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        chat_id = self.kwargs['id']
-        data['chat_messages'] = Message.objects.filter(chat=chat_id)
-        data['form'] = MessageFilterForm()
-        return data
-
-
-class AdminChatView(UserPassesTestMixin, View):
-
-    def get(self, request, *args, **kwargs):
-        view = AdminChatDetailView.as_view()
-        return view(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        view = AdminChatFormView.as_view()
-        return view(request, *args, **kwargs)
-
-    def test_func(self):
-        if not self.request.user.is_anonymous:
-            if self.request.user.is_superuser:
-                return True
-        return False
-
-
 def check_is_admin(user):
     if not user.is_anonymous:
         return user.is_superuser
