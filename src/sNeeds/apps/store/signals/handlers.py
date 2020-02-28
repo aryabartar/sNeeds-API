@@ -3,6 +3,7 @@ from django.db.models.signals import post_save, pre_delete, pre_save, m2m_change
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 from sNeeds.apps.store.tasks import send_notify_sold_time_slot_mail
+from sNeeds.apps.chats.models import Chat
 
 
 def pre_delete_product_receiver(sender, instance, *args, **kwargs):
@@ -30,7 +31,14 @@ def post_save_product_receiver(sender, instance, *args, **kwargs):
         obj.update_price()
 
 
+def create_chat(sender, instance, **kwargs):
+    user = instance.sold_to
+    consultant = instance.consultant
+    Chat.objects.create(user=user, consultant=consultant)
+
+
 pre_delete.connect(pre_delete_product_receiver, sender=Product)
 
 post_save.connect(post_save_product_receiver, sender=Product)
 post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)
+post_save.connect(create_chat, sender=SoldTimeSlotSale)
