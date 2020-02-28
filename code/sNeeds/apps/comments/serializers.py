@@ -3,8 +3,7 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Comment, AdminComment, SoldTimeSlotRate
-
+from .models import Comment, SoldTimeSlotRate
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -60,12 +59,6 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
         return obj
-
-
-class AdminCommentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AdminComment
-        fields = ['id', 'comment', 'message', 'created', 'updated', ]
 
 
 class SoldTimeSlotRateSerializer(serializers.ModelSerializer):

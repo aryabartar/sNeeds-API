@@ -19,6 +19,12 @@ ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
 
 
 class SendRequest(APIView):
+    """
+    POST:
+    {
+        "cartid":12
+    }
+    """
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request, *args, **kwargs):
@@ -27,7 +33,10 @@ class SendRequest(APIView):
         user = request.user
 
         try:
-            cart_id = kwargs.get("cartid")
+            cart_id = request.data.get("cartid")
+            if cart_id is None:
+                return Response({"detail": "cartid field is empty."}, 400)
+
             cart = Cart.objects.get(id=cart_id)
         except Cart.DoesNotExist:
             return Response({"detail": "No cart exists."}, 400)
@@ -57,13 +66,20 @@ class SendRequest(APIView):
 
 
 class Verify(APIView):
+    """
+    POST:
+    {
+       "authority":"000000000000000000000000000150139347",
+       "status":"OK"
+    }
+
+    """
     permission_classes = [permissions.IsAuthenticated, ]
 
     def post(self, request):
         client = Client('https://www.zarinpal.com/pg/services/WebGate/wsdl')
 
         data = request.data
-        print(data)
         if data.get('status') == 'OK':
             user = request.user
             authority = data.get('authority', None)
@@ -89,12 +105,3 @@ class Verify(APIView):
 
         else:
             return Response({"detail": "Transaction failed or canceled by user"}, status=400)
-
-
-class VerifyTest(APIView):
-    permission_classes = [permissions.IsAuthenticated, ]
-
-    def get(self, request):
-        cart_id = request.query_params.get("id")
-        Order.objects.sell_cart_create_order(Cart.objects.get(id=cart_id))
-        return HttpResponse()
