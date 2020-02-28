@@ -13,6 +13,11 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
           integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf"
           crossorigin="anonymous">
+    <style>
+        .scrollbar_hidden {
+            overflow: hidden; /* Hide scrollbars */
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -31,7 +36,7 @@
         <div class="card">
             <div class="card-header" id="headingOne">
                 <h5 class="mb-0">
-                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne"
+                    <button class="btn" data-toggle="collapse" data-target="#collapseOne"
                             aria-expanded="true" aria-controls="collapseOne">
                         Filters
                     </button>
@@ -40,54 +45,70 @@
 
             <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
                 <div class="card-body">
-                    <h3>Filter Messages</h3>
+                    <div class="container mb-3">
+                        <h3>Filter Messages</h3>
+                        <h6 class="text-muted">You can use one or any combination of the filters</h6>
+                    </div>
                     <form method="GET" action=".">
+
                         <div class="container">
-                            <div class="row">
-                                <div class="form-row">
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <input class="form-control py-2 border-right-0 border"
-                                                       type="search" name="text_message_search_character"
-                                                       placeholder="Search messages..."/>
-                                                <span class="input-group-append">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input class="form-control py-2 border-right-0 border"
+                                           type="search" name="text_message_search_character"
+                                           placeholder="Enter a character to search..."/>
+                                    <span class="input-group-append">
                                             <div class="input-group-text bg-transparent">
                                                 <i class="fa fa-search"></i>
                                             </div>
                                         </span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm">
+
+                                    <div class="form-row">
+                                        <div class="col-lg-12">
+
+                                            <div class="form-group">
+                                                <label class="mr-2" for="sendDateMin">Dates after</label>
+                                                <input type="date" class="form-control" id="sendDateMin"
+                                                       name="send_date_min">
                                             </div>
+                                            <div class="form-group">
+                                                <label class="mr-2"  for="sendDateMax">dates before</label>
+                                                <input type="date" class="form-control" id="sendDateMax"
+                                                       name="send_date_max">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="mr-2" for="Sender">sender</label>
+                                                <select id="Sender" class="form-control" name="sender">
+                                                    <option selected>Choose...</option>
+                                                    {% for user in chat_users %}
+                                                        <option value="{{ user }}">{{ user }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <button type="submit" class="btn btn-primary">Filter</button>
+
                                         </div>
-                                        <div class="form-group">
-                                            <label for="sendDateMin">dates after</label>
-                                            <input type="date" class="form-control" id="sendDateMin"
-                                                   name="send_date_min">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="sendDateMax">dates before</label>
-                                            <input type="date" class="form-control" id="sendDateMax"
-                                                   name="send_date_max">
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="Sender">sender</label>
-                                            <select id="Sender" class="form-control" name="sender">
-                                                <option selected>Choose...</option>
-                                                {% for user in chat_users %}
-                                                    <option value="{{ user }}">{{ user }}</option>
-                                                {% endfor %}
-                                            </select>
-                                        </div>
-                                        <button type="submit" class="btn btn-primary">Filter</button>
                                     </div>
                                 </div>
-                                <div class="form-group col-lg-4">
-                                    <label for="messageTypeSelector">message type</label>
-                                    <select multiple class="form-control" id="messageTypeSelector"
-                                            name="message_type_selector">
-                                        {% for message_type in message_types %}
-                                            <option value="{{ message_type }}"> {{ message_type }}</option>
-                                        {% endfor %}
-                                    </select>
+                                <div class="col-sm">
+
+                                    <div class="form-group">
+                                        <label for="messageTypeSelector">message type</label>
+                                        <select multiple class="form-control scrollbar_hidden" id="messageTypeSelector"
+                                                name="message_type_selector">
+                                            {% for message_type in message_types %}
+                                                <option value="{{ message_type }}"> {{ message_type }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -118,9 +139,9 @@
                                     <i class="fas fa-file"></i>
                                 </a>
                             {% elif message.voice_field %}
-                            <a href="{{ message.voice_field.url }}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-file-audio"></i>
-                            </a>
+                                <a href="{{ message.voice_field.url }}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-file-audio"></i>
+                                </a>
                             {% endif %}
                         </div>
                         <h6 class="card-footer text-muted">{{ message.created }}</h6>
