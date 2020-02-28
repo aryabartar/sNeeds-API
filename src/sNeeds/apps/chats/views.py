@@ -45,16 +45,18 @@ class MessageListAPIView(generics.ListCreateAPIView):
     filterset_fields = ["chat", "sender"]
 
     def get_queryset(self):
+        user = self.request.user
+        qs = Message.objects.filter(chat__user=user).order_by('-created')
+
         message_type = self.request.query_params.get("messageType", None)
         if message_type in MESSAGE_TYPES:
             qs = Message.objects.filter(
                 polymorphic_ctype=ContentType.objects.get_for_model(MESSAGE_TYPES[message_type])
             )
         else:
-            qs = Message.objects.all()
-        user = self.request.user
-        message_qs = qs.filter(chat__user=user).order_by('-created')
-        return message_qs
+            qs = Message.objects.none()
+
+        return qs
 
 
 class MessageDetailAPIView(generics.RetrieveAPIView):
