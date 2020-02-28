@@ -9,7 +9,10 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.customAuth.models import ConsultantProfile
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
+from sNeeds.apps.chats.models import (
+    Chat, Message, TextMessage, ImageMessage, FileMessage, VoiceMessage
+)
 
 User = get_user_model()
 
@@ -133,6 +136,16 @@ class ChatListAPIViewTest(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
+        # SoldTimeSlotSale -------
+        self.sold_time_slot_sale = SoldTimeSlotSale.objects.create(
+            used=False,
+            consultant=self.consultant2_profile,
+            start_time=timezone.now(),
+            end_time=timezone.now() + timezone.timedelta(hours=5),
+            sold_to=self.user1,
+            price=1300
+        )
+
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
@@ -143,10 +156,75 @@ class ChatListAPIViewTest(APITestCase):
         self.cart3 = Cart.objects.create(user=self.user2)
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
+        # Chats ------
+        self.legal_chat = Chat.objects.last()
+
+        self.legal_text_message = TextMessage.objects.create(
+            chat=self.legal_chat,
+            sender=self.user1,
+            text_message="Legal Message"
+        )
+
+        self.illegal_chat = Chat.objects.create(
+            user=self.user1,
+            consultant=self.consultant1_profile
+        )
+
+        self.illegal_text_message = TextMessage.objects.create(
+            chat=self.illegal_chat,
+            sender=self.user1,
+            text_message="Illegal Message"
+        )
+
         # Setup ------
         self.client = APIClient()
 
-    def test_anonymous_user_can_access(self):
+    def test_anonymous_user_can_access_chat_list(self):
         url = reverse("chat:chat-list")
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_anonymous_user_can_access_messages_list(self):
+        url = reverse("chat:message-list")
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_anonymous_user_can_access_chat_detail(self):
+        url = reverse("chat:chat-detail", args=(1,))
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_anonymous_user_can_access_message_detail(self):
+        url = reverse("chat:message-detail", args=(1,))
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_authenticated_user_can_access_chat_list(self):
+        url = reverse("chat:chat-list")
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authenticated_user_can_access_chat_detail(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authenticated_user_can_access_message_list(self):
+        url = reverse("chat:message-list")
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authenticated_user_can_access_message_detail_with_a_sold_time_slot(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_authenticated_user_can_access_message_detail_without_a_sold_time_slot(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
