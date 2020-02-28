@@ -4,12 +4,12 @@ from rest_framework import serializers
 
 import sNeeds.apps.customAuth.models
 from sNeeds.apps.comments.models import SoldTimeSlotRate
-from sNeeds.apps.comments.models import Comment
 
 from . import models
 
 User = get_user_model()
 
+#TODO: Move SoldTimeSlotRate
 
 class CountrySerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -58,7 +58,6 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.SerializerMethodField(read_only=True)
     last_name = serializers.SerializerMethodField(read_only=True)
     rate = serializers.SerializerMethodField(read_only=True)
-    comment_number = serializers.SerializerMethodField(read_only=True)
 
     universities = UniversitySerializer(many=True, read_only=True)
     field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
@@ -69,7 +68,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
-            'resume', 'rate', 'comment_number', 'active')
+            'resume', 'rate', 'active')
 
     def get_rate(self, obj):
         qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant=obj)
@@ -89,10 +88,6 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     def get_last_name(self, obj):
         return obj.user.last_name
-
-    def get_comment_number(self, obj):
-        qs = Comment.objects.filter(consultant=obj)
-        return qs.count()
 
 
 class ShortConsultantProfileSerializer(serializers.ModelSerializer):

@@ -7,5 +7,5 @@ class CommentFilterSet(filters.FilterSet):
     time_range = filters.IsoDateTimeFromToRangeFilter(field_name="created")
 
     class Meta:
-        model = models.Comment
+        model = models.ConsultantComment
         fields = ['user', 'consultant', 'time_range', ]

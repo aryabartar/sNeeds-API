@@ -8,8 +8,9 @@ from sNeeds.apps.store.models import SoldTimeSlotSale
 User = get_user_model()
 
 
-class Comment(models.Model):
+class ConsultantComment(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    reply_to = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     message = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -19,11 +20,8 @@ class Comment(models.Model):
         return "User : {} | Consultant : {}".format(str(self.user), str(self.consultant))
 
 
-
-
 class SoldTimeSlotRate(models.Model):
     sold_time_slot = models.OneToOneField(SoldTimeSlotSale, on_delete=models.CASCADE)
     rate = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
-

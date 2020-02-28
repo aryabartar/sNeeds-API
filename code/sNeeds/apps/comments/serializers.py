@@ -3,17 +3,15 @@ from django.utils.translation import gettext as _
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import Comment, SoldTimeSlotRate
+from .models import ConsultantComment, SoldTimeSlotRate
 
 
 class CommentSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="comments:comment-detail", lookup_field='id', read_only=True)
-    first_name = serializers.SerializerMethodField(read_only=True)
-    admin_reply = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = Comment
-        fields = ['id', 'url', 'user', 'admin_reply', 'first_name', 'consultant', 'message', 'created', 'updated', ]
+        model = ConsultantComment
+        fields = ['id', 'url', 'user',  'consultant', 'message', 'created', 'updated', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
