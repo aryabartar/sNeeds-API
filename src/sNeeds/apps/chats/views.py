@@ -25,7 +25,7 @@ class ChatListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Chat.objects.get_all_user_chats(user)
+        qs = Chat.objects.filter(Q(user=user) | Q(consultant__user=user))
         return qs
 
 
