@@ -87,7 +87,7 @@ class VoiceMessageSerializer(MessageSerializer):
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = MessageSerializer.Meta.fields + ['file_field', ]
+        fields = MessageSerializer.Meta.fields + ['voice_field', ]
 
 
 class FileMessageSerializer(MessageSerializer):

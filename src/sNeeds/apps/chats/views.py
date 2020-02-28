@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -11,7 +12,7 @@ from rest_framework import filters
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .permissions import ChatOwnerPermission, MessageOwnerPermission
+from .permissions import ChatOwnerPermission, CanChatPermission, CanSendMessagePermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
@@ -32,7 +33,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated,)
+    permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated, CanChatPermission)
 
 
 class MessageListAPIView(generics.ListCreateAPIView):
@@ -58,12 +59,12 @@ class MessageListAPIView(generics.ListCreateAPIView):
         else:
             qs = Message.objects.all()
         user = self.request.user
-        message_qs = qs.filter(sender=user).order_by('-created')
+        message_qs = qs.filter(chat__user=user).order_by('-created')
         return message_qs
 
 
 class MessageDetailAPIView(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, CanSendMessagePermission)
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
 

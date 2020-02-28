@@ -1,4 +1,8 @@
+from django.db.models import Q
+
 from rest_framework import permissions
+
+from sNeeds.apps.store.models import SoldTimeSlotSale
 
 
 class ChatOwnerPermission(permissions.BasePermission):
@@ -23,3 +27,19 @@ class MessageOwnerPermission(permissions.BasePermission):
             return True
 
         return False
+
+
+class CanChatPermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        consultant = obj.consultant
+        return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
+
+
+class CanSendMessagePermission(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        consultant = obj.chat.consultant
+        return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
