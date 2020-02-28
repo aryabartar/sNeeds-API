@@ -60,22 +60,10 @@ class MessageSerializer(serializers.ModelSerializer):
         user = request.user
         return obj.sender == user
 
-    def validate(self, attrs):
-        request = self.context.get('request')
-        user = request.user
-
-        chat = attrs.get('chat')
-        if user != chat.user and user != chat.consultant.user:
-            raise ValidationError("User has no access to send message in this chat.")
-
-        return attrs
-
     def create(self, validated_data):
         request = self.context.get('request')
-        user = request.user
-
-        obj = TextMessage.objects.create(sender=user, **validated_data)
-        return obj
+        validated_data['sender'] = request.user
+        return super(MessageSerializer, self).create(validated_data)
 
 
 class TextMessageSerializer(MessageSerializer):
