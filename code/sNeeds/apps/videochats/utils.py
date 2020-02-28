@@ -189,7 +189,8 @@ def get_login_url_without_password(user_id, room_id, ttl):
 def create_2members_chat_room(
         username1, nickname1, user1email, username2, nickname2, user2email, roomid):
     sold_time_slot = SoldTimeSlotSale.objects.get(id=roomid)
-    login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time).seconds // 60
+    login_link_ttl = (sold_time_slot.end_time - sold_time_slot.start_time + datetime.timedelta(
+        minutes=2 * BEFORE_AFTER_CLASS_TIME_MINUTES)).seconds // 60
     login_link_ttl *= 60
 
     if nickname1 == "" or nickname1 is None:

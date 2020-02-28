@@ -32,4 +32,5 @@ tests/.coverage
 build/
 tests/report/
 svenv/
+supervisor/
 .env

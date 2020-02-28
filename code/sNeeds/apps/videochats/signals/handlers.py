@@ -14,9 +14,7 @@ def post_save_room_receiver(sender, instance, created, *args, **kwargs):
 
 
 def post_delete_room_receiver(sender, instance, *args, **kwargs):
-    delete_room.delay(
-        instance.room_id
-    )
+    delete_room.delay(instance.room_id)
 
 
 post_save.connect(post_save_room_receiver, sender=Room)
