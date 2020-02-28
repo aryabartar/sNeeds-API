@@ -4,14 +4,16 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import ConsultantComment, SoldTimeSlotRate
+from ..customAuth.serializers import SafeUserDataSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="comments:comment-detail", lookup_field='id', read_only=True)
+    user = serializers.SerializerMethodField()
 
     class Meta:
         model = ConsultantComment
-        fields = ['id', 'url', 'user',  'consultant', 'message', 'created', 'updated', ]
+        fields = ['id', 'url', 'user', 'consultant', 'message', 'created', 'updated', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'user': {'read_only': True},
@@ -19,20 +21,8 @@ class CommentSerializer(serializers.ModelSerializer):
             'updated': {'read_only': True},
         }
 
-    def get_admin_reply(self, obj):
-        admin_reply = None
-        try:
-            admin_reply = AdminComment.objects.get(comment=obj)
-        except:
-            pass
-
-        if not admin_reply:
-            return None
-
-        return AdminCommentSerializer(admin_reply).data
-
-    def get_first_name(self, obj):
-        return obj.user.get_short_name()
+    def get_user(self, obj):
+        return SafeUserDataSerializer(obj.user).data
 
     def validate(self, attrs):
         request = self.context.get("request", None)
@@ -50,7 +40,7 @@ class CommentSerializer(serializers.ModelSerializer):
         request = self.context.get("request", None)
         user = request.user
 
-        obj = Comment.objects.create(
+        obj = ConsultantComment.objects.create(
             user=user,
             consultant=validated_data['consultant'],
             message=validated_data['message'],
