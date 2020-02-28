@@ -77,7 +77,7 @@
                                                        name="send_date_min">
                                             </div>
                                             <div class="form-group">
-                                                <label class="mr-2"  for="sendDateMax">dates before</label>
+                                                <label class="mr-2" for="sendDateMax">dates before</label>
                                                 <input type="date" class="form-control" id="sendDateMax"
                                                        name="send_date_max">
                                             </div>
@@ -158,19 +158,24 @@
                         {% if message.image_field %}
                             <img src="{{ message.image_field.url }}" alt="{{ message.image_field.url }}"
                                  class="card-img-top">
+                        {% elif message.file_field %}
+                            <a href="{{ message.file_field.url }}" class="btn btn-submit">
+                                <i class="fas fa-file"></i>
+                            </a>
+
+                        {% elif message.voice_field %}
+                            <a href="{{ message.voice_field.url }}" class="btn btn-submit">
+                                <i class="fas fa-file-audio"></i>
+                            </a>
                         {% endif %}
 
                         <div class="card-body">
                             {% if message.text_message %}
                                 <p class="card-text">{{ message.text_message }}</p>
                             {% elif message.file_field %}
-                                <a href="{{ message.file_field.url }}" class="btn btn-submit btn-lg">
-                                    <i class="fas fa-file"></i>
-                                </a>
+                                <h6>Click to get file</h6>
                             {% elif message.voice_field %}
-                                <a href="{{ message.voice_field.url }}" class="btn btn-submit btn-lg">
-                                    <i class="fas fa-file-audio"></i>
-                                </a>
+                                <h6>Click to get voice</h6>
                             {% endif %}
                         </div>
                         <h6 class="card-footer text-muted">{{ message.created }}</h6>
