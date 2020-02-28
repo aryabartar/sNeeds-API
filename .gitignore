@@ -31,6 +31,7 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
-svenv/
+venv/
 supervisor/
 .env
+celerybeat*
