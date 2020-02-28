@@ -10,7 +10,6 @@ User = get_user_model()
 
 class ConsultantComment(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    reply_to = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     message = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
@@ -18,6 +17,16 @@ class ConsultantComment(models.Model):
 
     def __str__(self):
         return "User : {} | Consultant : {}".format(str(self.user), str(self.consultant))
+
+
+class ConsultantAdminComment(models.Model):
+    comment = models.OneToOneField(ConsultantComment, on_delete=models.CASCADE, related_name="admin_reply")
+    message = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Comment {} Reply".format(self.comment)
 
 
 class SoldTimeSlotRate(models.Model):
