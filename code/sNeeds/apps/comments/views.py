@@ -14,6 +14,9 @@ class CommentListView(generics.ListCreateAPIView):
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
     filterset_class = CommentFilterSet
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created")
+
 
 class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
