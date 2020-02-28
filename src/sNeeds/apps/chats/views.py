@@ -46,15 +46,9 @@ class MessageListAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         message_type = self.request.query_params.get("messageType", None)
-        message_types = {
-            "TextMessage": TextMessage,
-            "FileMessage": FileMessage,
-            "ImageMessage": ImageMessage,
-            "VoiceMessage": VoiceMessage
-        }
-        if message_type in message_types:
+        if message_type in MESSAGE_TYPES:
             qs = Message.objects.filter(
-                polymorphic_ctype=ContentType.objects.get_for_model(message_types[message_type])
+                polymorphic_ctype=ContentType.objects.get_for_model(MESSAGE_TYPES[message_type])
             )
         else:
             qs = Message.objects.all()
@@ -67,11 +61,7 @@ class MessageDetailAPIView(generics.RetrieveAPIView):
     permission_classes = (permissions.IsAuthenticated, CanSendMessagePermission)
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
-
-    def get_queryset(self):
-        user = self.request.user
-        message_qs = Message.objects.filter(sender=user).order_by('-created')
-        return message_qs
+    queryset = Message.objects.all()
 
 
 def check_is_admin(user):
