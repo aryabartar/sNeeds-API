@@ -12,7 +12,7 @@ from rest_framework import filters
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .permissions import ChatOwnerPermission, CanChatPermission, CanSendMessagePermission
+from .permissions import ChatOwnerPermission, CanChatPermission, CanSendMessagePermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
@@ -33,7 +33,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (ChatOwnerPermission, permissions.IsAuthenticated, CanChatPermission)
+    permission_classes = (permissions.IsAuthenticated, CanChatPermission, ChatOwnerPermission)
 
 
 class MessageListAPIView(generics.ListCreateAPIView):
@@ -46,21 +46,21 @@ class MessageListAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = Message.objects.filter(chat__user=user).order_by('-created')
+        qs = Message.objects.filter(Q(chat__user=user) | Q(chat__consultant__user=user)).order_by('-created')
 
         message_type = self.request.query_params.get("messageType", None)
         if message_type in MESSAGE_TYPES:
             qs = Message.objects.filter(
                 polymorphic_ctype=ContentType.objects.get_for_model(MESSAGE_TYPES[message_type])
             )
-        else:
+        elif message_type is not None:
             qs = Message.objects.none()
 
         return qs
 
 
 class MessageDetailAPIView(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated, CanSendMessagePermission)
+    permission_classes = (permissions.IsAuthenticated, CanSendMessagePermission, MessageOwnerPermission)
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
     queryset = Message.objects.all()

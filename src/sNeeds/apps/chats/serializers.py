@@ -13,7 +13,9 @@ class ChatSerializer(serializers.ModelSerializer):
     class Meta:
         model = Chat
         fields = [
-            'id', 'url', 'other_person'
+            'id',
+            'url',
+            'other_person'
         ]
 
     def get_other_person(self, obj):

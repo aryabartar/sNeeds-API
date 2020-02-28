@@ -30,6 +30,7 @@ class MessageOwnerPermission(permissions.BasePermission):
 
 
 class CanChatPermission(permissions.BasePermission):
+    message = "You don't have permission to see this chat"
 
     def has_object_permission(self, request, view, obj):
         user = request.user
@@ -38,6 +39,7 @@ class CanChatPermission(permissions.BasePermission):
 
 
 class CanSendMessagePermission(permissions.BasePermission):
+    message = "You don't have permission to see this message"
 
     def has_object_permission(self, request, view, obj):
         user = request.user
