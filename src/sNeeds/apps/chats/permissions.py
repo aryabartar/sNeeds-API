@@ -33,15 +33,21 @@ class CanChatPermission(permissions.BasePermission):
     message = "You don't have permission to see this chat"
 
     def has_object_permission(self, request, view, obj):
-        user = request.user
+        request_user = request.user
+        user = obj.user
         consultant = obj.consultant
-        return SoldTimeSlotSale.objects.filter(Q(sold_to=user) | Q(consultant=consultant)).exists()
+        if request_user == user or request_user == consultant.user:
+            return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
+        return False
 
 
 class CanSendMessagePermission(permissions.BasePermission):
     message = "You don't have permission to see this message"
 
     def has_object_permission(self, request, view, obj):
-        user = request.user
+        request_user = request.user
+        user = obj.user
         consultant = obj.chat.consultant
-        return SoldTimeSlotSale.objects.filter(Q(sold_to=user) | Q(consultant=consultant)).exists()
+        if request_user == user or request_user == consultant.user:
+            return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
+        return False

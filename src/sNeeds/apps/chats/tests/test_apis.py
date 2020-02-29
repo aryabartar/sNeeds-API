@@ -430,7 +430,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_a_consultant_can_send_file_message_to_illegal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
             data = {
@@ -442,7 +442,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_a_user_can_send_text_messages_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         data = {
             'chat': self.legal_chat.id,
@@ -453,7 +453,7 @@ class ChatListAPIViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_image_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Pictures/PassImageServlet.jpeg') as img:
             data = {
@@ -465,7 +465,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_voice_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Music/20191221_141705.m4a') as voice:
             data = {
@@ -477,7 +477,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_file_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
             data = {
@@ -489,7 +489,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_text_messages_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         data = {
             'chat': self.legal_chat.id,
@@ -500,7 +500,7 @@ class ChatListAPIViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_image_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         with open('~/Pictures/PassImageServlet.jpeg') as img:
             data = {
@@ -512,7 +512,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_voice_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         with open('~/Music/20191221_141705.m4a') as voice:
             data = {
@@ -524,7 +524,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_file_message_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
             data = {
@@ -536,7 +536,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_send_legal_image_types_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Pictures/Screenshot from 2020-02-11 16-57-12.png') as img:
             data = {
@@ -566,7 +566,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_send_illegal_image_types_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Pictures/calendar.svg') as img:
             data = {
@@ -587,7 +587,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_user_send_legal_voice_types_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Music/file_example_MP3_700KB.mp3') as voice:
             data = {
@@ -608,7 +608,7 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_user_send_illegal_voice_types_to_legal_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         with open('~/Pictures/calendar.svg') as voice:
             data = {
