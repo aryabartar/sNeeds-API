@@ -4,6 +4,7 @@ from . import models
 
 
 class CommentFilterSet(filters.FilterSet):
+
     class Meta:
         model = models.ConsultantComment
         fields = ['user', 'consultant', ]

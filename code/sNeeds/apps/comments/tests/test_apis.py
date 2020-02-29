@@ -203,10 +203,73 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_consultant_list_get(self):
+    def test_consultant_list_get_success(self):
         client = self.client
         url = reverse("comments:comment-list")
 
         response = client.get(url, format="json")
 
         self.assertEqual(len(response.data), len(ConsultantComment.objects.all()))
+
+    def test_consultant_list_filter_user_get_success(self):
+        client = self.client
+        url = "%s?%s=%s" % (
+            reverse("comments:comment-list"),
+            "user",
+            self.user1.id
+        )
+
+        response = client.get(url, format="json")
+
+        self.assertEqual(len(response.data), 2)
+
+    def test_consultant_list_filter_consultant_get_success(self):
+        client = self.client
+        url = "%s?%s=%s" % (
+            reverse("comments:comment-list"),
+            "consultant",
+            self.consultant1_profile.id
+        )
+
+        response = client.get(url, format="json")
+
+        self.assertEqual(len(response.data), 1)
+
+    def test_consultant_list_post_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("comments:comment-list")
+
+        consultant_comment_before_count = ConsultantComment.objects.all().count()
+        data = {
+            "consultant": self.consultant1_profile.id,
+            "message": "hello"
+        }
+        response = client.post(url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(ConsultantComment.objects.all().count(), consultant_comment_before_count + 1)
+
+    def test_consultant_list_post__permission_fail(self):
+        client = self.client
+        url = reverse("comments:comment-list")
+
+        data = {
+            "consultant": self.consultant1_profile.id,
+            "message": "hello"
+        }
+        response = client.post(url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_consultant_list_post__permission_fail(self):
+        client = self.client
+        url = reverse("comments:comment-list")
+
+        data = {
+            "consultant": self.consultant1_profile.id,
+            "message": "hello"
+        }
+        response = client.post(url, data=data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
