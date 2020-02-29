@@ -234,7 +234,7 @@ class CartTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_consultant_profile_rate_correct(self):
+    def test_consultant_profile_model_rate_correct(self):
         self.consultant1_profile.refresh_from_db()
         self.assertEqual(self.consultant1_profile.rate, 3.25)
 
