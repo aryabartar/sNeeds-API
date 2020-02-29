@@ -581,7 +581,7 @@ class ChatListAPIViewTest(APITestCase):
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
-            response = self.client.post(path=url, data=data, format='json')
+            response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_user_send_legal_voice_types_to_legal_chat(self):
