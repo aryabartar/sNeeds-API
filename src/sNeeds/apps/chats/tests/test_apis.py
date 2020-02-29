@@ -261,8 +261,8 @@ class ChatListAPIViewTest(APITestCase):
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
-        response = self.client.post(path=url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.post(path=url, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_user_can_send_image_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
@@ -274,7 +274,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "ImageMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_user_can_send_voice_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
@@ -286,7 +286,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "ImageMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_user_can_send_file_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
@@ -298,7 +298,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "FileMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_consultant_can_send_text_messages_to_another_users_chat(self):
         url = reverse("chat:message-list")
@@ -308,8 +308,8 @@ class ChatListAPIViewTest(APITestCase):
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
-        response = self.client.post(path=url, data=data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        response = self.client.post(path=url, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_consultant_can_send_image_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
@@ -333,7 +333,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "ImageMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_consultant_can_send_file_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
