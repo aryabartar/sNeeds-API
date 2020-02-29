@@ -10,7 +10,7 @@ from .serializers import TicketSerializer, MessageSerializer
 from .permissions import TicketOwnerPermission, MessageOwnerPermission
 from .filtersets import MessageFilter
 
-from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from ..consultants.serializers import ShortConsultantProfileSerializer
 from ..consultants.models import ConsultantProfile
 
 

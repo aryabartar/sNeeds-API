@@ -7,7 +7,7 @@ from rest_framework import serializers
 from .models import TimeSlotSale, SoldTimeSlotSale
 
 from ..consultants.models import ConsultantProfile
-from sNeeds.apps.account.serializers import ConsultantProfileSerializer, ShortConsultantProfileSerializer
+from ..consultants.serializers import ShortConsultantProfileSerializer, ConsultantProfileSerializer
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
 import datetime
@@ -25,7 +25,7 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
         source='consultant',
         lookup_field='slug',
         read_only=True,
-        view_name='account:consultant-profile-detail'
+        view_name='consultant:consultant-profile-detail'
     )
 
     consultant = serializers.SerializerMethodField()

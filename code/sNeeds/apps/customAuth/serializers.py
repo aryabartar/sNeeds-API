@@ -7,7 +7,7 @@ from django.core import exceptions
 from rest_framework import serializers
 from rest_framework_jwt import utils as jwt_utils
 
-from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from ..consultants.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.customAuth.models import UserTypeChoices
 from ..consultants.models import ConsultantProfile
 from .utils import jwt_response_payload_handler

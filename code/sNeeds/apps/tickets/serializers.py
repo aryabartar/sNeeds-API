@@ -7,7 +7,7 @@ from .models import Ticket
 from .custom_serializer import ConsultantFieldSerializer, UserFilteredPrimaryKeyRelatedField
 
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
-from sNeeds.apps.account.serializers import ShortConsultantProfileSerializer
+from ..consultants.serializers import ShortConsultantProfileSerializer
 from ..consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import SoldTimeSlotSale
 
