@@ -15,7 +15,6 @@ from sNeeds.apps.chats.models import (
 )
 
 User = get_user_model()
-
 class ChatListAPIViewTest(APITestCase):
     def setUp(self):
         # Users -------
@@ -145,6 +144,9 @@ class ChatListAPIViewTest(APITestCase):
             sold_to=self.user1,
             price=1300
         )
+        print(f"Created a chat with id with soldTimeSlotSale {Chat.objects.last().id}")
+        self.legal_chat = Chat.objects.last()
+        print(f"All chats {Chat.objects.all()}")
 
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
@@ -157,7 +159,7 @@ class ChatListAPIViewTest(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Chats ------
-        self.legal_chat = Chat.objects.last()
+
 
         self.legal_text_message = TextMessage.objects.create(
             chat=self.legal_chat,
@@ -169,6 +171,7 @@ class ChatListAPIViewTest(APITestCase):
             user=self.user1,
             consultant=self.consultant1_profile
         )
+        print(f"Created a chat with id Without SoldTimeSlotSale {Chat.objects.last().id}")
 
         self.illegal_text_message = TextMessage.objects.create(
             chat=self.illegal_chat,
@@ -207,6 +210,7 @@ class ChatListAPIViewTest(APITestCase):
 
     def test_authenticated_user_can_access_chat_detail(self):
         url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        print(f"user url {url}")
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -228,3 +232,402 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_consultant_can_access_chat_without_a_sold_time_slot_sale(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_consultant_can_access_chat_with_a_sold_time_slot_sale(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_a_user_can_access_to_another_users_chat_details(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_access_to_another_users_chat_details(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_text_messages_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user2)
+        data = {
+            'chat': self.legal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_image_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user2)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_voice_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user2)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_file_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user2)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_text_messages_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        data = {
+            'chat': self.legal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_image_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_voice_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_file_message_to_another_users_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.legal_chat.id,
+                'file_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_text_messages_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        data = {
+            'chat': self.illegal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_image_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.illegal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_voice_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.illegal_chat.id,
+                'image_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_file_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.illegal_chat.id,
+                'image_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_text_messages_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        data = {
+            'chat': self.illegal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_image_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.illegal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_voice_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.illegal_chat.id,
+                'voice_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_can_send_file_message_to_illegal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.illegal_chat.id,
+                'file_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_user_can_send_text_messages_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        data = {
+            'chat': self.legal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_user_can_send_image_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_user_can_send_voice_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_user_can_send_file_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_consultant_can_send_text_messages_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        data = {
+            'chat': self.legal_chat.id,
+            'text_message': "An illegal messages",
+            'messageType': "TextMessage"
+        }
+        response = self.client.post(path=url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_consultant_can_send_image_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Pictures/PassImageServlet.jpeg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_consultant_can_send_voice_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_a_consultant_can_send_file_message_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.consultant1)
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+            data = {
+                'chat': self.legal_chat.id,
+                'file_field': video,
+                'messageType': "FileMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_send_legal_image_types_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Pictures/Screenshot from 2020-02-11 16-57-12.png') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        with open('~/Pictures/file_example_JPG_100kB.jpg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        with open('~/Pictures/Screenshot from 2020-02-11 16-57-12.png') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_send_illegal_image_types_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Pictures/calendar.svg') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        with open('~/Pictures/دانشکده مهندسي کامپيوتر.html') as img:
+            data = {
+                'chat': self.legal_chat.id,
+                'image_field': img,
+                'messageType': "ImageMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_user_send_legal_voice_types_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Music/file_example_MP3_700KB.mp3') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        with open('~/Music/20191221_141705.m4a') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+    def test_user_send_illegal_voice_types_to_legal_chat(self):
+        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        self.client.force_authenticate(user=self.user1)
+        with open('~/Pictures/calendar.svg') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as voice:
+            data = {
+                'chat': self.legal_chat.id,
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
+            }
+            response = self.client.post(path=url, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
