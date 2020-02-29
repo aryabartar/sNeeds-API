@@ -1,8 +1,3 @@
-from rest_framework import status, generics, mixins, permissions
+from django.shortcuts import render
 
-from .serializers import ConsultantSerializer
-
-
-class ConsultantCreateView(generics.CreateAPIView):
-    permission_classes = [permissions.AllowAny]
-    serializer_class = ConsultantSerializer
+# Create your views here.

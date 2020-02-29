@@ -346,7 +346,7 @@ class CartTests(APITestCase):
             SoldTimeSlotRate.objects.all().count()
         )
 
-    def test_sold_time_slot_rate_list_post_success(self):
+    def test_sold_time_slot_rate_list_post_permission_denied(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -358,5 +358,4 @@ class CartTests(APITestCase):
         }
         response = client.post(url, data=data, format='json')
 
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
