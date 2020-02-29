@@ -545,7 +545,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        with open('/home/mrghofrani/Pictures/file_example_JPG_100kB.jpg') as img:
+        with open('/home/mrghofrani/Pictures/file_example_JPG_100kB.jpg', 'rb') as img:
             data = {
                 'chat': self.legal_chat.id,
                 'image_field': img,
@@ -587,7 +587,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_user_send_legal_voice_types_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3') as voice:
+        with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
             data = {
                 'chat': self.legal_chat.id,
                 'voice_field': voice,
@@ -596,7 +596,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        with open('/home/mrghofrani/Music/20191221_141705.m4a') as voice:
+        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
                 'chat': self.legal_chat.id,
                 'voice_field': voice,
