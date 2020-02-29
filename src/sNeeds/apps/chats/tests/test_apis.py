@@ -157,8 +157,6 @@ class ChatListAPIViewTest(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Chats ------
-
-
         self.legal_text_message = TextMessage.objects.create(
             chat=self.legal_chat,
             sender=self.user1,
@@ -230,7 +228,7 @@ class ChatListAPIViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_consultant_can_access_chat_without_a_sold_time_slot_sale(self):
-        url = reverse("chat:message-detail", kwargs={'id': self.illegal_chat.id})
+        url = reverse("chat:message-detail", kwargs={'id': self.illegal_text_message.id})
         self.client.force_authenticate(user=self.consultant1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
