@@ -153,16 +153,12 @@ class CartTests(APITestCase):
         self.consultant_discount1 = ConsultantDiscount.objects.create(
             percent=10,
             code="discountcode1",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.consultant_discount2 = ConsultantDiscount.objects.create(
             percent=20,
             code="discountcode2",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
@@ -274,8 +270,6 @@ class CartTests(APITestCase):
         temp_consultant_discount = ConsultantDiscount.objects.create(
             percent=20,
             code="temp_consultant_discount",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         temp_consultant_discount.consultants.set([self.consultant2_profile])
 
@@ -328,8 +322,6 @@ class CartTests(APITestCase):
         temp_consultant_discount = ConsultantDiscount.objects.create(
             percent=20,
             code="temp_consultant_discount",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         temp_consultant_discount.consultants.set([self.consultant1_profile, ])
 

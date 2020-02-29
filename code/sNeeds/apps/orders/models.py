@@ -20,7 +20,6 @@ class OrderManager(models.Manager):
     @transaction.atomic
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()
-        print("cart_products", cart_products)
         time_slot_sales_qs = cart_products.get_time_slot_sales()
 
         try:
@@ -35,9 +34,7 @@ class OrderManager(models.Manager):
         except TimeSlotSaleNumberDiscount.DoesNotExist:
             time_slot_sales_number_discount_number = 0
 
-        print("ts", time_slot_sales_qs)
         sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
-        print("ss", sold_time_slot_sales_qs)
 
         order = Order(
             user=cart.user,
