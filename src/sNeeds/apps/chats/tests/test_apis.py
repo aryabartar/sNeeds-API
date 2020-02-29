@@ -144,9 +144,7 @@ class ChatListAPIViewTest(APITestCase):
             sold_to=self.user1,
             price=1300
         )
-        print(f"Created a chat with id with soldTimeSlotSale {Chat.objects.last().id}")
         self.legal_chat = Chat.objects.last()
-        print(f"All chats {Chat.objects.all()}")
 
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
@@ -171,7 +169,6 @@ class ChatListAPIViewTest(APITestCase):
             user=self.user1,
             consultant=self.consultant1_profile
         )
-        print(f"Created a chat with id Without SoldTimeSlotSale {Chat.objects.last().id}")
 
         self.illegal_text_message = TextMessage.objects.create(
             chat=self.illegal_chat,
@@ -210,7 +207,6 @@ class ChatListAPIViewTest(APITestCase):
 
     def test_authenticated_user_can_access_chat_detail(self):
         url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
-        print(f"user url {url}")
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
