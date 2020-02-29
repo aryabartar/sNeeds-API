@@ -1,12 +1,4 @@
-from django.http import Http404
-
-from rest_framework import status, generics, mixins, permissions
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-import sNeeds.apps.consultants.serializers
-import sNeeds.apps.customAuth.models
-from ..consultants.models import ConsultantProfile
+from rest_framework import generics
 
 from . import models
 from . import serializers
@@ -44,28 +36,4 @@ class FieldOfStudyList(generics.ListAPIView):
     queryset = models.FieldOfStudy.objects.all()
     serializer_class = serializers.FieldOfStudySerializer
 
-
-class ConsultantProfileDetail(APIView):
-    def get_object(self, slug):
-        try:
-            return ConsultantProfile.objects.get(slug=slug)
-        except ConsultantProfile.DoesNotExist:
-            raise Http404
-
-    def get(self, request, slug):
-        consultant_profile = self.get_object(slug)
-        serializer = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer(consultant_profile, context={"request": request})
-        return Response(serializer.data)
-
-
-class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
-    queryset = ConsultantProfile.objects.all()
-    serializer_class = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer
-    filterset_fields = ('universities', 'field_of_studies', 'countries')
-
-    def get_queryset(self):
-        return ConsultantProfile.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
 

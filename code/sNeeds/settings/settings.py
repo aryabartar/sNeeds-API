@@ -23,8 +23,6 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
 
-    'django.contrib.auth',
-
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
     'sNeeds.apps.consultants',
@@ -40,6 +38,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.tickets',
     'sNeeds.apps.chats',
 
+    'django.contrib.auth',
     'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
