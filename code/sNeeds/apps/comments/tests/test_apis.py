@@ -237,7 +237,7 @@ class CartTests(APITestCase):
 
     def test_consultant_list_post_success(self):
         client = self.client
-        client.login(email='c1@g.com', password='user1234')
+        client.login(email='u1@g.com', password='user1234')
         url = reverse("comments:comment-list")
 
         consultant_comment_before_count = ConsultantComment.objects.all().count()
@@ -249,8 +249,9 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(ConsultantComment.objects.all().count(), consultant_comment_before_count + 1)
+        self.assertEqual(response.data.get("user").get("id"), self.user1.id)
 
-    def test_consultant_list_post__permission_fail(self):
+    def test_consultant_list_post_permission_fail(self):
         client = self.client
         url = reverse("comments:comment-list")
 
@@ -262,14 +263,6 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_consultant_list_post__permission_fail(self):
-        client = self.client
-        url = reverse("comments:comment-list")
 
-        data = {
-            "consultant": self.consultant1_profile.id,
-            "message": "hello"
-        }
-        response = client.post(url, data=data, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_consultant_list_post_permission_fail

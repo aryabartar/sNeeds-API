@@ -14,15 +14,12 @@ class CommentListView(generics.ListCreateAPIView):
     permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
     filterset_class = CommentFilterSet
 
-    def get_queryset(self):
-        return super().get_queryset().order_by("-created")
 
-
-class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CommentDetailView(generics.RetrieveAPIView):
     lookup_field = 'id'
-    queryset = ConsultantComment.objects.all().order_by('-created')
+    queryset = ConsultantComment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [CommentOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 class SoldTimeSlotRateListView(generics.ListCreateAPIView):
