@@ -60,6 +60,20 @@ class MessageSerializer(serializers.ModelSerializer):
         user = request.user
         return obj.sender == user
 
+    def validate(self, data):
+        data = self._kwargs.get('data')
+        chat_id = data.get('chat')
+        request = self._kwargs.get('context').get('request')
+        user = request.user
+        try:
+            chat = Chat.objects.get(id=chat_id)
+        except Chat.DoesNotExist:
+            raise ValidationError("Chat entered does not exist")
+
+        if chat.user == user or chat.consultant.user == user:
+            return data
+        raise ValidationError("You can't access to the chat")
+
     def create(self, validated_data):
         request = self.context.get('request')
         validated_data['sender'] = request.user

@@ -9,7 +9,7 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import filters
-from rest_framework.parsers import MultiPartParser
+from rest_framework.parsers import MultiPartParser, FileUploadParser, DataAndFiles
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -39,7 +39,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
 
 class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
-    parser_classes = (MultiPartParser,)
+    parser_classes = [MultiPartParser, ]
     serializer_class = MessagePolymorphicSerializer
     filter_backends = [filters.OrderingFilter,
                        DjangoFilterBackend]

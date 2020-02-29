@@ -336,16 +336,16 @@ class ChatListAPIViewTest(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_a_consultant_can_send_file_message_to_another_users_chat(self):
-        url = reverse("chat:message-list", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('~/Videos/Re-imagining Microsoft’s mobile experiences.mp4') as video:
+        with open('/home/mrghofrani/Documents/metadata.db', 'rb') as video:
             data = {
                 'chat': self.legal_chat.id,
                 'file_field': video,
                 'messageType': "FileMessage"
             }
-            response = self.client.post(path=url, data=data, format='json')
-            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            response = self.client.post(path=url, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_a_user_can_send_text_messages_to_illegal_chat(self):
         url = reverse("chat:message-list", kwargs={'id': self.illegal_chat.id})
