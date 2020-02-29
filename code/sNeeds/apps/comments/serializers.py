@@ -66,7 +66,7 @@ class AdminCommentSerializer(serializers.ModelSerializer):
 class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoldTimeSlotRate
-        fields = ['sold_time_slot', 'rate', ]
+        fields = ['id', 'sold_time_slot', 'rate', ]
 
     def create(self, validated_data):
         request = self.context.get('request', None)

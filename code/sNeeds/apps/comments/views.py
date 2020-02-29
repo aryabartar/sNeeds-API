@@ -26,4 +26,5 @@ class CommentDetailView(generics.RetrieveAPIView):
 class SoldTimeSlotRateListView(generics.ListCreateAPIView):
     queryset = SoldTimeSlotRate.objects.all()
     serializer_class = SoldTimeSlotRateSerializer
+    filterset_fields = ['sold_time_slot', ]
     permission_classes = [SoldTimeSlotRateOwnerPermission, permissions.IsAuthenticatedOrReadOnly]

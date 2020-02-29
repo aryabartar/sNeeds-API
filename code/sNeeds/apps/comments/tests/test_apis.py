@@ -318,14 +318,45 @@ class CartTests(APITestCase):
 
         self.assertEqual(data.get("admin_reply"), None)
 
-    def test_sold_time_slot_rate_list_success(self):
+    def test_sold_time_slot_rate_list_get_success(self):
         client = self.client
 
-        url = "%s?%s=%s" % (
-            reverse("comments:sold-time-slot-rate-list"),
-            "sold-time-slot",
-            self.sold_time_slot_sale1.id
-        )
+        url = reverse("comments:sold-time-slot-rate-list")
+
         response = client.get(url, format='json')
 
+        self.assertEqual(len(response.data), SoldTimeSlotRate.objects.all().count())
+
+    def test_sold_time_slot_rate_list_post_success(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse("comments:sold-time-slot-rate-list")
+
+        before_count = SoldTimeSlotRate.objects.all().count()
+        data = {
+            "sold_time_slot": self.sold_time_slot_sale3.id,
+            "rate": 1
+        }
+        response = client.post(url, data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            before_count + 1,
+            SoldTimeSlotRate.objects.all().count()
+        )
+
+    def test_sold_time_slot_rate_list_post_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("comments:sold-time-slot-rate-list")
+
+        data = {
+            "sold_time_slot": self.sold_time_slot_sale3.id,
+            "rate": 1
+        }
+        response = client.post(url, data=data, format='json')
+
         print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
