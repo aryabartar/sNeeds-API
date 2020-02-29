@@ -5,7 +5,7 @@ from django.test import override_settings
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from rest_framework import status
+from rest_framework import status, serializers
 from rest_framework.test import APITestCase, APIClient
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
@@ -263,6 +263,21 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    def test_consultant_detail_get_success(self):
+        client = self.client
+        c1 = self.consultant_comment1
 
+        url = reverse("comments:comment-detail", args=(c1.id,))
+        response = client.get(url, format='json')
 
-    def test_consultant_list_post_permission_fail
+        data = response.data
+
+        self.assertEqual(data.get("id"), c1.id)
+        self.assertEqual(data.get("user").get("id"), c1.user.id)
+        self.assertEqual(data.get("user").get("first_name"), c1.user.first_name)
+        self.assertEqual(data.get("user").get("last_name"), c1.user.last_name)
+        self.assertEqual(data.get("admin_reply"), "Admin message 1")
+        self.assertEqual(data.get("consultant"), c1.consultant.id)
+        self.assertEqual(data.get("message"), c1.message)
+        self.assertEqual(data.get("created"), serializers.DateTimeField().to_representation(c1.created))
+        self.assertEqual(data.get("updated"), serializers.DateTimeField().to_representation(c1.updated))

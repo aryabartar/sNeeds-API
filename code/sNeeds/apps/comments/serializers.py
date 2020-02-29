@@ -25,7 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_admin_reply(self, obj):
         try:
             admin_reply = ConsultantAdminComment.objects.get(comment=obj)
-            return AdminCommentSerializer(admin_reply).data
+            return admin_reply.message
         except ConsultantAdminComment.DoesNotExist:
             return None
 
