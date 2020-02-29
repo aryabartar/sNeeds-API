@@ -449,7 +449,7 @@ class ChatListAPIViewTest(APITestCase):
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
-        response = self.client.post(path=url, data=data, format='json')
+        response = self.client.post(path=url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_image_message_to_legal_chat(self):
@@ -470,8 +470,8 @@ class ChatListAPIViewTest(APITestCase):
         with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
                 'chat': self.legal_chat.id,
-                'image_field': voice,
-                'messageType': "ImageMessage"
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -482,7 +482,7 @@ class ChatListAPIViewTest(APITestCase):
         with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
             data = {
                 'chat': self.legal_chat.id,
-                'image_field': video,
+                'file_field': video,
                 'messageType': "FileMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
