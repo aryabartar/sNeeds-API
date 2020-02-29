@@ -1,8 +1,11 @@
+from django.db.models import Q
+
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from sNeeds.apps.store.models import SoldTimeSlotSale
 from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
 
 
@@ -70,8 +73,10 @@ class MessageSerializer(serializers.ModelSerializer):
         except Chat.DoesNotExist:
             raise ValidationError("Chat entered does not exist")
 
-        if chat.user == user or chat.consultant.user == user:
-            return data
+        if SoldTimeSlotSale.objects.filter(Q(sold_to=chat.user) & Q(consultant=chat.consultant)).exists():
+            if chat.user == user or chat.consultant.user == user:
+                return data
+
         raise ValidationError("You can't access to the chat")
 
     def create(self, validated_data):
