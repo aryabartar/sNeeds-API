@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 
+import sNeeds.apps.consultants.models
 import sNeeds.apps.customAuth.models
 from sNeeds.apps.comments.models import SoldTimeSlotRate
 
@@ -64,7 +65,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     countries = CountrySerializer(many=True, read_only=True)
 
     class Meta:
-        model = sNeeds.apps.customAuth.models.ConsultantProfile
+        model = sNeeds.apps.consultants.models.ConsultantProfile
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
@@ -100,7 +101,7 @@ class ShortConsultantProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = sNeeds.apps.customAuth.models.ConsultantProfile
+        model = sNeeds.apps.consultants.models.ConsultantProfile
         fields = (
             'id',
             'url',

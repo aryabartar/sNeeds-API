@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 import sNeeds.apps.customAuth.models
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 
 from . import models
 from . import serializers

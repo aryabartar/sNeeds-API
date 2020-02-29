@@ -15,11 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Imported key to prevent circular imports.
-from .secure import keys
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
 INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
@@ -28,8 +23,11 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
 
+    'django.contrib.auth',
+
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
+    'sNeeds.apps.consultants',
     'sNeeds.apps.store',
     'sNeeds.apps.docs',
     'sNeeds.apps.carts',
@@ -40,11 +38,9 @@ INSTALLED_APPS = [
     'sNeeds.apps.discounts',
     'sNeeds.apps.videochats',
     'sNeeds.apps.tickets',
-    'sNeeds.apps.consultants',
     'sNeeds.apps.chats',
 
     'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -52,6 +48,11 @@ INSTALLED_APPS = [
 
     'django_cleanup',  # should go after your apps
 ]
+# Imported key to prevent circular imports.
+from .secure import keys
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first

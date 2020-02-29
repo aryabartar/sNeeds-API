@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.contrib.auth import get_user_model
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import SoldTimeSlotSale
 
 User = get_user_model()

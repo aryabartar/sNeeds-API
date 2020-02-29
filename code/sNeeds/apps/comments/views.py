@@ -7,7 +7,7 @@ from .models import ConsultantComment, SoldTimeSlotRate
 from .serializers import CommentSerializer, SoldTimeSlotRateSerializer
 from .permissions import SoldTimeSlotRateOwnerPermission
 from .filtersets import CommentFilterSet
-from ..customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 
 
 class CommentListView(generics.ListCreateAPIView):

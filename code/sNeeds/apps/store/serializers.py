@@ -6,7 +6,7 @@ from rest_framework import serializers
 
 from .models import TimeSlotSale, SoldTimeSlotSale
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 from sNeeds.apps.account.serializers import ConsultantProfileSerializer, ShortConsultantProfileSerializer
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 

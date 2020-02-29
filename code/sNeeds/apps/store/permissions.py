@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class ConsultantPermission(permissions.BasePermission):

@@ -12,7 +12,7 @@ from .permissions import (
     SoldTimeSlotSaleOwnerPermission,
 )
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 
 
 class TimeSlotSailList(generics.ListCreateAPIView):
