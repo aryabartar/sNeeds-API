@@ -490,18 +490,18 @@ class ChatListAPIViewTest(APITestCase):
 
     def test_a_consultant_can_send_text_messages_to_legal_chat(self):
         url = reverse("chat:message-list")
-        self.client.force_authenticate(user=self.consultant1)
+        self.client.force_authenticate(user=self.consultant2)
         data = {
             'chat': self.legal_chat.id,
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
-        response = self.client.post(path=url, data=data, format='json')
+        response = self.client.post(path=url, data=data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_image_message_to_legal_chat(self):
         url = reverse("chat:message-list")
-        self.client.force_authenticate(user=self.consultant1)
+        self.client.force_authenticate(user=self.consultant2)
         with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
             data = {
                 'chat': self.legal_chat.id,
@@ -513,12 +513,12 @@ class ChatListAPIViewTest(APITestCase):
 
     def test_a_consultant_can_send_voice_message_to_legal_chat(self):
         url = reverse("chat:message-list")
-        self.client.force_authenticate(user=self.consultant1)
+        self.client.force_authenticate(user=self.consultant2)
         with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
             data = {
                 'chat': self.legal_chat.id,
                 'voice_field': voice,
-                'messageType': "ImageMessage"
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
