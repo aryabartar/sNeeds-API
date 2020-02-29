@@ -623,5 +623,5 @@ class ChatListAPIViewTest(APITestCase):
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
-            response = self.client.post(path=url, data=data, format='json')
+            response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
