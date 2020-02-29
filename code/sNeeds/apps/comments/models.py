@@ -8,6 +8,18 @@ from sNeeds.apps.store.models import SoldTimeSlotSale
 User = get_user_model()
 
 
+class SoldTimeSlotRateManager(models.QuerySet):
+    def get_average_rate_or_none(self):
+        if self.count() == 0:
+            return None
+
+        rate_sum = 0
+        for obj in self.all():
+            rate_sum += obj.rate
+
+        return rate_sum / self.count()
+
+
 class ConsultantComment(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
@@ -34,3 +46,5 @@ class SoldTimeSlotRate(models.Model):
     rate = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(5)],
     )
+
+    objects = SoldTimeSlotRateManager.as_manager()

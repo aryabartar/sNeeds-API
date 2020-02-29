@@ -146,6 +146,13 @@ class ConsultantProfile(models.Model):
     countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)
     time_slot_price = models.PositiveIntegerField()
+    rate = models.FloatField(default=None, null=True, blank=True)
 
-    def __str__(self):
-        return self.user.__str__()
+    def update_rate(self):
+        """Currently based on sold time slot sales rate"""
+        from sNeeds.apps.comments.models import SoldTimeSlotRate
+
+        sold_time_slot_rate_qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant__id=self.id)
+        average_rate = sold_time_slot_rate_qs.get_average_rate_or_none()
+        self.rate = average_rate
+        self.save()

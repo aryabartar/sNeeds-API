@@ -323,7 +323,7 @@ class CartTests(APITestCase):
 
         url = "%s?%s=%s" % (
             reverse("comments:sold-time-slot-rate-list"),
-            "solt-time-slot",
+            "sold-time-slot",
             self.sold_time_slot_sale1.id
         )
         response = client.get(url, format='json')
