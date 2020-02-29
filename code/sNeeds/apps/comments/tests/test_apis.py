@@ -11,7 +11,7 @@ from rest_framework.test import APITestCase, APIClient
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
-from sNeeds.apps.comments.models import ConsultantComment, ConsultantAdminComment
+from sNeeds.apps.comments.models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate
 from sNeeds.apps.customAuth.models import ConsultantProfile
 from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
@@ -200,6 +200,37 @@ class CartTests(APITestCase):
             comment=self.consultant_comment2,
             message="Admin message 2"
         )
+        self.sold_time_slot_sale1 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user1,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale2 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=2),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale3 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant2_profile.time_slot_price
+        )
+        self.sold_time_slot_rate_1 = SoldTimeSlotRate.objects.create(
+            sold_time_slot=self.sold_time_slot_sale1,
+            rate=4
+        )
+        self.sold_time_slot_rate_2 = SoldTimeSlotRate.objects.create(
+            sold_time_slot=self.sold_time_slot_sale2,
+            rate=2.5
+        )
         # Setup ------
         self.client = APIClient()
 
@@ -269,7 +300,6 @@ class CartTests(APITestCase):
 
         url = reverse("comments:comment-detail", args=(c1.id,))
         response = client.get(url, format='json')
-
         data = response.data
 
         self.assertEqual(data.get("id"), c1.id)
@@ -281,3 +311,21 @@ class CartTests(APITestCase):
         self.assertEqual(data.get("message"), c1.message)
         self.assertEqual(data.get("created"), serializers.DateTimeField().to_representation(c1.created))
         self.assertEqual(data.get("updated"), serializers.DateTimeField().to_representation(c1.updated))
+
+        url = reverse("comments:comment-detail", args=(self.consultant_comment3.id,))
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(data.get("admin_reply"), None)
+
+    def test_sold_time_slot_rate_list_success(self):
+        client = self.client
+
+        url = "%s?%s=%s" % (
+            reverse("comments:sold-time-slot-rate-list"),
+            "solt-time-slot",
+            self.sold_time_slot_sale1.id
+        )
+        response = client.get(url, format='json')
+
+        print(response.data)

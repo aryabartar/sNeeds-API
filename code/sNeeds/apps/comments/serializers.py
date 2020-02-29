@@ -68,22 +68,14 @@ class SoldTimeSlotRateSerializer(serializers.ModelSerializer):
         model = SoldTimeSlotRate
         fields = ['sold_time_slot', 'rate', ]
 
-    def validate(self, attrs):
+    def create(self, validated_data):
         request = self.context.get('request', None)
         user = request.user
 
-        sold_time_slot = attrs['sold_time_slot']
+        sold_time_slot = validated_data['sold_time_slot']
 
         if sold_time_slot.sold_to != user:
             raise ValidationError({"detail": _("This time slot is not sold to this user")})
-
-        return attrs
-
-    def create(self, validated_data):
-        sold_time_slot = validated_data['sold_time_slot']
-
-        if SoldTimeSlotRate.objects.filter(sold_time_slot=sold_time_slot).exists():
-            raise ValidationError({"detail": "Rate exists"})
 
         obj = SoldTimeSlotRate.objects.create(
             sold_time_slot=sold_time_slot,

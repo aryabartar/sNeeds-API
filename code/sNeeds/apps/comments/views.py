@@ -1,4 +1,5 @@
 from rest_framework import status, generics, mixins, permissions
+from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -6,6 +7,7 @@ from .models import ConsultantComment, SoldTimeSlotRate
 from .serializers import CommentSerializer, SoldTimeSlotRateSerializer
 from .permissions import SoldTimeSlotRateOwnerPermission
 from .filtersets import CommentFilterSet
+from ..customAuth.models import ConsultantProfile
 
 
 class CommentListView(generics.ListCreateAPIView):
