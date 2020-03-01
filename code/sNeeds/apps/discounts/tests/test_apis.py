@@ -292,8 +292,6 @@ class CartTests(APITestCase):
         temp_consultant_discount = ConsultantDiscount.objects.create(
             percent=20,
             code="temp_consultant_discount",
-            start_time=timezone.now(),
-            end_time=timezone.now() + timezone.timedelta(days=1),
         )
         temp_consultant_discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
 

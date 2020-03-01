@@ -353,7 +353,7 @@ class CartTests(APITestCase):
         url = reverse("videochat:room-detail", args=(self.room1.id,))
 
         # For user
-        client.login(email="u1@g.com", password="user1234")
+        client.login(email="u2@g.com", password="user1234")
         response = client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

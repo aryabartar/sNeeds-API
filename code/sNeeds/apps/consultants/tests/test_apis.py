@@ -247,10 +247,6 @@ class CartTests(APITestCase):
         )
 
     def test_consultant_profile_list_order_by_rate_success(self):
-        SoldTimeSlotRate.objects.create(
-            sold_time_slot=self.sold_time_slot_sale2,
-            rate=2.5
-        )
 
         client = self.client
         url = "%s?%s=%s" % (

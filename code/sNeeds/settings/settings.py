@@ -52,7 +52,6 @@ from .secure import keys
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
     'django.middleware.security.SecurityMiddleware',
@@ -90,13 +89,12 @@ WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
+USE_TZ = True
 TIME_ZONE = 'UTC'
+# TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_L10N = True
-
-USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
