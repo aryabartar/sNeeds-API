@@ -34,4 +34,6 @@ tests/report/
 venv/
 supervisor/
 .env
+
 celerybeat*
+celerybeat-schedule
