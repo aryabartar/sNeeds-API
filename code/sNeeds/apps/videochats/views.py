@@ -20,12 +20,13 @@ from .permissions import RoomOwnerPermission
 
 class RoomListView(generics.ListAPIView):
     serializer_class = RoomSerializer
+    filterset_fields = ('sold_time_slot',)
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
         if ConsultantProfile.objects.filter(user=user).exists():
-            #TODO: Order by start_time
+            # TODO: Order by start_time
             qs = Room.objects.filter(sold_time_slot__consultant__user=user).order_by("-created")
         else:
             qs = Room.objects.filter(sold_time_slot__sold_to=user).order_by("-created")

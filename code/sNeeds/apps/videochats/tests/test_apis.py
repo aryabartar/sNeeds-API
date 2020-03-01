@@ -292,6 +292,31 @@ class CartTests(APITestCase):
             0
         )
 
+    def test_rooms_list_get_filter_by_sol_time_slot(self):
+        client = self.client
+        client.login(email="u1@g.com", password="user1234")
+
+        url = "%s?%s=%s" % (
+            reverse("videochat:room-list"),
+            "sold_time_slot",
+            self.sold_time_slot_sale1.id
+        )
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        url = "%s?%s=%s" % (
+            reverse("videochat:room-list"),
+            "sold_time_slot",
+            self.sold_time_slot_sale3.id
+        )
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+
     def test_rooms_list_authenticate_permission(self):
         client = self.client
         url = reverse("videochat:room-list")
