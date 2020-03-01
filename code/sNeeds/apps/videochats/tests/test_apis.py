@@ -347,3 +347,22 @@ class CartTests(APITestCase):
             data.get("end_time"),
             self.room1.sold_time_slot.end_time
         )
+
+    def test_rooms_detail_get_permission_denied(self):
+        client = self.client
+        url = reverse("videochat:room-detail", args=(self.room1.id,))
+
+        # For user
+        client.login(email="u1@g.com", password="user1234")
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_rooms_detail_get_unauthorized(self):
+        client = self.client
+        url = reverse("videochat:room-detail", args=(self.room1.id,))
+
+        # For user
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
