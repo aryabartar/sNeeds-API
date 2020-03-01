@@ -28,3 +28,19 @@ class SoldTimeSlotRateListView(generics.ListCreateAPIView):
     serializer_class = SoldTimeSlotRateSerializer
     filterset_fields = ['sold_time_slot', ]
     permission_classes = [SoldTimeSlotRateOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        # Changed because previously one object was returned in a list
+        if queryset.count() == 1 and self.request.GET.get("sold_time_slot") is not None:
+            serializer = self.get_serializer(queryset.first())
+        else:
+            serializer = self.get_serializer(queryset, many=True)
+
+        return Response(serializer.data)
