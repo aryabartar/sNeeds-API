@@ -25,9 +25,10 @@ class RoomListView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         if ConsultantProfile.objects.filter(user=user).exists():
-            qs = Room.objects.filter(sold_time_slot__consultant__user=user)
+            #TODO: Order by start_time
+            qs = Room.objects.filter(sold_time_slot__consultant__user=user).order_by("-created")
         else:
-            qs = Room.objects.filter(sold_time_slot__sold_to=user)
+            qs = Room.objects.filter(sold_time_slot__sold_to=user).order_by("-created")
         return qs
 
 

@@ -19,10 +19,12 @@ class ConsultantProfileDetail(APIView):
 
     def get(self, request, slug):
         consultant_profile = self.get_object(slug)
-        serializer = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer(consultant_profile, context={"request": request})
+        serializer = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer(consultant_profile,
+                                                                                     context={"request": request})
         return Response(serializer.data)
 
 
+# TODO: Show consultants based on ...
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = ConsultantProfile.objects.all()
     serializer_class = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer
