@@ -43,6 +43,9 @@ class RoomListView(generics.ListAPIView):
         # Changed because previously one object was returned in a list
         if queryset.count() == 1 and self.request.GET.get("sold_time_slot") is not None:
             serializer = self.get_serializer(queryset.first())
+        # For empty objects
+        elif not queryset.exists() and self.request.GET.get("sold_time_slot") is not None:
+            return Response({"detail": "Not found."}, status=404)
         else:
             serializer = self.get_serializer(queryset, many=True)
 
