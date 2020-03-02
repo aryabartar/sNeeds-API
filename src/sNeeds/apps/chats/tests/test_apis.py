@@ -26,6 +26,10 @@ class ChatListAPIViewTest(APITestCase):
         self.user2.is_admin = False
         self.user2.set_user_type_student()
 
+        self.user3 = User.objects.create_user(email="u3@g.com", password="user1234")
+        self.user3.is_admin = False
+        self.user3.set_user_type_student()
+
         # Countries -------
         self.country1 = Country.objects.create(
             name="country1",
@@ -103,6 +107,20 @@ class ChatListAPIViewTest(APITestCase):
             time_slot_price=80
         )
 
+        self.consultant3 = User.objects.create_user(email="c3@g.com", password="user1234")
+        self.consultant3.is_admin = False
+        self.consultant3.set_user_type_consultant()
+        self.consultant3_profile = ConsultantProfile.objects.create(
+            user=self.consultant3,
+            bio="bio3",
+            profile_picture=None,
+            aparat_link="https://www.aparat.com/v/vG4QC",
+            resume=None,
+            slug="consultant3",
+            active=True,
+            time_slot_price=180
+        )
+
         # TimeSlotSales -------
         self.time_slot_sale1 = TimeSlotSale.objects.create(
             consultant=self.consultant1_profile,
@@ -144,7 +162,17 @@ class ChatListAPIViewTest(APITestCase):
             sold_to=self.user1,
             price=1300
         )
-        self.legal_chat = Chat.objects.last()
+        self.chat_u1_c2 = Chat.objects.last()
+
+        self.sold_time_slot_sale = SoldTimeSlotSale.objects.create(
+            used=False,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now(),
+            end_time=timezone.now() + timezone.timedelta(hours=5),
+            sold_to=self.user2,
+            price=1300
+        )
+        self.chat_u2_c1 = Chat.objects.last()
 
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
@@ -158,7 +186,7 @@ class ChatListAPIViewTest(APITestCase):
 
         # Chats ------
         self.legal_text_message = TextMessage.objects.create(
-            chat=self.legal_chat,
+            chat=self.chat_u1_c2,
             sender=self.user1,
             text_message="Legal Message"
         )
@@ -204,7 +232,7 @@ class ChatListAPIViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_authenticated_user_can_access_chat_detail(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -234,19 +262,19 @@ class ChatListAPIViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_consultant_can_access_chat_with_a_sold_time_slot_sale(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant2)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_a_user_can_access_to_another_users_chat_details(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_a_consultant_can_access_to_another_users_chat_details(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.legal_chat.id})
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -255,7 +283,7 @@ class ChatListAPIViewTest(APITestCase):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user2)
         data = {
-            'chat': self.legal_chat.id,
+            'chat': self.chat_u1_c2.id,
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
@@ -267,7 +295,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user2)
         with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -279,7 +307,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user2)
         with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': voice,
                 'messageType': "ImageMessage"
             }
@@ -291,7 +319,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user2)
         with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': video,
                 'messageType': "FileMessage"
             }
@@ -302,7 +330,7 @@ class ChatListAPIViewTest(APITestCase):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
         data = {
-            'chat': self.legal_chat.id,
+            'chat': self.chat_u1_c2.id,
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
@@ -314,7 +342,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant1)
         with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -326,7 +354,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant1)
         with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "ImageMessage"
             }
@@ -338,7 +366,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant1)
         with open('/home/mrghofrani/Documents/metadata.db', 'rb') as video:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'file_field': video,
                 'messageType': "FileMessage"
             }
@@ -443,7 +471,7 @@ class ChatListAPIViewTest(APITestCase):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
         data = {
-            'chat': self.legal_chat.id,
+            'chat': self.chat_u1_c2.id,
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
@@ -455,7 +483,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -467,7 +495,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
@@ -479,7 +507,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'file_field': video,
                 'messageType': "FileMessage"
             }
@@ -490,7 +518,7 @@ class ChatListAPIViewTest(APITestCase):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant2)
         data = {
-            'chat': self.legal_chat.id,
+            'chat': self.chat_u1_c2.id,
             'text_message': "An illegal messages",
             'messageType': "TextMessage"
         }
@@ -502,7 +530,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant2)
         with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -514,7 +542,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant2)
         with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
@@ -526,7 +554,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant2)
         with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'file_field': video,
                 'messageType': "FileMessage"
             }
@@ -538,7 +566,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Pictures/Screenshot from 2020-02-11 16-57-12.png', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -547,7 +575,7 @@ class ChatListAPIViewTest(APITestCase):
 
         with open('/home/mrghofrani/Pictures/file_example_JPG_100kB.jpg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -556,7 +584,7 @@ class ChatListAPIViewTest(APITestCase):
 
         with open('/home/mrghofrani/Pictures/Screenshot from 2020-02-11 16-57-12.png', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -568,7 +596,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Pictures/calendar.svg', 'rb') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -577,7 +605,7 @@ class ChatListAPIViewTest(APITestCase):
 
         with open('/home/mrghofrani/Pictures/دانشکده مهندسي کامپيوتر.html') as img:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'image_field': img,
                 'messageType': "ImageMessage"
             }
@@ -589,7 +617,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
@@ -598,7 +626,7 @@ class ChatListAPIViewTest(APITestCase):
 
         with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
@@ -610,7 +638,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.user1)
         with open('/home/mrghofrani/Pictures/calendar.svg', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
@@ -619,7 +647,7 @@ class ChatListAPIViewTest(APITestCase):
 
         with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as voice:
             data = {
-                'chat': self.legal_chat.id,
+                'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
