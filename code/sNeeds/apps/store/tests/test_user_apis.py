@@ -12,7 +12,7 @@ from rest_framework.test import APITestCase, APIClient
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
@@ -210,72 +210,6 @@ class CartTests(APITestCase):
             len(response.data),
             TimeSlotSale.objects.all().count()
         )
-
-    def test_time_slot_sales_list_get_start_time_end_time_query(self):
-        client = self.client
-        now = timezone.now()
-
-        ts1 = TimeSlotSale.objects.create(
-            consultant=self.consultant1_profile,
-            start_time=now + timezone.timedelta(days=3),
-            end_time=now + timezone.timedelta(days=3) + timezone.timedelta(hours=1),
-            price=self.consultant1_profile.time_slot_price
-        )
-
-        ts2 = TimeSlotSale.objects.create(
-            consultant=self.consultant1_profile,
-            start_time=now + timezone.timedelta(days=3) + timezone.timedelta(hours=1),
-            end_time=now + timezone.timedelta(days=3) + timezone.timedelta(hours=2),
-            price=self.consultant1_profile.time_slot_price
-        )
-
-        url = "%s?%s=%s&%s=%s" % (
-            reverse("store:time-slot-sale-list"),
-            "start_time_range_after",
-            datetime.strftime(ts1.start_time, '%Y-%m-%dT%H:%M:%SZ'),
-            "start_time_range_before",
-            datetime.strftime(ts1.start_time + timezone.timedelta(seconds=1), '%Y-%m-%dT%H:%M:%SZ')
-        )
-
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-        url = "%s?%s=%s&?%s=%s" % (
-            reverse("store:time-slot-sale-list"),
-            "start_time_range_after",
-            datetime.strftime(ts1.start_time, '%Y-%m-%dT%H:%M:%SZ'),
-            "start_time_range_before",
-            datetime.strftime(ts2.start_time, '%Y-%m-%dT%H:%M:%SZ')
-        )
-
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
-
-        url = "%s?%s=%s&%s=%s" % (
-            reverse("store:time-slot-sale-list"),
-            "end_time_range_after",
-            datetime.strftime(ts1.end_time, '%Y-%m-%dT%H:%M:%SZ'),
-            "end_time_range_before",
-            datetime.strftime(ts1.end_time + timezone.timedelta(seconds=1), '%Y-%m-%dT%H:%M:%SZ')
-        )
-
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-        url = "%s?%s=%s&?%s=%s" % (
-            reverse("store:time-slot-sale-list"),
-            "end_time_range_after",
-            datetime.strftime(ts1.end_time, '%Y-%m-%dT%H:%M:%SZ'),
-            "end_time_range_before",
-            datetime.strftime(ts2.end_time, '%Y-%m-%dT%H:%M:%SZ')
-        )
-
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
 
     def test_time_slot_sales_list_get_consultant_query(self):
         client = self.client

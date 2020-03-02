@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from . import models
 from . import serializers
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 from .permissions import UserFileOwnerPermission
 
 

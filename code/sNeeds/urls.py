@@ -30,6 +30,7 @@ urlpatterns = [
                   path('docs/', include('sNeeds.apps.docs.urls')),
                   path('auth/', include('sNeeds.apps.customAuth.urls')),
                   path('account/', include('sNeeds.apps.account.urls')),
+                  path('consultant/', include('sNeeds.apps.consultants.urls')),
                   path('store/', include('sNeeds.apps.store.urls')),
                   path('cart/', include('sNeeds.apps.carts.urls')),
                   path('order/', include('sNeeds.apps.orders.urls')),
@@ -39,5 +40,4 @@ urlpatterns = [
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochat/', include('sNeeds.apps.videochats.urls')),
                   path('chat/', include('sNeeds.apps.chats.urls')),
-                  #path('consultant/', include('sNeeds.apps.consultants.urls')), Not using yet
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,4 +1,6 @@
 from django.urls import path
+
+import sNeeds.apps.consultants.views
 from . import views
 
 app_name = "account"
@@ -13,6 +15,6 @@ urlpatterns = [
     path('field-of-studies/', views.FieldOfStudyList.as_view(), name="field-of-study-list"),
     path('field-of-studies/<str:slug>/', views.FieldOfStudyDetail.as_view(), name="field-of-study-detail"),
 
-    path('consultant-profiles/', views.ConsultantProfileList.as_view(), name="consultant-profile-list"),
-    path('consultant-profiles/<str:slug>/', views.ConsultantProfileDetail.as_view(), name="consultant-profile-detail"),
+    path('consultant-profiles/', sNeeds.apps.consultants.views.ConsultantProfileList.as_view(), name="consultant-profile-list"),
+    path('consultant-profiles/<str:slug>/', sNeeds.apps.consultants.views.ConsultantProfileDetail.as_view(), name="consultant-profile-detail"),
     ]

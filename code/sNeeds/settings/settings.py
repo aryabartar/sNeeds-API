@@ -16,11 +16,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "..", "templates")
 
-# Imported key to prevent circular imports.
-from .secure import keys
-
-SECRET_KEY = os.environ.get('SECRET_KEY')
-
 INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
@@ -31,6 +26,7 @@ INSTALLED_APPS = [
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
+    'sNeeds.apps.consultants',
     'sNeeds.apps.store',
     'sNeeds.apps.docs',
     'sNeeds.apps.carts',
@@ -43,8 +39,8 @@ INSTALLED_APPS = [
     'sNeeds.apps.consultants',
     'sNeeds.apps.chats',
 
-    'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -52,6 +48,10 @@ INSTALLED_APPS = [
 
     'django_cleanup',  # should go after your apps
 ]
+# Imported key to prevent circular imports.
+from .secure import keys
+
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
@@ -90,13 +90,12 @@ WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
+USE_TZ = True
 TIME_ZONE = 'UTC'
+# TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
-USE_L10N = True
-
-USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [

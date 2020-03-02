@@ -12,7 +12,7 @@ from .permissions import (
     SoldTimeSlotSaleOwnerPermission,
 )
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from ..consultants.models import ConsultantProfile
 
 
 class TimeSlotSailList(generics.ListCreateAPIView):
@@ -37,9 +37,9 @@ class SoldTimeSlotSaleList(generics.ListAPIView):
 
         if consultant_profile_qs.exists():
             consultant_profile = consultant_profile_qs.first()
-            return SoldTimeSlotSale.objects.filter(consultant=consultant_profile).order_by('-start_time')
+            return SoldTimeSlotSale.objects.filter(consultant=consultant_profile).order_by('start_time')
         else:
-            return SoldTimeSlotSale.objects.filter(sold_to=user).order_by('-start_time')
+            return SoldTimeSlotSale.objects.filter(sold_to=user).order_by('start_time')
 
 
 class TimeSlotSaleDetail(generics.RetrieveDestroyAPIView):

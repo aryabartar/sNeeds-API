@@ -1,19 +1,33 @@
 from django.db import models
 
+from sNeeds.apps.account.models import get_consultant_image_path, get_consultant_resume_path, University, FieldOfStudy, \
+    Country
+from sNeeds.apps.customAuth.models import CustomUser
 
-def path_for_uploading_file(instance, filename):
-    return "media/consultants/{email}/{filename}".format(email=instance.email, filename=filename)
 
+class ConsultantProfile(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    bio = models.TextField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to=get_consultant_image_path)
+    aparat_link = models.URLField(null=True, blank=True)
+    resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
+    slug = models.SlugField(unique=True, help_text="lowercase pls")
+    universities = models.ManyToManyField(University, blank=True)
+    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
+    countries = models.ManyToManyField(Country, blank=True)
+    active = models.BooleanField(default=True)
+    time_slot_price = models.PositiveIntegerField()
+    rate = models.FloatField(default=None, null=True, blank=True)
 
-class TMPConsultant(models.Model):
-    first_name = models.CharField(max_length=128, null=False, blank=False)
-    last_name = models.CharField(max_length=128, null=False, blank=False)
-    email = models.EmailField(max_length=64, null=False, blank=False,)
-    phone_number = models.CharField(max_length=11, null=False, blank=False)
-    university = models.CharField(max_length=256, blank=False, null=False)
-    field_of_study = models.CharField(max_length=256, blank=False, null=False)
-    resume = models.FileField(upload_to=path_for_uploading_file, blank=False, null=False)
-    created = models.DateTimeField(auto_now_add=True)
+    def update_rate(self):
+        """Currently based on sold time slot sales rate"""
+        from sNeeds.apps.comments.models import SoldTimeSlotRate
 
-    def __str__(self):
-        return "{} {}".format(self.first_name, self.last_name)
+        sold_time_slot_rate_qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant__id=self.id)
+        average_rate = sold_time_slot_rate_qs.get_average_rate_or_none()
+        self.rate = average_rate
+        self.save()
