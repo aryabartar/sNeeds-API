@@ -255,6 +255,18 @@ class ChatListAPIViewTest(APITestCase):
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_authenticated_user_without_chat_can_access_chat_detail(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
+        self.client.force_authenticate(user=self.user3)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_user_with_chat_can_access_chat_details(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_consultant_can_access_chat_without_a_sold_time_slot_sale(self):
         url = reverse("chat:message-detail", kwargs={'id': self.illegal_text_message.id})
         self.client.force_authenticate(user=self.consultant1)
@@ -276,6 +288,12 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_access_to_another_users_chat_details(self):
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_a_consultant_without_any_chat_can_access_to_another_users_chat_details(self):
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
+        self.client.force_authenticate(user=self.consultant3)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
