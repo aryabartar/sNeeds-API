@@ -15,6 +15,8 @@ from sNeeds.apps.chats.models import (
 )
 
 User = get_user_model()
+
+
 class ChatListAPIViewTest(APITestCase):
     def setUp(self):
         # Users -------
@@ -208,64 +210,105 @@ class ChatListAPIViewTest(APITestCase):
     # Chat list ------
     def test_anonymous_user_can_access_chat_list(self):
         url = reverse("chat:chat-list")
+        # Anonymous user
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_authenticated_user_can_access_chat_list(self):
+        """
+        In this test, We test that a logged in user can access its chats or not
+        """
         url = reverse("chat:chat-list")
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_anonymous_user_can_access_chat_detail(self):
-        url = reverse("chat:chat-detail", args=(1,))
+    # Chat detail ------
+    def test_anonymous_user_can_access_chat_which_has_no_sold_time_slot_sale_detail(self):
+        """
+        Here we check that user can have access to chats without any SoldTimeSlotSale or not
+        :return:
+        """
+        url = reverse("chat:chat-detail", kwargs={'id': self.illegal_chat})
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # Chat detail ------
-    def test_authenticated_user_can_access_chat_detail(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
-        self.client.force_authenticate(user=self.user1)
+    def test_anonymous_user_can_access_chat_detail(self):
+        """
+        Here we check that user can have access to chats or not
+        :return:
+        """
+        url = reverse("chat:chat-detail", kwargs={'id':self.chat_u1_c2})
         response = self.client.get(path=url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_authenticated_user_can_access_message_detail_without_a_sold_time_slot(self):
+        """
+        Here we check that an user who has a chat with TimeSlotSale,
+        can access to its chat without TimeSlotSale
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.illegal_chat.id})
         self.client.force_authenticate(user=self.user1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_authenticated_user_can_access_chat_detail(self):
+        """
+        Here we check that an user who has a chat without TimeSlotSale,
+        can have access to its chat which has SoldTimeSlotSale
+        :return:
+        """
+        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_authenticated_user_without_chat_can_access_chat_detail(self):
+        """
+        Here we test that an user who hasn't chat can access to other ones chat
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.user3)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_authenticated_user_with_chat_can_access_chat_details(self):
+        """
+        Here we test that an user who has a valid chat can access to other one's chat
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.user2)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_consultant_can_access_chat_with_a_sold_time_slot_sale(self):
+        """
+        Here we test that a consultant who has a valid chat can access to one of his chat
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant2)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_a_user_can_access_to_another_users_chat_details(self):
-        url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
-        self.client.force_authenticate(user=self.user2)
-        response = self.client.get(path=url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_a_consultant_can_access_to_another_users_chat_details(self):
+        """
+        Here we test that a consultant who himself has a chat, can access to other ones chats
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant1)
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_a_consultant_without_any_chat_can_access_to_another_users_chat_details(self):
+        """
+        Here we test that a consultant who himself hasn't a chat, can access to other ones chats
+        :return:
+        """
         url = reverse("chat:chat-detail", kwargs={'id': self.chat_u1_c2.id})
         self.client.force_authenticate(user=self.consultant3)
         response = self.client.get(path=url, format='json')
