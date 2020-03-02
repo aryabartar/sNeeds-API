@@ -229,7 +229,7 @@ class ChatListAPIViewTest(APITestCase):
         Here we check that user can have access to chats without any SoldTimeSlotSale or not
         :return:
         """
-        url = reverse("chat:chat-detail", kwargs={'id': self.illegal_chat})
+        url = reverse("chat:chat-detail", kwargs={'id': self.illegal_chat.id})
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -238,7 +238,7 @@ class ChatListAPIViewTest(APITestCase):
         Here we check that user can have access to chats or not
         :return:
         """
-        url = reverse("chat:chat-detail", kwargs={'id':self.chat_u1_c2})
+        url = reverse("chat:chat-detail", kwargs={'id':self.chat_u1_c2.id})
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
