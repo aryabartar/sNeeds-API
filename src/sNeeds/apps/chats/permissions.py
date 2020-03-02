@@ -46,8 +46,7 @@ class CanSendMessagePermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         request_user = request.user
-        sender = obj.sender
+        user = obj.chat.user
         consultant = obj.chat.consultant
-        if request_user == sender or request_user == consultant.user:
-            return SoldTimeSlotSale.objects.filter(Q(sold_to=sender) & Q(consultant=consultant)).exists()
-        return False
+        if SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists():
+            return user == request_user or consultant.user == request_user

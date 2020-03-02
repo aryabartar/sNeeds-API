@@ -191,6 +191,18 @@ class ChatListAPIViewTest(APITestCase):
             text_message="Legal Message"
         )
 
+        self.message_u1_c2 = TextMessage.objects.create(
+            chat=self.chat_u1_c2,
+            sender=self.user1,
+            text_message="Sample Message"
+        )
+
+        self.message_c2_u1 = TextMessage.objects.create(
+            chat=self.chat_u1_c2,
+            sender=self.consultant2,
+            text_message="Symbolic Message"
+        )
+
         self.illegal_chat = Chat.objects.create(
             user=self.user1,
             consultant=self.consultant1_profile
@@ -217,9 +229,32 @@ class ChatListAPIViewTest(APITestCase):
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_consultant_can_access_message_list(self):
+        url = reverse("chat:message-list")
+        self.client.force_authenticate(user=self.consultant1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_without_messages_can_access_message_list(self):
+        url = reverse("chat:message-list")
+        self.client.force_authenticate(user=self.user3)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_consultant_without_messages_can_access_message_list(self):
+        url = reverse("chat:message-list")
+        self.client.force_authenticate(user=self.consultant3)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     # Message Detail ------
     def test_anonymous_user_can_access_message_detail(self):
-        url = reverse("chat:message-detail", args=(1,))
+        url = reverse("chat:message-detail", kwargs={'id': self.legal_text_message.id})
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_anonymous_user_can_access_message_which_has_no_sold_time_slot_sale(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.illegal_text_message.id})
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -229,7 +264,51 @@ class ChatListAPIViewTest(APITestCase):
         response = self.client.get(path=url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_consultant_can_access_chat_without_a_sold_time_slot_sale(self):
+    def test_authenticated_user_can_access_other_ones_message_detail(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.message_u1_c2.id})
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        url = reverse("chat:message-detail", kwargs={'id': self.message_c2_u1.id})
+        self.client.force_authenticate(user=self.user2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_consultant_can_access_other_ones_message_detail(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.message_u1_c2.id})
+        self.client.force_authenticate(user=self.consultant3)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        url = reverse("chat:message-detail", kwargs={'id': self.message_c2_u1.id})
+        self.client.force_authenticate(user=self.consultant3)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_authenticated_user_can_access_its_own_message_detail(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.message_u1_c2.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        url = reverse("chat:message-detail", kwargs={'id': self.message_c2_u1.id})
+        self.client.force_authenticate(user=self.user1)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_consultant_can_access_its_own_message_detail(self):
+        url = reverse("chat:message-detail", kwargs={'id': self.message_u1_c2.id})
+        self.client.force_authenticate(user=self.consultant2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        url = reverse("chat:message-detail", kwargs={'id': self.message_c2_u1.id})
+        self.client.force_authenticate(user=self.consultant2)
+        response = self.client.get(path=url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_consultant_can_access_message_without_a_sold_time_slot_sale(self):
         url = reverse("chat:message-detail", kwargs={'id': self.illegal_text_message.id})
         self.client.force_authenticate(user=self.consultant1)
         response = self.client.get(path=url, format='json')
