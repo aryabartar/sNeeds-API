@@ -320,14 +320,21 @@ class CartTests(APITestCase):
 
     def test_sold_time_slot_rate_list_get_success(self):
         client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
         url = reverse("comments:sold-time-slot-rate-list")
         response = client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), SoldTimeSlotRate.objects.all().count())
+        self.assertEqual(
+            len(response.data),
+            SoldTimeSlotRate.objects.filter(sold_time_slot__sold_to=self.user1).count() + \
+            SoldTimeSlotRate.objects.filter(sold_time_slot__consultant__user=self.user1).count()
+        )
 
     def test_sold_time_slot_rate_get_filter_by_sold_time_slot_success(self):
         client = self.client
+        client.login(email='u1@g.com', password='user1234')
         url = "%s?%s=%s" % (
             reverse("comments:sold-time-slot-rate-list"),
             "sold_time_slot",
@@ -347,7 +354,7 @@ class CartTests(APITestCase):
         )
         response = client.get(url, format='json')
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_sold_time_slot_rate_list_post_success(self):
         client = self.client

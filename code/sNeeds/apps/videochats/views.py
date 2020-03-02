@@ -23,6 +23,15 @@ class RoomListView(generics.ListAPIView):
     filterset_fields = ('sold_time_slot',)
     permission_classes = [permissions.IsAuthenticated]
 
+    def get_queryset(self):
+        user = self.request.user
+        if ConsultantProfile.objects.filter(user=user).exists():
+            # TODO: Order by start_time
+            qs = Room.objects.filter(sold_time_slot__consultant__user=user).order_by("-created")
+        else:
+            qs = Room.objects.filter(sold_time_slot__sold_to=user).order_by("-created")
+        return qs
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -38,15 +47,6 @@ class RoomListView(generics.ListAPIView):
             serializer = self.get_serializer(queryset, many=True)
 
         return Response(serializer.data)
-
-    def get_queryset(self):
-        user = self.request.user
-        if ConsultantProfile.objects.filter(user=user).exists():
-            # TODO: Order by start_time
-            qs = Room.objects.filter(sold_time_slot__consultant__user=user).order_by("-created")
-        else:
-            qs = Room.objects.filter(sold_time_slot__sold_to=user).order_by("-created")
-        return qs
 
 
 class RoomDetailAPIView(generics.RetrieveAPIView):

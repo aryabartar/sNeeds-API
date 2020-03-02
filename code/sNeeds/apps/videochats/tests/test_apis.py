@@ -292,7 +292,7 @@ class CartTests(APITestCase):
             0
         )
 
-    def test_rooms_list_get_filter_by_sol_time_slot(self):
+    def test_rooms_list_get_filter_by_sold_time_slot(self):
         client = self.client
         client.login(email="u1@g.com", password="user1234")
 
@@ -313,9 +313,9 @@ class CartTests(APITestCase):
         )
         response = client.get(url, format='json')
 
+        # TODO: This should be HTTP_403
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
-
 
     def test_rooms_list_authenticate_permission(self):
         client = self.client

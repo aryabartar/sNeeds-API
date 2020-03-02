@@ -5,7 +5,6 @@ from rest_framework.views import APIView
 
 from .models import ConsultantComment, SoldTimeSlotRate
 from .serializers import CommentSerializer, SoldTimeSlotRateSerializer
-from .permissions import SoldTimeSlotRateOwnerPermission
 from .filtersets import CommentFilterSet
 from ..consultants.models import ConsultantProfile
 
@@ -27,7 +26,7 @@ class SoldTimeSlotRateListView(generics.ListCreateAPIView):
     queryset = SoldTimeSlotRate.objects.all()
     serializer_class = SoldTimeSlotRateSerializer
     filterset_fields = ['sold_time_slot', ]
-    permission_classes = [SoldTimeSlotRateOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
