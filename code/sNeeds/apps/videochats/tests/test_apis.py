@@ -304,7 +304,7 @@ class CartTests(APITestCase):
         response = client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data.get("sold_time_slot"), self.sold_time_slot_sale1.id)
 
         url = "%s?%s=%s" % (
             reverse("videochat:room-list"),

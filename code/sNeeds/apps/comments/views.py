@@ -29,6 +29,13 @@ class SoldTimeSlotRateListView(generics.ListCreateAPIView):
     filterset_fields = ['sold_time_slot', ]
     permission_classes = [SoldTimeSlotRateOwnerPermission, permissions.IsAuthenticatedOrReadOnly]
 
+    def get_queryset(self):
+        user = self.request.user
+
+        qs = SoldTimeSlotRate.objects.filter(sold_time_slot__sold_to=user) | \
+             SoldTimeSlotRate.objects.filter(sold_time_slot__consultant__user=user)
+        return qs
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
