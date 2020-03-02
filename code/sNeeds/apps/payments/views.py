@@ -54,7 +54,7 @@ class SendRequest(APIView):
             "پرداخت اسنیدز",
             cart.user.email,
             cart.user.phone_number,
-            "http://37.152.182.253/payment/accept/",
+            "http://37.152.182.253:8080/payment/accept/",
         )
 
         if result.Status != 100:
