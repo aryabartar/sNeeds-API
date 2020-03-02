@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'sNeeds.apps.userfiles',
     'sNeeds.apps.discounts',
     'sNeeds.apps.videochats',
-    'sNeeds.apps.tickets',
     'sNeeds.apps.consultants',
     'sNeeds.apps.chats',
 
