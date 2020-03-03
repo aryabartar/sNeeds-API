@@ -34,7 +34,8 @@ def post_save_product_receiver(sender, instance, *args, **kwargs):
 def create_chat(sender, instance, **kwargs):
     user = instance.sold_to
     consultant = instance.consultant
-    Chat.objects.create(user=user, consultant=consultant)
+    if not Chat.objects.filter(user=user, consultant=consultant).exists():
+        Chat.objects.create(user=user, consultant=consultant)
 
 
 pre_delete.connect(pre_delete_product_receiver, sender=Product)

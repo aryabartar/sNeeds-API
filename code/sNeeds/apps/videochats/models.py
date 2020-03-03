@@ -1,7 +1,7 @@
 from django.db import models
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class Room(models.Model):

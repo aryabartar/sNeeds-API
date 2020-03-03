@@ -10,12 +10,4 @@ def pre_save_create_order_id(sender, instance, *args, **kwargs):
         instance.order_id = unique_order_id_generator(instance)
 
 
-def post_save_cart_total(sender, instance, created, *args, **kwargs):
-    if not created:
-        cart_obj = instance
-        qs = Order.objects.filter(cart=cart_obj)
-        for obj in qs:
-            obj.update_total()
-
-
 pre_save.connect(pre_save_create_order_id, sender=Order)

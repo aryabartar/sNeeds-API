@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Comment, AdminComment, SoldTimeSlotRate
+from .models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate
 
-admin.site.register(Comment)
-admin.site.register(AdminComment)
+admin.site.register(ConsultantComment)
+admin.site.register(ConsultantAdminComment)
 admin.site.register(SoldTimeSlotRate)

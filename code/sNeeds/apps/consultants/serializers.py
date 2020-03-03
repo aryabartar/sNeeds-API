@@ -1,44 +1,58 @@
-from django.utils.translation import gettext as _
-
 from rest_framework import serializers
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+import sNeeds.apps
+from sNeeds.apps.account.serializers import UniversitySerializer, FieldOfStudySerializer, CountrySerializer
+from sNeeds.apps.comments.models import SoldTimeSlotRate
 
-from .models import TMPConsultant
 
-
-
-class ConsultantSerializer(serializers.ModelSerializer):
+class ShortConsultantProfileSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="consultant:consultant-profile-detail",
+        lookup_field='slug',
+        read_only=True
+    )
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = TMPConsultant
-        fields = [
+        model = sNeeds.apps.consultants.models.ConsultantProfile
+        fields = (
             'id',
+            'url',
+            'profile_picture',
             'first_name',
             'last_name',
-            'phone_number',
-            'email',
-            'university',
-            'field_of_study',
-            'resume',
-        ]
+        )
 
-    def validate_phone_number(self, value):
-        if ConsultantProfile.objects.filter(user__phone_number=value).count() > 0:
-            raise serializers.ValidationError(_("A Consultant with this phone number exists. Are you not a Consultant?"))
-        if TMPConsultant.objects.filter(phone_number=value).count() > 0:
-            raise serializers.ValidationError(_("A Consultant with phone number is in assessment."))
-        if len(value) != 11:
-            raise serializers.ValidationError(_("Phone number should be 11 numbers"))
-        try:
-            int(value)
-        except ValueError:
-            raise serializers.ValidationError(_("Phone number should be numbers."))
-        return value
+    def get_first_name(self, obj):
+        return obj.user.first_name
 
-    def validate_email(self, value):
-        if ConsultantProfile.objects.filter(user__email=value).count() > 0:
-            raise serializers.ValidationError(_("A Consultant with this email exists. Are you not a Consultant?"))
-        if TMPConsultant.objects.filter(email=value).count() > 0:
-            raise serializers.ValidationError(_("A Consultant with this email is in assessment."))
-        return value
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
+
+class ConsultantProfileSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="consultant:consultant-profile-detail",
+        lookup_field='slug',
+        read_only=True
+    )
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
+
+    universities = UniversitySerializer(many=True, read_only=True)
+    field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
+    countries = CountrySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = sNeeds.apps.consultants.models.ConsultantProfile
+        fields = (
+            'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
+            'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
+            'resume', 'rate', 'active')
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name

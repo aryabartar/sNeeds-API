@@ -5,19 +5,19 @@ from django.utils import timezone
 from celery import task, shared_task
 from celery.utils.log import get_task_logger
 
+from sNeeds.settings.config.SkyroomConfig import BEFORE_AFTER_CLASS_TIME_MINUTES
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.videochats.models import Room
-from sNeeds.apps.videochats.utils import create_2members_chat_room, delete_room, delete_user
+from sNeeds.apps.videochats.utils import create_2members_chat_room
 
 logger = get_task_logger(__name__)
 
 
 @task()
 def create_rooms_from_sold_time_slots():
-    # 5 minutes before and 2 minutes after
     qs = SoldTimeSlotSale.objects.filter(
-        start_time__lte=timezone.now() + timezone.timedelta(minutes=5),
-        start_time__gte=timezone.now() - timezone.timedelta(minutes=2),
+        start_time__lte=timezone.now() + timezone.timedelta(minutes=BEFORE_AFTER_CLASS_TIME_MINUTES),
+        start_time__gte=timezone.now() - timezone.timedelta(minutes=BEFORE_AFTER_CLASS_TIME_MINUTES),
         used=False
     )
 
@@ -35,7 +35,7 @@ def delete_used_rooms():
     qs.delete()
 
 
-# @shared_task
+@shared_task
 def create_room_with_users_in_skyroom(room_id):
     room = Room.objects.get(id=room_id)
     user = room.sold_time_slot.sold_to
@@ -43,13 +43,13 @@ def create_room_with_users_in_skyroom(room_id):
     sold_time_slot_id = room.sold_time_slot.id
 
     data = create_2members_chat_room(
-        user.id,
-        user.first_name,
-        user.email,
-        consultant_user.id,
-        consultant_user.first_name,
-        consultant_user.email,
-        sold_time_slot_id
+        username1=user.email,
+        nickname1=user.first_name,
+        user1email=user.email,
+        username2=consultant_user.email,
+        nickname2=consultant_user.first_name,
+        user2email=consultant_user.email,
+        roomid=sold_time_slot_id
     )
 
     room.room_id = data['room_id']
@@ -64,7 +64,6 @@ def create_room_with_users_in_skyroom(room_id):
 
 
 @shared_task
-def delete_room_and_users(user_id, consultant_id, room_id):
-    delete_user(user_id)
-    delete_user(consultant_id)
+def delete_room(room_id):
+    from sNeeds.apps.videochats.utils import delete_room
     delete_room(room_id)

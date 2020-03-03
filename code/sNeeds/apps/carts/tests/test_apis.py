@@ -9,7 +9,7 @@ from rest_framework.test import APITestCase, APIClient
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale
 
 User = get_user_model()

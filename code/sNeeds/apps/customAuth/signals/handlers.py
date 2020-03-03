@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.contrib.auth import get_user_model
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 User = get_user_model()
 

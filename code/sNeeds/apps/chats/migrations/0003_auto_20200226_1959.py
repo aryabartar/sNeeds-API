@@ -8,7 +8,7 @@ import sNeeds.apps.chats.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('chats', '0002_auto_20200214_1549'),
+        ('chats', '0002_auto_20200229_0949'),
     ]
 
     operations = [

@@ -7,7 +7,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-from sNeeds.apps.account.models import get_consultant_image_path, get_consultant_resume_path, University, FieldOfStudy, \
+from sNeeds.apps.account.models import University, FieldOfStudy, \
     Country
 
 
@@ -130,22 +130,3 @@ class StudentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
 
 
-class ConsultantProfile(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
-    bio = models.TextField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to=get_consultant_image_path)
-    aparat_link = models.URLField(null=True, blank=True)
-    resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
-    slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, blank=True)
-    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
-    countries = models.ManyToManyField(Country, blank=True)
-    active = models.BooleanField(default=True)
-    time_slot_price = models.PositiveIntegerField()
-
-    def __str__(self):
-        return self.user.__str__()

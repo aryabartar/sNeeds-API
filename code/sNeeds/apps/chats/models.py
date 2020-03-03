@@ -8,7 +8,7 @@ from django.core.validators import FileExtensionValidator
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
 
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 User = get_user_model()
 

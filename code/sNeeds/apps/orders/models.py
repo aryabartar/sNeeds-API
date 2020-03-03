@@ -53,13 +53,15 @@ class OrderManager(models.Manager):
 
 
 class Order(models.Model):
-    order_id = models.CharField(max_length=12, blank=True,
-                                help_text="Leave this field blank, this will populate automatically.")
+    order_id = models.CharField(unique=True, max_length=12, blank=True,
+                                help_text="Leave this field blank, this will populate automatically."
+                                )
     user = models.ForeignKey(get_user_model(), on_delete=models.PROTECT)
     status = models.CharField(max_length=256, default='paid', choices=ORDER_STATUS_CHOICES)
     sold_products = models.ManyToManyField(SoldProduct, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    # TODO:Change to code.
     used_consultant_discount = models.ForeignKey(ConsultantDiscount, null=True, blank=True, on_delete=models.SET_NULL)
     time_slot_sales_number_discount = models.FloatField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
