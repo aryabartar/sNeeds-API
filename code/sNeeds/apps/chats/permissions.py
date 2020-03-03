@@ -29,24 +29,24 @@ class MessageOwnerPermission(permissions.BasePermission):
         return False
 
 
-class CanChatPermission(permissions.BasePermission):
-    message = "You don't have permission to see this chat"
-
-    def has_object_permission(self, request, view, obj):
-        request_user = request.user
-        user = obj.user
-        consultant = obj.consultant
-        if request_user == user or request_user == consultant.user:
-            return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
-        return False
-
-
-class CanSendMessagePermission(permissions.BasePermission):
-    message = "You don't have permission to see this message"
-
-    def has_object_permission(self, request, view, obj):
-        request_user = request.user
-        user = obj.chat.user
-        consultant = obj.chat.consultant
-        if SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists():
-            return user == request_user or consultant.user == request_user
+# class CanChatPermission(permissions.BasePermission):
+#     message = "You don't have permission to see this chat"
+#
+#     def has_object_permission(self, request, view, obj):
+#         request_user = request.user
+#         user = obj.user
+#         consultant = obj.consultant
+#         if request_user == user or request_user == consultant.user:
+#             return SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists()
+#         return False
+#
+#
+# class CanSendMessagePermission(permissions.BasePermission):
+#     message = "You don't have permission to see this message"
+#
+#     def has_object_permission(self, request, view, obj):
+#         request_user = request.user
+#         user = obj.chat.user
+#         consultant = obj.chat.consultant
+#         if SoldTimeSlotSale.objects.filter(Q(sold_to=user) & Q(consultant=consultant)).exists():
+#             return user == request_user or consultant.user == request_user

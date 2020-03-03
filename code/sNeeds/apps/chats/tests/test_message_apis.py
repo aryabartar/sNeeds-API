@@ -318,7 +318,7 @@ class ChatListAPIViewTest(APITestCase):
         url = reverse("chat:message-detail", kwargs={'id': self.illegal_text_message.id})
         self.client.force_authenticate(user=self.consultant1)
         response = self.client.get(path=url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     # Message Creation ------
     def test_a_user_can_send_text_messages_to_another_users_chat(self):
@@ -424,7 +424,7 @@ class ChatListAPIViewTest(APITestCase):
             'messageType': "TextMessage"
         }
         response = self.client.post(path=url, data=data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_image_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -436,7 +436,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "ImageMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_voice_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -448,7 +448,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_file_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -460,7 +460,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "FileMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_text_messages_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -471,7 +471,7 @@ class ChatListAPIViewTest(APITestCase):
             'messageType': "TextMessage"
         }
         response = self.client.post(path=url, data=data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_image_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -483,19 +483,19 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "ImageMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_voice_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp3'), 'rb') as voice:
             data = {
                 'chat': self.illegal_chat.id,
                 'voice_field': voice,
                 'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_consultant_can_send_file_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
@@ -507,7 +507,7 @@ class ChatListAPIViewTest(APITestCase):
                 'messageType': "FileMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_a_user_can_send_text_messages_to_legal_chat(self):
         url = reverse("chat:message-list")
@@ -561,7 +561,7 @@ class ChatListAPIViewTest(APITestCase):
         self.client.force_authenticate(user=self.consultant2)
         data = {
             'chat': self.chat_u1_c2.id,
-            'text_message': "An illegal messages",
+            'text_message': "A legal messages",
             'messageType': "TextMessage"
         }
         response = self.client.post(path=url, data=data, format='multipart')

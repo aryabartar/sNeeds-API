@@ -13,7 +13,7 @@ from rest_framework.parsers import MultiPartParser, FileUploadParser, DataAndFil
 
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .permissions import ChatOwnerPermission, CanChatPermission, CanSendMessagePermission, MessageOwnerPermission
+from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
 from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
@@ -34,7 +34,7 @@ class ChatDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (permissions.IsAuthenticated, CanChatPermission, ChatOwnerPermission)
+    permission_classes = (permissions.IsAuthenticated, ChatOwnerPermission)
 
 
 class MessageListAPIView(generics.ListCreateAPIView):
@@ -62,7 +62,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
 
 
 class MessageDetailAPIView(generics.RetrieveAPIView):
-    permission_classes = (permissions.IsAuthenticated, CanSendMessagePermission, MessageOwnerPermission)
+    permission_classes = (permissions.IsAuthenticated, MessageOwnerPermission)
     serializer_class = MessagePolymorphicSerializer
     lookup_field = 'id'
     queryset = Message.objects.all()
