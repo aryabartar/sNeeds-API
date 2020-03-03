@@ -1,3 +1,5 @@
+import os
+
 from django.utils import timezone
 
 from django.contrib.auth import get_user_model
@@ -8,15 +10,19 @@ from rest_framework.test import APITestCase, APIClient, APIRequestFactory
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
-from sNeeds.apps.customAuth.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.chats.models import (
     Chat, Message, TextMessage, ImageMessage, FileMessage, VoiceMessage
 )
 
 User = get_user_model()
+
+
 class ChatListAPIViewTest(APITestCase):
     def setUp(self):
+        self.pwd = os.path.dirname(__file__)
+
         # Users -------
         self.user1 = User.objects.create_user(email="u1@g.com", password="user1234")
         self.user1.is_admin = False
@@ -329,7 +335,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_image_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user2)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -341,11 +347,11 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_voice_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user2)
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.m4a'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
-                'image_field': voice,
-                'messageType': "ImageMessage"
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -353,7 +359,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_file_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user2)
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files','sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': video,
@@ -376,7 +382,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_image_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -388,11 +394,11 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_voice_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.m4a'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
-                'messageType': "ImageMessage"
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -400,7 +406,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_file_message_to_another_users_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Documents/metadata.db', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'file_field': video,
@@ -423,7 +429,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_image_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files','sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.illegal_chat.id,
                 'image_field': img,
@@ -435,11 +441,11 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_voice_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.m4a'), 'rb') as voice:
             data = {
                 'chat': self.illegal_chat.id,
-                'image_field': voice,
-                'messageType': "ImageMessage"
+                'voice_field': voice,
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -447,10 +453,10 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_file_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files','sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.illegal_chat.id,
-                'image_field': video,
+                'file_field': video,
                 'messageType': "FileMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
@@ -470,7 +476,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_image_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.illegal_chat.id,
                 'image_field': img,
@@ -482,11 +488,11 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_voice_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as voice:
             data = {
                 'chat': self.illegal_chat.id,
                 'voice_field': voice,
-                'messageType': "ImageMessage"
+                'messageType': "VoiceMessage"
             }
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -494,7 +500,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_file_message_to_illegal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant1)
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.illegal_chat.id,
                 'file_field': video,
@@ -517,7 +523,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_image_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -529,7 +535,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_voice_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.m4a'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
@@ -541,7 +547,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_user_can_send_file_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'file_field': video,
@@ -564,7 +570,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_image_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant2)
-        with open('/home/mrghofrani/Pictures/PassImageServlet.jpeg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -576,7 +582,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_voice_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant2)
-        with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp3'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
@@ -588,7 +594,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_a_consultant_can_send_file_message_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.consultant2)
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as video:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as video:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'file_field': video,
@@ -600,7 +606,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_user_send_legal_image_types_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Pictures/Screenshot from 2020-02-11 16-57-12.png', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.png'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -609,7 +615,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        with open('/home/mrghofrani/Pictures/file_example_JPG_100kB.jpg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -618,7 +624,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        with open('/home/mrghofrani/Pictures/Screenshot from 2020-02-11 16-57-12.png', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.jpeg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -630,7 +636,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_user_send_illegal_image_types_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Pictures/calendar.svg', 'rb') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.svg'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -639,7 +645,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        with open('/home/mrghofrani/Pictures/دانشکده مهندسي کامپيوتر.html') as img:
+        with open(os.path.join(self.pwd, 'files', 'sample.html'), 'rb') as img:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'image_field': img,
@@ -651,7 +657,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_user_send_legal_voice_types_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Music/file_example_MP3_700KB.mp3', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp3'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
@@ -660,7 +666,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        with open('/home/mrghofrani/Music/20191221_141705.m4a', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.m4a'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
@@ -672,7 +678,7 @@ class ChatListAPIViewTest(APITestCase):
     def test_user_send_illegal_voice_types_to_legal_chat(self):
         url = reverse("chat:message-list")
         self.client.force_authenticate(user=self.user1)
-        with open('/home/mrghofrani/Pictures/calendar.svg', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.svg'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
@@ -681,7 +687,7 @@ class ChatListAPIViewTest(APITestCase):
             response = self.client.post(path=url, data=data, format='multipart')
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        with open('/home/mrghofrani/Videos/simple.mp4', 'rb') as voice:
+        with open(os.path.join(self.pwd, 'files', 'sample.mp4'), 'rb') as voice:
             data = {
                 'chat': self.chat_u1_c2.id,
                 'voice_field': voice,
