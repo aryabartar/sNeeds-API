@@ -1,21 +1,19 @@
 from django.db.models import Q
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.mixins import UserPassesTestMixin
-from django.views import generic, View
-from django.shortcuts import render,reverse
+from django.shortcuts import render
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import filters
-from rest_framework.parsers import MultiPartParser, FileUploadParser, DataAndFiles
+from rest_framework.parsers import MultiPartParser
 
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .permissions import ChatOwnerPermission, MessageOwnerPermission
 
-from .models import (Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage, MESSAGE_TYPES)
+from .models import (Chat, Message, MESSAGE_TYPES)
 from .serializers import ChatSerializer, MessagePolymorphicSerializer
 
 
