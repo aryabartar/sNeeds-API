@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('chats', '0001_initial'),
         ('consultants', '0001_initial'),
+        ('customAuth', '0001_initial'),
     ]
 
     operations = [

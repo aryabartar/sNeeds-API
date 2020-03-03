@@ -20,14 +20,10 @@ from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.tasks import delete_time_slots
 from sNeeds.apps.videochats.models import Room
 
-from sNeeds.settings.celery.celery import app
-
 User = get_user_model()
 
 
-# from sNeeds.apps.carts.models import Cart
-
-class CartTests(APITestCase):
+class VideoChatTests(APITestCase):
     allow_database_queries = True
 
     def setUp(self):
@@ -314,8 +310,7 @@ class CartTests(APITestCase):
         response = client.get(url, format='json')
 
         # TODO: This should be HTTP_403
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_rooms_list_authenticate_permission(self):
         client = self.client
