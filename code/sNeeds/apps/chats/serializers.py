@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
+from sNeeds.apps.consultants.models import ConsultantProfile
 from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
 
 
@@ -43,6 +44,7 @@ class MessageSerializer(serializers.ModelSerializer):
         view_name="chat:message-detail", source='chat', lookup_field='id', read_only=True
     )
     is_sender_me = serializers.SerializerMethodField()
+    profile_img = serializers.SerializerMethodField()
 
     class Meta:
         model = Message
@@ -53,7 +55,8 @@ class MessageSerializer(serializers.ModelSerializer):
                   'sender',
                   'is_sender_me',
                   'updated',
-                  'created']
+                  'created',
+                  'profile_img']
         extra_kwargs = {
             'sender': {'read_only': True},
         }
@@ -62,6 +65,13 @@ class MessageSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = request.user
         return obj.sender == user
+
+    def get_profile_img(self, obj):
+        profile_img = None
+        if obj.sender.is_consultant():
+            consultant_profile = ConsultantProfile.objects.get(user=obj.sender)
+            profile_img = consultant_profile.profile_picture.url
+        return profile_img
 
     def validate(self, data):
         data = self._kwargs.get('data')
