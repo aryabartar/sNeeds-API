@@ -27,9 +27,13 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_time_slot_sales(self, obj):
         time_slot_sales = []
+
         for product in obj.products.all():
-            if isinstance(product, TimeSlotSale):
-                time_slot_sales.append(product.timeslotsale)
+            try:
+                time_slot_sale = product.timeslotsale
+                time_slot_sales.append(time_slot_sale)
+            except TimeSlotSale.DoesNotExist:
+                pass
 
         return TimeSlotSaleSerializer(
             time_slot_sales,
