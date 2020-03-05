@@ -13,14 +13,25 @@ from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, Image
 class ChatSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="chat:chat-detail", lookup_field='id')
     other_person = serializers.SerializerMethodField()
+    profile_img = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
         fields = [
             'id',
             'url',
-            'other_person'
+            'other_person',
+            'profile_img'
         ]
+
+    def get_profile_img(self, obj):
+        request = self.context.get("request")
+        consultant = obj.consultant
+        if consultant.profile_picture:
+            profile_img = consultant.profile_picture.url
+            return request.build_absolute_uri(profile_img)
+        else:
+            return None
 
     def get_other_person(self, obj):
         from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
@@ -67,12 +78,15 @@ class MessageSerializer(serializers.ModelSerializer):
         return obj.sender == user
 
     def get_profile_img(self, obj):
-        profile_img = None
+        request = self.context.get("request")
+
         if obj.sender.is_consultant():
             consultant_profile = ConsultantProfile.objects.get(user=obj.sender)
             if consultant_profile.profile_picture:
                 profile_img = consultant_profile.profile_picture.url
-        return profile_img
+                return request.build_absolute_uri(profile_img)
+        else:
+            return None
 
     def validate(self, data):
         data = self._kwargs.get('data')
@@ -96,28 +110,24 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class TextMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = TextMessage
         fields = MessageSerializer.Meta.fields + ['text_message', ]
 
 
 class VoiceMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
         fields = MessageSerializer.Meta.fields + ['voice_field', ]
 
 
 class FileMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = FileMessage
         fields = MessageSerializer.Meta.fields + ['file_field', ]
 
 
 class ImageMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
         fields = MessageSerializer.Meta.fields + ['image_field', ]
