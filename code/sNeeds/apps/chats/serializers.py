@@ -70,7 +70,8 @@ class MessageSerializer(serializers.ModelSerializer):
         profile_img = None
         if obj.sender.is_consultant():
             consultant_profile = ConsultantProfile.objects.get(user=obj.sender)
-            profile_img = consultant_profile.profile_picture.url
+            if consultant_profile.profile_picture:
+                profile_img = consultant_profile.profile_picture.url
         return profile_img
 
     def validate(self, data):
