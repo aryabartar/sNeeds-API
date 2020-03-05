@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.discounts',
     'sNeeds.apps.videochats',
     'sNeeds.apps.chats',
+    'sNeeds.apps.packages',
 
     'django.contrib.auth',
     'django.contrib.admin',
