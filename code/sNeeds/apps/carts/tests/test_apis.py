@@ -11,6 +11,7 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.serializers import TimeSlotSaleSerializer
 
 User = get_user_model()
 
@@ -163,7 +164,7 @@ class CartTests(APITestCase):
 
         self.assertEqual(len(response.data), Cart.objects.filter(user=self.user1).count())
 
-    def test_post_cart_pass(self):
+    def test_cart_list_post_pass(self):
         url = reverse("cart:cart-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
@@ -175,7 +176,7 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(
             [i.id for i in products].sort(),
-            response.data.get("products").sort()
+            [obj.get("id") for obj in response.data.get("time_slot_sales")].sort()
         )
 
     def test_post_cart_not_pass_time_conflict(self):
@@ -298,7 +299,14 @@ class CartTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(cart.total, response.data.get("total"))
         self.assertEqual(cart.subtotal, response.data.get("subtotal"))
-        self.assertEqual([p.id for p in cart.products.all()].sort(), response.data.get("products").sort())
+        self.assertEqual(
+            TimeSlotSaleSerializer(
+                self.cart1.products.all().get_time_slot_sales(),
+                context={"request": response.wsgi_request},
+                many=True
+            ).data,
+            response.data.get("time_slot_sales")
+        )
 
     def test_remove_product_from_cart_updates_price(self):
         self.assertEqual(
