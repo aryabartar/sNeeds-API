@@ -22,7 +22,7 @@ class StorePackagePhase(models.Model):
         return self.detailed_title
 
 
-class StorePackage(models.Model):
+class StorePackage(Product):
     title = models.CharField(max_length=1024)
     store_package_phases = models.ManyToManyField(
         StorePackagePhase,
@@ -56,5 +56,5 @@ class StorePackagePhaseThrough(models.Model):
 
 
 class SoldStorePackage(SoldProduct):
-    store_package_detail = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
+    store_package = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
