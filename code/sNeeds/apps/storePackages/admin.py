@@ -12,6 +12,6 @@ class StorePackageDetailAdmin(admin.ModelAdmin):
     inlines = (StorePackageDetailPhaseThroughInline,)
 
 
-admin.site.register(StorePackageDetailPhase)
 admin.site.register(StorePackage)
+admin.site.register(StorePackageDetailPhase)
 admin.site.register(StorePackageDetail, StorePackageDetailAdmin)

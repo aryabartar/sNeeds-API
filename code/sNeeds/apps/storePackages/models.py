@@ -10,9 +10,16 @@ User = get_user_model()
 
 class StorePackageDetailPhase(models.Model):
     title = models.CharField(max_length=1024)
-    price = models.IntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    detailed_title = models.CharField(
+        max_length=1024,
+        help_text="This field is for ourselves, Feel free to add details."
     )
+    price = models.IntegerField(
+        validators=[MinValueValidator(0), ],
+    )
+
+    def __str__(self):
+        return self.detailed_title
 
 
 class StorePackageDetail(models.Model):
@@ -21,6 +28,9 @@ class StorePackageDetail(models.Model):
         StorePackageDetailPhase,
         through='StorePackageDetailPhaseThrough'
     )
+
+    def __str__(self):
+        return self.title
 
 
 class StorePackageDetailPhaseThrough(models.Model):
@@ -32,9 +42,15 @@ class StorePackageDetailPhaseThrough(models.Model):
         StorePackageDetailPhase,
         on_delete=models.PROTECT
     )
-    order = models.IntegerField()
+    order = models.IntegerField(
+        validators=[MinValueValidator(0), ],
+    )
 
     class Meta:
+        unique_together = [
+            ['store_package_detail', 'order'],
+            ['store_package_detail', 'store_package_detail_phase']
+        ]
         ordering = ['order', ]
 
 
