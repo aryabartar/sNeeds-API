@@ -58,3 +58,4 @@ class StorePackage(Product):
     store_package_detail = models.ForeignKey(StorePackageDetail, on_delete=models.PROTECT)
     user = models.ForeignKey(User, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
+    slug = models.SlugField(unique=True)
