@@ -4,18 +4,17 @@ from rest_framework.exceptions import ValidationError
 from .models import StorePackagePhase, StorePackagePhaseThrough
 
 
-class StorePackagePhaseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = StorePackagePhase
-        fields = ['title', 'price']
-
-
 class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
+    title = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
     store_package_phase = serializers.SerializerMethodField()
 
     class Meta:
         model = StorePackagePhaseThrough
-        fields = ['store_package_detail_phase', 'price']
+        fields = ['title', 'store_package', 'order', 'price']
 
-    def get_store_package_phase(self, obj):
-        return StorePackagePhaseSerializer(obj.store_package_phase).data
+    def get_title(self, obj):
+        return obj.store_package_phase.title
+
+    def get_price(self, obj):
+        return obj.store_package_phase.price

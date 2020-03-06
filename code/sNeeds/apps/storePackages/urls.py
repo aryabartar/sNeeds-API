@@ -5,6 +5,8 @@ from . import views
 app_name = "store-package"
 
 urlpatterns = [
-    path('store-package-phase-through/',
+    path('store-package-phase-through-list/',
+         views.StorePackagePhaseThroughListAPIView.as_view(), name="store-package-phase-through-detail"),
+    path('store-package-phase-through-detail/',
          views.StorePackagePhaseThroughDetailAPIView.as_view(), name="store-package-phase-through-detail"),
 ]

@@ -41,21 +41,22 @@ class StorePackage(Product):
     objects = StorePackageQuerySetManager.as_manager()
 
     def update_price(self):
-        store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(store_package__id=self.id, order=1)
-
-        if store_package_phase_through_obj is not None:
+        try:
+            store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(store_package__id=self.id, order=1)
             self.price = store_package_phase_through_obj.store_package_phase.price
-        else:
+
+        except StorePackagePhaseThrough.DoesNotExist:
             self.price = 0
-    
+
+
+    def clean(self):
+        self.update_price()
+        super().clean()
+
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
         self.full_clean()
         super(StorePackage, self).save()
-        
-    def clean(self):
-        self.update_price()
-        super().clean()
 
     def __str__(self):
         return self.title
@@ -70,16 +71,16 @@ class StorePackagePhaseThrough(models.Model):
         StorePackagePhase,
         on_delete=models.PROTECT
     )
-    order = models.IntegerField(
+    phase_number = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
 
     class Meta:
         unique_together = [
-            ['store_package', 'order'],
+            ['store_package', 'phase_number'],
             ['store_package', 'store_package_phase']
         ]
-        ordering = ['order', ]
+        ordering = ['phase_number', ]
 
 
 class SoldStorePackage(SoldProduct):

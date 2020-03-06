@@ -8,12 +8,12 @@ from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
     queryset = StorePackagePhaseThrough.objects.all()
-    serializer_class = serializers.StorePackageDetailPhaseThroughSerializer
+    serializer_class = serializers.StorePackagePhaseThroughSerializer
     lookup_field = 'slug'
     filterset_fields = ['store_package']
 
 
 class StorePackagePhaseThroughDetailAPIView(generics.RetrieveAPIView):
     queryset = StorePackagePhaseThrough.objects.all()
-    serializer_class = serializers.StorePackageDetailPhaseThroughSerializer
+    serializer_class = serializers.StorePackagePhaseThroughSerializer
     lookup_field = 'slug'

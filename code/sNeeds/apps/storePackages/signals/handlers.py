@@ -13,7 +13,6 @@ def post_save_store_package_phase(sender, instance, *args, **kwargs):
     store_package_qs.update()
 
 
-
 def post_save_store_package_phase_through(sender, instance, *args, **kwargs):
     instance.store_package.save()
 
