@@ -57,7 +57,7 @@ class TimeSlotSaleManager(models.QuerySet):
 
 
 class Product(models.Model):
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(blank=True)
 
     objects = ProductQuerySet.as_manager()
 

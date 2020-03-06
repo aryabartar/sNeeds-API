@@ -8,6 +8,13 @@ from sNeeds.apps.store.models import Product, SoldProduct
 User = get_user_model()
 
 
+class StorePackageQuerySetManager(models.QuerySet):
+    def update(self, **kwargs):
+        super().update(**kwargs)
+        for obj in self._chain():
+            obj.save()
+
+
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
@@ -26,9 +33,29 @@ class StorePackage(Product):
     title = models.CharField(max_length=1024)
     store_package_phases = models.ManyToManyField(
         StorePackagePhase,
-        through='StorePackagePhaseThrough'
+        through='StorePackagePhaseThrough',
+        related_name='store_packages'
     )
     slug = models.SlugField(unique=True)
+
+    objects = StorePackageQuerySetManager.as_manager()
+
+    def update_price(self):
+        store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(store_package__id=self.id, order=1)
+
+        if store_package_phase_through_obj is not None:
+            self.price = store_package_phase_through_obj.store_package_phase.price
+        else:
+            self.price = 0
+    
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.full_clean()
+        super(StorePackage, self).save()
+        
+    def clean(self):
+        self.update_price()
+        super().clean()
 
     def __str__(self):
         return self.title
