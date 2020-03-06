@@ -11,11 +11,11 @@ class StorePackagePhaseSerializer(serializers.ModelSerializer):
 
 
 class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
-    store_package_detail = serializers.SerializerMethodField()
+    store_package_phase = serializers.SerializerMethodField()
 
     class Meta:
         model = StorePackagePhaseThrough
         fields = ['store_package_detail_phase', 'price']
 
-    def get_store_package_field(self, obj):
-        return StorePackageDetailPhaseSerializer(obj.store_package_detail).data
+    def get_store_package_phase(self, obj):
+        return StorePackagePhaseSerializer(obj.store_package_phase).data
