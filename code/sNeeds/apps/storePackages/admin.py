@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from .models import (StorePackageDetail, StorePackageDetailPhase, StorePackage, StorePackageDetailPhaseThrough)
+from .models import (StorePackage, StorePackagePhase, SoldStorePackage, StorePackagePhaseThrough)
 
 
 class StorePackageDetailPhaseThroughInline(admin.TabularInline):
-    model = StorePackageDetailPhaseThrough
+    model = StorePackagePhaseThrough
     extra = 1
 
 
@@ -12,6 +12,6 @@ class StorePackageDetailAdmin(admin.ModelAdmin):
     inlines = (StorePackageDetailPhaseThroughInline,)
 
 
-admin.site.register(StorePackage)
-admin.site.register(StorePackageDetailPhase)
-admin.site.register(StorePackageDetail, StorePackageDetailAdmin)
+admin.site.register(SoldStorePackage)
+admin.site.register(StorePackagePhase)
+admin.site.register(StorePackage, StorePackageDetailAdmin)

@@ -3,12 +3,12 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.store.models import Product
+from sNeeds.apps.store.models import Product, SoldProduct
 
 User = get_user_model()
 
 
-class StorePackageDetailPhase(models.Model):
+class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
         max_length=1024,
@@ -22,24 +22,25 @@ class StorePackageDetailPhase(models.Model):
         return self.detailed_title
 
 
-class StorePackageDetail(models.Model):
+class StorePackage(models.Model):
     title = models.CharField(max_length=1024)
     store_package_phases = models.ManyToManyField(
-        StorePackageDetailPhase,
-        through='StorePackageDetailPhaseThrough'
+        StorePackagePhase,
+        through='StorePackagePhaseThrough'
     )
+    slug = models.SlugField(unique=True)
 
     def __str__(self):
         return self.title
 
 
-class StorePackageDetailPhaseThrough(models.Model):
-    store_package_detail = models.ForeignKey(
-        StorePackageDetail,
+class StorePackagePhaseThrough(models.Model):
+    store_package = models.ForeignKey(
+        StorePackage,
         on_delete=models.PROTECT
     )
-    store_package_detail_phase = models.ForeignKey(
-        StorePackageDetailPhase,
+    store_package_phase = models.ForeignKey(
+        StorePackagePhase,
         on_delete=models.PROTECT
     )
     order = models.IntegerField(
@@ -48,14 +49,12 @@ class StorePackageDetailPhaseThrough(models.Model):
 
     class Meta:
         unique_together = [
-            ['store_package_detail', 'order'],
-            ['store_package_detail', 'store_package_detail_phase']
+            ['store_package', 'order'],
+            ['store_package', 'store_package_phase']
         ]
         ordering = ['order', ]
 
 
-class StorePackage(Product):
-    store_package_detail = models.ForeignKey(StorePackageDetail, on_delete=models.PROTECT)
-    user = models.ForeignKey(User, on_delete=models.PROTECT)
+class SoldStorePackage(SoldProduct):
+    store_package_detail = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
-    slug = models.SlugField(unique=True)

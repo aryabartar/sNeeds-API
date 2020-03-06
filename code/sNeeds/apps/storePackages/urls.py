@@ -5,5 +5,6 @@ from . import views
 app_name = "store-package"
 
 urlpatterns = [
-    # path('chats/', views.ChatListAPIView.as_view(), name="chat-list"),
+    path('store-package-detail-phase-through/',
+         views.StorePackageDetailPhaseThroughDetailAPIView.as_view(), name="store-package-detail-phase-through-detail"),
 ]
