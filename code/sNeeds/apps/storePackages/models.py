@@ -34,6 +34,9 @@ class StorePackageDetailPhaseThrough(models.Model):
     )
     order = models.IntegerField()
 
+    class Meta:
+        ordering = ['order', ]
+
 
 class StorePackage(Product):
     store_package_detail = models.ForeignKey(StorePackageDetail, on_delete=models.PROTECT)

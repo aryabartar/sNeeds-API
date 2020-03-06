@@ -2,13 +2,16 @@ from django.contrib import admin
 
 from .models import (StorePackageDetail, StorePackageDetailPhase, StorePackage, StorePackageDetailPhaseThrough)
 
-# class DepartmentPeopleInline(admin.TabularInline):
-#     model = DepartmentPeople
-#     extra = 1
-#
-# class DepartmentAdmin(admin.ModelAdmin):
-#     inlines = (DepartmentPeopleInline,)
 
-# admin.site.register(Person, PersonAdmin)
-# admin.site.register(Department, DepartmentAdmin)
-admin.site.register(StorePackageDetail)
+class StorePackageDetailPhaseThroughInline(admin.TabularInline):
+    model = StorePackageDetailPhaseThrough
+    extra = 1
+
+
+class StorePackageDetailAdmin(admin.ModelAdmin):
+    inlines = (StorePackageDetailPhaseThroughInline,)
+
+
+admin.site.register(StorePackageDetailPhase)
+admin.site.register(StorePackage)
+admin.site.register(StorePackageDetail, StorePackageDetailAdmin)
