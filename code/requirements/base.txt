@@ -20,6 +20,7 @@ django-enumfields==2.0.0
 django-filter==2.1.0
 django-polymorphic==2.1.2
 django-rest-passwordreset==1.0.0
+django-rest-polymorphic==0.1.8
 djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
 drf-yasg==1.17.0
@@ -36,9 +37,11 @@ kombu==4.6.3
 lxml==4.3.4
 MarkupSafe==1.1.1
 matplotlib==3.0.3
+mutagen==1.44.0
 numpy==1.17.4
 packaging==20.1
 Pillow==6.1.0
+pkg-resources==0.0.0
 psycopg2==2.8.3
 pycodestyle==2.5.0
 pycoin==0.90.20190630
