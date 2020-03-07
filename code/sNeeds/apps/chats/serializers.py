@@ -1,4 +1,4 @@
-from django.db.models import Q
+from os.path import basename
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -121,10 +121,22 @@ class VoiceMessageSerializer(MessageSerializer):
         fields = MessageSerializer.Meta.fields + ['voice_field', ]
 
 
+
 class FileMessageSerializer(MessageSerializer):
+    name = serializers.SerializerMethodField()
+    volume = serializers.SerializerMethodField()
+
     class Meta(MessageSerializer.Meta):
         model = FileMessage
-        fields = MessageSerializer.Meta.fields + ['file_field', ]
+        fields = MessageSerializer.Meta.fields + ['file_field',
+                                                  'name',
+                                                  'volume']
+
+    def get_name(self, obj):
+        return basename(obj.file_field.file.name)
+
+    def get_volume(self, obj):
+        return obj.file_field.size
 
 
 class ImageMessageSerializer(MessageSerializer):
