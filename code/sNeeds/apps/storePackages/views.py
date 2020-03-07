@@ -23,7 +23,7 @@ class StorePackageListAPIView(generics.ListAPIView):
     serializer_class = serializers.StorePackageSerializer
 
 
-class StorePackageDetailAPIView(generics.ListAPIView):
+class StorePackageDetailAPIView(generics.RetrieveAPIView):
     queryset = StorePackage.objects.all()
     serializer_class = serializers.StorePackageSerializer
     lookup_field = 'slug'
