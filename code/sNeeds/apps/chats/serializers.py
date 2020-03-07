@@ -5,6 +5,8 @@ from rest_framework.exceptions import ValidationError
 
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+import mutagen
+
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.consultants.models import ConsultantProfile
 from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
@@ -116,9 +118,37 @@ class TextMessageSerializer(MessageSerializer):
 
 
 class VoiceMessageSerializer(MessageSerializer):
+    name = serializers.SerializerMethodField()
+    volume = serializers.SerializerMethodField()
+    duration = serializers.SerializerMethodField()
+
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = MessageSerializer.Meta.fields + ['voice_field', ]
+        fields = MessageSerializer.Meta.fields + ['voice_field',
+                                                  'name',
+                                                  'volume',
+                                                  'duration']
+
+    def get_name(self, obj):
+        try:
+            file = obj.voice_field.file
+            return basename(file.name)
+        except FileNotFoundError as ex:
+            return ex.strerror
+
+    def get_volume(self, obj):
+        try:
+            return obj.voice_field.size
+        except FileNotFoundError as ex:
+            return ex.strerror
+
+    def get_duration(self, obj):
+        try:
+            audio_info = mutagen.File(obj.voice_field).info
+            duration = int(audio_info.length)
+            return duration
+        except FileNotFoundError as ex:
+            return ex.strerror
 
 
 
@@ -133,10 +163,17 @@ class FileMessageSerializer(MessageSerializer):
                                                   'volume']
 
     def get_name(self, obj):
-        return basename(obj.file_field.file.name)
+        try:
+            file = obj.file_field.file
+            return basename(file.name)
+        except FileNotFoundError as ex:
+            return ex.strerror
 
     def get_volume(self, obj):
-        return obj.file_field.size
+        try:
+            return obj.file_field.size
+        except FileNotFoundError as ex:
+            return ex.strerror
 
 
 class ImageMessageSerializer(MessageSerializer):
