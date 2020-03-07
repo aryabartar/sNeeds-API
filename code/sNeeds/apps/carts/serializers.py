@@ -7,15 +7,18 @@ from .models import Cart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.store.models import SoldTimeSlotSale, TimeSlotSale, Product
+from ..storePackages.models import StorePackage
+from ..storePackages.serializers import StorePackageSerializer
 
 
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
     time_slot_sales = serializers.SerializerMethodField(read_only=True)
+    store_packages = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'products', 'time_slot_sales',
+        fields = ['id', 'url', 'user', 'products', 'time_slot_sales', 'store_packages',
                   'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
@@ -37,6 +40,24 @@ class CartSerializer(serializers.ModelSerializer):
 
         return TimeSlotSaleSerializer(
             time_slot_sales,
+            context=self.context,
+            many=True
+        ).data
+
+
+
+    def get_store_packages(self, obj):
+        store_packages = []
+
+        for product in obj.products.all():
+            try:
+                store_package = product.storepackage
+                store_packages.append(store_package)
+            except StorePackage.DoesNotExist:
+                pass
+
+        return StorePackageSerializer(
+            store_packages,
             context=self.context,
             many=True
         ).data

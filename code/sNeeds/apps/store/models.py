@@ -14,9 +14,22 @@ class ProductQuerySet(models.QuerySet):
         for i in self.all():
             try:
                 time_slot_sale = i.timeslotsale
-                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale)
+                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale.id)
             except TimeSlotSale.DoesNotExist:
                 pass
+        return result_qs
+
+    def get_store_packages(self):
+        from sNeeds.apps.storePackages.models import StorePackage
+
+        result_qs = StorePackage.objects.none()
+        for i in self.all():
+            try:
+                store_package = i.storepackage
+                result_qs |= StorePackage.objects.filter(pk=store_package.id)
+            except StorePackage.DoesNotExist:
+                pass
+
         return result_qs
 
 
