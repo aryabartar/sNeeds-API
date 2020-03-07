@@ -16,3 +16,15 @@ class StorePackagePhaseThroughDetailAPIView(generics.RetrieveAPIView):
     queryset = StorePackagePhaseThrough.objects.all()
     serializer_class = serializers.StorePackagePhaseThroughSerializer
     lookup_field = 'id'
+
+
+class StorePackageListAPIView(generics.ListAPIView):
+    queryset = StorePackage.objects.all()
+    serializer_class = serializers.StorePackageSerializer
+    filterset_fields = ['store_package']
+
+
+class StorePackageDetailAPIView(generics.ListAPIView):
+    queryset = StorePackage.objects.all()
+    serializer_class = serializers.StorePackageSerializer
+    lookup_field = 'id'

@@ -9,4 +9,9 @@ urlpatterns = [
          views.StorePackagePhaseThroughDetailAPIView.as_view(), name="store-package-phase-through-detail"),
     path('store-package-phase-through-list/',
          views.StorePackagePhaseThroughListAPIView.as_view(), name="store-package-phase-through-list"),
+
+    path('store-package-detail/<int:id>',
+         views.StorePackageDetailAPIView.as_view(), name="store-package-detail"),
+    path('store-package-list/',
+         views.StorePackagePhaseThroughListAPIView.as_view(), name="store-package-list"),
 ]
