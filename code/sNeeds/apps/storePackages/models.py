@@ -42,10 +42,10 @@ class StorePackage(Product):
 
     def update_price(self):
         try:
-            store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(store_package__id=self.id,
-                                                                                   phase_number=1)
+            store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(
+                store_package__id=self.id, phase_number=1
+            )
             self.price = store_package_phase_through_obj.store_package_phase.price
-
         except StorePackagePhaseThrough.DoesNotExist:
             self.price = 0
 
