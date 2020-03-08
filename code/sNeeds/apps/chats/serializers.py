@@ -5,8 +5,6 @@ from rest_framework.exceptions import ValidationError
 
 from rest_polymorphic.serializers import PolymorphicSerializer
 
-from tinytag import TinyTag
-
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.consultants.models import ConsultantProfile
 from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, ImageMessage
