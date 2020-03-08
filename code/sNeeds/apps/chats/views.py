@@ -56,6 +56,15 @@ class MessageListAPIView(generics.ListCreateAPIView):
         elif message_type is not None:
             qs = Message.objects.none()
 
+        chat = self.request.query_params.get("chat", None)
+        tag = self.request.query_params.get("tag", None)
+        if chat is not None and tag is not None:
+            try:
+                chat = int(chat)
+                tag = int(tag)
+                qs = qs.filter(Q(chat=chat) & Q(tag__gte=tag))
+            except ValueError:
+                pass
         return qs
 
 
