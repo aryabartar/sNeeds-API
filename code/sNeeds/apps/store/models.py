@@ -159,3 +159,14 @@ class SoldTimeSlotSale(SoldProduct):
     def clean(self, *args, **kwargs):
         if self.end_time <= self.start_time:
             raise ValidationError(_("End time should be after start time"), code='invalid')
+
+
+class ConsultantAcceptSoldProductRequest(models.Model):
+    sold_product = models.ForeignKey(SoldProduct, on_delete=models.CASCADE)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['sold_product', 'consultant']

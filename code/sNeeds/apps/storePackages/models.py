@@ -15,20 +15,19 @@ class StorePackageQuerySetManager(models.QuerySet):
             obj.save()
 
     @transaction.atomic
-    def create_and_get_sold_package(self, sold_to):
+    def sell_and_get_sold_package(self, sold_to):
         qs = self.all()
 
         sold_store_package_list = []
         for obj in qs:
             sold_store_package_list.append(
                 SoldStorePackage.objects.create(
-                    consultant=obj.consultant,
+                    store_package=obj,
+                    price=obj.price,
                     sold_to=sold_to,
                 )
             )
         sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
-
-        qs.delete()
 
         return sold_store_package_qs
 
@@ -104,3 +103,4 @@ class StorePackagePhaseThrough(models.Model):
 class SoldStorePackage(SoldProduct):
     store_package = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
+

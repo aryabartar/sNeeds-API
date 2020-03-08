@@ -36,6 +36,7 @@ class OrderManager(models.Manager):
             time_slot_sales_number_discount_number = 0
 
         sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
+        sold_store_packages_qs = store_packages_qs.sell_and_get_sold_package(sold_to=cart.user)
 
         order = Order(
             user=cart.user,
@@ -48,6 +49,7 @@ class OrderManager(models.Manager):
 
         order.save()
         order.sold_products.set(sold_time_slot_sales_qs)
+        order.sold_products.set(sold_store_packages_qs)
 
         cart.delete()
         return order

@@ -109,7 +109,6 @@ class Verify(APIView):
 
 class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
-        print(kwargs)
         cart = Cart.objects.get(id=kwargs.get("cartid"))
         Order.objects.sell_cart_create_order(cart)
         return Response()
