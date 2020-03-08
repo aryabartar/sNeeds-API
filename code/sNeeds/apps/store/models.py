@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.store.validators import validate_sold_product_class_type
 
 User = get_user_model()
 
@@ -14,9 +15,22 @@ class ProductQuerySet(models.QuerySet):
         for i in self.all():
             try:
                 time_slot_sale = i.timeslotsale
-                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale)
+                result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale.id)
             except TimeSlotSale.DoesNotExist:
                 pass
+        return result_qs
+
+    def get_store_packages(self):
+        from sNeeds.apps.storePackages.models import StorePackage
+
+        result_qs = StorePackage.objects.none()
+        for i in self.all():
+            try:
+                store_package = i.storepackage
+                result_qs |= StorePackage.objects.filter(pk=store_package.id)
+            except StorePackage.DoesNotExist:
+                pass
+
         return result_qs
 
 
@@ -57,7 +71,7 @@ class TimeSlotSaleManager(models.QuerySet):
 
 
 class Product(models.Model):
-    price = models.PositiveIntegerField()
+    price = models.PositiveIntegerField(blank=True)
 
     objects = ProductQuerySet.as_manager()
 
@@ -129,7 +143,9 @@ class TimeSlotSale(Product):
 class SoldProduct(models.Model):
     price = models.PositiveIntegerField()
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     objects = SoldProductQuerySet.as_manager()
 
@@ -146,3 +162,18 @@ class SoldTimeSlotSale(SoldProduct):
     def clean(self, *args, **kwargs):
         if self.end_time <= self.start_time:
             raise ValidationError(_("End time should be after start time"), code='invalid')
+
+
+class ConsultantAcceptSoldProductRequest(models.Model):
+    sold_product = models.ForeignKey(
+        SoldProduct,
+        validators=[validate_sold_product_class_type],
+        on_delete=models.CASCADE
+    )
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['sold_product', 'consultant']
