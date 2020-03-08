@@ -100,9 +100,10 @@ class StorePackagePhaseThrough(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePackage(SoldProduct):
-    store_package = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
-    consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
+class SoldStorePackage(models.Model):
+    store_package = models.ForeignKey(StorePackage, on_delete=models.SET_NULL, null=True)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
+    sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
 
 
 class SoldStorePackagePhase(SoldProduct):
