@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 import mutagen
+from mutagen.mp3 import HeaderNotFoundError
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.consultants.models import ConsultantProfile
@@ -149,7 +150,8 @@ class VoiceMessageSerializer(MessageSerializer):
             return duration
         except FileNotFoundError as ex:
             return ex.strerror
-
+        except HeaderNotFoundError as ex:  # If its not mp3 or file but has a .mp3 extension
+            return "Not a voice file"
 
 
 class FileMessageSerializer(MessageSerializer):
