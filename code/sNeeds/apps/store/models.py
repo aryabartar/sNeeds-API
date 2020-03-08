@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.store.validators import validate_sold_product_class_type
 
 User = get_user_model()
 
@@ -164,7 +165,11 @@ class SoldTimeSlotSale(SoldProduct):
 
 
 class ConsultantAcceptSoldProductRequest(models.Model):
-    sold_product = models.ForeignKey(SoldProduct, on_delete=models.CASCADE)
+    sold_product = models.ForeignKey(
+        SoldProduct,
+        validators=[validate_sold_product_class_type],
+        on_delete=models.CASCADE
+    )
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -172,10 +177,3 @@ class ConsultantAcceptSoldProductRequest(models.Model):
 
     class Meta:
         unique_together = ['sold_product', 'consultant']
-
-    def clean(self):
-        from sNeeds.apps.storePackages.models import SoldStorePackage
-        # Limited SoldProduct models can use this model.
-        # e.g. SoldPackage not SoldTimeSlot
-        if not SoldStorePackage.objects.filter(id=self.sold_product.id):
-            raise ValidationError({"sold_product": "SoldProduct is not SoldStorePackage instance."})
