@@ -142,7 +142,9 @@ class TimeSlotSale(Product):
 class SoldProduct(models.Model):
     price = models.PositiveIntegerField()
     sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
     created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     objects = SoldProductQuerySet.as_manager()
 
@@ -170,3 +172,10 @@ class ConsultantAcceptSoldProductRequest(models.Model):
 
     class Meta:
         unique_together = ['sold_product', 'consultant']
+
+    def clean(self):
+        from sNeeds.apps.storePackages.models import SoldStorePackage
+        # Limited SoldProduct models can use this model.
+        # e.g. SoldPackage not SoldTimeSlot
+        if not SoldStorePackage.objects.filter(id=self.sold_product.id):
+            raise ValidationError({"sold_product": "SoldProduct is not SoldStorePackage instance."})
