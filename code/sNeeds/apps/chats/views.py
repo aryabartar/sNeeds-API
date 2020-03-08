@@ -62,7 +62,7 @@ class MessageListAPIView(generics.ListCreateAPIView):
             try:
                 chat = int(chat)
                 tag = int(tag)
-                qs = qs.filter(Q(chat=chat) & Q(tag__gte=tag))
+                qs = qs.filter(Q(chat=chat) & Q(tag__gt=tag))
             except ValueError:
                 pass
         return qs
