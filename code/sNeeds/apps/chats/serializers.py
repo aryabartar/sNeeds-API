@@ -5,8 +5,7 @@ from rest_framework.exceptions import ValidationError
 
 from rest_polymorphic.serializers import PolymorphicSerializer
 
-import mutagen
-from mutagen.mp3 import HeaderNotFoundError
+from tinytag import TinyTag
 
 from sNeeds.apps.store.models import SoldTimeSlotSale
 from sNeeds.apps.consultants.models import ConsultantProfile
@@ -67,12 +66,14 @@ class MessageSerializer(serializers.ModelSerializer):
                   'chat_url',
                   'message_url',
                   'sender',
+                  'tag',
                   'is_sender_me',
                   'updated',
                   'created',
                   'profile_img']
         extra_kwargs = {
             'sender': {'read_only': True},
+            'tag': {'read_only': True}
         }
 
     def get_is_sender_me(self, obj):
@@ -121,14 +122,12 @@ class TextMessageSerializer(MessageSerializer):
 class VoiceMessageSerializer(MessageSerializer):
     name = serializers.SerializerMethodField()
     volume = serializers.SerializerMethodField()
-    duration = serializers.SerializerMethodField()
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
         fields = MessageSerializer.Meta.fields + ['voice_field',
                                                   'name',
-                                                  'volume',
-                                                  'duration']
+                                                  'volume']
 
     def get_name(self, obj):
         try:
@@ -142,16 +141,6 @@ class VoiceMessageSerializer(MessageSerializer):
             return obj.voice_field.size
         except FileNotFoundError as ex:
             return ex.strerror
-
-    def get_duration(self, obj):
-        try:
-            audio_info = mutagen.File(obj.voice_field).info
-            duration = int(audio_info.length)
-            return duration
-        except FileNotFoundError as ex:
-            return ex.strerror
-        except HeaderNotFoundError as ex:  # If its not mp3 or file but has a .mp3 extension
-            return "Not a voice file"
 
 
 class FileMessageSerializer(MessageSerializer):

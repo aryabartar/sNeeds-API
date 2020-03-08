@@ -59,6 +59,7 @@ class Chat(models.Model):
 class Message(PolymorphicModel):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
+    tag = models.IntegerField(editable=False)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -67,6 +68,10 @@ class Message(PolymorphicModel):
     def clean(self):
         if self.sender != self.chat.user and self.sender != self.chat.consultant.user:
             raise ValidationError(f"User {self.sender} cannot send message to this chat.")
+
+    def save(self, *args, **kwargs):
+        self.tag = Message.objects.filter(chat=self.chat).count() + 1
+        super(Message, self).save(*args, **kwargs)
 
 
 class TextMessage(Message):
