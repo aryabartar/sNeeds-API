@@ -105,3 +105,11 @@ class Verify(APIView):
 
         else:
             return Response({"detail": "Transaction failed or canceled by user"}, status=400)
+
+
+class VerifyTest(APIView):
+    def get(self, request, *args, **kwargs):
+        print(kwargs)
+        cart = Cart.objects.get(id=kwargs.get("cartid"))
+        Order.objects.sell_cart_create_order(cart)
+        return Response()

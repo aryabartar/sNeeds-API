@@ -21,6 +21,7 @@ class OrderManager(models.Manager):
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()
         time_slot_sales_qs = cart_products.get_time_slot_sales()
+        store_packages_qs = cart_products.get_store_packages()
 
         try:
             used_consultant_discount = CartConsultantDiscount.objects.get(cart=cart).consultant_discount

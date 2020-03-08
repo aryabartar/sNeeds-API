@@ -14,6 +14,24 @@ class StorePackageQuerySetManager(models.QuerySet):
         for obj in self._chain():
             obj.save()
 
+    @transaction.atomic
+    def create_and_get_sold_package(self, sold_to):
+        qs = self.all()
+
+        sold_store_package_list = []
+        for obj in qs:
+            sold_store_package_list.append(
+                SoldStorePackage.objects.create(
+                    consultant=obj.consultant,
+                    sold_to=sold_to,
+                )
+            )
+        sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
+
+        qs.delete()
+
+        return sold_store_package_qs
+
 
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)

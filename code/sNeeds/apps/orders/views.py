@@ -8,10 +8,6 @@ from .permissions import OrderOwnerPermission
 
 
 class OrderListView(generics.ListAPIView):
-    """
-    Ordering samples:
-
-    """
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
