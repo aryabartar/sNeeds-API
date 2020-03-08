@@ -104,3 +104,23 @@ class SoldStorePackage(SoldProduct):
     store_package = models.ForeignKey(StorePackage, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, models.SET_NULL, null=True)
 
+
+class SoldStorePackagePhase(SoldProduct):
+    title = models.CharField(max_length=1024)
+    detailed_title = models.CharField(
+        max_length=1024,
+        help_text="This field is for ourselves, Feel free to add details."
+    )
+    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
+
+
+class UnpaidStorePackagePhase(models.Model):
+    title = models.CharField(max_length=1024)
+    detailed_title = models.CharField(
+        max_length=1024,
+        help_text="This field is for ourselves, Feel free to add details."
+    )
+    price = models.IntegerField(
+        validators=[MinValueValidator(0), ],
+    )
+    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
