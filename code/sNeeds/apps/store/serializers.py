@@ -107,3 +107,26 @@ class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):
         return ShortConsultantProfileSerializer(
             obj.consultant, context={'request': request}
         ).data
+
+
+class SoldTimeSlotSaleSafeSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name="store:sold-time-slot-sale-safe-detail",
+        lookup_field='id',
+        read_only=True
+    )
+
+    consultant = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SoldTimeSlotSale
+        fields = [
+            'id', 'url', 'price', 'used', 'consultant', 'start_time', 'end_time',
+        ]
+
+    def get_consultant(self, obj):
+        request = self.context.get('request')
+
+        return ShortConsultantProfileSerializer(
+            obj.consultant, context={'request': request}
+        ).data
