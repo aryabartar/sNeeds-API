@@ -4,7 +4,9 @@ from django.shortcuts import render
 # Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, mixins, filters
+from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 
 from sNeeds.apps.consultants.models import ConsultantProfile
@@ -27,10 +29,10 @@ class ConsultantProfileDetail(APIView):
         return Response(serializer.data)
 
 
-# TODO: Show consultants based on ...
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = ConsultantProfile.objects.all()
     serializer_class = ConsultantProfileSerializer
+    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     ordering_fields = ['rate', 'created', ]
     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 
