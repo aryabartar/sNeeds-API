@@ -1,6 +1,7 @@
 from django.http import Http404
+from django_filters.rest_framework import DjangoFilterBackend
 
-from rest_framework import status, generics, mixins, permissions
+from rest_framework import status, generics, mixins, permissions, filters
 from rest_framework.response import Response
 
 from . import serializers
@@ -28,8 +29,9 @@ class TimeSlotSailList(generics.ListCreateAPIView):
 class SoldTimeSlotSaleList(generics.ListAPIView):
     queryset = SoldTimeSlotSale.objects.all()
     serializer_class = serializers.SoldTimeSlotSaleSerializer
-    filterset_fields = ['used', 'consultant']
     permission_classes = [permissions.IsAuthenticated]
+    ordering_fields = ['start_time', ]
+    filterset_fields = ['used', 'consultant']
 
     def get_queryset(self):
         user = self.request.user

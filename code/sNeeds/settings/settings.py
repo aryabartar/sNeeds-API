@@ -70,7 +70,7 @@ ROOT_URLCONF = 'sNeeds.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR,],
+        'DIRS': [TEMPLATE_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -95,7 +95,6 @@ TIME_ZONE = 'UTC'
 # TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
-
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -122,7 +121,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter'
+    ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 

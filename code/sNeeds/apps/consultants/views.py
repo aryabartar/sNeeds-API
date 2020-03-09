@@ -31,7 +31,6 @@ class ConsultantProfileDetail(APIView):
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = ConsultantProfile.objects.all()
     serializer_class = ConsultantProfileSerializer
-    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
     ordering_fields = ['rate', 'created', ]
     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 

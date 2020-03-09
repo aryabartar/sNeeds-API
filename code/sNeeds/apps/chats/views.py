@@ -39,8 +39,6 @@ class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = [MultiPartParser, ]
     serializer_class = MessagePolymorphicSerializer
-    filter_backends = [filters.OrderingFilter,
-                       DjangoFilterBackend]
     ordering_fields = ['created']
     filterset_fields = ["chat", "sender"]
 

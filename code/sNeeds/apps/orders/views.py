@@ -11,7 +11,6 @@ class OrderListView(generics.ListAPIView):
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created', ]
 
     def get_queryset(self):
