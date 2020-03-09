@@ -2,6 +2,7 @@ from django.http import Http404
 from django.shortcuts import render
 
 # Create your views here.
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, mixins, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -30,9 +31,9 @@ class ConsultantProfileDetail(APIView):
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = ConsultantProfile.objects.all()
     serializer_class = ConsultantProfileSerializer
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['rate', '' ]
-    filterset_fields = ('universities', 'field_of_studies', 'countries',)
+    filter_backends = [filters.OrderingFilter, DjangoFilterBackend]
+    ordering_fields = ['rate', 'created', ]
+    filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 
     def get_queryset(self):
         return ConsultantProfile.objects.all()

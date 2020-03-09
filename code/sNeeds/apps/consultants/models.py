@@ -19,7 +19,7 @@ class ConsultantProfile(models.Model):
     universities = models.ManyToManyField(University, blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
     countries = models.ManyToManyField(Country, blank=True)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=True)  # TODO: Check this is working.
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
 
