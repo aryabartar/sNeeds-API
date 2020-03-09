@@ -6,8 +6,8 @@ from rest_framework import generics, mixins, filters
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-import sNeeds.apps
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.consultants.serializers import ConsultantProfileSerializer
 
 
 class ConsultantProfileDetail(APIView):
@@ -19,17 +19,19 @@ class ConsultantProfileDetail(APIView):
 
     def get(self, request, slug):
         consultant_profile = self.get_object(slug)
-        serializer = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer(consultant_profile,
-                                                                                     context={"request": request})
+        serializer = ConsultantProfileSerializer(
+            consultant_profile,
+            context={"request": request}
+        )
         return Response(serializer.data)
 
 
 # TODO: Show consultants based on ...
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     queryset = ConsultantProfile.objects.all()
-    serializer_class = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer
+    serializer_class = ConsultantProfileSerializer
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['rate', ]
+    ordering_fields = ['rate', '' ]
     filterset_fields = ('universities', 'field_of_studies', 'countries',)
 
     def get_queryset(self):

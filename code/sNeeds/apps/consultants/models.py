@@ -23,6 +23,9 @@ class ConsultantProfile(models.Model):
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
 
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
     def update_rate(self):
         """Currently based on sold time slot sales rate"""
         from sNeeds.apps.comments.models import SoldTimeSlotRate
