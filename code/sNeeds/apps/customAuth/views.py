@@ -94,6 +94,7 @@ class TimezoneTimeDetailAPIView(APIView):
 
     e.g. Use Asia-Tehran rather than Asia/Tehran
     """
+
     def get(self, request, timezone):
         import pytz
         timezone = timezone.replace("-", "/")

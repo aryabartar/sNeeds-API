@@ -19,8 +19,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.videochats.tasks.delete_used_rooms',
         'schedule': timedelta(minutes=1),
     },
-    # 'delete-time-slots': {
-    #     'task': 'sNeeds.apps.store.tasks.delete_time_slots',
-    #     'schedule': timedelta(minutes=1),
-    # },
+    'delete-time-slots': {
+        'task': 'sNeeds.apps.store.tasks.delete_time_slots',
+        'schedule': timedelta(minutes=1),
+    },
 }
