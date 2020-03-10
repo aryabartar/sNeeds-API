@@ -3,21 +3,12 @@ from sNeeds.apps.store.models import Product, SoldProduct
 from sNeeds.apps.consultants.models import ConsultantProfile
 
 
-class Webinar(models.Model):
-    consultants = models.OneToOneRel(
-        ConsultantProfile,
-    )
-    strat_date = models.DateField()
-    end_date = models.DateField()
+class Webinar(Product):
+    title = models.CharField(max_length=256)
+    slug = models.SlugField(unique=True)
+
+    active = models.BooleanField(default=True)
 
 
-class WebinarTimeSlot(Product):
-    consultant = models.ForeignKey(
-        ConsultantProfile,
-        on_delete=models.CASCADE
-    )
-    webinar = models.ForeignKey(
-        Webinar,
-    )
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+class SoldWebinar(SoldProduct):
+    webinar = models.ForeignKey(Webinar, on_delete=models.PROTECT)

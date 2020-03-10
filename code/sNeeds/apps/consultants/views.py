@@ -26,7 +26,6 @@ class ConsultantProfileDetail(APIView):
 
 # TODO: Show consultants based on ...
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
-    queryset = ConsultantProfile.objects.all()
     serializer_class = sNeeds.apps.consultants.serializers.ConsultantProfileSerializer
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['rate', ]
