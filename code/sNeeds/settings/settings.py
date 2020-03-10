@@ -16,6 +16,10 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "..", "templates")
 
+USE_TZ = True
+TIME_ZONE = 'UTC'
+
+
 INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
@@ -55,6 +59,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
+    'sNeeds.settings.middlewares.middlewares.TimezoneMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # For per-request translation
@@ -63,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'sNeeds.urls'
@@ -90,9 +96,7 @@ WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
-USE_TZ = True
-TIME_ZONE = 'UTC'
-# TIME_ZONE = 'Asia/Tehran'
+
 
 USE_I18N = True
 
