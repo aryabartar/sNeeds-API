@@ -32,6 +32,17 @@ class Cart(models.Model):
 
     objects = CartManager.as_manager()
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        from sNeeds.apps.consultants.models import ConsultantProfile
+        if ConsultantProfile.objects.filter(user=self.user).exists():
+            raise ValidationError({
+                "user": "Cart user can not be a consultant.",
+            })
+
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
