@@ -35,6 +35,9 @@ class Cart(models.Model):
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
+    def get_webinars_count(self):
+        return self.products.all().get_webinars().count()
+
     def _update_total_cart_consultant_discount_percent(self):
         from sNeeds.apps.discounts.models import CartConsultantDiscount
 

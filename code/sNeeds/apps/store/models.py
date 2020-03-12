@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.webinars.models import Webinar, SoldWebinar
 
 User = get_user_model()
 
@@ -19,6 +20,16 @@ class ProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
+    def get_webinars(self):
+        result_qs = Webinar.objects.none()
+        for i in self.all():
+            try:
+                webinar_w = i.webinar
+                result_qs |= Webinar.objects.filter(pk=webinar_w)
+            except Webinar.DoesNotExist:
+                pass
+        return result_qs
+
 
 class SoldProductQuerySet(models.QuerySet):
     def get_sold_time_slot_sales(self):
@@ -28,6 +39,16 @@ class SoldProductQuerySet(models.QuerySet):
                 sold_time_slot_sale = i.soldtimeslotsale
                 result_qs |= SoldTimeSlotSale.objects.filter(pk=sold_time_slot_sale.id)
             except SoldTimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+    def get_sold_webinars(self):
+        result_qs = SoldWebinar.objects.none()
+        for i in self.all():
+            try:
+                sold_webinar = i.soldwebinar
+                result_qs |= SoldWebinar.objects.filter(pk=sold_webinar)
+            except SoldWebinar.DoesNotExist:
                 pass
         return result_qs
 

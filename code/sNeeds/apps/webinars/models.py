@@ -1,5 +1,5 @@
 from django.db import models
-from sNeeds.apps.store.models import Product, SoldProduct
+from sNeeds.apps.store.models import Product, SoldProduct, ProductQuerySet, SoldProductQuerySet
 from sNeeds.apps.consultants.models import ConsultantProfile
 
 
@@ -8,7 +8,11 @@ class Webinar(Product):
     slug = models.SlugField(unique=True)
 
     active = models.BooleanField(default=True)
+    objects = ProductQuerySet.as_manager()
 
 
 class SoldWebinar(SoldProduct):
     webinar = models.ForeignKey(Webinar, on_delete=models.PROTECT)
+
+    objects = SoldProductQuerySet.as_manager()
+
