@@ -23,4 +23,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.store.tasks.delete_time_slots',
         'schedule': timedelta(minutes=1),
     },
+    'sold-time-slot-start-reminder': {
+        'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
+        'schedule': crontab(hour=10, minute=13),  # Tehran timezone
+    },
 }

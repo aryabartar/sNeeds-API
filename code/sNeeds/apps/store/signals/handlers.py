@@ -32,7 +32,7 @@ def post_save_product_receiver(sender, instance, *args, **kwargs):
         obj.update_price()
 
 
-def create_chat(sender, instance, **kwargs):
+def create_chat(sender, instance, *args, **kwargs):
     user = instance.sold_to
     consultant = instance.consultant
     if not Chat.objects.filter(user=user, consultant=consultant).exists():

@@ -51,3 +51,21 @@ def notify_sold_time_slot(send_to, name, sold_time_slot_id):
     json_data = json.dumps(payload)
     response = requests.request("POST", url, data=json_data, headers=headers)
     return response.text
+
+
+def send_sold_time_slot_start_reminder_email(send_to, name, sold_time_slot_id, start_time, end_time):
+    payload = {
+        "sender": {"name": "sneeds", "email": 'noreply.sneeds@gmail.com'},
+        "to": [{"email": send_to}],
+        "replyTo": {'email': 'noreply.sneeds@gmail.com'},
+        "params": {
+            "name": name,
+            "sold_time_slot_id": sold_time_slot_id,
+            "start_time": start_time,
+            "end_time": end_time,
+        },
+        "templateId": 8,
+    }
+    json_data = json.dumps(payload)
+    response = requests.request("POST", url, data=json_data, headers=headers)
+    return response.text
