@@ -5,7 +5,7 @@ from django.utils import timezone
 from sNeeds.utils import sendemail
 
 from .models import TimeSlotSale, SoldTimeSlotSale
-from ...settings.config.variables import TIME_SLOT_SALE_DELETE_TIME
+from ...settings.config.variables import TIME_SLOT_SALE_DELETE_TIME, FRONTEND_URL
 from ...utils.custom.time_functions import utc_to_jalali_string
 from ...utils.sendemail import send_sold_time_slot_start_reminder_email
 
@@ -35,17 +35,19 @@ def sold_time_slot_start_reminder():
         start_time = utc_to_jalali_string(obj.start_time)
         end_time = utc_to_jalali_string(obj.end_time)
 
+        sold_time_slot_url = FRONTEND_URL + 'user/sessions/'
         send_sold_time_slot_start_reminder_email(
+            sold_time_slot_url=sold_time_slot_url,
             send_to=obj.sold_to.email,
             name=obj.sold_to.get_full_name(),
-            sold_time_slot_id=obj.id,
             start_time=start_time,
             end_time=end_time
         )
+
         send_sold_time_slot_start_reminder_email(
+            sold_time_slot_url=sold_time_slot_url,
             send_to=obj.consultant.user.email,
             name=obj.consultant.user.get_full_name(),
-            sold_time_slot_id=obj.id,
             start_time=start_time,
             end_time=end_time
         )
