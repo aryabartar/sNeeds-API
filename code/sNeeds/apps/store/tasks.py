@@ -36,6 +36,7 @@ def sold_time_slot_start_reminder():
         end_time = utc_to_jalali_string(obj.end_time)
 
         sold_time_slot_url = FRONTEND_URL + 'user/sessions/'
+
         send_sold_time_slot_start_reminder_email(
             sold_time_slot_url=sold_time_slot_url,
             send_to=obj.sold_to.email,

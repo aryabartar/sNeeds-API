@@ -63,7 +63,7 @@ def send_sold_time_slot_start_reminder_email(send_to, name, sold_time_slot_url, 
         "replyTo": {'email': 'noreply.sneeds@gmail.com'},
         "params": {
             "name": name,
-            "sold_time_slot_id": sold_time_slot_url,
+            "sold_time_slot_url": sold_time_slot_url,
             "start_time": start_time,
             "end_time": end_time,
         },
