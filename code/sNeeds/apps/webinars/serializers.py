@@ -22,27 +22,24 @@ class WebinarSerializer(serializers.ModelSerializer):
 
 
 class SoldWebinarSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name="webinars:sold-webinar-detail",
+        read_only=True
+    )
 
-    # url = serializers.HyperlinkedIdentityField(
-    #     view_name="webinars:sold-webinar-detail",
-    #     lookup_field='id',
-    #     read_only=True
-    # )
-    #
-    # webinar_datail_url = serializers.HyperlinkedRelatedField(
-    #     many=True,
-    #     read_only=True,
-    #     lookup_field='slug',
-    #     view_name='webinars:webinar-detail'
-    # )
+    webinar = serializers.HyperlinkedRelatedField(
+        read_only=True,
+        lookup_field='slug',
+        view_name='webinars:webinar-detail'
+    )
 
     sold_to = serializers.SerializerMethodField()
-    webinar = serializers.SerializerMethodField()
 
     class Meta:
         model = SoldWebinar
         fields = [
-            'id', 'price', 'sold_to', 'webinar',
+            'id', 'url', 'webinar', 'price', 'sold_to',
         ]
 
     def get_sold_to(self, obj):
