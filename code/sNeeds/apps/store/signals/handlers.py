@@ -23,7 +23,7 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         start_time = utc_to_jalali_string(instance.start_time)
         end_time = utc_to_jalali_string(instance.end_time)
 
-        notify_sold_time_slot(
+        notify_sold_time_slot.delay(
             send_to=instance.consultant.user.email,
             name=instance.consultant.user.get_full_name(),
             sold_time_slot_url=sold_time_slot_url,
