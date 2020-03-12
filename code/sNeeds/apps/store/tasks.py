@@ -29,6 +29,7 @@ def send_notify_sold_time_slot_mail(send_to, name, sold_time_slot_id):
     )
 
 
+@shared_task
 def sold_time_slot_start_reminder():
     sts_qs = SoldTimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1), used=False)
     for obj in sts_qs:

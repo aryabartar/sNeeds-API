@@ -8,7 +8,7 @@ from django.utils import timezone
 from sNeeds.utils import sendemail
 
 
-@task()
+@shared_task
 def send_reset_password_email(email, first_name, reset_link):
     sendemail.reset_password(
         email,
