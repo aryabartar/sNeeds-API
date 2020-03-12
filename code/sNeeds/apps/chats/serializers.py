@@ -1,4 +1,4 @@
-from django.db.models import Q
+from os.path import basename
 
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -13,14 +13,25 @@ from .models import Chat, Message, TextMessage, VoiceMessage, FileMessage, Image
 class ChatSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="chat:chat-detail", lookup_field='id')
     other_person = serializers.SerializerMethodField()
+    profile_img = serializers.SerializerMethodField()
 
     class Meta:
         model = Chat
         fields = [
             'id',
             'url',
-            'other_person'
+            'other_person',
+            'profile_img'
         ]
+
+    def get_profile_img(self, obj):
+        request = self.context.get("request")
+        consultant = obj.consultant
+        if consultant.profile_picture:
+            profile_img = consultant.profile_picture.url
+            return request.build_absolute_uri(profile_img)
+        else:
+            return None
 
     def get_other_person(self, obj):
         from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
@@ -53,12 +64,14 @@ class MessageSerializer(serializers.ModelSerializer):
                   'chat_url',
                   'message_url',
                   'sender',
+                  'tag',
                   'is_sender_me',
                   'updated',
                   'created',
                   'profile_img']
         extra_kwargs = {
             'sender': {'read_only': True},
+            'tag': {'read_only': True}
         }
 
     def get_is_sender_me(self, obj):
@@ -67,11 +80,15 @@ class MessageSerializer(serializers.ModelSerializer):
         return obj.sender == user
 
     def get_profile_img(self, obj):
-        profile_img = None
+        request = self.context.get("request")
+
         if obj.sender.is_consultant():
             consultant_profile = ConsultantProfile.objects.get(user=obj.sender)
-            profile_img = consultant_profile.profile_picture.url
-        return profile_img
+            if consultant_profile.profile_picture:
+                profile_img = consultant_profile.profile_picture.url
+                return request.build_absolute_uri(profile_img)
+        else:
+            return None
 
     def validate(self, data):
         data = self._kwargs.get('data')
@@ -95,28 +112,60 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class TextMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = TextMessage
         fields = MessageSerializer.Meta.fields + ['text_message', ]
 
 
 class VoiceMessageSerializer(MessageSerializer):
+    name = serializers.SerializerMethodField()
+    volume = serializers.SerializerMethodField()
 
     class Meta(MessageSerializer.Meta):
         model = VoiceMessage
-        fields = MessageSerializer.Meta.fields + ['voice_field', ]
+        fields = MessageSerializer.Meta.fields + ['voice_field',
+                                                  'name',
+                                                  'volume']
+
+    def get_name(self, obj):
+        try:
+            file = obj.voice_field.file
+            return basename(file.name)
+        except FileNotFoundError as ex:
+            return ex.strerror
+
+    def get_volume(self, obj):
+        try:
+            return obj.voice_field.size
+        except FileNotFoundError as ex:
+            return ex.strerror
 
 
 class FileMessageSerializer(MessageSerializer):
+    name = serializers.SerializerMethodField()
+    volume = serializers.SerializerMethodField()
 
     class Meta(MessageSerializer.Meta):
         model = FileMessage
-        fields = MessageSerializer.Meta.fields + ['file_field', ]
+        fields = MessageSerializer.Meta.fields + ['file_field',
+                                                  'name',
+                                                  'volume']
+
+    def get_name(self, obj):
+        try:
+            file = obj.file_field.file
+            return basename(file.name)
+        except FileNotFoundError as ex:
+            return ex.strerror
+
+    def get_volume(self, obj):
+        try:
+            return obj.file_field.size
+        except FileNotFoundError as ex:
+            return ex.strerror
 
 
 class ImageMessageSerializer(MessageSerializer):
-
     class Meta(MessageSerializer.Meta):
         model = ImageMessage
         fields = MessageSerializer.Meta.fields + ['image_field', ]

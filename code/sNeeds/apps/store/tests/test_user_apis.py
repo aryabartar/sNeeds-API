@@ -319,9 +319,9 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         for sold_time_slot in response.data:
-            self.assertEqual(sold_time_slot.get("sold_to"), self.user1.id)
+            self.assertEqual(sold_time_slot.get("sold_to").get("id"), self.user1.id)
 
-    def test_sold_time_slot_sale_list_get_success(self):
+    def test_sold_time_slot_sale_list_get_unauthorized(self):
         client = self.client
 
         url = reverse("store:sold-time-slot-sale-list")
@@ -342,7 +342,6 @@ class CartTests(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
-
 
         url = "%s?%s=%s" % (
             reverse("store:sold-time-slot-sale-list"),
@@ -396,3 +395,38 @@ class CartTests(APITestCase):
         response = client.get(url, format="json")
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_sold_time_slot_sale_safe_detail_get_pass(self):
+        client = self.client
+
+        sts_obj = self.sold_time_slot_sale1
+
+        url = reverse("store:sold-time-slot-sale-safe-detail", args=(self.sold_time_slot_sale1.id,))
+        response = client.get(url, format="json")
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("id"), sts_obj.id)
+        self.assertEqual(data.get("consultant").get("id"), sts_obj.consultant.id)
+        self.assertEqual(
+            data.get("start_time"),
+            serializers.DateTimeField().to_representation(sts_obj.start_time)
+        )
+        self.assertEqual(
+            data.get("end_time"),
+            serializers.DateTimeField().to_representation(sts_obj.end_time)
+        )
+        self.assertEqual(
+            data.get("price"),
+            sts_obj.price
+        )
+        self.assertEqual(data.get("sold_to"), None)
+
+    def test_sold_time_slot_sale_safe_list_get_pass(self):
+        client = self.client
+
+        url = reverse("store:sold-time-slot-sale-safe-list")
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), SoldTimeSlotSale.objects.all().count())

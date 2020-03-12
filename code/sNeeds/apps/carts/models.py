@@ -86,11 +86,11 @@ class Cart(models.Model):
 
     def update_price(self):
         products_qs = self.products.all()
-        total = 0
+        subtotal = 0
         for product in products_qs:
-            total += product.price
+            subtotal += product.price
 
-        self.subtotal = total
+        self.subtotal = subtotal
         self._update_total()
 
         self.save()

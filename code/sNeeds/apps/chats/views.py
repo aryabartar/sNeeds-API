@@ -39,8 +39,6 @@ class MessageListAPIView(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = [MultiPartParser, ]
     serializer_class = MessagePolymorphicSerializer
-    filter_backends = [filters.OrderingFilter,
-                       DjangoFilterBackend]
     ordering_fields = ['created']
     filterset_fields = ["chat", "sender"]
 
@@ -56,6 +54,15 @@ class MessageListAPIView(generics.ListCreateAPIView):
         elif message_type is not None:
             qs = Message.objects.none()
 
+        chat = self.request.query_params.get("chat", None)
+        tag = self.request.query_params.get("tag", None)
+        if chat is not None and tag is not None:
+            try:
+                chat = int(chat)
+                tag = int(tag)
+                qs = qs.filter(Q(chat=chat) & Q(tag__gt=tag))
+            except ValueError:
+                pass
         return qs
 
 

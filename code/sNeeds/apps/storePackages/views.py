@@ -3,17 +3,27 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
-from .models import StorePackagePhase, StorePackage
+from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough
 
 
-class StorePackageDetailPhaseThroughListAPIView(generics.ListAPIView):
-    queryset = StorePackagePhase.objects.all()
-    serializer_class = serializers.StorePackageDetailPhaseThroughSerializer
-    lookup_field = 'slug'
-    filterset_fields = ['']
+class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
+    queryset = StorePackagePhaseThrough.objects.all()
+    serializer_class = serializers.StorePackagePhaseThroughSerializer
+    filterset_fields = ['store_package']
 
 
-class StorePackageDetailPhaseThroughDetailAPIView(generics.RetrieveAPIView):
-    queryset = StorePackagePhase.objects.all()
-    serializer_class = serializers.StorePackageDetailPhaseThroughSerializer
+class StorePackagePhaseThroughDetailAPIView(generics.RetrieveAPIView):
+    queryset = StorePackagePhaseThrough.objects.all()
+    serializer_class = serializers.StorePackagePhaseThroughSerializer
+    lookup_field = 'id'
+
+
+class StorePackageListAPIView(generics.ListAPIView):
+    queryset = StorePackage.objects.all()
+    serializer_class = serializers.StorePackageSerializer
+
+
+class StorePackageDetailAPIView(generics.RetrieveAPIView):
+    queryset = StorePackage.objects.all()
+    serializer_class = serializers.StorePackageSerializer
     lookup_field = 'slug'
