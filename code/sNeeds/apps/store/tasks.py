@@ -21,11 +21,9 @@ def delete_time_slots():
 
 
 @shared_task
-def send_notify_sold_time_slot_mail(send_to, name, sold_time_slot_id):
-    sendemail.notify_sold_time_slot(
-        send_to,
-        name,
-        sold_time_slot_id
+def notify_sold_time_slot(send_to, name, sold_time_slot_url, start_time, end_time):
+    sendemail.send_sold_time_slot_email(
+        send_to, name, sold_time_slot_url, start_time, end_time
     )
 
 
