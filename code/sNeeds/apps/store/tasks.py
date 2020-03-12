@@ -5,14 +5,17 @@ from django.utils import timezone
 from sNeeds.utils import sendemail
 
 from .models import TimeSlotSale
+from ...settings.config.variables import TIME_SLOT_SALE_DELETE_TIME
 
 
 @shared_task
 def delete_time_slots():
     """
-    Deletes time slots with less than 24 hours to start.
+    Deletes time slots with less than _ hours to start.
     """
-    qs = TimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(hours=12))
+    qs = TimeSlotSale.objects.filter(
+        start_time__lte=timezone.now() + timezone.timedelta(hours=TIME_SLOT_SALE_DELETE_TIME)
+    )
     qs.delete()
 
 

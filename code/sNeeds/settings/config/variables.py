@@ -1,0 +1,1 @@
+TIME_SLOT_SALE_DELETE_TIME = 24  # hours

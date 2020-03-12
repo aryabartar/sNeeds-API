@@ -16,7 +16,6 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "..", "templates")
 
-
 INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
@@ -93,12 +92,9 @@ WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
-
 USE_I18N = True
 USE_TZ = True
 TIME_ZONE = 'UTC'
-
-
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -163,9 +159,10 @@ ZARINPAL_MERCHANT = APIs.zarinpal_merchant
 # Keys
 ALL_SKYROOM_USERS_PASSWORD = keys.ALL_SKYROOM_USERS_PASSWORD
 
+# CORS
 from corsheaders.defaults import default_headers
 
-#TODO: Make this accurate
+# TODO: Make this accurate
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'CLIENT-TIMEZONE',
     'CLIENT_TIMEZONE',
