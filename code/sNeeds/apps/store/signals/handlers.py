@@ -5,6 +5,7 @@ from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 from sNeeds.apps.store.tasks import notify_sold_time_slot
 from sNeeds.apps.chats.models import Chat
 from sNeeds.settings.config.variables import FRONTEND_URL
+from sNeeds.utils.custom.time_functions import utc_to_jalali_string
 
 
 def pre_delete_product_receiver(sender, instance, *args, **kwargs):
@@ -17,14 +18,17 @@ def pre_delete_product_receiver(sender, instance, *args, **kwargs):
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
     # This is sent for consultants
-    sold_time_slot_url = FRONTEND_URL + "user/sessions/"
     if created:
-        notify_sold_time_slot.delay(
+        sold_time_slot_url = FRONTEND_URL + "user/sessions/"
+        start_time = utc_to_jalali_string(instance.start_time)
+        end_time = utc_to_jalali_string(instance.end_time)
+
+        notify_sold_time_slot(
             send_to=instance.consultant.user.email,
             name=instance.consultant.user.get_full_name(),
             sold_time_slot_url=sold_time_slot_url,
-            start_time=instance.start_time,
-            end_time=instance.end_time
+            start_time=start_time,
+            end_time=end_time
         )
 
 
