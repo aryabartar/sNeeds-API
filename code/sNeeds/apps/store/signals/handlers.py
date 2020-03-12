@@ -15,6 +15,7 @@ def pre_delete_product_receiver(sender, instance, *args, **kwargs):
 
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
+    # This is sent for consultants
     if created:
         send_notify_sold_time_slot_mail.delay(
             instance.consultant.user.email,
