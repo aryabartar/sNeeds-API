@@ -40,4 +40,5 @@ urlpatterns = [
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochat/', include('sNeeds.apps.videochats.urls')),
                   path('chat/', include('sNeeds.apps.chats.urls')),
+                  path('webinar/', include('sNeeds.apps.webinars.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

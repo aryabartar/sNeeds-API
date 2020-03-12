@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.webinars.models import Webinar, SoldWebinar
+
 
 User = get_user_model()
 

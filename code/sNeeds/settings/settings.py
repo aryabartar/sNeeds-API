@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.videochats',
     'sNeeds.apps.chats',
     'sNeeds.apps.storePackages',
+    'sNeeds.apps.webinars',
 
     'django.contrib.auth',
     'django.contrib.admin',

@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from sNeeds.apps.webinars import views
 app_name = "webinars"
 
 urlpatterns = [

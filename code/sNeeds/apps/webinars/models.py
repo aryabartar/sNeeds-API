@@ -1,6 +1,5 @@
 from django.db import models
 from sNeeds.apps.store.models import Product, SoldProduct, ProductQuerySet, SoldProductQuerySet
-from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class Webinar(Product):

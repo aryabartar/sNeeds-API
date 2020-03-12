@@ -1,10 +1,15 @@
 from rest_framework import serializers
 from .models import Webinar, SoldWebinar
-from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
+from ..customAuth.serializers import SafeUserDataSerializer
 
 
 class WebinarSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField()
+    url = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        lookup_field='slug',
+        view_name='webinars:webinar-detail'
+    )
 
     class Meta:
         model = Webinar
