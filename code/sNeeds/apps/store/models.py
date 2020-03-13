@@ -22,6 +22,7 @@ class ProductQuerySet(models.QuerySet):
         return result_qs
 
     def get_webinars(self):
+        from sNeeds.apps.webinars.models import Webinar
         result_qs = Webinar.objects.none()
         for i in self.all():
             try:
@@ -29,6 +30,8 @@ class ProductQuerySet(models.QuerySet):
                 result_qs |= Webinar.objects.filter(pk=webinar_w)
             except Webinar.DoesNotExist:
                 pass
+        return result_qs
+
     def get_store_packages(self):
         from sNeeds.apps.storePackages.models import StorePackage
 
@@ -72,9 +75,9 @@ class TimeSlotSaleManager(models.QuerySet):
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
 
-        sold_tome_slot_sales_list = []
+        sold_time_slot_sales_list = []
         for obj in qs:
-            sold_tome_slot_sales_list.append(
+            sold_time_slot_sales_list.append(
                 SoldTimeSlotSale.objects.create(
                     consultant=obj.consultant,
                     start_time=obj.start_time,
@@ -84,11 +87,11 @@ class TimeSlotSaleManager(models.QuerySet):
                     used=False
                 )
             )
-        sold_tome_slot_sales_qs = SoldTimeSlotSale.objects.filter(id__in=[obj.id for obj in sold_tome_slot_sales_list])
+        sold_time_slot_sales_qs = SoldTimeSlotSale.objects.filter(id__in=[obj.id for obj in sold_time_slot_sales_list])
 
         qs.delete()
 
-        return sold_tome_slot_sales_qs
+        return sold_time_slot_sales_qs
 
 
 class Product(models.Model):

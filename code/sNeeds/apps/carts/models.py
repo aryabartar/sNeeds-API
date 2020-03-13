@@ -101,5 +101,11 @@ class Cart(models.Model):
             self.products.add(p)
         self.save()
 
+    @transaction.atomic
+    def set_webinars(self, products):
+        for p in products:
+            self.products.add(p)
+        self.save()
+
     def __str__(self):
         return "User {} cart | pk: {}".format(self.user, str(self.pk))

@@ -13,7 +13,7 @@ class WebinarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Webinar
-        fields = ('id', 'title', 'slug', 'active')
+        fields = ('id', 'title', 'slug', 'active', 'price')
 
         extra_kwargs = {
             'id': {'read_only': True},
