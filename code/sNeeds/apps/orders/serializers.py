@@ -40,7 +40,7 @@ class OrderSerializer(serializers.ModelSerializer):
         ).data
 
     def get_sold_webinars(self, obj):
-        sold_webinars = obj.sold_products.all().get_webinars()
+        sold_webinars = obj.sold_products.all().get_sold_webinars()
         return SoldWebinarSerializer(
             sold_webinars, many=True, context={"request": self.context.get("request")}
         ).data
