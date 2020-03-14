@@ -22,9 +22,11 @@ django-filter==2.1.0
 django-polymorphic==2.1.2
 django-rest-passwordreset==1.0.0
 django-rest-polymorphic==0.1.8
+django-storages==1.9.1
 djangorestframework==3.9.4
 djangorestframework-jwt==1.11.0
 drf-yasg==1.17.0
+dropbox==9.4.0
 flower==0.9.3
 future==0.17.1
 gunicorn==19.9.0
@@ -48,12 +50,14 @@ pycodestyle==2.5.0
 pycoin==0.90.20190630
 PyJWT==1.7.1
 pyparsing==2.4.5
+python-bidi==0.4.2
 python-dateutil==2.8.0
 python-http-client==3.1.0
 pytz==2019.1
 redis==3.3.7
 requests==2.22.0
 requests-toolbelt==0.9.1
+rtl==0.4.3
 ruamel.yaml==0.15.99
 sendgrid==6.0.5
 sib-api-v3-sdk==6.0.2
