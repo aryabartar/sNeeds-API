@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.discounts.models import Discount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldProduct
 
 User = get_user_model()
@@ -24,8 +24,8 @@ class OrderManager(models.Manager):
         store_packages_qs = cart_products.get_store_packages()
 
         try:
-            used_consultant_discount = CartConsultantDiscount.objects.get(cart=cart).consultant_discount
-        except CartConsultantDiscount.DoesNotExist:
+            used_consultant_discount = CartDiscount.objects.get(cart=cart).consultant_discount
+        except CartDiscount.DoesNotExist:
             used_consultant_discount = None
 
         try:

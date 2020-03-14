@@ -47,12 +47,12 @@ class Cart(models.Model):
         return self.products.all().get_time_slot_sales().count()
 
     def _update_total_cart_consultant_discount_percent(self):
-        from sNeeds.apps.discounts.models import CartConsultantDiscount
+        from sNeeds.apps.discounts.models import CartDiscount
 
         products = self.products.all()
         try:
-            cart_consultant_discount = CartConsultantDiscount.objects.get(cart__id=self.id)
-        except CartConsultantDiscount.DoesNotExist:
+            cart_consultant_discount = CartDiscount.objects.get(cart__id=self.id)
+        except CartDiscount.DoesNotExist:
             self.total = self.subtotal
             return
 

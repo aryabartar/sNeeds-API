@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from .models import CartConsultantDiscount, Discount, TimeSlotSaleNumberDiscount
+from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
 
 
 class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
@@ -29,7 +29,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     consultant_discount = serializers.SerializerMethodField()
 
     class Meta:
-        model = CartConsultantDiscount
+        model = CartDiscount
         fields = ['id', 'cart', 'consultant_discount', 'url', 'code', ]
 
     def get_consultant_discount(self, obj):
@@ -49,7 +49,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         cart = attrs.get("cart")
 
         # Checking that discount is applied in the cart
-        qs = CartConsultantDiscount.objects.filter(cart=cart, )
+        qs = CartDiscount.objects.filter(cart=cart, )
         if qs.exists():
             raise ValidationError(_("This cart has an active code"))
 
@@ -71,7 +71,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
         except Discount.DoesNotExist:
             consultant_discount = None
 
-        obj = CartConsultantDiscount.objects.create(
+        obj = CartDiscount.objects.create(
             cart=validated_data.get("cart"),
             consultant_discount=consultant_discount
         )

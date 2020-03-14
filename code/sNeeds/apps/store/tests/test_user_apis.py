@@ -13,7 +13,7 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.discounts.models import Discount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
@@ -191,7 +191,7 @@ class CartTests(APITestCase):
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])
 
         # Cart consultant discounts
-        self.cart_consultant_discount1 = CartConsultantDiscount.objects.create(
+        self.cart_consultant_discount1 = CartDiscount.objects.create(
             cart=self.cart1,
             consultant_discount=self.consultant_discount1
         )
