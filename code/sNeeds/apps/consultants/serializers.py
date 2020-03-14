@@ -39,6 +39,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     )
     first_name = serializers.SerializerMethodField(read_only=True)
     last_name = serializers.SerializerMethodField(read_only=True)
+    rate = serializers.SerializerMethodField()
 
     universities = UniversitySerializer(many=True, read_only=True)
     field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
@@ -56,3 +57,8 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     def get_last_name(self, obj):
         return obj.user.last_name
+
+    def get_rate(self, obj):
+        if obj.rate is None:
+            return None
+        return round(obj.rate, 2)
