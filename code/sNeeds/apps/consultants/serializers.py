@@ -61,4 +61,4 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     def get_rate(self, obj):
         if obj.rate is None:
             return None
-        return round(obj.rate, 2)
+        return '{0:g}'.format(round(obj.rate, 2))
