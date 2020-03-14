@@ -34,7 +34,7 @@ class CICharField(models.CharField):
         return str(value).lower()
 
 
-class ConsultantDiscount(models.Model):
+class Discount(models.Model):
     consultants = models.ManyToManyField(ConsultantProfile)
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -48,7 +48,7 @@ class ConsultantDiscount(models.Model):
 class CartConsultantDiscount(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, )
     consultant_discount = models.ForeignKey(
-        ConsultantDiscount,
+        Discount,
         on_delete=models.CASCADE,
     )
 

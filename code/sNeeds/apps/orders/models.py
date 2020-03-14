@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.models import Discount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldProduct
 
 User = get_user_model()
@@ -65,7 +65,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     # TODO:Change to code.
-    used_consultant_discount = models.ForeignKey(ConsultantDiscount, null=True, blank=True, on_delete=models.SET_NULL)
+    used_consultant_discount = models.ForeignKey(Discount, null=True, blank=True, on_delete=models.SET_NULL)
     time_slot_sales_number_discount = models.FloatField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
     )

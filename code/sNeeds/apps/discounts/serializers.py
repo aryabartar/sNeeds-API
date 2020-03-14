@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
-from .models import CartConsultantDiscount, ConsultantDiscount, TimeSlotSaleNumberDiscount
+from .models import CartConsultantDiscount, Discount, TimeSlotSaleNumberDiscount
 
 
 class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
@@ -13,7 +13,7 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
 
 class ConsultantDiscountSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ConsultantDiscount
+        model = Discount
         fields = ['consultants', 'percent', ]
 
 
@@ -39,8 +39,8 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     def validate_code(self, code):
         # Checking that code is valid and active
         try:
-            ConsultantDiscount.objects.get(code__iexact=code)
-        except ConsultantDiscount.DoesNotExist:
+            Discount.objects.get(code__iexact=code)
+        except Discount.DoesNotExist:
             raise ValidationError(_("Code is not valid"))
 
         return code
@@ -54,7 +54,7 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             raise ValidationError(_("This cart has an active code"))
 
         # Checking that user has bought a session with the code's consultant or not
-        discount = ConsultantDiscount.objects.get(code=attrs.get("consultant_discount").get("code"))
+        discount = Discount.objects.get(code=attrs.get("consultant_discount").get("code"))
         discount_consultants_id = list(discount.consultants.all().values_list('id', flat=True))
         cart_products_consultants_id = list(
             cart.products.all().get_time_slot_sales().values_list('consultant', flat=True)
@@ -67,8 +67,8 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         code = validated_data.get("consultant_discount", {}).get('code')
         try:
-            consultant_discount = ConsultantDiscount.objects.get(code__iexact=code)
-        except ConsultantDiscount.DoesNotExist:
+            consultant_discount = Discount.objects.get(code__iexact=code)
+        except Discount.DoesNotExist:
             consultant_discount = None
 
         obj = CartConsultantDiscount.objects.create(

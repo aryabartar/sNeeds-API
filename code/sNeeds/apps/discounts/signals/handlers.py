@@ -3,7 +3,7 @@ from django.db.models.signals import pre_save, post_delete, m2m_changed, post_sa
 from sNeeds.apps.discounts.models import (
     TimeSlotSaleNumberDiscount,
     CartConsultantDiscount,
-    ConsultantDiscount
+    Discount
 )
 from sNeeds.apps.carts.models import Cart
 
@@ -49,5 +49,5 @@ post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleN
 post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_save.connect(post_save_cart_consultant_discount, sender=CartConsultantDiscount)
 post_delete.connect(post_delete_cart_consultant_discount, sender=CartConsultantDiscount)
-post_save.connect(post_save_consultant_discount, sender=ConsultantDiscount)
-m2m_changed.connect(m2m_changed_consultant_discount, sender=ConsultantDiscount.consultants.through)
+post_save.connect(post_save_consultant_discount, sender=Discount)
+m2m_changed.connect(m2m_changed_consultant_discount, sender=Discount.consultants.through)

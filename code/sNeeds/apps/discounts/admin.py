@@ -1,11 +1,11 @@
 from django.contrib import admin
 
-from .models import TimeSlotSaleNumberDiscount, ConsultantDiscount, CartConsultantDiscount
+from .models import TimeSlotSaleNumberDiscount, Discount, CartConsultantDiscount
 
 admin.site.register(TimeSlotSaleNumberDiscount)
 
 
-@admin.register(ConsultantDiscount)
+@admin.register(Discount)
 class ConsultantDiscountAdmin(admin.ModelAdmin):
     list_display = ('percent',)
 
