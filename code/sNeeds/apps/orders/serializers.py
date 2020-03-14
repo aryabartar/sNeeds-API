@@ -12,18 +12,18 @@ from ..store.serializers import SoldTimeSlotSaleSerializer
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
     sold_time_slot_sales = serializers.SerializerMethodField()
-    used_consultant_discount = serializers.SerializerMethodField()
+    used_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_time_slot_sales', 'created', 'updated',
-                  'used_consultant_discount', 'time_slot_sales_number_discount', ]
+                  'used_discount', 'time_slot_sales_number_discount', ]
 
         extra_kwargs = {
             'id': {'read_only': True},
             'order_id': {'read_only': True},
             'status': {'read_only': True},
-            'used_consultant_discount': {'read_only': True},
+            'used_discount': {'read_only': True},
             'time_slot_sales_number_discount': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
@@ -37,13 +37,13 @@ class OrderSerializer(serializers.ModelSerializer):
             sold_time_slot_sales, many=True, context={"request": self.context.get("request")}
         ).data
 
-    def get_used_consultant_discount(self, obj):
-        if obj.used_consultant_discount is None:
+    def get_used_discount(self, obj):
+        if obj.used_discount is None:
             return None
         else:
             return {
-                "code": obj.used_consultant_discount.code,
-                "percent": obj.used_consultant_discount.percent
+                "code": obj.used_discount.code,
+                "percent": obj.used_discount.percent
             }
 
     def validate(self, attrs):

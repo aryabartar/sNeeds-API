@@ -11,30 +11,30 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
         fields = ['number', 'discount', ]
 
 
-class ConsultantDiscountSerializer(serializers.ModelSerializer):
+class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
         fields = ['consultants', 'percent', ]
 
 
-class CartConsultantDiscountSerializer(serializers.ModelSerializer):
+class CartDiscountSerializer(serializers.ModelSerializer):
     code = serializers.CharField(
-        source="consultant_discount.code",
+        source="discount.code",
         required=True, max_length=128
     )
     url = serializers.HyperlinkedIdentityField(
-        view_name="discount:cart-consultant-discount-detail",
+        view_name="discount:cart-discount-detail",
         lookup_field='id'
     )
-    consultant_discount = serializers.SerializerMethodField()
+    discount = serializers.SerializerMethodField()
 
     class Meta:
         model = CartDiscount
-        fields = ['id', 'cart', 'consultant_discount', 'url', 'code', ]
+        fields = ['id', 'cart', 'discount', 'url', 'code', ]
 
-    def get_consultant_discount(self, obj):
-        consultant_discount_serialize = ConsultantDiscountSerializer(obj.consultant_discount)
-        return consultant_discount_serialize.data
+    def get_discount(self, obj):
+        discount_serialize = DiscountSerializer(obj.consultant_discount)
+        return discount_serialize.data
 
     def validate_code(self, code):
         # Checking that code is valid and active
@@ -54,26 +54,26 @@ class CartConsultantDiscountSerializer(serializers.ModelSerializer):
             raise ValidationError(_("This cart has an active code"))
 
         # Checking that user has bought a session with the code's consultant or not
-        discount = Discount.objects.get(code=attrs.get("consultant_discount").get("code"))
-        discount_consultants_id = list(discount.consultants.all().values_list('id', flat=True))
+        discount = Discount.objects.get(code=attrs.get("discount").get("code"))
+        discounts_id = list(discount.consultants.all().values_list('id', flat=True))
         cart_products_consultants_id = list(
             cart.products.all().get_time_slot_sales().values_list('consultant', flat=True)
         )
-        if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0:
+        if len(list(set(discounts_id) & set(cart_products_consultants_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
         return attrs
 
     def create(self, validated_data):
-        code = validated_data.get("consultant_discount", {}).get('code')
+        code = validated_data.get("discount", {}).get('code')
         try:
-            consultant_discount = Discount.objects.get(code__iexact=code)
+            discount = Discount.objects.get(code__iexact=code)
         except Discount.DoesNotExist:
-            consultant_discount = None
+            discount = None
 
         obj = CartDiscount.objects.create(
             cart=validated_data.get("cart"),
-            consultant_discount=consultant_discount
+            discount=discount
         )
 
         return obj

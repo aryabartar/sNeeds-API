@@ -65,7 +65,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     # TODO:Change to code.
-    used_consultant_discount = models.ForeignKey(Discount, null=True, blank=True, on_delete=models.SET_NULL)
+    used_discount = models.ForeignKey(Discount, null=True, blank=True, on_delete=models.SET_NULL)
     time_slot_sales_number_discount = models.FloatField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
     )
