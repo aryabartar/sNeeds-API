@@ -178,22 +178,22 @@ class CartTests(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Consultant discounts
-        self.consultant_discount1 = Discount.objects.create(
+        self.discount1 = Discount.objects.create(
             percent=10,
             code="discountcode1",
         )
-        self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
-        self.consultant_discount2 = Discount.objects.create(
+        self.discount2 = Discount.objects.create(
             percent=20,
             code="discountcode2",
         )
-        self.consultant_discount2.consultants.set([self.consultant1_profile, ])
+        self.discount2.consultants.set([self.consultant1_profile, ])
 
         # Cart consultant discounts
-        self.cart_consultant_discount1 = CartDiscount.objects.create(
+        self.cart_discount1 = CartDiscount.objects.create(
             cart=self.cart1,
-            consultant_discount=self.consultant_discount1
+            discount=self.discount1
         )
 
         # Setup ------

@@ -20,26 +20,26 @@ def post_delete_time_slot_sale_number_discount(sender, instance, *args, **kwargs
         obj.update_price()
 
 
-def post_save_cart_consultant_discount(sender, instance, *args, **kwargs):
+def post_save_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
     cart.update_price()
 
 
-def post_delete_cart_consultant_discount(sender, instance, *args, **kwargs):
+def post_delete_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
     cart.update_price()
 
 
-def post_save_consultant_discount(sender, instance, *args, **kwargs):
-    qs = CartDiscount.objects.filter(consultant_discount=instance)
+def post_save_discount(sender, instance, *args, **kwargs):
+    qs = CartDiscount.objects.filter(discount=instance)
     for obj in qs:
         cart = obj.cart
         cart.update_price()
 
 
-def m2m_changed_consultant_discount(sender, instance, action, *args, **kwargs):
+def m2m_changed_discount(sender, instance, action, *args, **kwargs):
     if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-        qs = CartDiscount.objects.filter(consultant_discount=instance)
+        qs = CartDiscount.objects.filter(discount=instance)
         for obj in qs:
             cart = obj.cart
             cart.update_price()
@@ -47,7 +47,7 @@ def m2m_changed_consultant_discount(sender, instance, action, *args, **kwargs):
 
 post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
-post_save.connect(post_save_cart_consultant_discount, sender=CartDiscount)
-post_delete.connect(post_delete_cart_consultant_discount, sender=CartDiscount)
-post_save.connect(post_save_consultant_discount, sender=Discount)
-m2m_changed.connect(m2m_changed_consultant_discount, sender=Discount.consultants.through)
+post_save.connect(post_save_cart_discount, sender=CartDiscount)
+post_delete.connect(post_delete_cart_discount, sender=CartDiscount)
+post_save.connect(post_save_discount, sender=Discount)
+m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)

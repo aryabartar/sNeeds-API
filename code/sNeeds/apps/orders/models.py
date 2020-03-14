@@ -24,9 +24,9 @@ class OrderManager(models.Manager):
         store_packages_qs = cart_products.get_store_packages()
 
         try:
-            used_consultant_discount = CartDiscount.objects.get(cart=cart).consultant_discount
+            used_discount = CartDiscount.objects.get(cart=cart).discount
         except CartDiscount.DoesNotExist:
-            used_consultant_discount = None
+            used_discount = None
 
         try:
             time_slot_sales_number_discount_number = TimeSlotSaleNumberDiscount.objects.get(
@@ -43,7 +43,7 @@ class OrderManager(models.Manager):
             status='paid',
             total=cart.total,
             subtotal=cart.subtotal,
-            used_consultant_discount=used_consultant_discount,
+            used_discount=used_discount,
             time_slot_sales_number_discount=time_slot_sales_number_discount_number
         )
 

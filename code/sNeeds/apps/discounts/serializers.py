@@ -33,7 +33,7 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         fields = ['id', 'cart', 'discount', 'url', 'code', ]
 
     def get_discount(self, obj):
-        discount_serialize = DiscountSerializer(obj.consultant_discount)
+        discount_serialize = DiscountSerializer(obj.discount)
         return discount_serialize.data
 
     def validate_code(self, code):

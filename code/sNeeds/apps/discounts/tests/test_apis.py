@@ -150,34 +150,34 @@ class CartTests(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Consultant discounts
-        self.consultant_discount1 = Discount.objects.create(
+        self.discount1 = Discount.objects.create(
             percent=10,
             code="discountcode1",
         )
-        self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
-        self.consultant_discount2 = Discount.objects.create(
+        self.discount2 = Discount.objects.create(
             percent=20,
             code="discountcode2",
         )
-        self.consultant_discount2.consultants.set([self.consultant1_profile, ])
+        self.discount2.consultants.set([self.consultant1_profile, ])
 
         # Cart consultant discounts
-        self.cart_consultant_discount1 = CartDiscount.objects.create(
+        self.cart_discount1 = CartDiscount.objects.create(
             cart=self.cart1,
-            consultant_discount=self.consultant_discount1
+            discount=self.discount1
         )
 
         # Setup ------
         self.client = APIClient()
 
-    def test_cart_consultant_discounts_list_number(self):
+    def test_cart_discounts_list_number(self):
         CartDiscount.objects.create(
             cart=self.cart3,
-            consultant_discount=self.consultant_discount2
+            discount=self.discount2
         )
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
@@ -186,119 +186,119 @@ class CartTests(APITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get("cart"), self.cart1.id)
 
-    def test_cart_consultant_discounts_list_get_query_parameter(self):
+    def test_cart_discounts_list_get_query_parameter(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         CartDiscount.objects.create(
             cart=self.cart2,
-            consultant_discount=self.consultant_discount2
+            discount=self.discount2
         )
         # Test 1
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         response = client.get(url, {}, format='json')
         self.assertEqual(len(response.data), 2)
 
         # Test 2
         url = "%s?%s=%i" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", self.cart_consultant_discount1.cart.id)
+            reverse("discount:cart-discount-list"), "cart", self.cart_discount1.cart.id)
         response = client.get(url, {}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0].get("cart"), self.cart1.id)
 
-    def test_cart_consultant_discounts_list_get_query_parameter_permission(self):
+    def test_cart_discounts_list_get_query_parameter_permission(self):
         client = self.client
         client.login(email='u2@g.com', password='user1234')
 
         url = "%s?%s=%s" % (
-            reverse("discount:cart-consultant-discounts-list"), "cart", str(self.cart_consultant_discount1.cart.id))
+            reverse("discount:cart-discount-list"), "cart", str(self.cart_discount1.cart.id))
         response = client.get(url, {}, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-    def test_cart_consultant_discount_post(self):
+    def test_cart_discount_post(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": self.cart2.id,
-            "code": self.consultant_discount1.code
+            "code": self.discount1.code
         }
         response = client.post(url, post_data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['cart'], self.cart2.id)
-        self.assertEqual(response.data['code'], self.consultant_discount1.code)
-        self.assertDictEqual(response.data['consultant_discount'],
-                             DiscountSerializer(self.consultant_discount1).data)
+        self.assertEqual(response.data['code'], self.discount1.code)
+        self.assertDictEqual(response.data['discount'],
+                             DiscountSerializer(self.discount1).data)
 
-    def test_cart_consultant_discount_post_fail_unauthorized(self):
+    def test_cart_discount_post_fail_unauthorized(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": self.cart3.id,
-            "code": self.consultant_discount1.code
+            "code": self.discount1.code
         }
         response = client.post(url, post_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_cart_consultant_discount_post_fail_more_than_one_discount_on_one_cart(self):
+    def test_cart_discount_post_fail_more_than_one_discount_on_one_cart(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": self.cart1.id,
-            "code": self.consultant_discount2.code
+            "code": self.discount2.code
         }
         response = client.post(url, post_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_cart_consultant_discount_post_fail_no_relevant_product_in_cart(self):
+    def test_cart_discount_post_fail_no_relevant_product_in_cart(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         temp_cart = Cart.objects.create(user=self.user1)
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
 
-        temp_consultant_discount = Discount.objects.create(
+        temp_discount = Discount.objects.create(
             percent=20,
-            code="temp_consultant_discount",
+            code="temp_discount",
         )
-        temp_consultant_discount.consultants.set([self.consultant2_profile])
+        temp_discount.consultants.set([self.consultant2_profile])
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": temp_cart.id,
-            "code": temp_consultant_discount.code
+            "code": temp_discount.code
         }
 
         response = client.post(url, post_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_cart_consultant_discount_correct_total_subtotal_update_1(self):
+    def test_cart_discount_correct_total_subtotal_update_1(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         temp_cart = Cart.objects.create(user=self.user1)
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
 
-        temp_consultant_discount = Discount.objects.create(
+        temp_discount = Discount.objects.create(
             percent=20,
-            code="temp_consultant_discount",
+            code="temp_discount",
         )
-        temp_consultant_discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        temp_discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": temp_cart.id,
-            "code": temp_consultant_discount.code
+            "code": temp_discount.code
         }
 
         response = client.post(url, post_data, format='json')
@@ -310,23 +310,23 @@ class CartTests(APITestCase):
         self.assertEqual(response.data.get("total"), 160)
         self.assertEqual(response.data.get("subtotal"), 200)
 
-    def test_cart_consultant_discount_correct_total_subtotal_update_2(self):
+    def test_cart_discount_correct_total_subtotal_update_2(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
         temp_cart = Cart.objects.create(user=self.user1)
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale4])
 
-        temp_consultant_discount = Discount.objects.create(
+        temp_discount = Discount.objects.create(
             percent=20,
-            code="temp_consultant_discount",
+            code="temp_discount",
         )
-        temp_consultant_discount.consultants.set([self.consultant1_profile, ])
+        temp_discount.consultants.set([self.consultant1_profile, ])
 
-        url = reverse("discount:cart-consultant-discounts-list")
+        url = reverse("discount:cart-discount-list")
         post_data = {
             "cart": temp_cart.id,
-            "code": temp_consultant_discount.code
+            "code": temp_discount.code
         }
 
         response = client.post(url, post_data, format='json')
@@ -338,67 +338,67 @@ class CartTests(APITestCase):
         self.assertEqual(response.data.get("total"), 160)
         self.assertEqual(response.data.get("subtotal"), 180)
 
-    def test_cart_consultant_discount_detail_get(self):
+    def test_cart_discount_detail_get(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get("cart"), self.cart_consultant_discount1.cart.id)
+        self.assertEqual(response.data.get("cart"), self.cart_discount1.cart.id)
 
-    def test_cart_consultant_discount_detail_get_no_permission(self):
+    def test_cart_discount_detail_get_no_permission(self):
         client = self.client
         client.login(email='u2@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_cart_consultant_discount_detail_get_unauthorized(self):
+    def test_cart_discount_detail_get_unauthorized(self):
         client = self.client
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_cart_consultant_discount_detail_delete(self):
+    def test_cart_discount_detail_delete(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_cart_consultant_discount_detail_delete_no_permission(self):
+    def test_cart_discount_detail_delete_no_permission(self):
         client = self.client
         client.login(email='u2@g.com', password='user1234')
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_cart_consultant_discount_detail_delete_unauthorized(self):
+    def test_cart_discount_detail_delete_unauthorized(self):
         client = self.client
 
-        url = reverse("discount:cart-consultant-discount-detail", args=(self.cart_consultant_discount1.id,))
+        url = reverse("discount:cart-discount-detail", args=(self.cart_discount1.id,))
         response = client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_cart_consultant_discount_delete_updates_cart_total_subtotal(self):
+    def test_cart_discount_delete_updates_cart_total_subtotal(self):
         self.assertEqual(self.cart1.total, 180)
         self.assertEqual(self.cart1.subtotal, 200)
-        self.cart_consultant_discount1.delete()
+        self.cart_discount1.delete()
         self.assertEqual(self.cart1.total, 200)
         self.assertEqual(self.cart1.total, 200)
 
-    def test_cart_consultant_discount_delete_updates_cart_total_subtotal(self):
+    def test_cart_discount_delete_updates_cart_total_subtotal(self):
         self.assertEqual(self.cart1.total, 180)
         self.assertEqual(self.cart1.subtotal, 200)
-        self.cart_consultant_discount1.delete()
+        self.cart_discount1.delete()
         self.assertEqual(self.cart1.total, 200)
         self.assertEqual(self.cart1.total, 200)
 

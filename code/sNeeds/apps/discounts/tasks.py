@@ -7,7 +7,7 @@ from .models import Discount
 
 
 @task()
-def activate_consultant_discount():
+def activate_discount():
 	now = timezone.now()
 	qs = Discount.objects.filter(
 		Q(start_time__lte=now) & Q(end_time__gt=now)
@@ -16,6 +16,6 @@ def activate_consultant_discount():
 
 
 @task()
-def deactivate_consultant_discount():
+def deactivate_discount():
 	qs = Discount.objects.filter(end_time__lte=timezone.now())
 	qs.delete()
