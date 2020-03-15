@@ -23,12 +23,12 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.store.tasks.delete_time_slots',
         'schedule': timedelta(minutes=1),
     },
+    'database-regular-backup': {
+        'task': 'sNeeds.apps.customUtils.tasks.backup_database',
+        'schedule': timedelta(seconds=10),
+    },
     'sold-time-slot-start-reminder': {
         'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
         'schedule': crontab(hour=18, minute=30),  # In UTC | 10 PM in Iran
-    },
-    'database-regular-backup': {
-        'task': 'sNeeds.apps.customUtils.tasks.backup_database',
-        'schedule': crontab(minute=1),
     },
 }
