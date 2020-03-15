@@ -25,7 +25,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'database-regular-backup': {
         'task': 'sNeeds.apps.customUtils.tasks.backup_database',
-        'schedule': timedelta(seconds=10),
+        'schedule': timedelta(days=1),
     },
     'sold-time-slot-start-reminder': {
         'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
