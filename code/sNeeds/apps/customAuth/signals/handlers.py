@@ -38,13 +38,11 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
                                                    reset_password_token.key),
         'token': reset_password_token.key,
     }
-    reset_link = FRONTEND_URL + "account/password-reset/?token={}".format(context['token'])
+    reset_link = FRONTEND_URL + "auth/forget?token={}".format(context['token'])
 
-    print("hkjkj")
-    print(
-        send_reset_password_email(
-            context['email'],
-            context['current_user'].get_full_name(),
-            reset_link,
-        )
+
+    send_reset_password_email(
+        context['email'],
+        context['current_user'].get_full_name(),
+        reset_link,
     )
