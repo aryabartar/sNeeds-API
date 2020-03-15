@@ -13,10 +13,6 @@ class TimezoneTimeDetailAPIView(APIView):
     """
 
     def get(self, request, timezone):
-        from django.core.management import call_command
-
-        call_command('dbbackup')
-
         import pytz
         timezone = timezone.replace("-", "/")
         try:
