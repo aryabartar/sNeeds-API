@@ -27,4 +27,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
         'schedule': crontab(hour=18, minute=30),  # In UTC | 10 PM in Iran
     },
+    'database-regular-backup': {
+        'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
+        'schedule': crontab(hour=18, minute=30),  # In UTC | 10 PM in Iran
+    },
 }

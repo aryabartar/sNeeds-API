@@ -18,6 +18,7 @@ import os
 # DROPBOX_OAUTH2_TOKEN = dropbox
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "..", "templates")
 
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.videochats',
     'sNeeds.apps.chats',
     'sNeeds.apps.storePackages',
+    'sNeeds.apps.customUtils',
 
     'django.contrib.auth',
     'django.contrib.admin',
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'dbbackup',
     'django_cleanup',  # should go after your apps
 ]
 # Imported key to prevent circular imports.
@@ -175,3 +178,13 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'HTTP_CLIENT_TIMEZONE',
     'HTTP_CLIENT-TIMEZONE'
 ]
+
+# dbbackup -------
+from .secure.APIs import dropbox_sneeds_backups_app
+
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': dropbox_sneeds_backups_app,
+}
+# TODO: Add PGP encryption.
+# ---------------------
