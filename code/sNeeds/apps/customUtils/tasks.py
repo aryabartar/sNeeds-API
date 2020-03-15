@@ -6,5 +6,7 @@ from django.core.management import call_command
 
 @shared_task
 def backup_database():
-    call_command('dbbackup')
+    from sNeeds.settings.config.variables import SERVER_NAME
+    server_name_args = "-s=" + SERVER_NAME
+    call_command('dbbackup', server_name_args)
 
