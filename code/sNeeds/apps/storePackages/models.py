@@ -114,22 +114,7 @@ class StorePackagePhaseThrough(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePackage(models.Model):
-    store_package = models.ForeignKey(StorePackage, on_delete=models.SET_NULL, null=True)
-    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
-    sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
-
-
-class SoldStorePackagePhase(SoldProduct):
-    title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
-    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
-
-
-class UnpaidStorePackagePhase(models.Model):
+class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
         max_length=1024,
@@ -138,4 +123,18 @@ class UnpaidStorePackagePhase(models.Model):
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
-    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
+    phase_number = models.IntegerField()
+    paid = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['phase_number',]
+
+
+class SoldStorePackage(models.Model):
+    store_package = models.ForeignKey(StorePackage, on_delete=models.SET_NULL, null=True)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
+    sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
+
+    sold_store_package_phases = models.ManyToManyField(
+        SoldStorePackagePhase
+    )
