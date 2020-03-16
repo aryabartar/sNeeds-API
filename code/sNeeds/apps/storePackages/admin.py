@@ -11,7 +11,7 @@ class StorePackagePhaseThroughInline(admin.TabularInline):
 @admin.register(StorePackage)
 class StorePackageAdmin(admin.ModelAdmin):
     inlines = (StorePackagePhaseThroughInline,)
-    readonly_fields = ["price", ]
+    readonly_fields = ["price", "total_price", ]
 
 
 admin.site.register(StorePackagePhase)

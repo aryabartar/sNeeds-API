@@ -25,9 +25,16 @@ def post_delete_store_package_phase_through(sender, instance, *args, **kwargs):
     instance.store_package.save()
 
 
+def post_save_store_package(sender, instance, *args, **kwargs):
+    from sNeeds.apps.carts.models import Cart
+    carts_qs = Cart.objects.filter(products__in=[instance])
+    carts_qs.update_price()
+
+
 pre_save.connect(pre_save_store_package, sender=StorePackage)
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
+post_save.connect(post_save_store_package, sender=StorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
 
 post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)

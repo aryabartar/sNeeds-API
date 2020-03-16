@@ -20,6 +20,13 @@ class CartManager(models.QuerySet):
         obj.products.add(*products)
         return obj
 
+    @transaction.atomic
+    def update_price(self):
+        qs = self._chain()
+        for obj in qs:
+            obj.update_price()
+        return qs
+
 
 class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
