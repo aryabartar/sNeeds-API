@@ -13,8 +13,8 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
-from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
+from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.serializers import DiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.serializers import SoldTimeSlotSaleSerializer
@@ -156,22 +156,22 @@ class CartTests(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         # Consultant discounts
-        self.consultant_discount1 = ConsultantDiscount.objects.create(
+        self.discount1 = Discount.objects.create(
             percent=10,
             code="discountcode1",
         )
-        self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
-        self.consultant_discount2 = ConsultantDiscount.objects.create(
+        self.discount2 = Discount.objects.create(
             percent=20,
             code="discountcode2",
         )
-        self.consultant_discount2.consultants.set([self.consultant1_profile, ])
+        self.discount2.consultants.set([self.consultant1_profile, ])
 
         # Cart consultant discounts
-        self.cart_consultant_discount1 = CartConsultantDiscount.objects.create(
+        self.cart_discount1 = CartDiscount.objects.create(
             cart=self.cart1,
-            consultant_discount=self.consultant_discount1
+            discount=self.discount1
         )
 
         self.time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.create(
@@ -229,9 +229,9 @@ class CartTests(APITestCase):
             )
 
         try:
-            cart1_consultant_discount = CartConsultantDiscount.objects.get(cart=self.cart1).consultant_discount
-        except CartConsultantDiscount.DoesNotExist:
-            cart1_consultant_discount = None
+            cart1_discount = CartDiscount.objects.get(cart=self.cart1).discount
+        except CartDiscount.DoesNotExist:
+            cart1_discount = None
 
         cart1_time_slot_sale_number_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(
             self.cart1.products.all().get_time_slot_sales().count()
@@ -259,7 +259,7 @@ class CartTests(APITestCase):
 
         self.assertEqual(order.user, cart1_user)
         self.assertEqual(order.status, "paid")
-        self.assertEqual(order.used_consultant_discount, cart1_consultant_discount)
+        self.assertEqual(order.used_discount, cart1_discount)
         self.assertEqual(order.time_slot_sales_number_discount, cart1_time_slot_sale_number_discount)
         self.assertEqual(order.total, cart1_total)
         self.assertEqual(order.subtotal, cart1_subtotal)
@@ -361,8 +361,8 @@ class CartTests(APITestCase):
             serializers.DateTimeField().to_representation(order1.updated)
         )
         self.assertEqual(
-            response_data.get("used_consultant_discount"),
-            {"code": order1.used_consultant_discount.code, "percent": order1.used_consultant_discount.percent}
+            response_data.get("used_discount"),
+            {"code": order1.used_discount.code, "percent": order1.used_discount.percent}
         )
         self.assertEqual(response_data.get("time_slot_sales_number_discount"), order1.time_slot_sales_number_discount)
         self.assertEqual(response_data.get("subtotal"), order1.subtotal)

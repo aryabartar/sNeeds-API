@@ -19,8 +19,6 @@ from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 User = get_user_model()
 
 
-# from sNeeds.apps.carts.models import Cart
-
 class CartTests(CustomAPITestCase):
     def setUp(self):
         super().setUp()

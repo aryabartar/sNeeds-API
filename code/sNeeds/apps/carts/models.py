@@ -32,19 +32,30 @@ class Cart(models.Model):
 
     objects = CartManager.as_manager()
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    def clean(self):
+        from sNeeds.apps.consultants.models import ConsultantProfile
+        if ConsultantProfile.objects.filter(user=self.user).exists():
+            raise ValidationError({
+                "user": "Cart user can not be a consultant.",
+            })
+
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
     def get_webinars_count(self):
         return self.products.all().get_webinars().count()
 
-    def _update_total_cart_consultant_discount_percent(self):
-        from sNeeds.apps.discounts.models import CartConsultantDiscount
+    def _update_total_cart_discount_percent(self):
+        from sNeeds.apps.discounts.models import CartDiscount
 
         products = self.products.all()
         try:
-            cart_consultant_discount = CartConsultantDiscount.objects.get(cart__id=self.id)
-        except CartConsultantDiscount.DoesNotExist:
+            cart_discount = CartDiscount.objects.get(cart__id=self.id)
+        except CartDiscount.DoesNotExist:
             self.total = self.subtotal
             return
 
@@ -55,9 +66,9 @@ class Cart(models.Model):
             # For TimeSlots
             try:
                 time_slot_sale = product.timeslotsale  # Checks here
-                consultants_qs = cart_consultant_discount.consultant_discount.consultants.all()
+                consultants_qs = cart_discount.discount.consultants.all()
                 if time_slot_sale.consultant in consultants_qs:
-                    percent += cart_consultant_discount.consultant_discount.percent
+                    percent += cart_discount.discount.percent
             except TimeSlotSale.DoesNotExist:
                 pass
 
@@ -79,7 +90,7 @@ class Cart(models.Model):
 
     def _update_total(self):
         # For code discount
-        self._update_total_cart_consultant_discount_percent()
+        self._update_total_cart_discount_percent()
 
         # For quantity discount
         self._update_total_time_slot_number()

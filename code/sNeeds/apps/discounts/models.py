@@ -34,7 +34,7 @@ class CICharField(models.CharField):
         return str(value).lower()
 
 
-class ConsultantDiscount(models.Model):
+class Discount(models.Model):
     consultants = models.ManyToManyField(ConsultantProfile)
     percent = models.FloatField(
         validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -45,15 +45,15 @@ class ConsultantDiscount(models.Model):
         return "{}%".format(str(self.percent))
 
 
-class CartConsultantDiscount(models.Model):
+class CartDiscount(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, )
-    consultant_discount = models.ForeignKey(
-        ConsultantDiscount,
+    discount = models.ForeignKey(
+        Discount,
         on_delete=models.CASCADE,
     )
 
     class Meta:
-        unique_together = (("cart", "consultant_discount"),)
+        unique_together = (("cart", "discount"),)
 
     def __str__(self):
-        return "cart {} discount".format(str(self.consultant_discount))
+        return "cart {} discount".format(str(self.discount))

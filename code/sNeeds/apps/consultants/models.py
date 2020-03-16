@@ -34,3 +34,6 @@ class ConsultantProfile(models.Model):
         average_rate = sold_time_slot_rate_qs.get_average_rate_or_none()
         self.rate = average_rate
         self.save()
+
+    def __str__(self):
+        return self.user.get_full_name()

@@ -190,4 +190,4 @@ cart_user2_no1.products.set(
 )
 
 # Discount -------
-ConsultantDiscount
+Discount

@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
+from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldProduct
 
 User = get_user_model()
@@ -25,9 +25,9 @@ class OrderManager(models.Manager):
         webinars_qs = cart_products.get_webinars()
 
         try:
-            used_consultant_discount = CartConsultantDiscount.objects.get(cart=cart).consultant_discount
-        except CartConsultantDiscount.DoesNotExist:
-            used_consultant_discount = None
+            used_discount = CartDiscount.objects.get(cart=cart).discount
+        except CartDiscount.DoesNotExist:
+            used_discount = None
 
         try:
             time_slot_sales_number_discount_number = TimeSlotSaleNumberDiscount.objects.get(
@@ -45,7 +45,7 @@ class OrderManager(models.Manager):
             status='paid',
             total=cart.total,
             subtotal=cart.subtotal,
-            used_consultant_discount=used_consultant_discount,
+            used_discount=used_discount,
             time_slot_sales_number_discount=time_slot_sales_number_discount_number
         )
 
@@ -68,7 +68,7 @@ class Order(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     # TODO:Change to code.
-    used_consultant_discount = models.ForeignKey(ConsultantDiscount, null=True, blank=True, on_delete=models.SET_NULL)
+    used_discount = models.ForeignKey(Discount, null=True, blank=True, on_delete=models.SET_NULL)
     time_slot_sales_number_discount = models.FloatField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)],
     )

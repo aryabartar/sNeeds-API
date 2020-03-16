@@ -48,7 +48,7 @@ Use this to show number discounts to all people.
 [
     {
         "id": 35,
-        "consultant_discount": {
+        "discount": {
             "consultant": [
                 4,
                 2,
@@ -61,7 +61,7 @@ Use this to show number discounts to all people.
     },
     {
         "id": 36,
-        "consultant_discount": {
+        "discount": {
             "consultant": [
                 2,
                 3,
@@ -92,7 +92,7 @@ Use this to show number discounts to all people.
 ```json
 {
     "id": 35,
-    "consultant_discount": {
+    "discount": {
         "consultant": [
             4,
             2,

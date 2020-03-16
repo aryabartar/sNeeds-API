@@ -12,7 +12,13 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+# from .secure.APIs import dropbox
+#
+# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+# DROPBOX_OAUTH2_TOKEN = dropbox
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, "..", "templates")
 
@@ -38,6 +44,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.videochats',
     'sNeeds.apps.chats',
     'sNeeds.apps.storePackages',
+    'sNeeds.apps.customUtils',
     'sNeeds.apps.webinars',
 
     'django.contrib.auth',
@@ -47,6 +54,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'dbbackup',
     'django_cleanup',  # should go after your apps
 ]
 # Imported key to prevent circular imports.
@@ -56,6 +64,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
+    'sNeeds.settings.middlewares.middlewares.TimezoneMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # For per-request translation
@@ -64,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'sNeeds.urls'
@@ -91,11 +101,9 @@ WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
 LANGUAGE_CODE = 'en-us'
 
-USE_TZ = True
-TIME_ZONE = 'UTC'
-# TIME_ZONE = 'Asia/Tehran'
-
 USE_I18N = True
+USE_TZ = True
+TIME_ZONE = 'Asia/Tehran'
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
@@ -159,3 +167,25 @@ ZARINPAL_MERCHANT = APIs.zarinpal_merchant
 
 # Keys
 ALL_SKYROOM_USERS_PASSWORD = keys.ALL_SKYROOM_USERS_PASSWORD
+
+# CORS
+from corsheaders.defaults import default_headers
+
+# TODO: Make this accurate
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'CLIENT-TIMEZONE',
+    'CLIENT_TIMEZONE',
+    'HTTP-CLIENT-TIMEZONE',
+    'HTTP_CLIENT_TIMEZONE',
+    'HTTP_CLIENT-TIMEZONE'
+]
+
+# dbbackup -------
+from .secure.APIs import dropbox_sneeds_backups_app
+
+DBBACKUP_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+DBBACKUP_STORAGE_OPTIONS = {
+    'oauth2_access_token': dropbox_sneeds_backups_app,
+}
+# TODO: Add PGP encryption.
+# ---------------------

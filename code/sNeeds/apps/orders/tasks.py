@@ -3,5 +3,5 @@ from celery import shared_task
 from sNeeds.utils import sendemail
 
 @shared_task
-def send_accept_order_mail(email, name, order_id):
-    sendemail.accept_order(email, name, order_id)
+def notify_order_created(email, name, order_url):
+    sendemail.send_order_created_email(email, name, order_url)

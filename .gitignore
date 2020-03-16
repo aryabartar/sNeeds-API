@@ -33,7 +33,6 @@ tests/.coverage
 build/
 tests/report/
 venv/
-supervisor/
 .env
 
 celerybeat*
