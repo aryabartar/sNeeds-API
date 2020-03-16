@@ -53,18 +53,32 @@ class StorePackage(Product):
         through='StorePackagePhaseThrough',
         related_name='store_packages'
     )
+    total_price = models.PositiveIntegerField(blank=True)
     slug = models.SlugField(unique=True)
 
     objects = StorePackageQuerySetManager.as_manager()
 
-    def update_price(self):
+    def _update_price(self):
+        try:
+            store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(
+                store_package__id=self.id, phase_number=1
+            )
+            self.price = store_package_phase_through_obj.store_package_phase.price
+        except StorePackagePhaseThrough.DoesNotExist:
+            self.price = 0
+
+    def _update_total_price(self):
         store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
             store_package__id=self.id,
         )
-        price = 0
+        total_price = 0
         for obj in store_package_phase_through_qs:
-            price += obj.store_package_phase.price
-        self.price = price
+            total_price += obj.store_package_phase.price
+        self.total_price = total_price
+
+    def update_price(self):
+        self._update_price()
+        self._update_total_price()
 
     def clean(self):
         self.update_price()
