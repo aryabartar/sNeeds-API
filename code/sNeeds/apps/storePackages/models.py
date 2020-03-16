@@ -58,13 +58,13 @@ class StorePackage(Product):
     objects = StorePackageQuerySetManager.as_manager()
 
     def update_price(self):
-        try:
-            store_package_phase_through_obj = StorePackagePhaseThrough.objects.get(
-                store_package__id=self.id, phase_number=1
-            )
-            self.price = store_package_phase_through_obj.store_package_phase.price
-        except StorePackagePhaseThrough.DoesNotExist:
-            self.price = 0
+        store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
+            store_package__id=self.id,
+        )
+        price = 0
+        for obj in store_package_phase_through_qs:
+            price += obj.store_package_phase.price
+        self.price = price
 
     def clean(self):
         self.update_price()

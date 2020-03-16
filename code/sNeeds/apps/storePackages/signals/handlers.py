@@ -13,10 +13,21 @@ def post_save_store_package_phase(sender, instance, *args, **kwargs):
     store_package_qs.update()
 
 
+# Used in place of m2m_changed because due to Django's bug in m2m_changed in
+# custom through this signal is not triggered
 def post_save_store_package_phase_through(sender, instance, *args, **kwargs):
     instance.store_package.save()
 
 
+# Used in place of m2m_changed because due to Django's bug in m2m_changed in
+# custom through this signal is not triggered
+def post_delete_store_package_phase_through(sender, instance, *args, **kwargs):
+    instance.store_package.save()
+
+
 pre_save.connect(pre_save_store_package, sender=StorePackage)
+
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
+
+post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)
