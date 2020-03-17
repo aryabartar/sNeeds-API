@@ -62,7 +62,7 @@ from .secure import keys
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
+    # 'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
