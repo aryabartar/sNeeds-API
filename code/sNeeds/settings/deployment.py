@@ -1,7 +1,8 @@
 from .settings import *
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-CORS_ORIGIN_ALLOW_ALL = DEBUG
+print("here")
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '194.5.206.177',]
 
