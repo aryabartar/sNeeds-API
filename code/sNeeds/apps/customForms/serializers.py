@@ -17,6 +17,7 @@ class BugReportSerializer(ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
-        if user.is_authenticated:
+        if validated_data['email'] is None and user.is_authenticated:
             validated_data['email'] = user.email
+            
         return super(BugReportSerializer, self).create(validated_data)
