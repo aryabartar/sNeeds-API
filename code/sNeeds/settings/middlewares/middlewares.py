@@ -27,10 +27,10 @@ class CORSMiddleware(object):
         print(json.dumps(dict(request.headers), indent=4, sort_keys=True))
         print("------------------------ ")
         #
+
         response = self.get_response(request)
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Headers"] = "*"
+        response["Access-Control-Allow-Credentials"] = 'true'
 
-        # print("response: ")
-        # print(json.dumps(response, indent=4, sort_keys=True))
         return response

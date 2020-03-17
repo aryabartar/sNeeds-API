@@ -61,6 +61,8 @@ from .secure import keys
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+ROOT_URLCONF = 'sNeeds.urls'
+
 MIDDLEWARE = [
     # 'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
 
@@ -75,8 +77,6 @@ MIDDLEWARE = [
 
     'sNeeds.settings.middlewares.middlewares.CORSMiddleware',
 ]
-
-ROOT_URLCONF = 'sNeeds.urls'
 
 TEMPLATES = [
     {
