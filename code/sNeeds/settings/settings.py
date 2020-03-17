@@ -62,8 +62,7 @@ from .secure import keys
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
-    'sNeeds.settings.middlewares.middlewares.TimezoneMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # For per-request translation
@@ -72,7 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'sNeeds.settings.middlewares.middlewares.CORSMiddleware',
 ]
 
 ROOT_URLCONF = 'sNeeds.urls'

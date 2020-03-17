@@ -135,6 +135,7 @@ class SoldStorePackage(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
     sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
 
+    
     sold_store_package_phases = models.ManyToManyField(
         SoldStorePackagePhase
     )
