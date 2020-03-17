@@ -29,6 +29,6 @@ class CORSMiddleware(object):
         response = self.get_response(request)
         response["Access-Control-Allow-Origin"] = "*"
 
-        print("response: ")
-        print(json.dumps(dict(response), indent=4, sort_keys=True))
+        # print("response: ")
+        # print(json.dumps(response, indent=4, sort_keys=True))
         return response
