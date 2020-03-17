@@ -71,7 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'sNeeds.settings.middlewares.middlewares.CORSMiddleware',
+
+    # 'sNeeds.settings.middlewares.middlewares.CORSMiddleware',
 ]
 
 ROOT_URLCONF = 'sNeeds.urls'
