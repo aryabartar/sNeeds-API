@@ -177,7 +177,10 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'CLIENT_TIMEZONE',
     'HTTP-CLIENT-TIMEZONE',
     'HTTP_CLIENT_TIMEZONE',
-    'HTTP_CLIENT-TIMEZONE'
+    'HTTP_CLIENT-TIMEZONE',
+    'authorization',
+    'AUTHORIZATION',
+    'Authorization'
 ]
 
 # dbbackup -------
