@@ -13,7 +13,7 @@ class ConsultantProfileQuerySetManager(models.QuerySet):
         qs = self.none()
         for obj in self._chain():
             if TimeSlotSale.objects.filter(consultant=obj).exists():
-                qs |= obj
+                qs |= ConsultantProfile.objects.filter(id=obj.id)
         return qs
 
 
