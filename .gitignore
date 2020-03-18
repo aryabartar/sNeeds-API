@@ -32,6 +32,7 @@ tests/coverage_html/
 tests/.coverage
 build/
 tests/report/
+static/
 venv/
 .env
 
