@@ -7,6 +7,8 @@ from .models import Cart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.store.models import SoldTimeSlotSale, TimeSlotSale, Product
+from sNeeds.apps.webinars.models import Webinar
+from sNeeds.apps.webinars.serializers import WebinarSerializer, SoldWebinarSerializer
 from ..storePackages.models import StorePackage
 from ..storePackages.serializers import StorePackageSerializer
 
@@ -14,15 +16,17 @@ from ..storePackages.serializers import StorePackageSerializer
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
     time_slot_sales = serializers.SerializerMethodField(read_only=True)
+    webinars = serializers.SerializerMethodField(read_only=True)
     store_packages = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'products', 'time_slot_sales', 'store_packages',
+        fields = ['id', 'url', 'user', 'products', 'time_slot_sales', 'store_packages', 'webinars',
                   'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'time_slot_sales': {'read_only': True},
+            'webinars': {'read_only': True},
             'user': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
@@ -44,7 +48,20 @@ class CartSerializer(serializers.ModelSerializer):
             many=True
         ).data
 
+    def get_webinars(self, obj):
+        webinars = []
+        for product in obj.products.all():
+            try:
+                webinar_r = product.webinar
+                webinars.append(webinar_r)
+            except Webinar.DoesNotExist:
+                pass
 
+        return WebinarSerializer(
+            webinars,
+            context=self.context,
+            many=True
+        ).data
 
     def get_store_packages(self, obj):
         store_packages = []
@@ -84,6 +101,11 @@ class CartSerializer(serializers.ModelSerializer):
         products_qs = Product.objects.filter(id__in=products_id)
 
         time_slot_sales_qs = products_qs.get_time_slot_sales()
+        webinars_qs = products_qs.get_webinars()
+
+        for wr in webinars_qs:
+            if not wr.active:
+                raise ValidationError({"detail": "Webinar is not active"})
 
         for ts in time_slot_sales_qs:
             conflicting_sold_time_slots = SoldTimeSlotSale.objects.filter(

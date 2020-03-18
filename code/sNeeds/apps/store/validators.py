@@ -42,5 +42,5 @@ def validate_sold_product_valid_request_time(sold_product):
     #             raise ValidationError(
     #                 [{"sold_product": ["SoldProduct is not instance of {} classes.".format(allowed_classes)]}]
     #             )
-
+    #
     # if is_allowed is False:

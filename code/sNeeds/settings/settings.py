@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'sNeeds.apps.chats',
     'sNeeds.apps.storePackages',
     'sNeeds.apps.customUtils',
+    'sNeeds.apps.webinars',
+    'sNeeds.apps.customForms',
 
     'django.contrib.auth',
     'django.contrib.admin',

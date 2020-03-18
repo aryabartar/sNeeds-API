@@ -53,6 +53,9 @@ class Cart(models.Model):
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
+    def get_webinars_count(self):
+        return self.products.all().get_webinars().count()
+
     def _update_total_cart_discount_percent(self):
         from sNeeds.apps.discounts.models import CartDiscount
 
@@ -112,6 +115,12 @@ class Cart(models.Model):
 
     @transaction.atomic
     def set_time_slot_sales(self, products):
+        for p in products:
+            self.products.add(p)
+        self.save()
+
+    @transaction.atomic
+    def set_webinars(self, products):
         for p in products:
             self.products.add(p)
         self.save()

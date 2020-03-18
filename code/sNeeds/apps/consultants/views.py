@@ -30,7 +30,6 @@ class ConsultantProfileDetail(APIView):
 
 
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
-    queryset = ConsultantProfile.objects.all()
     serializer_class = ConsultantProfileSerializer
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     ordering_fields = ['rate', 'created', ]

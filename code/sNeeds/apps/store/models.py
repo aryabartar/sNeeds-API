@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.validators import validate_sold_product_class_type
 
+
 User = get_user_model()
 
 
@@ -17,6 +18,17 @@ class ProductQuerySet(models.QuerySet):
                 time_slot_sale = i.timeslotsale
                 result_qs |= TimeSlotSale.objects.filter(pk=time_slot_sale.id)
             except TimeSlotSale.DoesNotExist:
+                pass
+        return result_qs
+
+    def get_webinars(self):
+        from sNeeds.apps.webinars.models import Webinar
+        result_qs = Webinar.objects.none()
+        for i in self.all():
+            try:
+                webinar_w = i.webinar
+                result_qs |= Webinar.objects.filter(pk=webinar_w)
+            except Webinar.DoesNotExist:
                 pass
         return result_qs
 
@@ -45,15 +57,27 @@ class SoldProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
+    def get_sold_webinars(self):
+        from sNeeds.apps.webinars.models import SoldWebinar
+
+        result_qs = SoldWebinar.objects.none()
+        for i in self.all():
+            try:
+                sold_webinar = i.soldwebinar
+                result_qs |= SoldWebinar.objects.filter(pk=sold_webinar)
+            except SoldWebinar.DoesNotExist:
+                pass
+        return result_qs
+
 
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
     def set_time_slot_sold(self, sold_to):
         qs = self.all()
 
-        sold_tome_slot_sales_list = []
+        sold_time_slot_sales_list = []
         for obj in qs:
-            sold_tome_slot_sales_list.append(
+            sold_time_slot_sales_list.append(
                 SoldTimeSlotSale.objects.create(
                     consultant=obj.consultant,
                     start_time=obj.start_time,
@@ -63,11 +87,11 @@ class TimeSlotSaleManager(models.QuerySet):
                     used=False
                 )
             )
-        sold_tome_slot_sales_qs = SoldTimeSlotSale.objects.filter(id__in=[obj.id for obj in sold_tome_slot_sales_list])
+        sold_time_slot_sales_qs = SoldTimeSlotSale.objects.filter(id__in=[obj.id for obj in sold_time_slot_sales_list])
 
         qs.delete()
 
-        return sold_tome_slot_sales_qs
+        return sold_time_slot_sales_qs
 
 
 class Product(models.Model):
