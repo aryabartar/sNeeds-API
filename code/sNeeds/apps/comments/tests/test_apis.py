@@ -160,13 +160,13 @@ class CartTests(APITestCase):
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
-            percent=10,
+            amount=10,
             code="discountcode1",
         )
         self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.discount2 = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="discountcode2",
         )
         self.discount2.consultants.set([self.consultant1_profile, ])

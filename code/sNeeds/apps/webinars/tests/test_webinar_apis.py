@@ -6,8 +6,7 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.discounts.models import ConsultantDiscount, CartConsultantDiscount, TimeSlotSaleNumberDiscount
-from sNeeds.apps.discounts.serializers import ConsultantDiscountSerializer
+from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from django.utils.datetime_safe import datetime
@@ -150,13 +149,13 @@ class TestWebinarModel(APITestCase):
 
         # Consultant discounts
         self.consultant_discount1 = ConsultantDiscount.objects.create(
-            percent=10,
+            amount=10,
             code="discountcode1",
         )
         self.consultant_discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.consultant_discount2 = ConsultantDiscount.objects.create(
-            percent=20,
+            amount=20,
             code="discountcode2",
         )
         self.consultant_discount2.consultants.set([self.consultant1_profile, ])

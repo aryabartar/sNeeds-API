@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
+from sNeeds.apps.webinars.models import Webinar
 
 User = get_user_model()
 
@@ -56,7 +57,7 @@ class Cart(models.Model):
     def get_webinars_count(self):
         return self.products.all().get_webinars().count()
 
-    def _update_total_cart_discount_percent(self):
+    def _update_total_cart_discount_amount(self):
         from sNeeds.apps.discounts.models import CartDiscount
 
         products = self.products.all()
@@ -67,19 +68,27 @@ class Cart(models.Model):
             return
 
         total = 0
+        consultants_qs = cart_discount.discount.consultants.all()
+        webinars_qs = cart_discount.discount.webinars.all()
+
         for product in products:
-            percent = 0
+            amount = 0
 
             # For TimeSlots
             try:
                 time_slot_sale = product.timeslotsale  # Checks here
-                consultants_qs = cart_discount.discount.consultants.all()
                 if time_slot_sale.consultant in consultants_qs:
-                    percent += cart_discount.discount.percent
+                    amount += cart_discount.discount.amount
             except TimeSlotSale.DoesNotExist:
                 pass
+            try:
+                webinar_w = product.webinar  # Checks here
+                if webinar_w in webinars_qs:
+                    amount += cart_discount.discount.amount
+            except Webinar.DoesNotExist:
+                pass
 
-            total += product.price * ((100.0 - percent) / 100)
+            total += (product.price - amount)
         self.total = total
 
     def _update_total_time_slot_number(self):
@@ -97,7 +106,7 @@ class Cart(models.Model):
 
     def _update_total(self):
         # For code discount
-        self._update_total_cart_discount_percent()
+        self._update_total_cart_discount_amount()
 
         # For quantity discount
         self._update_total_time_slot_number()

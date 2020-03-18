@@ -51,7 +51,7 @@ class OrderSerializer(serializers.ModelSerializer):
         else:
             return {
                 "code": obj.used_discount.code,
-                "percent": obj.used_discount.percent
+                "amount": obj.used_discount.amount
             }
 
     def validate(self, attrs):

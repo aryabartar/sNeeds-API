@@ -6,10 +6,10 @@ admin.site.register(TimeSlotSaleNumberDiscount)
 
 
 @admin.register(Discount)
-class ConsultantDiscountAdmin(admin.ModelAdmin):
-    list_display = ('percent',)
+class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('amount',)
 
 
 @admin.register(CartDiscount)
-class CartConsultantDiscountAdmin(admin.ModelAdmin):
-    list_display = ('cart', 'discount',)
+class CartDiscountAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'discount')

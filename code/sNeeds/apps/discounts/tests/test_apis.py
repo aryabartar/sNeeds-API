@@ -13,7 +13,7 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import DiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
-
+from sNeeds.apps.webinars.models import Webinar
 User = get_user_model()
 
 
@@ -139,6 +139,35 @@ class CartTests(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
+        # webinars
+        self.webinar1 = Webinar.objects.create(
+            title="webinar1",
+            slug="webinar1",
+            active=True,
+            price=30000,
+        )
+
+        self.webinar2 = Webinar.objects.create(
+            title="webinar2",
+            slug="webinar2",
+            active=True,
+            price=30000,
+        )
+
+        self.webinar3 = Webinar.objects.create(
+            title="webinar3",
+            slug="webinar3",
+            active=True,
+            price=30000,
+        )
+
+        self.webinar4 = Webinar.objects.create(
+            title="webinar4",
+            slug="webinar4",
+            active=False,
+            price=30000,
+        )
+
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
@@ -151,13 +180,13 @@ class CartTests(APITestCase):
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
-            percent=10,
+            amount=10,
             code="discountcode1",
         )
         self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.discount2 = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="discountcode2",
         )
         self.discount2.consultants.set([self.consultant1_profile, ])
@@ -268,7 +297,7 @@ class CartTests(APITestCase):
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
 
         temp_discount = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="temp_discount",
         )
         temp_discount.consultants.set([self.consultant2_profile])
@@ -290,7 +319,7 @@ class CartTests(APITestCase):
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale2])
 
         temp_discount = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="temp_discount",
         )
         temp_discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
@@ -318,7 +347,7 @@ class CartTests(APITestCase):
         temp_cart.products.set([self.time_slot_sale1, self.time_slot_sale4])
 
         temp_discount = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="temp_discount",
         )
         temp_discount.consultants.set([self.consultant1_profile, ])

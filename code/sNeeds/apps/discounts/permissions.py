@@ -3,7 +3,7 @@ from rest_framework import permissions
 from sNeeds.apps.carts.models import Cart
 
 
-class CartConsultantDiscountPermission(permissions.BasePermission):
+class CartDiscountPermission(permissions.BasePermission):
     message = "This user is not discount owner."
 
     def has_permission(self, request, view):

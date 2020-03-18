@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.webinars.models import Webinar
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
@@ -35,14 +36,29 @@ class CICharField(models.CharField):
 
 
 class Discount(models.Model):
-    consultants = models.ManyToManyField(ConsultantProfile)
-    percent = models.FloatField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
+    consultants = models.ManyToManyField(ConsultantProfile, blank=True)
+    webinars = models.ManyToManyField(Webinar, blank=True)
+    # percent = models.FloatField(
+    #     validators=[MinValueValidator(0), MaxValueValidator(100)],
+    # )
+    amount = models.IntegerField(
+        validators=[MinValueValidator(0)], default=0
     )
     code = CICharField(max_length=128, unique=True)
 
     def __str__(self):
-        return "{}%".format(str(self.percent))
+        return "{}%".format(str(self.amount))
+
+
+# class WebinarDiscount(models.Model):
+#     webinar = models.ManyToManyField(Webinar)
+#     amount = models.IntegerField(
+#         validators=[MinValueValidator(0)]
+#     )
+#     code = CICharField(max_length=128, unique=True)
+#
+#     def __str__(self):
+#         return "{}%".format(str(self.amount))
 
 
 class CartDiscount(models.Model):

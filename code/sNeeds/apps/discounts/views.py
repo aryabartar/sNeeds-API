@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount
 from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer
-from .permissions import CartConsultantDiscountPermission
+from .permissions import CartDiscountPermission
 
 
 class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
@@ -13,9 +13,9 @@ class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
     permission_classes = []
 
 
-class CartConsultantDiscountListView(generics.ListCreateAPIView):
+class CartDiscountListView(generics.ListCreateAPIView):
     serializer_class = CartDiscountSerializer
-    permission_classes = [CartConsultantDiscountPermission, permissions.IsAuthenticated]
+    permission_classes = [CartDiscountPermission, permissions.IsAuthenticated]
     filterset_fields = ('cart',)
 
     def get_queryset(self):
@@ -24,8 +24,8 @@ class CartConsultantDiscountListView(generics.ListCreateAPIView):
         return qs
 
 
-class CartConsultantDiscountDetailView(generics.RetrieveDestroyAPIView):
+class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
     queryset = CartDiscount.objects.all()
     serializer_class = CartDiscountSerializer
-    permission_classes = [CartConsultantDiscountPermission, permissions.IsAuthenticated]
+    permission_classes = [CartDiscountPermission, permissions.IsAuthenticated]
     lookup_field = 'id'

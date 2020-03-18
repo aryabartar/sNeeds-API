@@ -14,7 +14,7 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        fields = ['consultants', 'percent', ]
+        fields = ['consultants', 'webinars', 'amount', ]
 
 
 class CartDiscountSerializer(serializers.ModelSerializer):
@@ -55,11 +55,17 @@ class CartDiscountSerializer(serializers.ModelSerializer):
 
         # Checking that user has bought a session with the code's consultant or not
         discount = Discount.objects.get(code=attrs.get("discount").get("code"))
-        discounts_id = list(discount.consultants.all().values_list('id', flat=True))
+        discount_consultants_id = list(discount.consultants.all().values_list('id', flat=True))
+        discount_webinars_id = list(discount.webinars.all().values_list('id', flat=True))
         cart_products_consultants_id = list(
             cart.products.all().get_time_slot_sales().values_list('consultant', flat=True)
         )
-        if len(list(set(discounts_id) & set(cart_products_consultants_id))) == 0:
+        cart_products_webinars_id = list(
+            cart.products.all().get_webinars().values_list('id', flat=True)
+        )
+
+        if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0 and \
+                len(list(set(discount_webinars_id) & set(cart_products_webinars_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
         return attrs

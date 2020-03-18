@@ -27,7 +27,7 @@ class ProductQuerySet(models.QuerySet):
         for i in self.all():
             try:
                 webinar_w = i.webinar
-                result_qs |= Webinar.objects.filter(pk=webinar_w)
+                result_qs |= Webinar.objects.filter(pk=webinar_w.id)
             except Webinar.DoesNotExist:
                 pass
         return result_qs
