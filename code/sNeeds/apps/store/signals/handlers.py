@@ -1,6 +1,7 @@
 from django.db.models.signals import post_save, pre_delete, pre_save, m2m_changed
 
 from sNeeds.apps.carts.models import Cart
+from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 from sNeeds.apps.store.tasks import notify_sold_time_slot
 from sNeeds.apps.chats.models import Chat
@@ -14,6 +15,11 @@ def pre_delete_product_receiver(sender, instance, *args, **kwargs):
     This signal fix this problem.
     """
     Cart.objects.filter(products=instance).remove_product(instance)
+
+
+def pre_save_time_slot_receiver(sender, instance, *args, **kwargs):
+    consultant = ConsultantProfile.objects.get(id=instance.consultant.id)
+    instance.price = consultant.time_slot_price
 
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
@@ -48,6 +54,8 @@ def create_chat(sender, instance, *args, **kwargs):
 
 
 pre_delete.connect(pre_delete_product_receiver, sender=Product)
+
+pre_save.connect(pre_save_time_slot_receiver, sender=TimeSlotSale)
 
 post_save.connect(post_save_product_receiver, sender=Product)
 post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)

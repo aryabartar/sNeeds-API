@@ -37,7 +37,7 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 
     def get_queryset(self):
-        return ConsultantProfile.objects.all()
+        return ConsultantProfile.objects.all().get_active_consultants()
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)

@@ -1,8 +1,20 @@
 from django.db import models
 
-from sNeeds.apps.account.models import get_consultant_image_path, get_consultant_resume_path, University, FieldOfStudy, \
+from sNeeds.apps.account.models import (
+    get_consultant_image_path, get_consultant_resume_path, University, FieldOfStudy,
     Country
+)
 from sNeeds.apps.customAuth.models import CustomUser
+
+
+class ConsultantProfileQuerySetManager(models.QuerySet):
+    def get_active_consultants(self, **kwargs):
+        from sNeeds.apps.store.models import TimeSlotSale
+        qs = self.none()
+        for obj in self._chain():
+            if TimeSlotSale.objects.filter(consultant=obj).exists():
+                qs |= obj
+        return qs
 
 
 class ConsultantProfile(models.Model):
@@ -25,6 +37,8 @@ class ConsultantProfile(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    objects = ConsultantProfileQuerySetManager.as_manager()
 
     def update_rate(self):
         """Currently based on sold time slot sales rate"""
