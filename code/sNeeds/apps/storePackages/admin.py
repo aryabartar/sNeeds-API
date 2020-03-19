@@ -16,6 +16,10 @@ class StorePackageAdmin(admin.ModelAdmin):
     readonly_fields = ["price", "total_price", ]
 
 
+@admin.register(SoldStorePackage)
+class StorePackageAdmin(admin.ModelAdmin):
+    readonly_fields = ["price", "total_price", ]
+
+
 admin.site.register(StorePackagePhase)
-admin.site.register(SoldStorePackage)
 admin.site.register(SoldStorePackagePhase)

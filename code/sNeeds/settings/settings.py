@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
-from .secure.APIs import dropbox_static_files_sneeds
-
-DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
-DROPBOX_OAUTH2_TOKEN = dropbox_static_files_sneeds
+# from .secure.APIs import dropbox_static_files_sneeds
+#
+# DEFAULT_FILE_STORAGE = 'storages.backends.dropbox.DropBoxStorage'
+# DROPBOX_OAUTH2_TOKEN = dropbox_static_files_sneeds
 #
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 

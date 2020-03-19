@@ -1,7 +1,8 @@
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save
 
-from sNeeds.apps.storePackages.models import StorePackage, StorePackagePhaseThrough, StorePackagePhase
-
+from sNeeds.apps.storePackages.models import (
+    StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage, SoldStorePackagePhase
+)
 
 def pre_save_store_package(sender, instance, *args, **kwargs):
     if instance.price is None:
@@ -31,6 +32,10 @@ def post_save_store_package(sender, instance, *args, **kwargs):
     carts_qs.update_price()
 
 
+def update_sold_time_slot_sale_price(sender, instance, *args, **kwargs):
+    instance.update_price()
+
+
 pre_save.connect(pre_save_store_package, sender=StorePackage)
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
@@ -38,3 +43,5 @@ post_save.connect(post_save_store_package, sender=StorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
 
 post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)
+
+m2m_changed.connect(update_sold_time_slot_sale_price, sender=SoldStorePackage.sold_store_package_phases.through)

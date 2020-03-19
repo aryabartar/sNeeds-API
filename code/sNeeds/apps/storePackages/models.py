@@ -133,7 +133,7 @@ class StorePackagePhaseThrough(models.Model):
 
 
 class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_total(self):
+    def get_qs_price(self):
         total = 0
         for obj in self._chain():
             total += obj.price
@@ -160,7 +160,7 @@ class SoldStorePackagePhase(models.Model):
 
 class SoldStorePackage(SoldProduct):
     title = models.CharField(max_length=1024)
-    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
 
     sold_store_package_phases = models.ManyToManyField(
         SoldStorePackagePhase
