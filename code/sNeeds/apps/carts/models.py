@@ -116,7 +116,7 @@ class Cart(models.Model):
         return False
 
     def _update_total(self):
-        # For code discount
+        # For code discount and time slot number discount
         self._update_total_cart_discount_amount()
 
     def update_price(self):
