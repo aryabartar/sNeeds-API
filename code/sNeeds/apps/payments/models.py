@@ -22,9 +22,9 @@ class PayPayment(models.Model):
 
 class ConsultantDepositInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
-    tracing_code = models.CharField(unique=True, max_length=12, blank=True,
-                                    help_text="Leave this field blank, this will populate automatically."
-                                    )
+    consultant_deposit_info_id = models.CharField(unique=True, max_length=12, blank=True,
+                                                  help_text="Leave this field blank, this will populate automatically."
+                                                  )
     amount = models.PositiveIntegerField()
     comment = models.TextField(max_length=512, blank=True)
     created = models.DateTimeField(auto_now_add=True)

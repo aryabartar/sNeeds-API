@@ -130,7 +130,7 @@ class ConsultantDepositInfoListAPIView(generics.ListAPIView):
 
 
 class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
-    lookup_field = 'id'
+    lookup_field = 'consultant_deposit_info_id'
     serializer_class = ConsultantDepositInfoSerializer
     permission_classes = [permissions.IsAuthenticated, IsConsultant]
 

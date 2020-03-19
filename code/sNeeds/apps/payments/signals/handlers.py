@@ -4,13 +4,13 @@ from django.urls import reverse
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.payments.models import ConsultantDepositInfo
 from sNeeds.apps.orders.tasks import notify_order_created
-from sNeeds.apps.payments.utils import unique_tracing_code_generator
+from sNeeds.apps.payments.utils import unique_consultant_deposit_info_id_generator
 from sNeeds.settings.config.variables import BACKEND_URL, FRONTEND_URL
 
 
 def pre_save_create_tracing_code(sender, instance, *args, **kwargs):
-    if not instance.tracing_code:
-        instance.tracing_code = unique_tracing_code_generator(instance)
+    if not instance.consultant_deposit_info_id:
+        instance.tracing_code = unique_consultant_deposit_info_id_generator(instance)
 
 
 pre_save.connect(pre_save_create_tracing_code, sender=ConsultantDepositInfo)
