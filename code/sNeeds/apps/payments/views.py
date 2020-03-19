@@ -109,6 +109,10 @@ class Verify(APIView):
 
 class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
-        cart = Cart.objects.get(id=kwargs.get("cartid"))
-        Order.objects.sell_cart_create_order(cart)
+        # cart = Cart.objects.get(id=kwargs.get("cartid"))
+        # Order.objects.sell_cart_create_order(cart)
+        from sNeeds.apps.storePackages.models import StorePackage
+        id = kwargs.get("cartid")
+        StorePackage.objects.all().sell_and_get_sold_package(sold_to=request.user)
+
         return Response()

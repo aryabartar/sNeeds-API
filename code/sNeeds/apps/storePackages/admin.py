@@ -15,3 +15,4 @@ class StorePackageAdmin(admin.ModelAdmin):
 
 
 admin.site.register(StorePackagePhase)
+admin.site.register(SoldStorePackage)

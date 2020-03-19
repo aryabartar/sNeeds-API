@@ -17,8 +17,8 @@ class StorePackageQuerySetManager(models.QuerySet):
     @transaction.atomic
     def sell_and_get_sold_package(self, sold_to):
         qs = self.all()
-
         sold_store_package_list = []
+        print("here")
         for obj in qs:
             sold_store_package_list.append(
                 SoldStorePackage.objects.create(
@@ -127,15 +127,16 @@ class SoldStorePackagePhase(models.Model):
     paid = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['phase_number',]
+        ordering = ['phase_number', ]
 
 
-class SoldStorePackage(models.Model):
-    store_package = models.ForeignKey(StorePackage, on_delete=models.SET_NULL, null=True)
+class SoldStorePackage(SoldProduct):
+    title = models.CharField(max_length=1024)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, null=True)
-    sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
 
-    
     sold_store_package_phases = models.ManyToManyField(
         SoldStorePackagePhase
     )
+
+    def __str__(self):
+        return
