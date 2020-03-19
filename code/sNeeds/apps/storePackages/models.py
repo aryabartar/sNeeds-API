@@ -168,10 +168,15 @@ class SoldStorePackage(SoldProduct):
     total_price = models.PositiveIntegerField()
 
     def _update_price(self):
+        self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
 
     def _update_total_price(self):
+        self.price = self.sold_store_package_phases.all().get_qs_price()
 
     def update_price(self):
+        self._update_price()
+        self._update_total_price()
+        self.save()
 
     def __str__(self):
         return self.title
