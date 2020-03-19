@@ -157,13 +157,13 @@ class CartTests(APITestCase):
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
-            percent=10,
+            amount=10,
             code="discountcode1",
         )
         self.discount1.consultants.set([self.consultant1_profile, self.consultant2_profile])
 
         self.discount2 = Discount.objects.create(
-            percent=20,
+            amount=20,
             code="discountcode2",
         )
         self.discount2.consultants.set([self.consultant1_profile, ])
@@ -362,7 +362,7 @@ class CartTests(APITestCase):
         )
         self.assertEqual(
             response_data.get("used_discount"),
-            {"code": order1.used_discount.code, "percent": order1.used_discount.percent}
+            {"code": order1.used_discount.code, "amount": order1.used_discount.amount}
         )
         self.assertEqual(response_data.get("time_slot_sales_number_discount"), order1.time_slot_sales_number_discount)
         self.assertEqual(response_data.get("subtotal"), order1.subtotal)

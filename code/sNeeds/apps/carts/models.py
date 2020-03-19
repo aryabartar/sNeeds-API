@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
+from sNeeds.apps.webinars.models import Webinar
 
 User = get_user_model()
 
@@ -53,8 +54,12 @@ class Cart(models.Model):
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
-    def _update_total_cart_discount_percent(self):
+    def get_webinars_count(self):
+        return self.products.all().get_webinars().count()
+
+    def _update_total_cart_discount_amount(self):
         from sNeeds.apps.discounts.models import CartDiscount
+        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
         products = self.products.all()
         try:
@@ -63,29 +68,47 @@ class Cart(models.Model):
             self.total = self.subtotal
             return
 
+        # consultants that are in the discount of code entered
+        consultants_qs = cart_discount.discount.consultants.all()
+
+        # webinars that are in the discount of code entered
+        webinars_qs = cart_discount.discount.webinars.all()
+
+        # for apply time slot number discount
+        time_slot_sale_count = self.get_time_slot_sales_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+
         total = 0
         for product in products:
-            percent = 0
+            effective_price = 0
 
             # For TimeSlots
             try:
                 time_slot_sale = product.timeslotsale  # Checks here
-                consultants_qs = cart_discount.discount.consultants.all()
                 if time_slot_sale.consultant in consultants_qs:
-                    percent += cart_discount.discount.percent
+                    effective_price = product.price - cart_discount.discount.amount
+                else:
+                    effective_price = product.price
+
+                # if user applied discount code we apply num discount for lower price
+                effective_price = effective_price * ((100.0 - count_discount) / 100)
+
             except TimeSlotSale.DoesNotExist:
                 pass
 
-            total += product.price * ((100.0 - percent) / 100)
+            # for webinars
+            try:
+                webinar_w = product.webinar  # Checks here
+                if webinar_w in webinars_qs:
+                    effective_price = product.price - cart_discount.discount.amount
+                else:
+                    effective_price = product.price
+
+            except Webinar.DoesNotExist:
+                pass
+
+            total += effective_price
         self.total = total
-
-    def _update_total_time_slot_number(self):
-        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
-
-        time_slot_sale_count = self.get_time_slot_sales_count()
-        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
-
-        self.total = self.total * ((100.0 - count_discount) / 100)
 
     def is_acceptable_for_pay(self):
         if self.total > 0:
@@ -93,11 +116,8 @@ class Cart(models.Model):
         return False
 
     def _update_total(self):
-        # For code discount
-        self._update_total_cart_discount_percent()
-
-        # For quantity discount
-        self._update_total_time_slot_number()
+        # For code discount and time slot number discount
+        self._update_total_cart_discount_amount()
 
     def update_price(self):
         products_qs = self.products.all()
@@ -112,6 +132,12 @@ class Cart(models.Model):
 
     @transaction.atomic
     def set_time_slot_sales(self, products):
+        for p in products:
+            self.products.add(p)
+        self.save()
+
+    @transaction.atomic
+    def set_webinars(self, products):
         for p in products:
             self.products.add(p)
         self.save()
