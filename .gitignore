@@ -34,7 +34,6 @@ build/
 tests/report/
 static/
 venv/
-shell/
 .env
 
 celerybeat*
