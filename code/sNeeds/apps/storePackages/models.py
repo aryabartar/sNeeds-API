@@ -20,13 +20,31 @@ class StorePackageQuerySetManager(models.QuerySet):
         sold_store_package_list = []
         print("here")
         for obj in qs:
-            sold_store_package_list.append(
-                SoldStorePackage.objects.create(
-                    store_package=obj,
-                    price=obj.price,
-                    sold_to=sold_to,
-                )
+            new_sold_store_package = SoldStorePackage.objects.create(
+                title=obj.title,
+                price=obj.price,
+                sold_to=sold_to,
             )
+            sold_store_package_list.append(new_sold_store_package)
+
+            store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
+                store_package=obj
+            )
+
+            for store_package_phase_through_obj in store_package_phase_through_qs:
+
+                paid = False
+                if store_package_phase_through_obj.phase_number == 1:
+                    paid = True
+
+                new_sold_store_package.sold_store_package_phases.create(
+                    title=store_package_phase_through_obj.store_package_phase.title,
+                    detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
+                    price=store_package_phase_through_obj.store_package_phase.price,
+                    phase_number=store_package_phase_through_obj.phase_number,
+                    paid=paid
+                )
+
         sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
 
         return sold_store_package_qs
@@ -139,4 +157,4 @@ class SoldStorePackage(SoldProduct):
     )
 
     def __str__(self):
-        return
+        return self.title
