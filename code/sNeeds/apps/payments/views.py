@@ -9,8 +9,13 @@ from django.conf import settings
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework import generics
 
 from sNeeds.apps.orders.models import Order
+
+from .serializers import ConsultantDepositInfoSerializer
+from .permissions import IsConsultant
+from . models import ConsultantDepositInfo
 
 from .models import PayPayment
 from ..carts.models import Cart
@@ -112,3 +117,25 @@ class VerifyTest(APIView):
         cart = Cart.objects.get(id=kwargs.get("cartid"))
         Order.objects.sell_cart_create_order(cart)
         return Response()
+
+
+class ConsultantDepositInfoListAPIView(generics.ListAPIView):
+    serializer_class = ConsultantDepositInfoSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultant]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = ConsultantDepositInfo.objects.filter(consultant=user)
+        return qs
+
+
+class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    serializer_class = ConsultantDepositInfoSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultant]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = ConsultantDepositInfo.objects.filter(consultant=user)
+        return qs
+

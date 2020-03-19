@@ -85,13 +85,15 @@ class Cart(models.Model):
             # For TimeSlots
             try:
                 time_slot_sale = product.timeslotsale  # Checks here
+
+                # If user applied discount code we apply num discount for lower price
                 if time_slot_sale.consultant in consultants_qs:
                     effective_price = product.price - cart_discount.discount.amount
                 else:
                     effective_price = product.price
 
-                # If user applied discount code we apply num discount for lower price
                 effective_price = effective_price * ((100.0 - count_discount) / 100)
+                total += effective_price
                 continue
             except TimeSlotSale.DoesNotExist:
                 pass

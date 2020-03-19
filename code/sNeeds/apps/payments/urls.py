@@ -8,4 +8,7 @@ urlpatterns = [
     path('request/', views.SendRequest.as_view(), name='request'),
     path('verify/', views.Verify.as_view(), name='verify'),
     path('verify-test/<int:cartid>/', views.VerifyTest.as_view()),
+    path('consultant-deposits/', views.ConsultantDepositInfoListAPIView.as_view(), name='consultant-deposit-list'),
+    path('consultant-deposits/<int:id>/', views.ConsultantDepositInfoDetailAPIView.as_view(), name='consultant'
+                                                                                                   '-deposit-detail'),
 ]
