@@ -178,6 +178,15 @@ class CartTests(APITestCase):
         self.cart3 = Cart.objects.create(user=self.user2)
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
+        self.cart4 = Cart.objects.create(user=self.user1)
+        self.cart4.products.set([self.webinar1])
+
+        self.cart5 = Cart.objects.create(user=self.user1)
+        self.cart5.products.set([self.webinar2])
+
+        self.cart6 = Cart.objects.create(user=self.user1)
+        self.cart6.products.set([self.webinar1, self.webinar2])
+
         # Consultant discounts
         self.discount1 = Discount.objects.create(
             amount=10,
@@ -190,6 +199,13 @@ class CartTests(APITestCase):
             code="discountcode2",
         )
         self.discount2.consultants.set([self.consultant1_profile, ])
+
+        self.discount3 = Discount.objects.create(
+            amount=500,
+            code="discountcode3"
+        )
+        self.discount3.webinars.set([self.webinar1])
+
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(

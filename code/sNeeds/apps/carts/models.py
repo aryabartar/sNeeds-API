@@ -59,6 +59,7 @@ class Cart(models.Model):
 
     def _update_total_cart_discount_amount(self):
         from sNeeds.apps.discounts.models import CartDiscount
+        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
 
         products = self.products.all()
         try:
@@ -67,37 +68,47 @@ class Cart(models.Model):
             self.total = self.subtotal
             return
 
-        total = 0
+        # consultants that are in the discount of code entered
         consultants_qs = cart_discount.discount.consultants.all()
+
+        # webinars that are in the discount of code entered
         webinars_qs = cart_discount.discount.webinars.all()
 
+        # for apply time slot number discount
+        time_slot_sale_count = self.get_time_slot_sales_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+
+        total = 0
         for product in products:
-            amount = 0
+            effective_price = 0
 
             # For TimeSlots
             try:
                 time_slot_sale = product.timeslotsale  # Checks here
                 if time_slot_sale.consultant in consultants_qs:
-                    amount += cart_discount.discount.amount
+                    effective_price = product.price - cart_discount.discount.amount
+                else:
+                    effective_price = product.price
+
+                # if user applied discount code we apply num discount for lower price
+                effective_price = effective_price * ((100.0 - count_discount) / 100)
+
             except TimeSlotSale.DoesNotExist:
                 pass
+
+            # for webinars
             try:
                 webinar_w = product.webinar  # Checks here
                 if webinar_w in webinars_qs:
-                    amount += cart_discount.discount.amount
+                    effective_price = product.price - cart_discount.discount.amount
+                else:
+                    effective_price = product.price
+
             except Webinar.DoesNotExist:
                 pass
 
-            total += (product.price - amount)
+            total += effective_price
         self.total = total
-
-    def _update_total_time_slot_number(self):
-        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
-
-        time_slot_sale_count = self.get_time_slot_sales_count()
-        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
-
-        self.total = self.total * ((100.0 - count_discount) / 100)
 
     def is_acceptable_for_pay(self):
         if self.total > 0:
@@ -107,9 +118,6 @@ class Cart(models.Model):
     def _update_total(self):
         # For code discount
         self._update_total_cart_discount_amount()
-
-        # For quantity discount
-        self._update_total_time_slot_number()
 
     def update_price(self):
         products_qs = self.products.all()
