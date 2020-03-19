@@ -30,14 +30,13 @@ class ConsultantProfileDetail(APIView):
 
 
 class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
-    queryset = ConsultantProfile.objects.all()
     serializer_class = ConsultantProfileSerializer
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     ordering_fields = ['rate', 'created', ]
     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 
     def get_queryset(self):
-        return ConsultantProfile.objects.all().get_active_consultants()
+        return ConsultantProfile.objects.get_active_consultants()
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
