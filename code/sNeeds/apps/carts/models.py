@@ -68,13 +68,13 @@ class Cart(models.Model):
             self.total = self.subtotal
             return
 
-        # consultants that are in the discount of code entered
+        # Consultants that are in the discount of code entered
         consultants_qs = cart_discount.discount.consultants.all()
 
-        # webinars that are in the discount of code entered
-        webinars_qs = cart_discount.discount.webinars.all()
+        # Products that are in the discount of code entered
+        products_qs = cart_discount.discount.products.all()
 
-        # for apply time slot number discount
+        # For apply time slot number discount
         time_slot_sale_count = self.get_time_slot_sales_count()
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
 
@@ -90,22 +90,17 @@ class Cart(models.Model):
                 else:
                     effective_price = product.price
 
-                # if user applied discount code we apply num discount for lower price
+                # If user applied discount code we apply num discount for lower price
                 effective_price = effective_price * ((100.0 - count_discount) / 100)
-
+                continue
             except TimeSlotSale.DoesNotExist:
                 pass
 
-            # for webinars
-            try:
-                webinar_w = product.webinar  # Checks here
-                if webinar_w in webinars_qs:
-                    effective_price = product.price - cart_discount.discount.amount
-                else:
-                    effective_price = product.price
-
-            except Webinar.DoesNotExist:
-                pass
+            # For products
+            if product in products_qs:
+                effective_price = product.price - cart_discount.discount.amount
+            else:
+                effective_price = product.price
 
             total += effective_price
         self.total = total

@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.webinars.models import Webinar
+from sNeeds.apps.store.models import Product
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
@@ -37,7 +38,7 @@ class CICharField(models.CharField):
 
 class Discount(models.Model):
     consultants = models.ManyToManyField(ConsultantProfile, blank=True)
-    webinars = models.ManyToManyField(Webinar, blank=True)
+    products = models.ManyToManyField(Product, blank=True)
     amount = models.PositiveIntegerField()
     code = CICharField(max_length=128, unique=True)
 
