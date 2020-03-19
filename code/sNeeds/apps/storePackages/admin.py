@@ -1,6 +1,8 @@
 from django.contrib import admin
 
-from .models import (StorePackage, StorePackagePhase, SoldStorePackage, StorePackagePhaseThrough)
+from .models import (
+    StorePackage, StorePackagePhase, SoldStorePackage, StorePackagePhaseThrough, SoldStorePackagePhase
+)
 
 
 class StorePackagePhaseThroughInline(admin.TabularInline):
@@ -16,3 +18,4 @@ class StorePackageAdmin(admin.ModelAdmin):
 
 admin.site.register(StorePackagePhase)
 admin.site.register(SoldStorePackage)
+admin.site.register(SoldStorePackagePhase)

@@ -18,7 +18,7 @@ class StorePackageQuerySetManager(models.QuerySet):
     def sell_and_get_sold_package(self, sold_to):
         qs = self.all()
         sold_store_package_list = []
-        print("here")
+
         for obj in qs:
             new_sold_store_package = SoldStorePackage.objects.create(
                 title=obj.title,
@@ -132,6 +132,14 @@ class StorePackagePhaseThrough(models.Model):
         ordering = ['phase_number', ]
 
 
+class SoldStorePackagePhaseQuerySet(models.QuerySet):
+    def get_qs_total(self):
+        total = 0
+        for obj in self._chain():
+            total += obj.price
+        return total
+
+
 class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
@@ -144,6 +152,8 @@ class SoldStorePackagePhase(models.Model):
     phase_number = models.IntegerField()
     paid = models.BooleanField(default=False)
 
+    objects = SoldStorePackagePhaseQuerySet.as_manager()
+
     class Meta:
         ordering = ['phase_number', ]
 
@@ -155,6 +165,13 @@ class SoldStorePackage(SoldProduct):
     sold_store_package_phases = models.ManyToManyField(
         SoldStorePackagePhase
     )
+    total_price = models.PositiveIntegerField()
+
+    def _update_price(self):
+
+    def _update_total_price(self):
+
+    def update_price(self):
 
     def __str__(self):
         return self.title
