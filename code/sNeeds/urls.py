@@ -43,6 +43,6 @@ urlpatterns = [
                   path('chat/', include('sNeeds.apps.chats.urls')),
                   path('webinar/', include('sNeeds.apps.webinars.urls')),
                   path('utils/', include('sNeeds.apps.customUtils.urls')),
-                  path('bugs/', include('sNeeds.apps.customForms.urls')),
+                  path('custom-form/', include('sNeeds.apps.customForms.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
