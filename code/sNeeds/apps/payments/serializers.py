@@ -6,11 +6,10 @@ class ConsultantDepositInfoSerializer(ModelSerializer):
 
     class Meta:
         model = ConsultantDepositInfo
-        fields = ['id', 'tracing_code', 'amount', 'updated', 'comment']
+        fields = ['consultant_deposit_info_id', 'amount', 'updated', 'comment']
 
         extra_kwargs = {
-            'id': {'read_only': True},
-            'tracing_code': {'read_only': True},
+            'consultant_deposit_info_id': {'read_only': True},
             'amount': {'read_only': True},
             'updated': {'read_only': True},
             'comment': {'read_only': True},
