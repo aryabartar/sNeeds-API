@@ -204,8 +204,7 @@ class CartTests(APITestCase):
             amount=500,
             code="discountcode3"
         )
-        self.discount3.webinars.set([self.webinar1])
-
+        self.discount3.products.set([self.webinar1])
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(
