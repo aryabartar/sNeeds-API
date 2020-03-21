@@ -158,6 +158,12 @@ class SoldStorePackagePhase(models.Model):
         ordering = ['phase_number', ]
 
 
+class SoldStorePackageQuerySet(models.QuerySet):
+    def update_qs_prices(self):
+        for obj in self._chain():
+            obj.update_price()
+
+
 class SoldStorePackage(SoldProduct):
     title = models.CharField(max_length=1024)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
@@ -166,6 +172,8 @@ class SoldStorePackage(SoldProduct):
         SoldStorePackagePhase
     )
     total_price = models.PositiveIntegerField()
+
+    objects = SoldStorePackageQuerySet.as_manager()
 
     def _update_price(self):
         self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
