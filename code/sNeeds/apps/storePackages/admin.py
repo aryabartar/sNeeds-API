@@ -19,7 +19,13 @@ class StorePackageAdmin(admin.ModelAdmin):
 @admin.register(SoldStorePackage)
 class StorePackageAdmin(admin.ModelAdmin):
     readonly_fields = ["price", "total_price", ]
+    list_display = ['id', 'title', 'sold_to', 'consultant']
 
+
+@admin.register(SoldStorePackagePhase)
+class SoldStorePackagePhaseAdmin(admin.ModelAdmin):
+    # readonly_fields = ["price", "total_price", ]
+    # list_display = ['id', 'title', 'sold_to', 'consultant']
+    pass
 
 admin.site.register(StorePackagePhase)
-admin.site.register(SoldStorePackagePhase)

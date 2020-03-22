@@ -165,8 +165,8 @@ class SoldStorePackage(SoldProduct):
         self._update_total_price()
         self.save()
 
-    def __str__(self):
-        return self.title
+    # def __str__(self):
+    #     return self.title
 
 
 SOLD_STORE_PACKAGE_PHASE_STATUS = [
@@ -183,7 +183,11 @@ class SoldStorePackagePhase(models.Model):
         max_length=1024,
         help_text="This field is for ourselves, Feel free to add details."
     )
-    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
+    sold_store_package = models.ForeignKey(
+        SoldStorePackage,
+        on_delete=models.CASCADE,
+        related_name='sold_store_package_phases'
+    )
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
