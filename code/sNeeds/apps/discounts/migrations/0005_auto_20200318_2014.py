@@ -7,7 +7,6 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('webinars', '0001_initial'),
         ('discounts', '0004_auto_20200314_1126'),
     ]
 
