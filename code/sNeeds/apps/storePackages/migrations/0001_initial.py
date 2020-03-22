@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=1024)),
                 ('detailed_title', models.CharField(help_text='This field is for ourselves, Feel free to add details.', max_length=1024)),
-                ('price', models.IntegerField(vlidators=[django.core.validators.MinValueValidator(0)])),
+                ('price', models.IntegerField(validators=[django.core.validators.MinValueValidator(0)])),
                 ('phase_number', models.IntegerField()),
                 ('consultant_done', models.BooleanField(default=False)),
                 ('paid', models.BooleanField(default=False)),

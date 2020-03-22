@@ -186,15 +186,11 @@ class SoldStorePackagePhase(models.Model):
     sold_store_package = models.ForeignKey(
         SoldStorePackage,
         on_delete=models.CASCADE,
-        related_name='sold_store_package_phases'
     )
-    price = models.IntegerField(
-        validators=[MinValueValidator(0), ],
-    )
+
     phase_number = models.IntegerField()
 
     consultant_done = models.BooleanField(default=False)
-    paid = models.BooleanField(default=False)
     status = models.CharField(
         choices=SOLD_STORE_PACKAGE_PHASE_STATUS,
         default="not_started",
@@ -204,6 +200,13 @@ class SoldStorePackagePhase(models.Model):
     objects = SoldStorePackagePhaseQuerySet.as_manager()
 
     class Meta:
+        abstract = True
         ordering = ['phase_number', ]
 
-    # def update_status(self):
+
+class SoldStorePaidPackagePhase(SoldStorePackagePhase, Product):
+    pass
+
+
+class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, SoldProduct):
+    pass
