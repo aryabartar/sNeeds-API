@@ -25,7 +25,6 @@ class BasicProduct(Product):
     title = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
 
-    active = models.BooleanField(default=True)
     objects = BasicProductManager.as_manager()
 
     def __str__(self):
