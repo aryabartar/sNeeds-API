@@ -22,7 +22,7 @@ class StorePackageQuerySetManager(models.QuerySet):
         for obj in qs:
             new_sold_store_package = SoldStorePackage.objects.create(
                 title=obj.title,
-                price=obj.price,
+                paid_price=obj.price,
                 sold_to=sold_to,
             )
             sold_store_package_list.append(new_sold_store_package)
@@ -32,18 +32,22 @@ class StorePackageQuerySetManager(models.QuerySet):
             )
 
             for store_package_phase_through_obj in store_package_phase_through_qs:
-
-                paid = False
                 if store_package_phase_through_obj.phase_number == 1:
-                    paid = True
-
-                new_sold_store_package.sold_store_package_phases.create(
-                    title=store_package_phase_through_obj.store_package_phase.title,
-                    detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
-                    price=store_package_phase_through_obj.store_package_phase.price,
-                    phase_number=store_package_phase_through_obj.phase_number,
-                    paid=paid
-                )
+                    SoldStorePaidPackagePhase.objects.create(
+                        title=store_package_phase_through_obj.store_package_phase.title,
+                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
+                        price=store_package_phase_through_obj.store_package_phase.price,
+                        phase_number=store_package_phase_through_obj.phase_number,
+                        sold_store_package=new_sold_store_package
+                    )
+                else:
+                    SoldStoreUnpaidPackagePhase.objects.create(
+                        title=store_package_phase_through_obj.store_package_phase.title,
+                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
+                        price=store_package_phase_through_obj.store_package_phase.price,
+                        phase_number=store_package_phase_through_obj.phase_number,
+                        sold_store_package=new_sold_store_package
+                    )
 
         sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
 
@@ -146,27 +150,28 @@ class SoldStorePackageQuerySet(models.QuerySet):
             obj.update_price()
 
 
-class SoldStorePackage(SoldProduct):
+class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
+    sold_to = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
 
+    paid_price = models.PositiveIntegerField()
     total_price = models.PositiveIntegerField()
 
     objects = SoldStorePackageQuerySet.as_manager()
 
     def _update_price(self):
-        self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
+        # self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
+        pass
 
     def _update_total_price(self):
-        self.price = self.sold_store_package_phases.all().get_qs_price()
+        # self.price = self.sold_store_package_phases.all().get_qs_price()
+        pass
 
     def update_price(self):
         self._update_price()
         self._update_total_price()
         self.save()
-
-    # def __str__(self):
-    #     return self.title
 
 
 SOLD_STORE_PACKAGE_PHASE_STATUS = [

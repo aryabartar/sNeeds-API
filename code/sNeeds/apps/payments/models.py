@@ -16,9 +16,6 @@ class PayPayment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return str(self.order)
-
 
 class ConsultantDepositInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
