@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.webinars.models import Webinar
 from sNeeds.apps.store.models import Product
 
 

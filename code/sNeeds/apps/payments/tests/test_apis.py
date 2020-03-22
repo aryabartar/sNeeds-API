@@ -11,12 +11,13 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import DiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.customForms.models import BugReport
 
 User = get_user_model()
 
 
-class BugReportTests(APITestCase):
+class ConsultantDepositInfoAPITests(APITestCase):
     def setUp(self):
         # Users -------
         self.user1 = User.objects.create_user(email="u1@g.com", password="user1234")
@@ -136,6 +137,34 @@ class BugReportTests(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
+        # BasicProducts
+        self.BasicProduct1 = BasicProduct.objects.create(
+            title="BasicProduct1",
+            slug="BasicProduct1",
+            active=True,
+            price=30000,
+        )
+
+        self.BasicProduct2 = BasicProduct.objects.create(
+            title="BasicProduct2",
+            slug="BasicProduct2",
+            active=True,
+            price=30000,
+        )
+
+        self.BasicProduct3 = BasicProduct.objects.create(
+            title="BasicProduct3",
+            slug="BasicProduct3",
+            active=True,
+            price=30000,
+        )
+
+        self.BasicProduct4 = BasicProduct.objects.create(
+            title="BasicProduct4",
+            slug="BasicProduct4",
+            active=False,
+            price=30000,
+        )
 
         # Carts -------
         self.cart1 = Cart.objects.create(user=self.user1)
@@ -147,14 +176,14 @@ class BugReportTests(APITestCase):
         self.cart3 = Cart.objects.create(user=self.user2)
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
-        # self.cart4 = Cart.objects.create(user=self.user1)
-        # self.cart4.products.set([self.webinar1])
+        self.cart4 = Cart.objects.create(user=self.user1)
+        self.cart4.products.set([self.BasicProduct1])
 
-        # self.cart5 = Cart.objects.create(user=self.user1)
-        # self.cart5.products.set([self.webinar2])
-        #
-        # self.cart6 = Cart.objects.create(user=self.user1)
-        # self.cart6.products.set([self.webinar1, self.webinar2])
+        self.cart5 = Cart.objects.create(user=self.user1)
+        self.cart5.products.set([self.BasicProduct2])
+
+        self.cart6 = Cart.objects.create(user=self.user1)
+        self.cart6.products.set([self.BasicProduct1, self.BasicProduct2])
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
@@ -173,7 +202,7 @@ class BugReportTests(APITestCase):
             amount=500,
             code="discountcode3"
         )
-        self.discount3.products.set([self.webinar1])
+        self.discount3.products.set([self.BasicProduct1])
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(
@@ -184,55 +213,3 @@ class BugReportTests(APITestCase):
         # Setup ------
         self.client = APIClient()
 
-    def test_create_bug_report_logged_in_user_entered_email_again(self):
-        client = self.client
-        client.login(email='zx@gmial.com', password='123password')
-        url = reverse('customForms:bug-report-create')
-
-        post_data = {
-            "email": "qw@gmail.com",
-            "comment": "shop is not working",
-        }
-        response = client.post(url, post_data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data.get("email"), post_data.get("email"))
-        self.assertEqual(response.data.get("comment"), post_data.get("comment"))
-
-    def test_create_bug_report_logged_in_user_not_entered_email_again(self):
-        client = self.client
-        client.force_login(user=self.user1)
-        url = reverse('customForms:bug-report-create')
-
-        post_data = {
-            "comment": "shop is not working",
-        }
-        response = client.post(url, post_data)
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data.get("email"), self.user1.email)
-        self.assertEqual(response.data.get("comment"), post_data.get("comment"))
-
-    def test_create_bug_report_fail_with_no_comment(self):
-        client = self.client
-        client.login(email='zx@gmial.com', password='123password')
-        url = reverse('customForms:bug-report-create')
-
-        post_data = {
-            "email": "yu@gmail.com",
-        }
-        response = client.post(url, post_data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_get_bug_report_is_not_allowed(self):
-        client = self.client
-        client.login(email='zx@gmial.com', password='123password')
-        url = reverse('customForms:bug-report-create')
-
-        post_data = {
-            "email": "yu@gmail.com",
-        }
-        response = client.get(url, post_data, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)

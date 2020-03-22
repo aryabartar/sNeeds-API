@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
-from sNeeds.apps.webinars.models import Webinar
 
 User = get_user_model()
 
@@ -54,8 +53,8 @@ class Cart(models.Model):
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
 
-    def get_webinars_count(self):
-        return self.products.all().get_webinars().count()
+    def get_basic_products_count(self):
+        return self.products.all().get_basic_products().count()
 
     def _update_total_cart_discount_amount(self):
         from sNeeds.apps.discounts.models import CartDiscount
@@ -134,7 +133,7 @@ class Cart(models.Model):
         self.save()
 
     @transaction.atomic
-    def set_webinars(self, products):
+    def set_basic_products(self, products):
         for p in products:
             self.products.add(p)
         self.save()

@@ -21,14 +21,14 @@ class ProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
-    def get_webinars(self):
-        from sNeeds.apps.webinars.models import Webinar
-        result_qs = Webinar.objects.none()
+    def get_basic_products(self):
+        from sNeeds.apps.basicProducts.models import BasicProduct
+        result_qs = BasicProduct.objects.none()
         for i in self.all():
             try:
-                webinar_w = i.webinar
-                result_qs |= Webinar.objects.filter(pk=webinar_w.id)
-            except Webinar.DoesNotExist:
+                basic_product = i.basicproduct
+                result_qs |= BasicProduct.objects.filter(pk=basic_product.id)
+            except BasicProduct.DoesNotExist:
                 pass
         return result_qs
 
@@ -57,15 +57,15 @@ class SoldProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
-    def get_sold_webinars(self):
-        from sNeeds.apps.webinars.models import SoldWebinar
+    def get_sold_basic_products(self):
+        from sNeeds.apps.basicProducts.models import SoldBasicProduct
 
-        result_qs = SoldWebinar.objects.none()
+        result_qs = SoldBasicProduct.objects.none()
         for i in self.all():
             try:
-                sold_webinar = i.soldwebinar
-                result_qs |= SoldWebinar.objects.filter(pk=sold_webinar)
-            except SoldWebinar.DoesNotExist:
+                sold_basic_product = i.soldbasicproduct
+                result_qs |= SoldBasicProduct.objects.filter(pk=sold_basic_product)
+            except SoldBasicProduct.DoesNotExist:
                 pass
         return result_qs
 

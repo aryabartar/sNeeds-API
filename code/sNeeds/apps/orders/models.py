@@ -22,7 +22,7 @@ class OrderManager(models.Manager):
         cart_products = cart.products.all()
         time_slot_sales_qs = cart_products.get_time_slot_sales()
         store_packages_qs = cart_products.get_store_packages()
-        webinars_qs = cart_products.get_webinars()
+        basic_products_qs = cart_products.get_basic_products()
 
         try:
             used_discount = CartDiscount.objects.get(cart=cart).discount
@@ -38,7 +38,7 @@ class OrderManager(models.Manager):
 
         sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
         sold_store_packages_qs = store_packages_qs.sell_and_get_sold_package(sold_to=cart.user)
-        sold_webinars_qs = webinars_qs.add_webinar_sold(sold_to=cart.user)
+        sold_basic_products_qs = basic_products_qs.add_basic_product_sold(sold_to=cart.user)
 
         order = Order(
             user=cart.user,
@@ -52,7 +52,7 @@ class OrderManager(models.Manager):
         order.save()
         order.sold_products.set(sold_time_slot_sales_qs)
         order.sold_products.set(sold_store_packages_qs)
-        order.sold_products.set(sold_webinars_qs)
+        order.sold_products.set(sold_basic_products_qs)
 
         cart.delete()
         return order

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'sNeeds.apps.chats',
     'sNeeds.apps.storePackages',
     'sNeeds.apps.customUtils',
+    'sNeeds.apps.basicProducts',
     'sNeeds.apps.webinars',
     'sNeeds.apps.customForms',
 
