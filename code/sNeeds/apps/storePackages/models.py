@@ -140,24 +140,6 @@ class SoldStorePackagePhaseQuerySet(models.QuerySet):
         return total
 
 
-class SoldStorePackagePhase(models.Model):
-    title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
-    price = models.IntegerField(
-        validators=[MinValueValidator(0), ],
-    )
-    phase_number = models.IntegerField()
-    paid = models.BooleanField(default=False)
-
-    objects = SoldStorePackagePhaseQuerySet.as_manager()
-
-    class Meta:
-        ordering = ['phase_number', ]
-
-
 class SoldStorePackageQuerySet(models.QuerySet):
     def update_qs_prices(self):
         for obj in self._chain():
@@ -168,9 +150,6 @@ class SoldStorePackage(SoldProduct):
     title = models.CharField(max_length=1024)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
 
-    sold_store_package_phases = models.ManyToManyField(
-        SoldStorePackagePhase
-    )
     total_price = models.PositiveIntegerField()
 
     objects = SoldStorePackageQuerySet.as_manager()
@@ -188,3 +167,39 @@ class SoldStorePackage(SoldProduct):
 
     def __str__(self):
         return self.title
+
+
+SOLD_STORE_PACKAGE_PHASE_STATUS = [
+    ('not_started', "شروع نشده"),
+    ("pay_to_start", "نیازمند پرداخت برای شروع"),
+    ('in_progress', "در حال انجام"),
+    ('done', "انجام شده")
+]
+
+
+class SoldStorePackagePhase(models.Model):
+    title = models.CharField(max_length=1024)
+    detailed_title = models.CharField(
+        max_length=1024,
+        help_text="This field is for ourselves, Feel free to add details."
+    )
+    sold_store_package = models.ForeignKey(SoldStorePackage, on_delete=models.CASCADE)
+    price = models.IntegerField(
+        validators=[MinValueValidator(0), ],
+    )
+    phase_number = models.IntegerField()
+
+    consultant_done = models.BooleanField(default=False)
+    paid = models.BooleanField(default=False)
+    status = models.CharField(
+        choices=SOLD_STORE_PACKAGE_PHASE_STATUS,
+        default="not_started",
+        max_length=128
+    )
+
+    objects = SoldStorePackagePhaseQuerySet.as_manager()
+
+    class Meta:
+        ordering = ['phase_number', ]
+
+    # def update_status(self):
