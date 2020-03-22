@@ -41,7 +41,7 @@ urlpatterns = [
                   path('discount/', include('sNeeds.apps.discounts.urls')),
                   path('videochat/', include('sNeeds.apps.videochats.urls')),
                   path('chat/', include('sNeeds.apps.chats.urls')),
-                  path('webinar/', include('sNeeds.apps.webinars.urls')),
+                  path('basic-product/', include('sNeeds.apps.basicProducts.urls')),
                   path('utils/', include('sNeeds.apps.customUtils.urls')),
                   path('custom-form/', include('sNeeds.apps.customForms.urls')),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

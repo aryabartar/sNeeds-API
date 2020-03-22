@@ -13,7 +13,7 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import DiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
-from sNeeds.apps.webinars.models import Webinar
+from sNeeds.apps.basicProducts.models import BasicProduct
 User = get_user_model()
 
 
@@ -139,31 +139,31 @@ class CartTests(APITestCase):
             price=self.consultant2_profile.time_slot_price
         )
 
-        # webinars
-        self.webinar1 = Webinar.objects.create(
-            title="webinar1",
-            slug="webinar1",
+        # basicProducts
+        self.basic_product1 = BasicProduct.objects.create(
+            title="basic_product1",
+            slug="basic_product1",
             active=True,
             price=30000,
         )
 
-        self.webinar2 = Webinar.objects.create(
-            title="webinar2",
-            slug="webinar2",
+        self.basic_product2 = BasicProduct.objects.create(
+            title="basic_product2",
+            slug="basic_product2",
             active=True,
             price=30000,
         )
 
-        self.webinar3 = Webinar.objects.create(
-            title="webinar3",
-            slug="webinar3",
+        self.basic_product3 = BasicProduct.objects.create(
+            title="basic_product3",
+            slug="basic_product3",
             active=True,
             price=30000,
         )
 
-        self.webinar4 = Webinar.objects.create(
-            title="webinar4",
-            slug="webinar4",
+        self.basic_product4 = BasicProduct.objects.create(
+            title="basic_product4",
+            slug="basic_product4",
             active=False,
             price=30000,
         )
@@ -179,13 +179,13 @@ class CartTests(APITestCase):
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
         self.cart4 = Cart.objects.create(user=self.user1)
-        self.cart4.products.set([self.webinar1])
+        self.cart4.products.set([self.basic_product1])
 
         self.cart5 = Cart.objects.create(user=self.user1)
-        self.cart5.products.set([self.webinar2])
+        self.cart5.products.set([self.basic_product2])
 
         self.cart6 = Cart.objects.create(user=self.user1)
-        self.cart6.products.set([self.webinar1, self.webinar2])
+        self.cart6.products.set([self.basic_product1, self.basic_product2])
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
@@ -204,8 +204,7 @@ class CartTests(APITestCase):
             amount=500,
             code="discountcode3"
         )
-        self.discount3.webinars.set([self.webinar1])
-
+        self.discount3.products.set([self.basic_product1])
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(

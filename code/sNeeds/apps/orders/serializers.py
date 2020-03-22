@@ -7,19 +7,19 @@ from .models import Order
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from ..store.serializers import SoldTimeSlotSaleSerializer
-from ..webinars.serializers import SoldWebinarSerializer
+from ..basicProducts.serializers import SoldBasicProductSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
     sold_time_slot_sales = serializers.SerializerMethodField()
-    sold_webinars = serializers.SerializerMethodField()
+    sold_basic_products = serializers.SerializerMethodField()
     used_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
         fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_time_slot_sales', 'created', 'updated',
-                  'used_discount', 'time_slot_sales_number_discount', 'sold_webinars']
+                  'used_discount', 'time_slot_sales_number_discount', 'sold_basic_products']
 
         extra_kwargs = {
             'id': {'read_only': True},
@@ -39,10 +39,10 @@ class OrderSerializer(serializers.ModelSerializer):
             sold_time_slot_sales, many=True, context={"request": self.context.get("request")}
         ).data
 
-    def get_sold_webinars(self, obj):
-        sold_webinars = obj.sold_products.all().get_sold_webinars()
-        return SoldWebinarSerializer(
-            sold_webinars, many=True, context={"request": self.context.get("request")}
+    def get_sold_basic_products(self, obj):
+        sold_basic_products = obj.sold_products.all().get_sold_basic_products()
+        return SoldBasicProductSerializer(
+            sold_basic_products, many=True, context={"request": self.context.get("request")}
         ).data
 
     def get_used_discount(self, obj):

@@ -1,6 +1,6 @@
 from django.urls import path
-from.views import SendBug
+from.views import BugReportCreateAPIView
 app_name = "customForms"
 urlpatterns = [
-    path('bugs', SendBug.as_view(), name='bug-create'),
+    path('bugs', BugReportCreateAPIView.as_view(), name='bug-report-create'),
 ]
