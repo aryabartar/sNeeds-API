@@ -11,6 +11,11 @@ class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
     )
     title = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
+    store_package = serializers.HyperlinkedRelatedField(
+        lookup_field='slug',
+        read_only=True,
+        view_name='store-package:store-package-detail'
+    )
 
     class Meta:
         model = StorePackagePhaseThrough
@@ -38,4 +43,4 @@ class StorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StorePackage
-        fields = ["id", 'url', "price", "total_price", "active", "title", "store_package_phases", "slug", ]
+        fields = ["id", 'url', "price", "total_price", "active", "title", "store_package_phases", ]
