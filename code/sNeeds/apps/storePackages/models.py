@@ -46,7 +46,8 @@ class StorePackageQuerySetManager(models.QuerySet):
                         detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
                         price=store_package_phase_through_obj.store_package_phase.price,
                         phase_number=store_package_phase_through_obj.phase_number,
-                        sold_store_package=new_sold_store_package
+                        sold_store_package=new_sold_store_package,
+                        active=False
                     )
 
         sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
@@ -167,7 +168,6 @@ class SoldStorePackage(models.Model):
             sold_store_package__id=self.id
         ).get_qs_price()
         self.paid_price = paid_price
-        print(self.paid_price)
 
     def _update_total_price(self):
         paid_price = SoldStorePaidPackagePhase.objects.filter(
@@ -204,7 +204,6 @@ class SoldStorePackagePhase(models.Model):
 
     phase_number = models.IntegerField()
 
-    consultant_done = models.BooleanField(default=False)
     status = models.CharField(
         choices=SOLD_STORE_PACKAGE_PHASE_STATUS,
         default="not_started",
@@ -231,12 +230,23 @@ class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
 
 
 class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    pass
+    def deactivate_all(self):
+        for obj in self._chain():
+            obj.active = False
+            obj.save()
 
 
 class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
+    consultant_done = models.BooleanField(default=False)
+
     objects = SoldStorePaidPackagePhaseQuerySet.as_manager()
 
 
 class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
     objects = SoldStoreUnpaidPackagePhaseQuerySet.as_manager()
+
+    def get_status(self):
+        if not self.active:
+            return "not_started"
+        else:
+            return "pay_to_start"

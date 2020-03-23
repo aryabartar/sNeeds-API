@@ -20,6 +20,20 @@ def pre_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     instance.sold_to = instance.sold_store_package.sold_to
 
 
+def pre_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs):
+    # Setting active
+    sold_store_paid_package_phases = SoldStorePaidPackagePhase.objects.filter(
+        sold_store_package__id=instance.sold_store_package.id
+    ).order_by('phase_number')
+
+    if instance.phase_number == sold_store_paid_package_phases.first().phase_number + 1:
+        instance.active = True
+
+    # Setting status
+    instance.status = instance.get_status()
+
+
+
 def post_save_store_package_phase(sender, instance, *args, **kwargs):
     store_package_qs = instance.store_packages.all()
     store_package_qs.update()
@@ -67,9 +81,23 @@ def post_delete_sold_store_unpaid_package_phase(sender, instance, *args, **kwarg
     instance.sold_store_package.save()
 
 
+def handle_phases(sender, instance, *args, **kwargs):
+    sold_store_unpaid_package_phases = SoldStoreUnpaidPackagePhase.objects.filter(
+        sold_store_package__id=instance.id
+    ).order_by('phase_number')
+    sold_store_paid_package_phases = SoldStorePaidPackagePhase.objects.filter(
+        sold_store_package__id=instance.id
+    ).order_by('phase_number')
+
+    sold_store_unpaid_package_phases.deactivate_all()
+
+    current_phase = sold_store_paid_package_phases.first()
+
+
 pre_save.connect(pre_save_store_package, sender=StorePackage)
 pre_save.connect(pre_save_sold_store_package, sender=SoldStorePackage)
 pre_save.connect(pre_save_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
+pre_save.connect(pre_save_sold_store_unpaid_package_phase, sender=SoldStoreUnpaidPackagePhase)
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package, sender=StorePackage)
