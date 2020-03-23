@@ -10,6 +10,10 @@ def pre_save_store_package(sender, instance, *args, **kwargs):
         instance.price = 0
 
 
+def pre_save_sold_store_package(sender, instance, *args, **kwargs):
+    instance.update_price()
+
+
 def post_save_store_package_phase(sender, instance, *args, **kwargs):
     store_package_qs = instance.store_packages.all()
     store_package_qs.update()
@@ -35,17 +39,21 @@ def post_save_store_package(sender, instance, *args, **kwargs):
 
 def update_sold_time_slot_sale_price(sender, instance, *args, **kwargs):
     instance.update_price()
+    instance.save()
 
 
 def sold_store_package_post_save(sender, instance, *args, **kwargs):
     instance.sold_store_package.update_price()
+    instance.sold_store_package.save()
 
 
 def sold_store_package_pre_delete(sender, instance, *args, **kwargs):
     instance.sold_store_package.update_price()
+    instance.sold_store_package.save()
 
 
 pre_save.connect(pre_save_store_package, sender=StorePackage)
+pre_save.connect(pre_save_sold_store_package, sender=SoldStorePackage)
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package, sender=StorePackage)

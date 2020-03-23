@@ -148,11 +148,12 @@ class SoldStorePackageQuerySet(models.QuerySet):
     def update_qs_prices(self):
         for obj in self._chain():
             obj.update_price()
+            obj.save()
 
 
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
-    sold_to = models.ForeignKey(User, null=True, on_delete=models.PROTECT)
+    sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
 
     paid_price = models.PositiveIntegerField()
@@ -160,18 +161,19 @@ class SoldStorePackage(models.Model):
 
     objects = SoldStorePackageQuerySet.as_manager()
 
-    def _update_price(self):
+    def _update_paid_price(self):
+        self.paid_price = 0
         # self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
         pass
 
     def _update_total_price(self):
+        self.total_price = 0
         # self.price = self.sold_store_package_phases.all().get_qs_price()
         pass
 
     def update_price(self):
-        self._update_price()
+        self._update_paid_price()
         self._update_total_price()
-        self.save()
 
 
 SOLD_STORE_PACKAGE_PHASE_STATUS = [
