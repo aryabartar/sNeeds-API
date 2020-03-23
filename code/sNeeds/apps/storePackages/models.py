@@ -153,6 +153,7 @@ class SoldStorePackageQuerySet(models.QuerySet):
 
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
+
     sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
 
@@ -162,14 +163,20 @@ class SoldStorePackage(models.Model):
     objects = SoldStorePackageQuerySet.as_manager()
 
     def _update_paid_price(self):
-        self.paid_price = 0
-        # self.total_price = self.sold_store_package_phases.filter(paid=True).get_qs_price()
-        pass
+        paid_price = SoldStorePaidPackagePhase.objects.filter(
+            sold_store_package__id=self.id
+        ).get_qs_price()
+        self.paid_price = paid_price
+        print(self.paid_price)
 
     def _update_total_price(self):
-        self.total_price = 0
-        # self.price = self.sold_store_package_phases.all().get_qs_price()
-        pass
+        paid_price = SoldStorePaidPackagePhase.objects.filter(
+            sold_store_package__id=self.id
+        ).get_qs_price()
+        unpaid_price = SoldStoreUnpaidPackagePhase.objects.filter(
+            sold_store_package__id=self.id
+        ).get_qs_price()
+        self.total_price = paid_price + unpaid_price
 
     def update_price(self):
         self._update_paid_price()
@@ -211,9 +218,25 @@ class SoldStorePackagePhase(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePaidPackagePhase(SoldStorePackagePhase, Product):
+class SoldStorePackagePhaseQuerySet(models.QuerySet):
+    def get_qs_price(self):
+        qs_price = 0
+        for obj in self._chain():
+            qs_price += obj.price
+        return qs_price
+
+
+class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
     pass
 
 
-class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, SoldProduct):
+class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
     pass
+
+
+class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
+    objects = SoldStorePaidPackagePhaseQuerySet.as_manager()
+
+
+class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
+    objects = SoldStoreUnpaidPackagePhaseQuerySet.as_manager()

@@ -1,7 +1,8 @@
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save, pre_delete
 
 from sNeeds.apps.storePackages.models import (
-    StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage, SoldStorePackagePhase
+    StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
+    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase
 )
 
 
@@ -58,8 +59,10 @@ pre_save.connect(pre_save_sold_store_package, sender=SoldStorePackage)
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package, sender=StorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
-post_save.connect(sold_store_package_post_save, sender=SoldStorePackagePhase)
+post_save.connect(sold_store_package_post_save, sender=SoldStorePaidPackagePhase)
+post_save.connect(sold_store_package_post_save, sender=SoldStoreUnpaidPackagePhase)
 
-pre_delete.connect(sold_store_package_pre_delete, sender=SoldStorePackagePhase)
+pre_delete.connect(sold_store_package_pre_delete, sender=SoldStorePaidPackagePhase)
+pre_delete.connect(sold_store_package_pre_delete, sender=SoldStoreUnpaidPackagePhase)
 
 post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)
