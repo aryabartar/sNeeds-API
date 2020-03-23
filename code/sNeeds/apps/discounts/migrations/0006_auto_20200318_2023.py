@@ -15,9 +15,4 @@ class Migration(migrations.Migration):
             name='consultants',
             field=models.ManyToManyField(blank=True, to='consultants.ConsultantProfile'),
         ),
-        migrations.AlterField(
-            model_name='discount',
-            name='webinars',
-            field=models.ManyToManyField(blank=True, to='webinars.Webinar'),
-        ),
     ]

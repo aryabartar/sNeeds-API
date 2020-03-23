@@ -20,9 +20,4 @@ class Migration(migrations.Migration):
             name='amount',
             field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)]),
         ),
-        migrations.AddField(
-            model_name='discount',
-            name='webinars',
-            field=models.ManyToManyField(to='webinars.Webinar'),
-        ),
     ]
