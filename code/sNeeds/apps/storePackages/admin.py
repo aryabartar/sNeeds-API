@@ -25,7 +25,7 @@ class StorePackageAdmin(admin.ModelAdmin):
 
 @admin.register(SoldStoreUnpaidPackagePhase)
 class SoldStorePackagePhaseAdmin(admin.ModelAdmin):
-    readonly_fields = ['status', 'active',]
+    readonly_fields = ['status', 'active', 'sold_store_package',]
     list_display = ['id', 'title', 'price', 'sold_store_package',]
 
 

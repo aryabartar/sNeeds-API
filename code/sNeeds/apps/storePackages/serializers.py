@@ -24,26 +24,18 @@ class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
 
 
 class StorePackageSerializer(serializers.ModelSerializer):
-    first_price = serializers.IntegerField(source='price')
-    total_price = serializers.SerializerMethodField()
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='slug',
+        view_name='store-package:store-package-detail',
+    )
+
     store_package_phases = serializers.HyperlinkedRelatedField(
         lookup_field='id',
         many=True,
         read_only=True,
         view_name='store-package:store-package-phase-through-detail'
     )
-    url = serializers.HyperlinkedIdentityField(
-        lookup_field='slug',
-        view_name='store-package:store-package-detail',
-    )
 
     class Meta:
         model = StorePackage
-        fields = ["id",'url', "title", "store_package_phases", "slug", "first_price", "total_price"]
-
-    def get_total_price(self, obj):
-        qs = StorePackagePhaseThrough.objects.filter(store_package=obj)
-        total = 0
-        for obj in qs:
-            total += obj.store_package_phase.price
-        return total
+        fields = ["id", 'url', "price", "total_price", "active", "title", "store_package_phases", "slug", ]
