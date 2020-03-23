@@ -241,6 +241,12 @@ class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
 
     objects = SoldStorePaidPackagePhaseQuerySet.as_manager()
 
+    def get_status(self):
+        if not self.consultant_done:
+            return "in_progress"
+        else:
+            return "done"
+
 
 class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
     objects = SoldStoreUnpaidPackagePhaseQuerySet.as_manager()

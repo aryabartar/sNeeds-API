@@ -25,12 +25,15 @@ class StorePackageAdmin(admin.ModelAdmin):
 
 @admin.register(SoldStoreUnpaidPackagePhase)
 class SoldStorePackagePhaseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'price', 'sold_store_package']
+    readonly_fields = ['status', 'active',]
+    list_display = ['id', 'title', 'price', 'sold_store_package',]
 
 
 @admin.register(SoldStorePaidPackagePhase)
 class SoldStorePackagePhaseAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title', 'price', 'sold_store_package']
+    exclude = ['sold_to', ]
+    readonly_fields = ['status', 'sold_store_package', ]
+    list_display = ['id', 'title', 'price', 'sold_store_package',]
 
 
 admin.site.register(StorePackagePhase)
