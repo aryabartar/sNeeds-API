@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
+from .utils import unique_discount_code_generator
 from ..consultants.models import ConsultantProfile
 from ..store.models import Product
 
@@ -16,41 +17,13 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        fields = ['consultants', 'products', 'amount', 'code']
-
-
-    def validate_products(self, products):
-        # Validate empty products
-        if len(products) != 0:
-            raise ValidationError("No products in cart")
-
-        user = None
-        request = self.context.get("request")
-        # Post Method for create discount bu consultants
-        if request.method == 'POST':
-
-            if request and hasattr(request, "user"):
-                user = request.user
-
-            products_id = [p.id for p in products]
-            products_qs = Product.objects.filter(id__in=products_id)
-            time_slot_sales_qs = products_qs.get_time_slot_sales()
-
-            if time_slot_sales_qs.count() != products_qs.count():
-                raise ValidationError("There is a none Time slot sale product in products")
-
-            for ts in time_slot_sales_qs:
-                if ts.consultant.user != user:
-                    raise ValidationError("There is an time slot sale belongs to another consultant")
-
-        return products
-
-
-    def validate_code(self, code):
-        qs = Discount.objects.filter(code=code)
-        if qs.exists():
-            raise ValidationError(_("This code is existed"))
-
+        fields = ['consultants', 'products', 'amount', 'code', 'users']
+        extra_kwargs = {
+            'consultant': {'read_only': True},
+            'products': {'read_only': True},
+            'amount': {'read_only': True},
+            'code': {'read_only': True}
+        }
 
     def validate(self, attrs):
         user = None
@@ -58,10 +31,33 @@ class DiscountSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user"):
             user = request.user
 
-
-
-
     def create(self, validated_data):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        if len(validated_data['products']) != 0:
+            raise ValidationError("No products in cart")
+
+        if validated_data.get('users', None) is None:
+            raise ValidationError("No students defined to use discount")
+
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        consultants = validated_data.get('consultants', [])
+        consultants.add(consultant_profile)
+
+
+
+        users = validated_data.get('users', [])
+        products = validated_data.get('products', [])
+
+        code = unique_discount_code_generator()
+        amount = validated_data.get('amount')
+
+        obj = Discount.objects.new_discount_with_products_and_users_and_consultant(products, users, consultants,
+                                                                                   code=code, amount=amount,
+                                                                                   )
+
 
 
 

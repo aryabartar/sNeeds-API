@@ -8,9 +8,9 @@ from sNeeds.apps.payments.utils import unique_consultant_deposit_info_id_generat
 from sNeeds.settings.config.variables import BACKEND_URL, FRONTEND_URL
 
 
-def pre_save_create_tracing_code(sender, instance, *args, **kwargs):
+def pre_save_consultant_deposit_info_id(sender, instance, *args, **kwargs):
     if not instance.consultant_deposit_info_id:
-        instance.tracing_code = unique_consultant_deposit_info_id_generator(instance)
+        instance.consultant_deposit_info_id = unique_consultant_deposit_info_id_generator(instance)
 
 
-pre_save.connect(pre_save_create_tracing_code, sender=ConsultantDepositInfo)
+pre_save.connect(pre_save_consultant_deposit_info_id, sender=ConsultantDepositInfo)

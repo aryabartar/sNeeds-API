@@ -16,9 +16,11 @@ User = get_user_model()
 class DiscountManager(models.QuerySet):
 
     @transaction.atomic
-    def new_discount_with_products_and_users(self, products, users, **kwargs):
+    def new_discount_with_products_and_users_and_consultant(self, products, users, consultants, **kwargs):
         obj = self.create(**kwargs)
         obj.products.add(*products)
+        obj.user.add(*users)
+        obj.consultants.add(*consultants)
         return obj
 
 
@@ -54,7 +56,9 @@ class Discount(models.Model):
     products = models.ManyToManyField(Product, blank=True)
     amount = models.PositiveIntegerField()
     code = CICharField(max_length=128, unique=True)
-    usage_num = models.PositiveIntegerField()
+    capacity = models.PositiveIntegerField()
+
+    objects = DiscountManager.as_manager()
 
     def __str__(self):
         return "{}%".format(str(self.amount))
