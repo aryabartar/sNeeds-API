@@ -2,9 +2,9 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import CartDiscount, TimeSlotSaleNumberDiscount
+from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
 from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer
-from .permissions import CartDiscountPermission
+from .permissions import CartDiscountPermission, ConsultantPermission
 
 
 class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
@@ -29,3 +29,10 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
     serializer_class = CartDiscountSerializer
     permission_classes = [CartDiscountPermission, permissions.IsAuthenticated]
     lookup_field = 'id'
+
+
+class ConsultantToUser(generics.CreateAPIView):
+    queryset = Discount.objects.all()
+    serializer_class =
+    permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
+

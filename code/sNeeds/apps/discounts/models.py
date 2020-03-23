@@ -1,5 +1,7 @@
-from django.db import models
+from django.contrib.auth import get_user_model
+from django.db import models, transaction
 from django.core.validators import MaxValueValidator, MinValueValidator
+
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -7,6 +9,17 @@ from django.utils.translation import gettext_lazy as _
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product
+
+User = get_user_model()
+
+
+class DiscountManager(models.QuerySet):
+
+    @transaction.atomic
+    def new_discount_with_products_and_users(self, products, users, **kwargs):
+        obj = self.create(**kwargs)
+        obj.products.add(*products)
+        return obj
 
 
 class TimeSlotSaleNumberDiscountModelManager(models.Manager):
@@ -37,9 +50,11 @@ class CICharField(models.CharField):
 
 class Discount(models.Model):
     consultants = models.ManyToManyField(ConsultantProfile, blank=True)
+    users = models.ManyToManyField(User, blank=True)
     products = models.ManyToManyField(Product, blank=True)
     amount = models.PositiveIntegerField()
     code = CICharField(max_length=128, unique=True)
+    usage_num = models.PositiveIntegerField()
 
     def __str__(self):
         return "{}%".format(str(self.amount))
