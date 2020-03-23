@@ -9,13 +9,14 @@ class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
         lookup_field='id',
         view_name='store-package:store-package-phase-through-detail',
     )
-    title = serializers.SerializerMethodField()
-    price = serializers.SerializerMethodField()
     store_package = serializers.HyperlinkedRelatedField(
         lookup_field='slug',
         read_only=True,
         view_name='store-package:store-package-detail'
     )
+    title = serializers.SerializerMethodField()
+    price = serializers.SerializerMethodField()
+
 
     class Meta:
         model = StorePackagePhaseThrough
