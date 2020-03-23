@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.validators import validate_sold_product_class_type
 
-
 User = get_user_model()
 
 
@@ -111,9 +110,6 @@ class TimeSlotSale(Product):
 
     objects = TimeSlotSaleManager.as_manager()
 
-    def __str__(self):
-        return str(self.pk)
-
     def get_consultant_username(self):
         return self.consultant.user.username
 
@@ -167,7 +163,7 @@ class TimeSlotSale(Product):
 
 class SoldProduct(models.Model):
     price = models.PositiveIntegerField()
-    sold_to = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    sold_to = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)

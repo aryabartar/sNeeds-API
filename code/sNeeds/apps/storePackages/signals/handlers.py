@@ -15,6 +15,11 @@ def pre_save_sold_store_package(sender, instance, *args, **kwargs):
     instance.update_price()
 
 
+def pre_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
+    # Update sold_to
+    instance.sold_to = instance.sold_store_package.sold_to
+
+
 def post_save_store_package_phase(sender, instance, *args, **kwargs):
     store_package_qs = instance.store_packages.all()
     store_package_qs.update()
@@ -38,31 +43,40 @@ def post_save_store_package(sender, instance, *args, **kwargs):
     carts_qs.update_price()
 
 
-def update_sold_time_slot_sale_price(sender, instance, *args, **kwargs):
-    instance.update_price()
-    instance.save()
-
-
-def sold_store_package_post_save(sender, instance, *args, **kwargs):
+def post_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs):
+    # Update SoldStorePackage price
     instance.sold_store_package.update_price()
     instance.sold_store_package.save()
 
 
-def sold_store_package_pre_delete(sender, instance, *args, **kwargs):
+def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
+    # Update SoldStorePackage price
+    instance.sold_store_package.update_price()
+    instance.sold_store_package.save()
+
+
+def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
+    # Update SoldStorePackage price
+    instance.sold_store_package.update_price()
+    instance.sold_store_package.save()
+
+
+def post_delete_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs):
+    # Update SoldStorePackage price
     instance.sold_store_package.update_price()
     instance.sold_store_package.save()
 
 
 pre_save.connect(pre_save_store_package, sender=StorePackage)
 pre_save.connect(pre_save_sold_store_package, sender=SoldStorePackage)
+pre_save.connect(pre_save_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package, sender=StorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
-post_save.connect(sold_store_package_post_save, sender=SoldStorePaidPackagePhase)
-post_save.connect(sold_store_package_post_save, sender=SoldStoreUnpaidPackagePhase)
-
-pre_delete.connect(sold_store_package_pre_delete, sender=SoldStorePaidPackagePhase)
-pre_delete.connect(sold_store_package_pre_delete, sender=SoldStoreUnpaidPackagePhase)
+post_save.connect(post_save_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
+post_save.connect(post_save_sold_store_unpaid_package_phase, sender=SoldStoreUnpaidPackagePhase)
 
 post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)
+post_delete.connect(post_delete_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
+post_delete.connect(post_delete_sold_store_unpaid_package_phase, sender=SoldStoreUnpaidPackagePhase)
