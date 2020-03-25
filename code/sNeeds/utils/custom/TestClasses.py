@@ -12,7 +12,10 @@ from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import TimeSlotSale
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer
-from sNeeds.apps.storePackages.models import StorePackagePhase, StorePackagePhaseThrough, StorePackage
+from sNeeds.apps.storePackages.models import (
+    StorePackagePhase, StorePackagePhaseThrough, StorePackage,
+    SoldStorePackage, SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase
+)
 
 User = get_user_model()
 
@@ -150,7 +153,7 @@ class CustomAPITestCase(APITestCase):
 
         self.store_package_phase_1 = StorePackagePhase.objects.create(
             title="General Package Phase 1",
-            detailed_title="Math Gold Phase",
+            detailed_title="General Package Phase",
             price=100
         )
         self.store_package_1_phase_2 = StorePackagePhase.objects.create(
@@ -193,6 +196,35 @@ class CustomAPITestCase(APITestCase):
             store_package=self.store_package_2,
             store_package_phase=self.store_package_2_phase_2,
             phase_number=2
+        )
+
+        self.sold_store_package_1 = SoldStorePackage.objects.create(
+            title="Math Gold Package",
+            sold_to=self.user1,
+        )
+
+        self.sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.create(
+            title=self.store_package_phase_1.title,
+            detailed_title=self.store_package_phase_1.detailed_title,
+            phase_number=1,
+            consultant_done=True,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_phase_1.price
+        )
+        self.sold_store_paid_package_phase_2 = SoldStorePaidPackagePhase.objects.create(
+            title=self.store_package_1_phase_2.title,
+            detailed_title=self.store_package_1_phase_2.detailed_title,
+            phase_number=2,
+            consultant_done=False,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_1_phase_2.price
+        )
+        self.sold_store_unpaid_package_phase_3 = SoldStoreUnpaidPackagePhase.objects.create(
+            title=self.store_package_1_phase_3.title,
+            detailed_title=self.store_package_1_phase_3.detailed_title,
+            phase_number=3,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_1_phase_3.price
         )
 
         # Carts -------

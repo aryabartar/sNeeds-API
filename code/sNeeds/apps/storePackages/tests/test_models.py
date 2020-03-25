@@ -39,7 +39,6 @@ class TestStorePackageModels(CustomAPITestCase):
         self.assertEqual(self.store_package_1.price, 200)
         self.assertEqual(self.store_package_1.total_price, 900)
 
-    # def test_selling_store_package_correct(self):
 
 
     # def test_store_package_price_correct_after_add_phase(self):
