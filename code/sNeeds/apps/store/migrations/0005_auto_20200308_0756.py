@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import sNeeds.apps.store.validators
 
 
 class Migration(migrations.Migration):
@@ -15,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='consultantacceptsoldproductrequest',
             name='sold_product',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='store.SoldProduct', validators=[sNeeds.apps.store.validators.validate_sold_product_class_type]),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='store.SoldProduct'),
         ),
     ]

@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
+from sNeeds.apps.storePackages.validators import validate_sold_product_class_type
 
 User = get_user_model()
 
@@ -254,3 +255,18 @@ class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
             return "not_started"
         else:
             return "pay_to_start"
+
+
+class ConsultantAcceptSoldProductRequest(models.Model):
+    sold_product = models.ForeignKey(
+        SoldProduct,
+        validators=[validate_sold_product_class_type],
+        on_delete=models.CASCADE
+    )
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['sold_product', 'consultant']
