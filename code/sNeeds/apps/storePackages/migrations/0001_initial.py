@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
         # ('store', '0007_auto_20200322_1810'),
         # migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         # ('consultants', '0003_auto_20200309_1356'),
-        ('storePackages', '0000'),
+        # ('storePackages', '0000'),
     ]
 
     operations = [
