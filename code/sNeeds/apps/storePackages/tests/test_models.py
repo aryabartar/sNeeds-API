@@ -50,37 +50,57 @@ class TestStorePackageModels(CustomAPITestCase):
         self.assertEqual(sold_store_package.paid_price, store_package.price)
         self.assertEqual(sold_store_package.total_price, store_package.total_price)
 
-        sold_store_package_phase_1 = SoldStorePaidPackagePhase.objects.filter(
+        sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.get(
             sold_store_package=sold_store_package,
             phase_number=1
         )
-        self.assertEqual(
-            sold_store_package_phase_1.title,
-            self.store_package_phase_1.title
-        )
-        self.assertEqual(
-            sold_store_package_phase_1.detailed_title,
-            self.store_package_phase_1.detailed_title
-        )
-        self.assertEqual(
-            sold_store_package_phase_1.sold_store_package,
-            sold_store_package
-        )
-        self.assertEqual(
-            sold_store_package_phase_1.phase_number,
-            1
-        )
-        self.assertEqual(
-            sold_store_package_phase_1.sold_store_package,
-            sold_store_package
-        )
-        self.assertEqual(
-            sold_store_package_phase_1.status,
-            "in_progress"
-        )
+        self.assertEqual(sold_store_paid_package_phase_1.title, self.store_package_phase_1.title)
+        self.assertEqual(sold_store_paid_package_phase_1.detailed_title, self.store_package_phase_1.detailed_title)
+        self.assertEqual(sold_store_paid_package_phase_1.sold_store_package, sold_store_package)
+        self.assertEqual(sold_store_paid_package_phase_1.phase_number, 1)
+        self.assertEqual(sold_store_paid_package_phase_1.sold_store_package, sold_store_package)
+        self.assertEqual(sold_store_paid_package_phase_1.status, "in_progress")
+        self.assertEqual(sold_store_paid_package_phase_1.consultant_done, False)
+        self.assertEqual(sold_store_paid_package_phase_1.price, self.store_package_phase_1.price)
+        self.assertEqual(sold_store_paid_package_phase_1.sold_to, self.user2)
 
+        sold_store_unpaid_package_phase_2 = SoldStoreUnpaidPackagePhase.objects.get(
+            sold_store_package=sold_store_package,
+            phase_number=2
+        )
+        self.assertEqual(
+            sold_store_unpaid_package_phase_2.title, self.store_package_1_phase_through_2.store_package_phase.title
+        )
+        self.assertEqual(
+            sold_store_unpaid_package_phase_2.detailed_title,
+            self.store_package_1_phase_through_2.store_package_phase.detailed_title
+        )
+        self.assertEqual(sold_store_unpaid_package_phase_2.sold_store_package, sold_store_package)
+        self.assertEqual(sold_store_unpaid_package_phase_2.phase_number, 2)
+        self.assertEqual(sold_store_unpaid_package_phase_2.status, "pay_to_start")
+        self.assertEqual(
+            sold_store_unpaid_package_phase_2.price, self.store_package_1_phase_through_2.store_package_phase.price
+        )
+        self.assertEqual(sold_store_unpaid_package_phase_2.active, True)
 
-
+        sold_store_unpaid_package_phase_3 = SoldStoreUnpaidPackagePhase.objects.get(
+            sold_store_package=sold_store_package,
+            phase_number=3
+        )
+        self.assertEqual(
+            sold_store_unpaid_package_phase_3.title, self.store_package_1_phase_through_3.store_package_phase.title
+        )
+        self.assertEqual(
+            sold_store_unpaid_package_phase_3.detailed_title,
+            self.store_package_1_phase_through_3.store_package_phase.detailed_title
+        )
+        self.assertEqual(sold_store_unpaid_package_phase_3.sold_store_package, sold_store_package)
+        self.assertEqual(sold_store_unpaid_package_phase_3.phase_number, 3)
+        self.assertEqual(sold_store_unpaid_package_phase_3.status, "not_started")
+        self.assertEqual(
+            sold_store_unpaid_package_phase_3.price, self.store_package_1_phase_through_3.store_package_phase.price
+        )
+        self.assertEqual(sold_store_unpaid_package_phase_3.active, False)
     # def test_store_package_price_update_correct(self):
     #     self.store_package_phase_1.price = 11
     #     self.store_package_phase_1.save()
