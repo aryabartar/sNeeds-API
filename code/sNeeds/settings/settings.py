@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',  # for filtering get queries in DRF
     'drf_yasg',  # for filtering get queries in DRF
-    'corsheaders',
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
 

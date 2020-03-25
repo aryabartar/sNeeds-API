@@ -6,11 +6,19 @@ from rest_framework import status
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhase, StorePackagePhaseThrough, SoldStorePackage,
-    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
+    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
 )
 
 
 class TestAPIStorePackage(CustomAPITestCase):
+
+    def setUp(self):
+        super().setUp()
+
+        self.consultant_sold_store_package_accept_request_1 = ConsultantSoldStorePackageAcceptRequest.objects.create(
+            sold_store_package=self.sold_store_package_1,
+            consultant=self.consultant1_profile
+        )
 
     def test_store_package_phase_through_list_get_success(self):
         client = self.client
@@ -67,3 +75,32 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(len(data.get("store_package_phases")), len(obj.store_package_phases.all()))
         self.assertEqual(data.get("price"), obj.price)
         self.assertEqual(data.get("total_price"), obj.total_price)
+
+    # def test_consultant_sold_store_package_accept_request_post_permission_denied(self):
+    #     client = self.client
+    #     url = reverse("store-package:consultant-sold-store-package-accept-request-list")
+    #
+    #     data = {
+    #         ""
+    #     }
+
+    def test_consultant_sold_store_package_accept_request_detail_get_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+        obj = self.consultant_sold_store_package_accept_request_1
+        url = reverse(
+            "store-package:consultant-sold-store-package-accept-request-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("sold_store_package"), obj.sold_store_package)
+        self.assertEqual(data.get("consultant"), obj.consultant)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

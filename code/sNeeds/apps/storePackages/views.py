@@ -39,7 +39,7 @@ class ConsultantSoldStorePackageAcceptRequestDetailAPIView(generics.RetrieveAPIV
     permission_classes = [permissions.IsAuthenticated, ConsultantSoldStorePackageAcceptRequestViewPermission]
 
 
-class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.RetrieveAPIView):
+class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIView):
     lookup_field = 'id'
     serializer_class = serializers.ConsultantSoldStorePackageAcceptRequestSerializer
     permission_classes = [permissions.IsAuthenticated, ]
