@@ -25,10 +25,8 @@ def post_save_consultant_profile(sender, instance, created, *args, **kwargs):
 post_save.connect(post_save_consultant_profile, sender=ConsultantProfile)
 
 
-
 @receiver(reset_password_token_created)
 def password_reset_token_created(sender, instance, reset_password_token, *args, **kwargs):
-    print("kjhjkjk")
     # send an e-mail to the user
     context = {
         'current_user': reset_password_token.user,
@@ -40,8 +38,7 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
     }
     reset_link = FRONTEND_URL + "auth/forget?token={}".format(context['token'])
 
-
-    send_reset_password_email(
+    send_reset_password_email.delay(
         context['email'],
         context['current_user'].get_full_name(),
         reset_link,
