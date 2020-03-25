@@ -257,10 +257,9 @@ class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
             return "pay_to_start"
 
 
-class ConsultantAcceptSoldProductRequest(models.Model):
-    sold_product = models.ForeignKey(
-        SoldProduct,
-        validators=[validate_sold_product_class_type],
+class ConsultantSoldStorePackageAcceptRequest(models.Model):
+    sold_store_package = models.ForeignKey(
+        SoldStorePackage,
         on_delete=models.CASCADE
     )
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
@@ -269,4 +268,4 @@ class ConsultantAcceptSoldProductRequest(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ['sold_product', 'consultant']
+        unique_together = ['sold_store_package', 'consultant']

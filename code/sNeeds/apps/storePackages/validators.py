@@ -11,6 +11,7 @@ def validate_sold_product_class_type(sold_product):
     """
     from sNeeds.apps.storePackages.models import SoldStorePackage
 
+    # Change here
     allowed_classes = [SoldStorePackage, ]
 
     is_allowed = False
@@ -22,4 +23,3 @@ def validate_sold_product_class_type(sold_product):
         raise ValidationError(
             [{"sold_product": ["SoldProduct is not instance of {} classes.".format(allowed_classes)]}]
         )
-
