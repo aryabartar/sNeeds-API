@@ -30,7 +30,10 @@ def notify_sold_time_slot(send_to, name, sold_time_slot_url, start_time, end_tim
 
 @shared_task
 def sold_time_slot_start_reminder():
-    sts_qs = SoldTimeSlotSale.objects.filter(start_time__lte=timezone.now() + timezone.timedelta(days=1), used=False)
+    sts_qs = SoldTimeSlotSale.objects.filter(
+        start_time__lte=timezone.now() + timezone.timedelta(days=1),
+        start_time__gte=timezone.now(),
+    )
     for obj in sts_qs:
         start_time = utc_to_jalali_string(obj.start_time)
         end_time = utc_to_jalali_string(obj.end_time)
