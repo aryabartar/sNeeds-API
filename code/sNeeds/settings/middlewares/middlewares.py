@@ -30,6 +30,7 @@ class CORSMiddleware(object):
         response["Access-Control-Allow-Headers"] = 'client-timezone, content-type, authorization'
         # response["Access-Control-Allow-Headers"] = '*/*'
         response["Access-Control-Allow-Credentials"] = 'true'
+        response["Access-Control-Allow-Methods"] = '*'
         response["arya"] = 'true'
 
         return response
