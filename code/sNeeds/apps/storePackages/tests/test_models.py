@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
-from rest_framework import status
 from django.urls import reverse
+
+from rest_framework import status
 
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.storePackages.models import (
@@ -37,6 +38,9 @@ class TestStorePackageModels(CustomAPITestCase):
         self.store_package_1.refresh_from_db()
         self.assertEqual(self.store_package_1.price, 200)
         self.assertEqual(self.store_package_1.total_price, 900)
+
+    # def test_selling_store_package_correct(self):
+
 
     # def test_store_package_price_correct_after_add_phase(self):
     #     self.store_package_1.store_package_phases.add(self.store_package_2_phase_2)
