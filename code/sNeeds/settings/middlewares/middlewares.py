@@ -31,6 +31,7 @@ class CORSMiddleware(object):
         # response["Access-Control-Allow-Headers"] = '*/*'
         response["Access-Control-Allow-Credentials"] = 'true'
         response["Access-Control-Allow-Methods"] = '*'
+        response["Access-Control-Max-Age"] = 86400
         response["arya"] = 'true'
 
         return response
