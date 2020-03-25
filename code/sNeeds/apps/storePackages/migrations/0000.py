@@ -7,5 +7,5 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-    # initial = True
-    pass
+    initial = True
+    # pass
