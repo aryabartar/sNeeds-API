@@ -15,7 +15,7 @@ class IsConsultantPermission(permissions.BasePermission):
             return False
 
 
-class CustomIsAuthenticated(BasePermission):
+class CustomIsAuthenticated(permissions.IsAuthenticated):
 
     def has_permission(self, request, view):
         if request.method == "OPTIONS":
