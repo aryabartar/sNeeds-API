@@ -1,6 +1,7 @@
 amqp==2.5.2
 anyjson==0.3.3
 appdirs==1.4.3
+asgiref==3.2.5
 attrs==19.1.0
 autopep8==1.4.4
 Babel==2.7.0
@@ -21,7 +22,7 @@ django-dbbackup==3.2.0
 django-enumfields==2.0.0
 django-filter==2.1.0
 django-polymorphic==2.1.2
-django-rest-passwordreset==1.0.0
+django-rest-passwordreset==1.1.0rc3
 django-rest-polymorphic==0.1.8
 django-storages==1.9.1
 djangorestframework==3.9.4
@@ -47,6 +48,7 @@ numpy==1.17.4
 packaging==20.1
 Pillow==6.1.0
 psycopg2==2.8.3
+psycopg2-binary==2.8.4
 pycodestyle==2.5.0
 pycoin==0.90.20190630
 PyJWT==1.7.1
