@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from sNeeds.apps.store.models import SoldTimeSlotSale
+from sNeeds.apps.store.models import SoldTimeSlotSale, SoldProduct
 
 User = get_user_model()
 
@@ -11,12 +11,12 @@ USER_FILE_CHOICES = (
 
 
 def get_file_upload_path(instance, filename):
-    return "files/userfiles/{}/{}/{}".format(instance.user.email, instance.type, filename)
+    return "userfiles/files/{}/{}/{}".format(instance.user.id, instance.type, filename)
 
 
 class UserFileModelManager(models.Manager):
     def get_consultant_accessed_files(self, consultant_profile):
-        sold_to_list = SoldTimeSlotSale.objects.filter(
+        sold_to_list = SoldProduct.objects.filter(
             consultant=consultant_profile,
         ).values_list('sold_to', flat=True)
 
@@ -34,5 +34,3 @@ class UserFile(models.Model):
     class Meta:
         unique_together = ('user', 'type')
 
-    def __str__(self):
-        return str(self.user)

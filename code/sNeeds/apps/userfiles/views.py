@@ -17,7 +17,6 @@ class UserFileListView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated, ]
     filterset_fields = ('user', 'type',)
 
-
     def get_queryset(self):
         user = self.request.user
         consultant_profile_qs = ConsultantProfile.objects.filter(user=user)

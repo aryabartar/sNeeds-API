@@ -14,15 +14,15 @@ User = get_user_model()
 
 
 def get_file_upload_path(instance, filename):
-    return "files/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
+    return "chats/files/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
 def get_image_upload_path(instance, filename):
-    return "images/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
+    return "chats/images/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
 def get_voice_upload_path(instance, filename):
-    return "voices/chats/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
+    return "chats/voices/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
 class ChatManager(models.Manager):
