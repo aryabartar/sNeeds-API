@@ -95,7 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
-
 LANGUAGE_CODE = 'en-us'
 
 USE_I18N = True
@@ -194,6 +193,7 @@ DBBACKUP_STORAGE_OPTIONS = {
 
 # ---------------------
 # Because of OPTIONS
+# https://github.com/encode/django-rest-framework/issues/5616
 from rest_framework import permissions
 from sNeeds.utils.custom.custom_permissions import CustomIsAuthenticated
 
