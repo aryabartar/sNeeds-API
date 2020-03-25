@@ -6,6 +6,7 @@ from . import serializers
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest
 from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
+from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission
 
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
@@ -35,6 +36,7 @@ class ConsultantSoldStorePackageAcceptRequestDetailAPIView(generics.RetrieveAPIV
     lookup_field = 'id'
     serializer_class = serializers.ConsultantSoldStorePackageAcceptRequestSerializer
     queryset = ConsultantSoldStorePackageAcceptRequest.objects.all()
+    permission_classes = [permissions.IsAuthenticated, ConsultantSoldStorePackageAcceptRequestViewPermission]
 
 
 class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.RetrieveAPIView):

@@ -47,7 +47,10 @@ class StorePackageSerializer(serializers.ModelSerializer):
 
 
 class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSerializer):
-
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:consultant-sold-store-package-accept-request-detail'
+    )
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
