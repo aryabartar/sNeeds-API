@@ -106,6 +106,7 @@ class Verify(APIView):
 
             if result.Status == 100:
                 Order.objects.sell_cart_create_order(payment.cart)
+                # TODO RefID does not save in relative order or in payment ???
                 return Response({"detail": "Success", "ReflD": str(result.RefID)}, status=200)
             elif result.Status == 101:
                 return Response({"detail": "Transaction submitted", "status": str(result.Status)}, status=200)

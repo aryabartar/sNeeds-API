@@ -17,6 +17,8 @@ ORDER_STATUS_CHOICES = (
 
 
 class OrderManager(models.Manager):
+    # TODO Don't we save the price of product that is applied in factor after using discount ?? certainly it defers from
+    # TODO primary price
     @transaction.atomic
     def sell_cart_create_order(self, cart):
         cart_products = cart.products.all()

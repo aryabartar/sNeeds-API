@@ -113,6 +113,8 @@ class Cart(models.Model):
                     effective_price = product.price
 
                 effective_price = effective_price * ((100.0 - count_discount) / 100)
+                if effective_price < 0:
+                    effective_price = 0
                 total += effective_price
                 continue
             except TimeSlotSale.DoesNotExist:
@@ -121,6 +123,8 @@ class Cart(models.Model):
             # For products
             if product in products_qs:
                 effective_price = product.price - cart_discount.discount.amount
+                if effective_price < 0:
+                    effective_price = 0
             else:
                 effective_price = product.price
 

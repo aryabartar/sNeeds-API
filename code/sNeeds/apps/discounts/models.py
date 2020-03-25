@@ -60,7 +60,7 @@ class Discount(models.Model):
     products = models.ManyToManyField(Product, blank=True)
     amount = models.PositiveIntegerField()
     code = CICharField(max_length=128, unique=True, blank=True,
-                       help_text="Leave this field blank, this will populate automatically."
+                       help_text="If want to populate automatically, Leave this field blank. Otherwise enter code"
                        )
     use_limit = models.PositiveIntegerField(null=True, blank=True)
     creator = models.CharField(choices=CREATORS, max_length=1, default="A")
