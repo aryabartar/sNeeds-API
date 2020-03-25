@@ -95,8 +95,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sNeeds.wsgi.application'
 
-# Internationalization
-# https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -194,10 +192,10 @@ DBBACKUP_STORAGE_OPTIONS = {
 # ---------------------
 
 
-
 # ---------------------
-
+# Because of OPTIONS
 from rest_framework import permissions
 from sNeeds.utils.custom.custom_permissions import CustomIsAuthenticated
 
 permissions.IsAuthenticated = CustomIsAuthenticated
+# ---------------------
