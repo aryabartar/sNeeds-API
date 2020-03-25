@@ -65,8 +65,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 ROOT_URLCONF = 'sNeeds.urls'
 
 MIDDLEWARE = [
-    # 'corsheaders.middleware.CorsMiddleware',  # CORS, should be at first
-
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',  # For per-request translation

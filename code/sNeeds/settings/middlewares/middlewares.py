@@ -29,5 +29,6 @@ class CORSMiddleware(object):
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Headers"] = "*"
         response["Access-Control-Allow-Credentials"] = 'true'
+        response["arya"] = 'true'
 
         return response
