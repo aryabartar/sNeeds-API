@@ -26,7 +26,7 @@ class CORSMiddleware(object):
         # print(json.dumps(dict(request.headers), indent=4, sort_keys=True))
 
         response = self.get_response(request)
-        response["Access-Control-Allow-Origin"] = "*"
+        response["Access-Control-Allow-Origin"] = "http://194.5.206.177/, http://194.5.206.177, http://194.5.206.177:80"
         response["Access-Control-Allow-Headers"] = 'client-timezone, content-type, authorization'
         # response["Access-Control-Allow-Headers"] = '*/*'
         response["Access-Control-Allow-Credentials"] = 'true'
