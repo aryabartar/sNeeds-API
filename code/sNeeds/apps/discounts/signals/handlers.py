@@ -1,5 +1,5 @@
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save
-
+from sNeeds.apps.discounts.utils import unique_discount_code_generator
 from sNeeds.apps.discounts.models import (
     TimeSlotSaleNumberDiscount,
     CartDiscount,
@@ -45,9 +45,15 @@ def m2m_changed_discount(sender, instance, action, *args, **kwargs):
             cart.update_price()
 
 
+def pre_save_create_discount_code(sender, instance, *args, **kwargs):
+    if not instance.code:
+        instance.code = unique_discount_code_generator(instance)
+
+
 post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_save.connect(post_save_cart_discount, sender=CartDiscount)
 post_delete.connect(post_delete_cart_discount, sender=CartDiscount)
 post_save.connect(post_save_discount, sender=Discount)
 m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
+pre_save.connect(pre_save_create_discount_code, sender=Discount)

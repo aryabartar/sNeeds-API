@@ -26,3 +26,13 @@ class CartDiscountPermission(permissions.BasePermission):
         if request.user == obj.cart.user:
             return True
         return False
+
+
+class ConsultantPermission(permissions.BasePermission):
+    message = 'User should be consultant.'
+
+    def has_permission(self, request, view):
+
+        if request.user.is_authenticated and request.user.is_consultant():
+            return True
+        return False
