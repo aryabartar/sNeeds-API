@@ -39,12 +39,47 @@ class TestStorePackageModels(CustomAPITestCase):
         self.assertEqual(self.store_package_1.price, 200)
         self.assertEqual(self.store_package_1.total_price, 900)
 
+    def test_store_package_selling_works_correct(self):
+        store_package = self.store_package_1
+        qs = StorePackage.objects.filter(id=store_package.id)
+        sold_store_package = qs.sell_and_get_sold_package(self.user2).first()
+
+        self.assertEqual(sold_store_package.title, store_package.title)
+        self.assertEqual(sold_store_package.sold_to, self.user2)
+        self.assertEqual(sold_store_package.consultant, None)
+        self.assertEqual(sold_store_package.paid_price, store_package.price)
+        self.assertEqual(sold_store_package.total_price, store_package.total_price)
+
+        sold_store_package_phase_1 = SoldStorePaidPackagePhase.objects.filter(
+            sold_store_package=sold_store_package,
+            phase_number=1
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.title,
+            self.store_package_phase_1.title
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.detailed_title,
+            self.store_package_phase_1.detailed_title
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.sold_store_package,
+            sold_store_package
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.phase_number,
+            1
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.sold_store_package,
+            sold_store_package
+        )
+        self.assertEqual(
+            sold_store_package_phase_1.status,
+            "in_progress"
+        )
 
 
-    # def test_store_package_price_correct_after_add_phase(self):
-    #     self.store_package_1.store_package_phases.add(self.store_package_2_phase_2)
-    #     self.assertEqual(self.store_package_1.price, 100)
-    #     self.assertEqual(self.store_package_1.total_price, 900)
 
     # def test_store_package_price_update_correct(self):
     #     self.store_package_phase_1.price = 11

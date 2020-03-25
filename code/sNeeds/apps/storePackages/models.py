@@ -191,6 +191,25 @@ SOLD_STORE_PACKAGE_PHASE_STATUS = [
 ]
 
 
+class SoldStorePackagePhaseQuerySet(models.QuerySet):
+    def get_qs_price(self):
+        qs_price = 0
+        for obj in self._chain():
+            qs_price += obj.price
+        return qs_price
+
+
+class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
+    pass
+
+
+class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
+    def deactivate_all(self):
+        for obj in self._chain():
+            obj.active = False
+            obj.save()
+
+
 class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
@@ -210,30 +229,9 @@ class SoldStorePackagePhase(models.Model):
         max_length=128
     )
 
-    objects = SoldStorePackagePhaseQuerySet.as_manager()
-
     class Meta:
         abstract = True
         ordering = ['phase_number', ]
-
-
-class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_price(self):
-        qs_price = 0
-        for obj in self._chain():
-            qs_price += obj.price
-        return qs_price
-
-
-class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    pass
-
-
-class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    def deactivate_all(self):
-        for obj in self._chain():
-            obj.active = False
-            obj.save()
 
 
 class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
