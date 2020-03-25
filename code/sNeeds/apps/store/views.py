@@ -8,10 +8,10 @@ from . import serializers
 from . import filtersets
 from .models import TimeSlotSale, SoldTimeSlotSale, Product
 from .permissions import (
-    ConsultantPermission,
     TimeSlotSaleOwnerPermission,
     SoldTimeSlotSaleOwnerPermission,
 )
+from ...utils.custom.custom_permissions import IsConsultantPermission
 
 from ..consultants.models import ConsultantProfile
 
@@ -20,7 +20,7 @@ class TimeSlotSailListAPIView(generics.ListCreateAPIView):
     queryset = TimeSlotSale.objects.all()
     serializer_class = serializers.TimeSlotSaleSerializer
     filterset_class = filtersets.TimeSlotSaleFilter
-    permission_classes = [ConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [IsConsultantPermission, permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return super(TimeSlotSailListAPIView, self).get_queryset().order_by('-start_time')

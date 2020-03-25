@@ -15,4 +15,15 @@ urlpatterns = [
     path('store-package-phase-through-list/',
          views.StorePackagePhaseThroughListAPIView.as_view(), name="store-package-phase-through-list"),
 
+    path(
+        'consultant-sold-store-package-accept-request-detail/<int:id>',
+        views.ConsultantSoldStorePackageAcceptRequestDetailAPIView.as_view(),
+        name="'consultant-sold-store-package-accept-request-detail"
+    ),
+    path(
+        'consultant-sold-store-package-accept-request-list/',
+        views.ConsultantSoldStorePackageAcceptRequestListAPIView.as_view(),
+        name="'consultant-sold-store-package-accept-request-list"
+    ),
+
 ]
