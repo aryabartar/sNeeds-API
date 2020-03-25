@@ -20,4 +20,4 @@ class CustomIsAuthenticated(BasePermission):
     def has_permission(self, request, view):
         if request.method == "OPTIONS":
             return True
-        return bool(request.user and request.user.is_authenticated)
+        super().has_permission(request, view)
