@@ -13,6 +13,7 @@ from . import serializers
 from .utils import jwt_response_payload_handler
 from .serializers import UserRegisterSerializer
 from .permissions import NotLoggedInPermission, SameUserPermission
+from ...utils.custom.custom_permissions import CustomIsAuthenticated
 
 User = get_user_model()
 
@@ -76,7 +77,7 @@ class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
 
 
 class MyAccountInfoView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [CustomIsAuthenticated]
 
     def get_object(self):
         return self.request.user
