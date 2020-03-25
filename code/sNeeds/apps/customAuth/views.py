@@ -77,7 +77,7 @@ class UserDetailView(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, generic
 
 
 class MyAccountInfoView(APIView):
-    permission_classes = [CustomIsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user

@@ -172,16 +172,16 @@ ALL_SKYROOM_USERS_PASSWORD = keys.ALL_SKYROOM_USERS_PASSWORD
 from corsheaders.defaults import default_headers
 
 # TODO: Make this accurate
-# CORS_ALLOW_HEADERS = list(default_headers) + [
-#     'CLIENT-TIMEZONE',
-#     'CLIENT_TIMEZONE',
-#     'HTTP-CLIENT-TIMEZONE',
-#     'HTTP_CLIENT_TIMEZONE',
-#     'HTTP_CLIENT-TIMEZONE',
-#     'authorization',
-#     'AUTHORIZATION',
-#     'Authorization'
-# ]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'CLIENT-TIMEZONE',
+    'CLIENT_TIMEZONE',
+    'HTTP-CLIENT-TIMEZONE',
+    'HTTP_CLIENT_TIMEZONE',
+    'HTTP_CLIENT-TIMEZONE',
+    'authorization',
+    'AUTHORIZATION',
+    'Authorization'
+]
 
 # dbbackup -------
 from .secure.APIs import dropbox_sneeds_backups_app
@@ -192,3 +192,9 @@ DBBACKUP_STORAGE_OPTIONS = {
 }
 # TODO: Add PGP encryption.
 # ---------------------
+
+
+from rest_framework import permissions
+from sNeeds.utils.custom.custom_permissions import CustomIsAuthenticated
+
+permissions.IsAuthenticated = CustomIsAuthenticated
