@@ -31,6 +31,15 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
     permission_classes = [CartDiscountPermission, permissions.IsAuthenticated]
     lookup_field = 'id'
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        discount = instance.dicount
+        if discount.use_limit is not None:
+            discount.use_limit = discount.use_limit + 1
+        discount.save()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class ConsultantForUserDiscountListCreateAPIView(generics.ListCreateAPIView):
     queryset = Discount.objects.all()
