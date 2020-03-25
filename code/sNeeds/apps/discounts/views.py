@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
-from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer
+from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer
 from .permissions import CartDiscountPermission, ConsultantPermission
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
@@ -31,8 +32,26 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
     lookup_field = 'id'
 
 
-class ConsultantToUser(generics.CreateAPIView):
+class ConsultantForUserDiscountListCreateAPIView(generics.ListCreateAPIView):
     queryset = Discount.objects.all()
-    serializer_class =
+    serializer_class = DiscountSerializer
     permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
 
+    def get_queryset(self):
+        user = self.request.user
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        qs = Discount.objects.filter(consultants=consultant_profile, creator='C')
+        return qs
+
+
+class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAPIView):
+    lookup_field = 'id'
+    queryset = Discount.objects.all()
+    serializer_class = DiscountSerializer
+    permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
+
+    def get_queryset(self):
+        user = self.request.user
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        qs = Discount.objects.filter(consultants=consultant_profile, creator='C')
+        return qs

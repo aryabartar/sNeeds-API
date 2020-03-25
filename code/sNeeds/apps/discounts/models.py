@@ -16,10 +16,10 @@ User = get_user_model()
 class DiscountManager(models.QuerySet):
 
     @transaction.atomic
-    def new_discount_with_products_and_users_and_consultant(self, products, users, consultants, **kwargs):
+    def new_discount_with_products_users_consultant(self, products, users, consultants, **kwargs):
         obj = self.create(**kwargs)
         obj.products.add(*products)
-        obj.user.add(*users)
+        obj.users.add(*users)
         obj.consultants.add(*consultants)
         return obj
 
@@ -51,17 +51,28 @@ class CICharField(models.CharField):
 
 
 class Discount(models.Model):
+    CREATORS = (
+        ('C', 'Consultant'),
+        ('A', 'Admin'),
+    )
     consultants = models.ManyToManyField(ConsultantProfile, blank=True)
     users = models.ManyToManyField(User, blank=True)
     products = models.ManyToManyField(Product, blank=True)
     amount = models.PositiveIntegerField()
-    code = CICharField(max_length=128, unique=True)
-    capacity = models.PositiveIntegerField()
+    code = CICharField(max_length=128, unique=True, blank=True,
+                       help_text="Leave this field blank, this will populate automatically."
+                       )
+    use_limit = models.PositiveIntegerField(null=True, blank=True)
+    creator = models.CharField(choices=CREATORS, max_length=1, default="A")
 
     objects = DiscountManager.as_manager()
 
     def __str__(self):
-        return "{}%".format(str(self.amount))
+        return "{} ".format(str(self.amount))
+
+
+# TODO If a discount that was created by a consultant is being removed, cart discount should be removed too?
+# TODO Don't We record discounts created by consultants to discover abuses?
 
 
 class CartDiscount(models.Model):

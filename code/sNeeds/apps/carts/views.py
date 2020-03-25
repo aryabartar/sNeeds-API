@@ -21,4 +21,3 @@ class CartDetailView(generics.RetrieveAPIView):
     serializer_class = serializers.CartSerializer
     lookup_field = 'id'
     permission_classes = (CartOwnerPermission, permissions.IsAuthenticated)
-

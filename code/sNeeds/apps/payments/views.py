@@ -49,9 +49,13 @@ class SendRequest(APIView):
         if not cart.user == user:
             return Response({"detail": "This user is not cart's owner."}, 400)
 
-        # TODO: Change for 100% discounts.
         if not cart.is_acceptable_for_pay():
-            return Response({"detail": "Can not pay, The price is 0."}, 400)
+            # If price is zero it may a 100 percent for one time slot. so we check that is just one time slot
+            if cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1:
+                Order.objects.sell_cart_create_order(cart)
+                return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
+            else:
+                return Response({"detail": "Can not pay, The price is 0."}, 400)
 
         result = client.service.PaymentRequest(
             ZARINPAL_MERCHANT,

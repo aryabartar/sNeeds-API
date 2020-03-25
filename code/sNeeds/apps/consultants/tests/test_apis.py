@@ -14,7 +14,7 @@ from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.comments.models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
-from sNeeds.apps.discounts.serializers import DiscountSerializer
+from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.tasks import delete_time_slots
