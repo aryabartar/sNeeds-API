@@ -140,7 +140,6 @@ class CartDiscountSerializer(serializers.ModelSerializer):
                 len(list(set(discount_products_id) & set(cart_products_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
-        # TODO increase use_limit if destroyed cart_discount
         if discount.use_limit is not None:
             discount.use_limit = use_limit
         discount.save()
