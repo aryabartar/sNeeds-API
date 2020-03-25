@@ -27,7 +27,7 @@ class CORSMiddleware(object):
 
         response = self.get_response(request)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Headers"] = ["client-timezone", 'HTTP_CLIENT_TIMEZONE']
+        response["Access-Control-Allow-Headers"] = 'client-timezone, HTTP_CLIENT_TIMEZONE'
         response["Access-Control-Allow-Credentials"] = 'true'
         response["arya"] = 'true'
 
