@@ -4,7 +4,6 @@ from django.contrib.auth import get_user_model
 
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
-from sNeeds.apps.storePackages.validators import validate_sold_product_class_type
 
 User = get_user_model()
 

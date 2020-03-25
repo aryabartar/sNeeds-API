@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import sNeeds.apps.storePackages.validators
 
 
 class Migration(migrations.Migration):
@@ -21,7 +20,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('consultant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='consultants.ConsultantProfile')),
-                ('sold_product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='store.SoldProduct', validators=[sNeeds.apps.storePackages.validators.validate_sold_product_class_type])),
+                ('sold_product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='store.SoldProduct', )),
             ],
             options={
                 'unique_together': {('sold_product', 'consultant')},
