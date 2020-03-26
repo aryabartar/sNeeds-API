@@ -92,6 +92,7 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
 class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePackageSerializer
+    queryset = SoldStorePackage.objects.all()
     permission_classes = [
         permissions.IsAuthenticated, SoldStorePackageOwnerUpdatePermission, SoldStorePackageGetPermission
     ]
