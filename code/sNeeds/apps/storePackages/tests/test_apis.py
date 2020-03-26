@@ -127,3 +127,22 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(obj.sold_store_package, self.sold_store_package_1)
         self.assertEqual(obj.consultant, self.consultant2_profile)
+
+    def test_consultant_sold_store_package_accept_request_list_post_fail(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("store-package:consultant-sold-store-package-accept-request-list")
+
+        data = {"sold_store_package": self.sold_store_package_1.id}
+
+        # Breaks unique rule
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.logout()
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
