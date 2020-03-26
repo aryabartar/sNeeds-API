@@ -60,12 +60,12 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
 
 
 class SoldStorePackageSerializer(serializers.ModelSerializer):
-    # url = serializers.HyperlinkedIdentityField(
-    #     lookup_field='id',
-    #     view_name='store-package:consultant-sold-store-package-accept-request-detail'
-    # )
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-package-detail'
+    )
     sold_to = serializers.SerializerMethodField()
-    consultant_url = serializers.HyperlinkedRelatedField(
+    consultant = serializers.HyperlinkedRelatedField(
         source='consultant',
         lookup_field='slug',
         read_only=True,
@@ -75,6 +75,12 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = ['title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+        extra_kwargs = {
+            'title': {'read_only': True},
+            'sold_to': {'read_only': True},
+            'paid_price': {'read_only': True},
+            'total_price': {'read_only': True},
+        }
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data

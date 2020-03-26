@@ -15,3 +15,20 @@ class ConsultantSoldStorePackageAcceptRequestViewPermission(permissions.BasePerm
             return consultant == obj.consultant
         else:
             return user == obj.sold_store_package.sold_to
+
+
+class SoldStorePackageOwnerUpdatePermission(permissions.BasePermission):
+    message = "This user is not sold store package owner so can't update."
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == "UPDATE":
+            return obj.sold_to == request.user
+        return True
+
+
+class SoldStorePackageGetPermission(permissions.BasePermission):
+    message = "This user has no view access."
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        return user == obj.sold_to or user == obj.consultant.user

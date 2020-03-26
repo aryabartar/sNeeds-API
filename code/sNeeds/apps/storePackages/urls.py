@@ -26,4 +26,8 @@ urlpatterns = [
         name="consultant-sold-store-package-accept-request-list"
     ),
 
+    path('sold-store-package-detail/<str:slug>/',
+         views.SoldStorePackageDetailAPIView.as_view(), name="sold-store-package-detail"),
+    path('spld-store-package-list/',
+         views.SoldStorePackageListAPIView.as_view(), name="sold-store-package-list"),
 ]

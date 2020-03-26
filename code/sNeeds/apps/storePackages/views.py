@@ -3,10 +3,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from . import serializers
-from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest
+from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
+    SoldStorePackage
 from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
-from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission
+from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
+    SoldStorePackageGetPermission
 from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
 
 
@@ -85,3 +87,18 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
 
         except ConsultantProfile.DoesNotExist:
             return Response({"detail": "User is not consultant."}, status=403)
+
+
+class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [
+        permissions.IsAuthenticated, SoldStorePackageOwnerUpdatePermission, SoldStorePackageGetPermission
+    ]
+
+
+class SoldStorePackageListAPIView(generics.ListAPIView):
+    lookup_field = 'id'
+    queryset = SoldStorePackage.objects.all()
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [permissions.IsAuthenticated, SoldStorePackageGetPermission]
