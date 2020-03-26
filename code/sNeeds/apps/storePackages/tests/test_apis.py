@@ -98,8 +98,8 @@ class TestAPIStorePackage(CustomAPITestCase):
         data = response.data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(data.get("sold_store_package"), obj.sold_store_package)
-        self.assertEqual(data.get("consultant"), obj.consultant)
+        self.assertEqual(data.get("sold_store_package"), obj.sold_store_package.id)
+        self.assertEqual(data.get("consultant"), obj.consultant.id)
 
         client.login(email='c1@g.com', password='user1234')
         response = client.get(url, format='json')

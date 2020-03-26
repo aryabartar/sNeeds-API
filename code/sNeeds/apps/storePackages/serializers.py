@@ -54,4 +54,4 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
-        fields = ['sold_store_package', 'consultant', 'created', 'updated']
+        fields = ['id', 'url', 'sold_store_package', 'consultant', 'created', 'updated']
