@@ -99,6 +99,19 @@ class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
 
 class SoldStorePackageListAPIView(generics.ListAPIView):
     lookup_field = 'id'
-    queryset = SoldStorePackage.objects.all()
     serializer_class = serializers.SoldStorePackageSerializer
     permission_classes = [permissions.IsAuthenticated, SoldStorePackageGetPermission]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        try:
+            consultant = ConsultantProfile.objects.get(user=user)
+            qs = SoldStorePackage.objects.filter(
+                consultant=consultant
+            )
+        except ConsultantProfile.DoesNotExist:
+            qs = SoldStorePackage.objects.filter(
+                sold_to=user
+            )
+        return qs

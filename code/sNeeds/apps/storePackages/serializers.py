@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest
+from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
+    SoldStorePackage
 from ..consultants.models import ConsultantProfile
 from ..customAuth.serializers import SafeUserDataSerializer
 
@@ -66,15 +67,14 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
     )
     sold_to = serializers.SerializerMethodField()
     consultant = serializers.HyperlinkedRelatedField(
-        source='consultant',
         lookup_field='slug',
         read_only=True,
         view_name='consultant:consultant-profile-detail'
     )
 
     class Meta:
-        model = ConsultantSoldStorePackageAcceptRequest
-        fields = ['title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+        model = SoldStorePackage
+        fields = ['url', 'title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
         extra_kwargs = {
             'title': {'read_only': True},
             'sold_to': {'read_only': True},
