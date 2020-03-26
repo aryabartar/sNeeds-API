@@ -76,14 +76,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(data.get("price"), obj.price)
         self.assertEqual(data.get("total_price"), obj.total_price)
 
-    # def test_consultant_sold_store_package_accept_request_post_permission_denied(self):
-    #     client = self.client
-    #     url = reverse("store-package:consultant-sold-store-package-accept-request-list")
-    #
-    #     data = {
-    #         ""
-    #     }
-
     def test_consultant_sold_store_package_accept_request_detail_get_success(self):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
@@ -104,3 +96,19 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='c1@g.com', password='user1234')
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_consultant_sold_store_package_accept_request_detail_get_permission_fail(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse(
+            "store-package:consultant-sold-store-package-accept-request-detail",
+            args=[self.consultant_sold_store_package_accept_request_1.id]
+        )
+        response = client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
