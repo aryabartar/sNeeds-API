@@ -3,6 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest
 from ..consultants.models import ConsultantProfile
+from ..customAuth.serializers import SafeUserDataSerializer
 
 
 class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
@@ -56,3 +57,24 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = ['id', 'url', 'sold_store_package', 'consultant', 'created', 'updated']
+
+
+class SoldStorePackageSerializer(serializers.ModelSerializer):
+    # url = serializers.HyperlinkedIdentityField(
+    #     lookup_field='id',
+    #     view_name='store-package:consultant-sold-store-package-accept-request-detail'
+    # )
+    sold_to = serializers.SerializerMethodField()
+    consultant_url = serializers.HyperlinkedRelatedField(
+        source='consultant',
+        lookup_field='slug',
+        read_only=True,
+        view_name='consultant:consultant-profile-detail'
+    )
+
+    class Meta:
+        model = ConsultantSoldStorePackageAcceptRequest
+        fields = ['title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+
+    def get_sold_to(self, obj):
+        return SafeUserDataSerializer(obj.sold_to).data
