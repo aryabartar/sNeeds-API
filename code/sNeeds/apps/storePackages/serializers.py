@@ -2,6 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest
+from ..consultants.models import ConsultantProfile
 
 
 class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
