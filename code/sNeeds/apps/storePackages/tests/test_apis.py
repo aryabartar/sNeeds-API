@@ -115,16 +115,15 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_consultant_sold_store_package_accept_request_list_post_success(self):
         client = self.client
-        client.login(email='u2@g.com', password='user1234')
-
-        url = reverse(
-            "store-package:consultant-sold-store-package-accept-request-detail",
-            args=[self.consultant_sold_store_package_accept_request_1.id]
-        )
-        response = client.get(url, format='json')
-
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
         client.login(email='c2@g.com', password='user1234')
-        response = client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        url = reverse("store-package:consultant-sold-store-package-accept-request-list")
+
+        data = {"sold_store_package": self.sold_store_package_1.id}
+
+        response = client.post(url, data=data, format='json')
+        data = response.data
+        obj = ConsultantSoldStorePackageAcceptRequest.objects.get(id=data.get('id'))
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(obj.sold_store_package, self.sold_store_package_1)
+        self.assertEqual(obj.consultant, self.consultant2_profile)
