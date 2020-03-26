@@ -19,3 +19,9 @@ def activate_discount():
 def deactivate_discount():
 	qs = Discount.objects.filter(end_time__lte=timezone.now())
 	qs.delete()
+
+
+@task()
+def delete_consultant_created_used_discounts():
+	qs = Discount.objects.filter(creator='C', use_limit=0)
+	qs.delete()

@@ -9,4 +9,10 @@ urlpatterns = [
     path('cart-discounts/', views.CartDiscountListView.as_view(), name='cart-discount-list'),
     path('cart-discounts/<int:id>/', views.CartDiscountDetailView.as_view(),
          name="cart-discount-detail"),
+
+    path('consultant-discounts/', views.ConsultantForUserDiscountListCreateAPIView.as_view(),
+         name='consultant-discount-list-create'),
+
+    path('consultant-discounts/<int:id>/', views.ConsultantForUserDiscountRetrieveDestroyAPIView.as_view(),
+         name='consultant-discount-retrieve-destroy'),
 ]

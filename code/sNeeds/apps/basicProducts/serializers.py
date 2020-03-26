@@ -18,14 +18,14 @@ class BasicProductSerializer(serializers.ModelSerializer):
 class SoldBasicProductSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         lookup_field='id',
-        view_name="basicProducts:sold-basic-product-detail",
+        view_name="basic-product:sold-basic-product-detail",
         read_only=True
     )
 
     basic_product = serializers.HyperlinkedRelatedField(
         read_only=True,
         lookup_field='slug',
-        view_name='basic-products:basic-product-detail'
+        view_name='basic-product:basic-product-detail'
     )
 
     sold_to = serializers.SerializerMethodField()

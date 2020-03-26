@@ -9,7 +9,7 @@ from rest_framework.test import APITestCase, APIClient
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
-from sNeeds.apps.discounts.serializers import DiscountSerializer
+from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.customForms.models import BugReport

@@ -67,6 +67,13 @@ class Cart(models.Model):
             self.total = self.subtotal
             return
 
+
+        discount = cart_discount.discount
+
+        # if discount.creator == "C":
+        #     self.total = self.subtotal - discount.amount
+        #     return
+
         # Consultants that are in the discount of code entered
         consultants_qs = cart_discount.discount.consultants.all()
 
@@ -75,6 +82,20 @@ class Cart(models.Model):
 
         # For apply time slot number discount
         time_slot_sale_count = self.get_time_slot_sales_count()
+
+        # If discount is given by one consultant to one user we remove one time slot from products
+        # and also consultant from consultants , so no other time slots will be affected by discount
+        # but count discount will remain with one fewer time slots
+        if discount.creator == "C":
+            discount_creator_time_slot_qs =\
+                self.products.all().get_time_slot_sales().filter(consultant__in=consultants_qs)
+
+            if discount_creator_time_slot_qs.exists():
+                discount_creator_first_time_slot_id = discount_creator_time_slot_qs.first().id
+                products = self.products.all().exclude(id=discount_creator_first_time_slot_id)
+                consultants_qs = consultants_qs.none()
+                time_slot_sale_count -= 1
+
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
 
         total = 0
@@ -92,6 +113,8 @@ class Cart(models.Model):
                     effective_price = product.price
 
                 effective_price = effective_price * ((100.0 - count_discount) / 100)
+                if effective_price < 0:
+                    effective_price = 0
                 total += effective_price
                 continue
             except TimeSlotSale.DoesNotExist:
@@ -100,6 +123,8 @@ class Cart(models.Model):
             # For products
             if product in products_qs:
                 effective_price = product.price - cart_discount.discount.amount
+                if effective_price < 0:
+                    effective_price = 0
             else:
                 effective_price = product.price
 

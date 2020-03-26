@@ -3,6 +3,8 @@ from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
 
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
+from ..store.models import Product
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
@@ -11,10 +13,55 @@ class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
         fields = ['number', 'discount', ]
 
 
+class ShortDiscountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Discount
+        fields = ['consultants', 'products']
+
+
 class DiscountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Discount
-        fields = ['consultants', 'products', 'amount', ]
+        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users']
+        extra_kwargs = {
+            'consultants': {'read_only': True},
+            'products': {'read_only': True},
+            'amount': {'read_only': True},
+            'code': {'read_only': True},
+        }
+
+    def validate(self, attrs):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+        return attrs
+
+    def create(self, validated_data):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        consultants = [consultant_profile]
+
+        users = validated_data.get('users', [])
+
+        if len(users) == 0:
+            raise ValidationError("No students defined to use discount")
+
+        users_are_consultants_qs = ConsultantProfile.objects.filter(user__in=users)
+        if users_are_consultants_qs.exists():
+            raise ValidationError("No Consultant allowed to be in users")
+
+        products = []
+
+        obj = Discount.objects.new_discount_with_products_users_consultant(products, users, consultants,
+                                                                           amount=consultant_profile.time_slot_price,
+                                                                           use_limit=1, creator="C",
+                                                                           )
+        return obj
 
 
 class CartDiscountSerializer(serializers.ModelSerializer):
@@ -33,7 +80,7 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         fields = ['id', 'cart', 'discount', 'url', 'code', ]
 
     def get_discount(self, obj):
-        discount_serialize = DiscountSerializer(obj.discount)
+        discount_serialize = ShortDiscountSerializer(obj.discount)
         return discount_serialize.data
 
     def validate_code(self, code):
@@ -46,6 +93,11 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         return code
 
     def validate(self, attrs):
+        user = None
+        request = self.context.get("request")
+        if request and hasattr(request, "user"):
+            user = request.user
+
         cart = attrs.get("cart")
 
         # Checking that discount is applied in the cart
@@ -53,7 +105,24 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         if qs.exists():
             raise ValidationError(_("This cart has an active code"))
 
+        if cart.user != user:
+            raise ValidationError(_("The user wants to apply code is not cart owner"))
+
         discount = Discount.objects.get(code=attrs.get("discount").get("code"))
+
+        use_limit = 0
+        if discount.use_limit is not None:
+            use_limit = discount.use_limit
+            if use_limit > 0:
+                use_limit -= 1
+            else:
+                raise ValidationError(_("Discount has reached to limit"))
+
+        # Checking that if discount has users , cart user is included in discount users
+        if discount.users.all().count() > 0:
+            qs = discount.users.filter(id=user.id)
+            if qs.exists() is not True:
+                raise ValidationError(_("The user is not allowed to use this code"))
 
         # Checking that user has bought a session with the code's consultant or not
         discount_consultants_id = list(discount.consultants.all().values_list('id', flat=True))
@@ -71,6 +140,9 @@ class CartDiscountSerializer(serializers.ModelSerializer):
                 len(list(set(discount_products_id) & set(cart_products_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
+        if discount.use_limit is not None:
+            discount.use_limit = use_limit
+        discount.save()
         return attrs
 
     def create(self, validated_data):
