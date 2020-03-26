@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'drf_yasg',  # for filtering get queries in DRF
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
+    'ckeditor',
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
