@@ -26,5 +26,6 @@ class CORSMiddleware(object):
         response["Access-Control-Allow-Origin"] = "*"
         response["Access-Control-Allow-Headers"] = 'client-timezone, authorization, content-type'
         response["Access-Control-Allow-Credentials"] = 'true'
+        response["Access-Control-Allow-Methods"] = 'GET, PUT, POST, DELETE, HEAD'
 
         return response

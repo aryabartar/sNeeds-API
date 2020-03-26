@@ -196,3 +196,26 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='c1@g.com', password='user1234')
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_sold_store_package_detail_get_permission_denied(self):
+        client = self.client
+
+        obj = self.sold_store_package_1
+        obj.consultant = self.consultant1_profile
+        obj.save()
+
+        url = reverse("store-package:sold-store-package-detail", args=[obj.id])
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data['title'], obj.title)
+        self.assertEqual(data['sold_to']['id'], obj.sold_to.id)
+        self.assertEqual(data['paid_price'], obj.paid_price)
+        self.assertEqual(data['total_price'], obj.total_price)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
