@@ -273,7 +273,7 @@ class CartTests(APITestCase):
         client = self.client
 
         ts_obj = TimeSlotSale.objects.all().first()
-        url = reverse("store:time-slot-sale-detail", args=(ts_obj,))
+        url = reverse("store:time-slot-sale-detail", args=(ts_obj.id,))
 
         response = client.get(url, format="json")
 

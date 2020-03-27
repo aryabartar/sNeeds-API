@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage
+    SoldStorePackage, SoldStoreUnpaidPackagePhase
 from ..consultants.models import ConsultantProfile
 from ..customAuth.serializers import SafeUserDataSerializer
 
@@ -84,3 +84,27 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+
+class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
+    sold_store_package = serializers.HyperlinkedRelatedField(
+        lookup_field='id',
+        read_only=True,
+        view_name='store-package:sold-store-package-detail'
+    )
+
+    class Meta:
+        fields = ['url', 'title', 'detailed_title', 'sold_store_package', 'phase_number', 'status']
+        extra_kwargs = {
+            'url': {'read_only': True},
+            'title': {'read_only': True},
+            'detailed_title': {'read_only': True},
+            'sold_store_package': {'read_only': True},
+            'phase_number': {'read_only': True},
+            'status': {'read_only': True},
+        }
+
+
+class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
+    class Meta(SoldStorePackageSerializer.Meta):
+        model = SoldStoreUnpaidPackagePhase

@@ -27,6 +27,14 @@ class SoldStorePackageOwnerUpdatePermission(permissions.BasePermission):
 
 
 class SoldStorePackageGetPermission(permissions.BasePermission):
+    message = "This user has no view access to SoldStorePackage."
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        return user == obj.sold_to or user == obj.consultant.user
+
+
+class SoldStorePackageGetPermission(permissions.BasePermission):
     message = "This user has no view access."
 
     def has_object_permission(self, request, view, obj):
