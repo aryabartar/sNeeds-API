@@ -57,6 +57,11 @@ def create_chat(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_time_slot_receiver, sender=TimeSlotSale)
 
 post_save.connect(post_save_product_receiver, sender=Product)
+# Signal is not fired when subclasses were updated.
+# https://stackoverflow.com/questions/14758250/django-post-save-signal-on-parent-class-with-multi-table-inheritance
+for subclass in Product.__subclasses__():
+    post_save.connect(post_save_product_receiver, subclass)
+
 post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)
 post_save.connect(create_chat, sender=SoldTimeSlotSale)
 
