@@ -27,3 +27,5 @@ class CartModelTests(CustomAPITestCase):
     def test_cart_create_user_is_consultant_fail(self):
         with self.assertRaises(ValidationError) as e:
             Cart.objects.create(user=self.consultant1)
+
+    # def test_product_price_update_
