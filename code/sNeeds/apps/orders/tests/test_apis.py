@@ -52,8 +52,6 @@ class CartTests(CustomAPITestCase):
             discount=50
         )
 
-        # Setup ------
-        self.client = APIClient()
 
     def test_selling_cart_deletes_sold_products_from_other_carts(self):
         cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()

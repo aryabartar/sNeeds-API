@@ -48,7 +48,7 @@ class OrderManager(models.Manager):
         )
         sold_basic_products_qs = basic_products_qs.add_basic_product_sold(sold_to=cart.user)
 
-        order = Order(
+        order = Order.objects.create(
             user=cart.user,
             status='paid',
             total=cart.total,
@@ -57,10 +57,10 @@ class OrderManager(models.Manager):
             time_slot_sales_number_discount=time_slot_sales_number_discount_number
         )
 
+        order.sold_products.add(*list(sold_time_slot_sales_qs))
+        order.sold_products.add(*list(sold_store_paid_package_phase_qs))
+        order.sold_products.add(*list(sold_basic_products_qs))
         order.save()
-        order.sold_products.set(sold_time_slot_sales_qs)
-        order.sold_products.set(sold_store_paid_package_phase_qs)
-        order.sold_products.set(sold_basic_products_qs)
 
         cart.delete()
         return order
