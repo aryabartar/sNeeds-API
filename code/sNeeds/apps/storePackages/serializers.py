@@ -122,14 +122,8 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         lookup_field='id',
         view_name='store-package:sold-store-paid-package-phase-detail'
     )
-    sold_to = serializers.SerializerMethodField()
 
     class Meta(SoldStorePackagePhaseSerializer.Meta):
-        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url', 'sold_to', 'consultant_done']
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url', 'consultant_done']
         model = SoldStorePaidPackagePhase
-        extra_kwargs = {
-            'sold_to': {'read_only': True},
-        }
 
-    def get_sold_to(self, obj):
-        return SafeUserDataSerializer(obj.sold_to).data

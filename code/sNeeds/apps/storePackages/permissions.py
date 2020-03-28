@@ -50,7 +50,11 @@ class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):
     message = "This user has no access to SoldStorePaidPackagePhase obj."
 
     def has_object_permission(self, request, view, obj):
-        user = request.user
-        if obj.sold_store_package.consultant is not None:
-            return user == obj.sold_store_package.consultant.user
-        return False
+        if request.method == "PUT":
+            user = request.user
+            if obj.sold_store_package.consultant is not None:
+                return user == obj.sold_store_package.consultant.user
+            return False
+
+        else:
+            return True

@@ -280,19 +280,18 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(data['title'], obj.title)
         self.assertEqual(data['detailed_title'], obj.detailed_title)
         self.assertEqual(data['phase_number'], obj.phase_number)
-        self.assertEqual(data['price'], obj.phase_number)
-        self.assertEqual(data['sold_to'], obj.phase_number)
         self.assertEqual(data['status'], obj.status)
+        self.assertEqual(data['price'], obj.phase_number)
 
         client.login(email='c1@g.com', password='user1234')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_sold_store_unpaid_package_phase_detail_get_permission_denied(self):
+    def test_sold_store_paid_package_phase_detail_get_permission_denied(self):
         client = self.client
-        obj = self.sold_store_unpaid_package_phase_3
+        obj = self.sold_store_paid_package_phase_2
 
         url = reverse(
-            "store-package:sold-store-unpaid-package-phase-detail",
+            "store-package:sold-store-paid-package-phase-detail",
             args=[obj.id]
         )
 
@@ -306,3 +305,23 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='c2@g.com', password='user1234')
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # def test_sold_store_paid_package_phase_detail_update_accept(self):
+    #     client = self.client
+    #     obj = self.sold_store_paid_package_phase_2
+    #
+    #     url = reverse(
+    #         "store-package:sold-store-paid-package-phase-detail",
+    #         args=[obj.id]
+    #     )
+    #
+    #     response = client.get(url, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    #
+    #     client.login(email='u2@g.com', password='user1234')
+    #     response = client.get(url, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    #
+    #     client.login(email='c2@g.com', password='user1234')
+    #     response = client.get(url, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
