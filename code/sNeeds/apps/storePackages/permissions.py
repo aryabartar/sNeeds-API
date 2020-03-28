@@ -31,6 +31,8 @@ class SoldStorePackageGetPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user = request.user
+        if obj.consultant is None:
+            return user == obj.sold_to
         return user == obj.sold_to or user == obj.consultant.user
 
 
@@ -39,4 +41,6 @@ class SoldStoreUnpaidPackagePhaseGetPermission(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         user = request.user
+        if obj.sold_store_package.consultant is None:
+            return user == obj.sold_store_package.sold_to
         return user == obj.sold_store_package.sold_to or user == obj.sold_store_package.consultant.user

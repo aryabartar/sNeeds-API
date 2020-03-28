@@ -244,6 +244,7 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_sold_store_unpaid_package_phase_detail_get_permission_denied(self):
         client = self.client
+        obj = self.sold_store_unpaid_package_phase_3
 
         url = reverse(
             "store-package:sold-store-unpaid-package-phase-detail",
@@ -252,8 +253,11 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         response = client.get(url, format='json')
 
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
         client.login(email='u2@g.com', password='user1234')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         client.login(email='c2@g.com', password='user1234')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
