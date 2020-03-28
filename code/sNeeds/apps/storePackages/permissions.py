@@ -55,6 +55,5 @@ class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):
             if obj.sold_store_package.consultant is not None:
                 return user == obj.sold_store_package.consultant.user
             return False
-
         else:
             return True

@@ -321,8 +321,33 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         self.assertEqual(False, obj.consultant_done)
 
+        client.login(email='c1@g.com', password='user1234')
         response = client.put(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         obj.refresh_from_db()
         self.assertEqual(True, obj.consultant_done)
+
+    def test_sold_store_paid_package_phase_detail_update_permission_denied(self):
+        client = self.client
+        obj = self.sold_store_paid_package_phase_2
+
+        url = reverse(
+            "store-package:sold-store-paid-package-phase-detail",
+            args=[obj.id]
+        )
+        data = {
+            "consultant_done": True
+        }
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
