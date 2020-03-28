@@ -281,7 +281,8 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(data['detailed_title'], obj.detailed_title)
         self.assertEqual(data['phase_number'], obj.phase_number)
         self.assertEqual(data['status'], obj.status)
-        self.assertEqual(data['price'], obj.phase_number)
+        self.assertEqual(data['price'], obj.price)
+        self.assertEqual(data['consultant_done'], obj.consultant_done)
 
         client.login(email='c1@g.com', password='user1234')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
