@@ -122,7 +122,7 @@ class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
-    # permission_classes = [permissions.IsAuthenticated, SoldStoreUnpaidPackagePhaseGetPermission]
+    permission_classes = [permissions.IsAuthenticated, SoldStoreUnpaidPackagePhaseGetPermission]
 
 
 class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
