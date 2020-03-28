@@ -14,7 +14,7 @@ coreapi==2.3.3
 coreschema==0.0.4
 cycler==0.10.0
 defusedxml==0.6.0
-Django==2.2.3
+Django==2.2.10
 django-ckeditor==5.9.0
 django-cleanup==4.0.0
 django-cors-headers==3.0.2
