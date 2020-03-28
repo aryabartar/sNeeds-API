@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage, SoldStoreUnpaidPackagePhase
+    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
 from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
-    SoldStorePackageGetPermission, SoldStoreUnpaidPackagePhaseGetPermission
+    SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission
 from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
 
 
@@ -122,7 +122,7 @@ class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
-    permission_classes = [permissions.IsAuthenticated, SoldStoreUnpaidPackagePhaseGetPermission]
+    permission_classes = [permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission]
 
 
 class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
@@ -140,6 +140,36 @@ class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
             )
         except ConsultantProfile.DoesNotExist:
             qs = SoldStoreUnpaidPackagePhase.objects.filter(
+                sold_store_package__sold_to=user
+            )
+        return qs
+
+
+class SoldStorePaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    queryset = SoldStorePaidPackagePhase.objects.all()
+    serializer_class = serializers.SoldStorePaidPackagePhaseSerializer
+    permission_classes = [
+        permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission,
+        SoldStorePackagePaidPhaseUpdatePermission
+    ]
+
+
+class SoldStorePaidPackagePhaseListAPIView(generics.ListAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStorePaidPackagePhaseSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+
+        try:
+            consultant = ConsultantProfile.objects.get(user=user)
+            qs = SoldStorePaidPackagePhase.objects.filter(
+                sold_store_package__consultant=consultant
+            )
+        except ConsultantProfile.DoesNotExist:
+            qs = SoldStorePaidPackagePhase.objects.filter(
                 sold_store_package__sold_to=user
             )
         return qs

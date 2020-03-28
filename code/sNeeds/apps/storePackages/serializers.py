@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage, SoldStoreUnpaidPackagePhase
+    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
 from ..consultants.models import ConsultantProfile
 from ..customAuth.serializers import SafeUserDataSerializer
 
@@ -94,11 +94,12 @@ class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ['title', 'detailed_title', 'sold_store_package', 'phase_number', 'status']
+        fields = ['title', 'detailed_title', 'price', 'sold_store_package', 'phase_number', 'status']
         extra_kwargs = {
             'url': {'read_only': True},
             'title': {'read_only': True},
             'detailed_title': {'read_only': True},
+            'price': {'read_only': True},
             'sold_store_package': {'read_only': True},
             'phase_number': {'read_only': True},
             'status': {'read_only': True},
@@ -114,3 +115,17 @@ class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
     class Meta(SoldStorePackagePhaseSerializer.Meta):
         fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url']
         model = SoldStoreUnpaidPackagePhase
+
+
+class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-paid-package-phase-detail'
+    )
+
+    class Meta(SoldStorePackagePhaseSerializer.Meta):
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url', 'sold_to', 'consultant_done']
+        model = SoldStorePaidPackagePhase
+        extra_kwargs = {
+            'sold_to': {'read_only': True},
+        }
