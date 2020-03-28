@@ -241,3 +241,19 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         client.login(email='c1@g.com', password='user1234')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_sold_store_unpaid_package_phase_detail_get_permission_denied(self):
+        client = self.client
+
+        url = reverse(
+            "store-package:sold-store-unpaid-package-phase-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+
+        client.login(email='u2@g.com', password='user1234')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
