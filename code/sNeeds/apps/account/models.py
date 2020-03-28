@@ -13,6 +13,10 @@ def get_consultant_resume_path(instance, filename):
     return "account/files/consultants/{}/resume/{}".format(instance.user.email, filename)
 
 
+def get_student_resume_path(instance, filename):
+    return "account/files/students/{}/resume/{}".format(instance.user.email, filename)
+
+
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
     picture = models.ImageField(upload_to=get_image_upload_path("country-pictures"))
