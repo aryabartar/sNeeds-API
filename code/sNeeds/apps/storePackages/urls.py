@@ -31,9 +31,8 @@ urlpatterns = [
     path('sold-store-package-list/',
          views.SoldStorePackageListAPIView.as_view(), name="sold-store-package-list"),
 
-    # path('sold-store-unpaid-package-phase-detail/<int:id>/',
-    #      views.SoldStoreUnpaidPackagePhaseDetailAPIView.as_view(), name="sold-store-unpaid-package-phase-detail"),
-    # path('sold-store-unpaid-package-phase-list/',
-    #      views.SoldStoreUnpaidPackagePhaseListAPIView.as_view(), name="sold-store-unpaid-package-phase-list"),
-
+    path('sold-store-unpaid-package-phase-detail/<int:id>/',
+         views.SoldStoreUnpaidPackagePhaseDetailAPIView.as_view(), name="sold-store-unpaid-package-phase-detail"),
+    path('sold-store-unpaid-package-phase-list/',
+         views.SoldStoreUnpaidPackagePhaseListAPIView.as_view(), name="sold-store-unpaid-package-phase-list"),
 ]

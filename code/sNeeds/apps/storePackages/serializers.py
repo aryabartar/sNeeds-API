@@ -94,7 +94,7 @@ class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ['url', 'title', 'detailed_title', 'sold_store_package', 'phase_number', 'status']
+        fields = ['title', 'detailed_title', 'sold_store_package', 'phase_number', 'status']
         extra_kwargs = {
             'url': {'read_only': True},
             'title': {'read_only': True},
@@ -106,5 +106,11 @@ class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
 
 
 class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
-    class Meta(SoldStorePackageSerializer.Meta):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-unpaid-package-phase-detail'
+    )
+
+    class Meta(SoldStorePackagePhaseSerializer.Meta):
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url']
         model = SoldStoreUnpaidPackagePhase

@@ -4,11 +4,11 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage
+    SoldStorePackage, SoldStoreUnpaidPackagePhase
 from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
-    SoldStorePackageGetPermission
+    SoldStorePackageGetPermission, SoldStoreUnpaidPackagePhaseGetPermission
 from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
 
 
@@ -120,19 +120,26 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
 
 class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
+    queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
-    permission_classes = [permissions.IsAuthenticated, SoldStorePackageGetPermission]
+    # permission_classes = [permissions.IsAuthenticated, SoldStoreUnpaidPackagePhaseGetPermission]
+
+
+class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
 
         try:
             consultant = ConsultantProfile.objects.get(user=user)
-            qs = SoldStorePackage.objects.filter(
-                consultant=consultant
+            qs = SoldStoreUnpaidPackagePhase.objects.filter(
+                sold_store_package__consultant=consultant
             )
         except ConsultantProfile.DoesNotExist:
-            qs = SoldStorePackage.objects.filter(
-                sold_to=user
+            qs = SoldStoreUnpaidPackagePhase.objects.filter(
+                sold_store_package__sold_to=user
             )
         return qs

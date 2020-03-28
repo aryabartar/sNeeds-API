@@ -34,9 +34,9 @@ class SoldStorePackageGetPermission(permissions.BasePermission):
         return user == obj.sold_to or user == obj.consultant.user
 
 
-class SoldStorePackageGetPermission(permissions.BasePermission):
-    message = "This user has no view access."
+class SoldStoreUnpaidPackagePhaseGetPermission(permissions.BasePermission):
+    message = "This user has no view access to SoldStoreUnpaidPackagePhase obj."
 
     def has_object_permission(self, request, view, obj):
         user = request.user
-        return user == obj.sold_to or user == obj.consultant.user
+        return user == obj.sold_store_package.sold_to or user == obj.sold_store_package.consultant.user
