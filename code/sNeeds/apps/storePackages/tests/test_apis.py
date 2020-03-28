@@ -307,22 +307,22 @@ class TestAPIStorePackage(CustomAPITestCase):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # def test_sold_store_paid_package_phase_detail_update_accept(self):
-    #     client = self.client
-    #     obj = self.sold_store_paid_package_phase_2
-    #
-    #     url = reverse(
-    #         "store-package:sold-store-paid-package-phase-detail",
-    #         args=[obj.id]
-    #     )
-    #
-    #     response = client.get(url, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-    #
-    #     client.login(email='u2@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-    #
-    #     client.login(email='c2@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    def test_sold_store_paid_package_phase_detail_update_accept(self):
+        client = self.client
+        obj = self.sold_store_paid_package_phase_2
+
+        url = reverse(
+            "store-package:sold-store-paid-package-phase-detail",
+            args=[obj.id]
+        )
+        data = {
+            "consultant_done": True
+        }
+
+        self.assertEqual(False, obj.consultant_done)
+
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        obj.refresh_from_db()
+        self.assertEqual(True, obj.consultant_done)
