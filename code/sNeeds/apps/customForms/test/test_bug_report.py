@@ -169,11 +169,11 @@ class BugReportTests(APITestCase):
         )
         self.discount2.consultants.set([self.consultant1_profile, ])
 
-        self.discount3 = Discount.objects.create(
-            amount=500,
-            code="discountcode3"
-        )
-        self.discount3.products.set([self.webinar1])
+        # self.discount3 = Discount.objects.create(
+        #     amount=500,
+        #     code="discountcode3"
+        # )
+        # self.discount3.products.set([self.webinar1])
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(

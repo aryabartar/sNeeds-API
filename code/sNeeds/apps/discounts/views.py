@@ -33,7 +33,7 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        discount = instance.dicount
+        discount = instance.discount
         if discount.use_limit is not None:
             discount.use_limit = discount.use_limit + 1
         discount.save()
