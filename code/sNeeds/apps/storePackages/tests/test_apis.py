@@ -252,12 +252,13 @@ class TestAPIStorePackage(CustomAPITestCase):
         )
 
         response = client.get(url, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
         client.login(email='u2@g.com', password='user1234')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         client.login(email='c2@g.com', password='user1234')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
