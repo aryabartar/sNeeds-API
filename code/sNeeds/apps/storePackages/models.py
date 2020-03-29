@@ -1,6 +1,9 @@
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
+from sendgrid import Content
 
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
@@ -271,3 +274,35 @@ class ConsultantSoldStorePackageAcceptRequest(models.Model):
 
     class Meta:
         unique_together = ['sold_store_package', 'consultant']
+
+
+SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = (
+    ("not_started", "شروع نشده"),
+    ("in_progress", "در حال انجام"),
+    ("done", "انجام شد"),
+    ("succeeded", "موفقیت در گرفتن نتیجه"),
+    ("failed", "عدم موفقیت در گرفتن نتیجه"),
+    ("canceled", "موفقیت در گرفتن نتیجه"),
+)
+CONTENT_TYPE_LIMIT_CHOICE = models.Q(app_label='storePackages', model='soldstorepaidpackagephase') | \
+                            models.Q(app_label='storePackages', model='soldstoreunpaidpackagephase')
+
+
+class SoldStorePackagePhaseDetail(models.Model):
+    title = models.CharField(max_length=1024)
+    status = models.CharField(
+        choices=SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS,
+        max_length=1024
+    )
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE,
+        limit_choices_to=CONTENT_TYPE_LIMIT_CHOICE
+    )
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    file = models.FileField(blank=True, null=True)

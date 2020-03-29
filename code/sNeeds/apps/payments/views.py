@@ -120,14 +120,16 @@ class Verify(APIView):
 
 class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
-        # cart = Cart.objects.get(id=kwargs.get("cartid"))
-        # Order.objects.sell_cart_create_order(cart)
-        from sNeeds.apps.storePackages.models import StorePackage
-        id = kwargs.get("cartid")
-        qs = StorePackage.objects.all()
-        print(qs)
-        qs.sell_and_get_sold_package(sold_to=request.user)
-
+        # # cart = Cart.objects.get(id=kwargs.get("cartid"))
+        # # Order.objects.sell_cart_create_order(cart)
+        # from sNeeds.apps.storePackages.models import StorePackage
+        # id = kwargs.get("cartid")
+        # qs = StorePackage.objects.all()
+        # print(qs)
+        # qs.sell_and_get_sold_package(sold_to=request.user)
+        from django.contrib.contenttypes.models import ContentType
+        for c in ContentType.objects.all():
+            print(c.app_label, c.model)
         return Response()
 
 
