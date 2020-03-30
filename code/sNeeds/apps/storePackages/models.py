@@ -285,8 +285,7 @@ SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = (
     ("in_progress", "در حال انجام"),
     ("done", "انجام شد"),
     ("finished", "دریافت نتیجه"),
-    ("failed", "عدم موفقیت در گرفتن نتیجه"),
-    ("canceled", "لغو شد"),
+    ("pending_user_data", "دریافت اطلاعات کاربر"),
 )
 CONTENT_TYPE_LIMIT_CHOICE = models.Q(app_label='storePackages', model='soldstorepaidpackagephase') | \
                             models.Q(app_label='storePackages', model='soldstoreunpaidpackagephase')

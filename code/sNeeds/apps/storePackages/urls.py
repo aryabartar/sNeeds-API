@@ -42,7 +42,7 @@ urlpatterns = [
          views.SoldStorePaidPackagePhaseListAPIView.as_view(), name="sold-store-paid-package-phase-list"),
 
     path('sold-store-package-phase-detail-detail/<int:id>/',
-         views.SoldStorePaidPackagePhaseDetailAPIView.as_view(), name="sold-store-package-phase-detail-detail"),
+         views.SoldStorePackagePhaseDetailDetailAPIView.as_view(), name="sold-store-package-phase-detail-detail"),
     path('sold-store-package-phase-detail-list/',
-         views.SoldStorePaidPackagePhaseListAPIView.as_view(), name="sold-store-package-phase-detail-list"),
+         views.SoldStorePackagePhaseDetailListAPIView.as_view(), name="sold-store-package-phase-detail-list"),
 ]

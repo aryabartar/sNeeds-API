@@ -203,11 +203,11 @@ class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):
         if is_consultant:
             consultant = ConsultantProfile.objects.get(user=user)
             qs = SoldStorePackagePhaseDetail.objects.filter(
-                content_object__consultant=consultant
+                content_object__sold_store_package__consultant=consultant
             )
         else:
-            qs = ConsultantSoldStorePackageAcceptRequest.objects.filter(
-                sold_store_package__sold_to=user
+            qs = SoldStorePackagePhaseDetail.objects.filter(
+                content_object__sold_store_package__sold_to=user
             )
         return qs
 

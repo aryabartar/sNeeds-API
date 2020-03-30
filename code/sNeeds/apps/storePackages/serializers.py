@@ -129,4 +129,11 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
 
 
 class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
-    pass
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-package-phase-detail-detail'
+    )
+
+    class Meta:
+        fields =  ['url', 'consultant_done']
+        model = SoldStorePaidPackagePhase
