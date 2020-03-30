@@ -12,8 +12,8 @@ from sNeeds.apps.store.models import Product, SoldProduct
 User = get_user_model()
 
 
-def get_sold_store_package_phase_detail_file_upload_path(instance):
-    return "storePackage/files/sold-store-package-phase-detail/{}".format(instance.id)
+def get_sold_store_package_phase_detail_file_upload_path(instance, file_name):
+    return "storePackage/files/sold-store-package-phase-detail/{}/{}".format(instance.id, file_name)
 
 
 class StorePackageQuerySetManager(models.QuerySet):
