@@ -277,6 +277,10 @@ class SoldStorePackagePhaseDetail(models.Model):
         if self.content_object is None:
             raise ValidationError({"object_id": "Id is not valid."})
 
+    def save(self, **kwargs):
+        self.clean()
+        super().save(self, **kwargs)
+
     class Meta:
         ordering = ['created']
 

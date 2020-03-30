@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
@@ -135,12 +134,21 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
 
-    # sold-storePaidPackagePhaseSerializer
-
     class Meta:
-        fields = ['url', 'status', 'created', 'updated', ]
+        fields = ['url', 'status', 'created', 'updated', 'content_type', 'object_id', ]
         model = SoldStorePackagePhaseDetail
 
-    def validate(self, attrs):
-        print(attrs)
-        return attrs
+    # def validate_phase_id(self, value):
+    #     if not SoldStorePaidPackagePhase.objects.filter(id=value).exists() and \
+    #             SoldStoreUnpaidPackagePhase.objects.filter(id=value).exists():
+    #         raise serializers.ValidationError("Phase with {} id does not exist.".format(value))
+    #     return value
+
+    # def save(self, **kwargs):
+    #     phase_id = self.validated_data.pop['phase_id']
+    #
+    #     self.validated_data['content_type'] = SoldStorePaidPackagePhase
+    #
+    #     self.validated_data['object_id'] = phase_id
+    #
+    #     print(self.validated_data)
