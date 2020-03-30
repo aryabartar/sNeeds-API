@@ -67,8 +67,9 @@ class Message(PolymorphicModel):
 
     def clean(self):
         if self.sender != self.chat.user and self.sender != self.chat.consultant.user:
+            # TODO: Fix this
             # raise ValidationError(f"User {self.sender} cannot send message to this chat.")
-            raise  ValidationError("Error")
+            raise ValidationError("Error")
 
     def save(self, *args, **kwargs):
         self.tag = Message.objects.filter(chat=self.chat).count() + 1

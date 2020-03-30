@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models, transaction
 from django.contrib.auth import get_user_model
@@ -9,6 +10,10 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
 
 User = get_user_model()
+
+
+def get_sold_store_package_phase_detail(instance, filename):
+    return "storePackage/files//{}/image/{}".format(instance.user.id, filename)
 
 
 class StorePackageQuerySetManager(models.QuerySet):
@@ -277,12 +282,11 @@ class ConsultantSoldStorePackageAcceptRequest(models.Model):
 
 
 SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = (
-    ("not_started", "شروع نشده"),
     ("in_progress", "در حال انجام"),
     ("done", "انجام شد"),
-    ("succeeded", "موفقیت در گرفتن نتیجه"),
+    ("finished", "دریافت نتیجه"),
     ("failed", "عدم موفقیت در گرفتن نتیجه"),
-    ("canceled", "موفقیت در گرفتن نتیجه"),
+    ("canceled", "لغو شد"),
 )
 CONTENT_TYPE_LIMIT_CHOICE = models.Q(app_label='storePackages', model='soldstorepaidpackagephase') | \
                             models.Q(app_label='storePackages', model='soldstoreunpaidpackagephase')
@@ -306,3 +310,7 @@ class SoldStorePackagePhaseDetail(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     file = models.FileField(blank=True, null=True)
+
+    def clean(self):
+        if self.content_object is None:
+            raise ValidationError({"object_id": "Id is not valid."})

@@ -40,4 +40,9 @@ urlpatterns = [
          views.SoldStorePaidPackagePhaseDetailAPIView.as_view(), name="sold-store-paid-package-phase-detail"),
     path('sold-store-paid-package-phase-list/',
          views.SoldStorePaidPackagePhaseListAPIView.as_view(), name="sold-store-paid-package-phase-list"),
+
+    path('sold-store-package-phase-detail-detail/<int:id>/',
+         views.SoldStorePaidPackagePhaseDetailAPIView.as_view(), name="sold-store-package-phase-detail-detail"),
+    path('sold-store-package-phase-detail-list/',
+         views.SoldStorePaidPackagePhaseListAPIView.as_view(), name="sold-store-package-phase-detail-list"),
 ]

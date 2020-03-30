@@ -19,6 +19,7 @@ from .models import ConsultantDepositInfo
 
 from .models import PayPayment
 from ..carts.models import Cart
+from ..storePackages.models import SoldStorePackagePhaseDetail
 from ...settings.config.variables import FRONTEND_URL
 
 ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
@@ -127,9 +128,11 @@ class VerifyTest(APIView):
         # qs = StorePackage.objects.all()
         # print(qs)
         # qs.sell_and_get_sold_package(sold_to=request.user)
-        from django.contrib.contenttypes.models import ContentType
-        for c in ContentType.objects.all():
-            print(c.app_label, c.model)
+        obj = SoldStorePackagePhaseDetail.objects.all().first()
+        print("***")
+        print(obj.content_type)
+        print(obj.object_id)
+        print(obj.content_object)
         return Response()
 
 
