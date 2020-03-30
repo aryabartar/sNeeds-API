@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -203,12 +204,13 @@ class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):
         if is_consultant:
             consultant = ConsultantProfile.objects.get(user=user)
             qs = SoldStorePackagePhaseDetail.objects.filter(
-                content_object__sold_store_package__consultant=consultant
+                Q(sold_store_unpaid_package_phase__sold_store_package__consultant=consultant) | Q(
+                    sold_store_paid_package_phase__sold_store_package__consultant=consultant)
             )
         else:
             qs = SoldStorePackagePhaseDetail.objects.filter(
-                content_object__sold_store_package__sold_to=user
-            )
+                Q(sold_store_unpaid_package_phase__sold_store_package__sold_to=user) | Q(
+                    sold_store_paid_package_phase__sold_store_package__sold_to=user))
         return qs
 
     def create(self, data, *args, **kwargs):

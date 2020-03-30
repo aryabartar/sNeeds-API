@@ -1,4 +1,4 @@
-from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -10,6 +10,21 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
 
 User = get_user_model()
+
+SOLD_STORE_PACKAGE_PHASE_STATUS = [
+    ('not_started', "شروع نشده"),
+    ("pay_to_start", "نیازمند پرداخت برای شروع"),
+    ('in_progress', "در حال انجام"),
+    ('done', "انجام شده")
+]
+SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = [
+    ("in_progress", "در حال انجام"),
+    ("done", "انجام شد"),
+    ("finished", "دریافت نتیجه"),
+    ("pending_user_data", "دریافت اطلاعات کاربر"),
+]
+CONTENT_TYPE_LIMIT_CHOICE = models.Q(app_label='storePackages', model='soldstorepaidpackagephase') | \
+                            models.Q(app_label='storePackages', model='soldstoreunpaidpackagephase')
 
 
 def get_sold_store_package_phase_detail_file_upload_path(instance, file_name):
@@ -194,14 +209,6 @@ class SoldStorePackage(models.Model):
         self._update_total_price()
 
 
-SOLD_STORE_PACKAGE_PHASE_STATUS = [
-    ('not_started', "شروع نشده"),
-    ("pay_to_start", "نیازمند پرداخت برای شروع"),
-    ('in_progress', "در حال انجام"),
-    ('done', "انجام شده")
-]
-
-
 class SoldStorePackagePhaseQuerySet(models.QuerySet):
     def get_qs_price(self):
         qs_price = 0
@@ -245,52 +252,6 @@ class SoldStorePackagePhase(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
-    consultant_done = models.BooleanField(default=False)
-
-    objects = SoldStorePaidPackagePhaseQuerySet.as_manager()
-
-    def get_status(self):
-        if not self.consultant_done:
-            return "in_progress"
-        else:
-            return "done"
-
-
-class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
-    objects = SoldStoreUnpaidPackagePhaseQuerySet.as_manager()
-
-    def get_status(self):
-        if not self.active:
-            return "not_started"
-        else:
-            return "pay_to_start"
-
-
-class ConsultantSoldStorePackageAcceptRequest(models.Model):
-    sold_store_package = models.ForeignKey(
-        SoldStorePackage,
-        on_delete=models.CASCADE
-    )
-    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
-
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        unique_together = ['sold_store_package', 'consultant']
-
-
-SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = (
-    ("in_progress", "در حال انجام"),
-    ("done", "انجام شد"),
-    ("finished", "دریافت نتیجه"),
-    ("pending_user_data", "دریافت اطلاعات کاربر"),
-)
-CONTENT_TYPE_LIMIT_CHOICE = models.Q(app_label='storePackages', model='soldstorepaidpackagephase') | \
-                            models.Q(app_label='storePackages', model='soldstoreunpaidpackagephase')
-
-
 class SoldStorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024)
     status = models.CharField(
@@ -315,3 +276,50 @@ class SoldStorePackagePhaseDetail(models.Model):
     def clean(self):
         if self.content_object is None:
             raise ValidationError({"object_id": "Id is not valid."})
+
+    class Meta:
+        ordering = ['created']
+
+
+class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
+    consultant_done = models.BooleanField(default=False)
+    phase_detail = GenericRelation(
+        SoldStorePackagePhaseDetail,
+        related_query_name="sold_store_paid_package_phase"
+    )
+
+    objects = SoldStorePaidPackagePhaseQuerySet.as_manager()
+
+    def get_status(self):
+        if not self.consultant_done:
+            return "in_progress"
+        else:
+            return "done"
+
+
+class SoldStoreUnpaidPackagePhase(SoldStorePackagePhase, Product):
+    objects = SoldStoreUnpaidPackagePhaseQuerySet.as_manager()
+    phase_detail = GenericRelation(
+        SoldStorePackagePhaseDetail,
+        related_query_name="sold_store_unpaid_package_phase"
+    )
+
+    def get_status(self):
+        if not self.active:
+            return "not_started"
+        else:
+            return "pay_to_start"
+
+
+class ConsultantSoldStorePackageAcceptRequest(models.Model):
+    sold_store_package = models.ForeignKey(
+        SoldStorePackage,
+        on_delete=models.CASCADE
+    )
+    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ['sold_store_package', 'consultant']

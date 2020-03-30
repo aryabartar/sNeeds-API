@@ -81,4 +81,3 @@ class SoldStorePackagePhaseDetailUpdatePermission(permissions.BasePermission):
             return False
         else:
             return True
-

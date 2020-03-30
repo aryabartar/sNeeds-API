@@ -2,7 +2,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
+    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
 from ..consultants.models import ConsultantProfile
 from ..customAuth.serializers import SafeUserDataSerializer
 
@@ -128,12 +128,19 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         model = SoldStorePaidPackagePhase
 
 
+# TODO: FILTER! In list!
 class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
     url = serializers.HyperlinkedIdentityField(
         lookup_field='id',
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
 
+    # sold-storePaidPackagePhaseSerializer
+
     class Meta:
-        fields =  ['url', 'consultant_done']
-        model = SoldStorePaidPackagePhase
+        fields = ['url', 'status', 'created', 'updated', ]
+        model = SoldStorePackagePhaseDetail
+
+    def validate(self, attrs):
+        print(attrs)
+        return attrs
