@@ -9,7 +9,7 @@ from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
-    SoldStorePackagePhaseDetailGetPermission
+    SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission
 from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
 
 
@@ -176,12 +176,57 @@ class SoldStorePaidPackagePhaseListAPIView(generics.ListAPIView):
         return qs
 
 
-
 class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateAPIView):
     lookup_field = 'id'
     queryset = SoldStorePackagePhaseDetail.objects.all()
     serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
     permission_classes = [
         permissions.IsAuthenticated, SoldStorePackagePhaseDetailGetPermission,
-        SoldStorePackagePaidPhaseUpdatePermission
+        SoldStorePackagePhaseDetailUpdatePermission
     ]
+
+
+class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+    def get_queryset(self):
+        user = self.request.user
+        is_consultant = ConsultantProfile.objects.filter(user=user).exists()
+
+        if is_consultant:
+            consultant = ConsultantProfile.objects.get(user=user)
+            qs = SoldStorePackagePhaseDetail.objects.filter(
+                content_object__consultant=consultant
+            )
+        else:
+            qs = ConsultantSoldStorePackageAcceptRequest.objects.filter(
+                sold_store_package__sold_to=user
+            )
+        return qs
+
+    def create(self, data, *args, **kwargs):
+        # Here is changed
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def post(self, request, *args, **kwargs):
+        user = self.request.user
+
+        try:
+            data = request.data.copy()  # Default data is immutable
+            consultant = ConsultantProfile.objects.get(user=user)
+            data['consultant'] = consultant.id
+            return self.create(data, *args, **kwargs)
+
+        except ConsultantProfile.DoesNotExist:
+            return Response({"detail": "User is not consultant."}, status=403)
