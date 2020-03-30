@@ -4,11 +4,12 @@ from rest_framework.views import APIView
 
 from . import serializers
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
-    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
+    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
 from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
-    SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission
+    SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
+    SoldStorePackagePhaseDetailGetPermission
 from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
 
 
@@ -173,3 +174,14 @@ class SoldStorePaidPackagePhaseListAPIView(generics.ListAPIView):
                 sold_store_package__sold_to=user
             )
         return qs
+
+
+
+class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    queryset = SoldStorePackagePhaseDetail.objects.all()
+    serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
+    permission_classes = [
+        permissions.IsAuthenticated, SoldStorePackagePhaseDetailGetPermission,
+        SoldStorePackagePaidPhaseUpdatePermission
+    ]

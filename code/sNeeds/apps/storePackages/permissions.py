@@ -57,3 +57,27 @@ class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):
             return False
         else:
             return True
+
+
+class SoldStorePackagePhaseDetailGetPermission(permissions.BasePermission):
+    message = "This user has no view access to SoldStoreUnpaidPackagePhaseDetail obj."
+
+    def has_object_permission(self, request, view, obj):
+        user = request.user
+        if obj.content_object.sold_store_package.consultant is None:
+            return user == obj.content_object.sold_store_package.sold_to
+        return user == obj.content_object.sold_store_package.sold_to or \
+               user == obj.content_object.sold_store_package.consultant.user
+
+
+class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):
+    message = "This user has no access to SoldStorePaidPackagePhase obj."
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == "PUT":
+            user = request.user
+            if obj.sold_store_package.consultant is not None:
+                return user == obj.sold_store_package.consultant.user
+            return False
+        else:
+            return True
