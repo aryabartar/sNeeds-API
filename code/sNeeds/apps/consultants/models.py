@@ -1,11 +1,17 @@
 from ckeditor.fields import RichTextField
+
 from django.db import models
 
-from sNeeds.apps.account.models import (
-    get_consultant_image_path, get_consultant_resume_path, University, FieldOfStudy,
-    Country
-)
+from sNeeds.apps.account.models import (University, FieldOfStudy, Country)
 from sNeeds.apps.customAuth.models import CustomUser
+
+
+def get_consultant_image_path(instance, filename):
+    return "account/images/consultants/{}/image/{}".format(instance.user.id, filename)
+
+
+def get_consultant_resume_path(instance, filename):
+    return "account/files/consultants/{}/resume/{}".format(instance.user.id, filename)
 
 
 class ConsultantProfileQuerySetManager(models.QuerySet):

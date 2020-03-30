@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('bio', models.TextField(blank=True, null=True)),
-                ('profile_picture', models.ImageField(upload_to=sNeeds.apps.account.models.get_consultant_image_path)),
+                ('profile_picture', models.ImageField(upload_to=sNeeds.apps.consultants.models.get_consultant_image_path)),
                 ('aparat_link', models.URLField(blank=True, null=True)),
-                ('resume', models.FileField(blank=True, null=True, upload_to=sNeeds.apps.account.models.get_consultant_resume_path)),
+                ('resume', models.FileField(blank=True, null=True, upload_to=sNeeds.apps.consultants.models.get_consultant_resume_path)),
                 ('slug', models.SlugField(help_text='lowercase pls', unique=True)),
                 ('active', models.BooleanField(default=True)),
                 ('time_slot_price', models.PositiveIntegerField()),

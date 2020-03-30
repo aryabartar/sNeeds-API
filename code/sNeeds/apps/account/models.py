@@ -5,14 +5,6 @@ def get_image_upload_path(sub_dir):
     return "account/images/" + sub_dir
 
 
-def get_consultant_image_path(instance, filename):
-    return "account/images/consultants/{}/image/{}".format(instance.user.id, filename)
-
-
-def get_consultant_resume_path(instance, filename):
-    return "account/files/consultants/{}/resume/{}".format(instance.user.id, filename)
-
-
 class Country(models.Model):
     name = models.CharField(max_length=256, unique=True)
     picture = models.ImageField(upload_to=get_image_upload_path("country-pictures"))

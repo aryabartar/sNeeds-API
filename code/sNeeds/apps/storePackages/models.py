@@ -12,8 +12,8 @@ from sNeeds.apps.store.models import Product, SoldProduct
 User = get_user_model()
 
 
-def get_sold_store_package_phase_detail(instance, filename):
-    return "storePackage/files//{}/image/{}".format(instance.user.id, filename)
+def get_sold_store_package_phase_detail_file_upload_path(instance):
+    return "storePackage/files/sold-store-package-phase-detail/{}".format(instance.id)
 
 
 class StorePackageQuerySetManager(models.QuerySet):
@@ -309,7 +309,9 @@ class SoldStorePackagePhaseDetail(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
-    file = models.FileField(blank=True, null=True)
+    file = models.FileField(
+        blank=True, null=True, upload_to=get_sold_store_package_phase_detail_file_upload_path
+    )
 
     def clean(self):
         if self.content_object is None:
