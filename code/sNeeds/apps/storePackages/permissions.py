@@ -70,14 +70,14 @@ class SoldStorePackagePhaseDetailGetPermission(permissions.BasePermission):
                user == obj.content_object.sold_store_package.consultant.user
 
 
-class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):
-    message = "This user has no access to SoldStorePaidPackagePhase obj."
+class SoldStorePackagePhaseDetailUpdatePermission(permissions.BasePermission):
+    message = "This user has no access to update SoldStorePackagePhaseDetail obj."
 
     def has_object_permission(self, request, view, obj):
         if request.method == "PUT":
             user = request.user
-            if obj.sold_store_package.consultant is not None:
-                return user == obj.sold_store_package.consultant.user
+            if obj.content_object.sold_store_package.consultant is not None:
+                return user == obj.content_object.sold_store_package.consultant.user
             return False
         else:
             return True
