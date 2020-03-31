@@ -1,7 +1,10 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
-from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest
+from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
+    SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
+from ..consultants.models import ConsultantProfile
+from ..customAuth.serializers import SafeUserDataSerializer
 
 
 class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
@@ -54,4 +57,73 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
-        fields = ['sold_store_package', 'consultant', 'created', 'updated']
+        fields = ['id', 'url', 'sold_store_package', 'consultant', 'created', 'updated']
+
+
+class SoldStorePackageSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-package-detail'
+    )
+    sold_to = serializers.SerializerMethodField()
+    consultant = serializers.HyperlinkedRelatedField(
+        lookup_field='slug',
+        read_only=True,
+        view_name='consultant:consultant-profile-detail'
+    )
+
+    class Meta:
+        model = SoldStorePackage
+        fields = ['url', 'title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+        extra_kwargs = {
+            'title': {'read_only': True},
+            'sold_to': {'read_only': True},
+            'paid_price': {'read_only': True},
+            'total_price': {'read_only': True},
+        }
+
+    def get_sold_to(self, obj):
+        return SafeUserDataSerializer(obj.sold_to).data
+
+
+class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
+    sold_store_package = serializers.HyperlinkedRelatedField(
+        lookup_field='id',
+        read_only=True,
+        view_name='store-package:sold-store-package-detail'
+    )
+
+    class Meta:
+        fields = ['title', 'detailed_title', 'price', 'sold_store_package', 'phase_number', 'status']
+        extra_kwargs = {
+            'url': {'read_only': True},
+            'title': {'read_only': True},
+            'detailed_title': {'read_only': True},
+            'price': {'read_only': True},
+            'sold_store_package': {'read_only': True},
+            'phase_number': {'read_only': True},
+            'status': {'read_only': True},
+        }
+
+
+class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-unpaid-package-phase-detail'
+    )
+
+    class Meta(SoldStorePackagePhaseSerializer.Meta):
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url']
+        model = SoldStoreUnpaidPackagePhase
+
+
+class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        lookup_field='id',
+        view_name='store-package:sold-store-paid-package-phase-detail'
+    )
+
+    class Meta(SoldStorePackagePhaseSerializer.Meta):
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url', 'consultant_done']
+        model = SoldStorePaidPackagePhase
+

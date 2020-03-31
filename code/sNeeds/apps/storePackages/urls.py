@@ -26,4 +26,18 @@ urlpatterns = [
         name="consultant-sold-store-package-accept-request-list"
     ),
 
+    path('sold-store-package-detail/<int:id>/',
+         views.SoldStorePackageDetailAPIView.as_view(), name="sold-store-package-detail"),
+    path('sold-store-package-list/',
+         views.SoldStorePackageListAPIView.as_view(), name="sold-store-package-list"),
+
+    path('sold-store-unpaid-package-phase-detail/<int:id>/',
+         views.SoldStoreUnpaidPackagePhaseDetailAPIView.as_view(), name="sold-store-unpaid-package-phase-detail"),
+    path('sold-store-unpaid-package-phase-list/',
+         views.SoldStoreUnpaidPackagePhaseListAPIView.as_view(), name="sold-store-unpaid-package-phase-list"),
+
+    path('sold-store-paid-package-phase-detail/<int:id>/',
+         views.SoldStorePaidPackagePhaseDetailAPIView.as_view(), name="sold-store-paid-package-phase-detail"),
+    path('sold-store-paid-package-phase-list/',
+         views.SoldStorePaidPackagePhaseListAPIView.as_view(), name="sold-store-paid-package-phase-list"),
 ]

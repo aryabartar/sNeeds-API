@@ -15,10 +15,11 @@ from sNeeds.apps.orders.models import Order
 
 from .serializers import ConsultantDepositInfoSerializer
 from .permissions import IsConsultant
-from . models import ConsultantDepositInfo
+from .models import ConsultantDepositInfo
 
 from .models import PayPayment
 from ..carts.models import Cart
+from ...settings.config.variables import FRONTEND_URL
 
 ZARINPAL_MERCHANT = settings.ZARINPAL_MERCHANT
 
@@ -63,7 +64,7 @@ class SendRequest(APIView):
             "پرداخت اسنیدز",
             cart.user.email,
             cart.user.phone_number,
-            "http://37.152.182.253/user/payment/accept/",
+            FRONTEND_URL + "user/payment/accept/",
         )
 
         if result.Status != 100:
@@ -149,4 +150,3 @@ class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
         user = self.request.user
         qs = ConsultantDepositInfo.objects.filter(consultant=user)
         return qs
-

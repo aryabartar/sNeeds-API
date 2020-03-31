@@ -41,7 +41,7 @@ class CartTests(CustomAPITestCase):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package1]
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
         data = {"products": [i.id for i in products], }
         response = client.post(url, data=data, format='json')
 
@@ -118,7 +118,7 @@ class CartTests(CustomAPITestCase):
         client = self.client
         client.login(email='u1@g.com', password='user1234')
 
-        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package1]
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
         data = {"products": [i.id for i in products], }
         response = client.post(url, data=data, format='json')
 

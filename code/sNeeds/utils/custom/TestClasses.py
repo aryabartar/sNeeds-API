@@ -201,6 +201,7 @@ class CustomAPITestCase(APITestCase):
         self.sold_store_package_1 = SoldStorePackage.objects.create(
             title="Math Gold Package",
             sold_to=self.user1,
+            consultant=self.consultant1_profile
         )
 
         self.sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.create(

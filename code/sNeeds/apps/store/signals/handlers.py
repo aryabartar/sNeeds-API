@@ -18,8 +18,9 @@ def pre_delete_product_receiver(sender, instance, *args, **kwargs):
 
 
 def pre_save_time_slot_receiver(sender, instance, *args, **kwargs):
-    consultant = ConsultantProfile.objects.get(id=instance.consultant.id)
-    instance.price = consultant.time_slot_price
+    consultant = instance.consultant
+    if instance.price is None:
+        instance.price = consultant.time_slot_price
 
 
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
@@ -39,7 +40,7 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 
 
 def post_save_product_receiver(sender, instance, *args, **kwargs):
-    cart_qs = Cart.objects.filter(products=instance)
+    cart_qs = Cart.objects.filter(products__in=[instance])
 
     # Used when time slot sold price is changed and its signal is triggered to update this model
     for obj in cart_qs:
@@ -53,10 +54,15 @@ def create_chat(sender, instance, *args, **kwargs):
         Chat.objects.create(user=user, consultant=consultant)
 
 
-pre_delete.connect(pre_delete_product_receiver, sender=Product)
-
 pre_save.connect(pre_save_time_slot_receiver, sender=TimeSlotSale)
 
 post_save.connect(post_save_product_receiver, sender=Product)
+# Signal is not fired when subclasses were updated.
+# https://stackoverflow.com/questions/14758250/django-post-save-signal-on-parent-class-with-multi-table-inheritance
+for subclass in Product.__subclasses__():
+    post_save.connect(post_save_product_receiver, subclass)
+
 post_save.connect(post_save_time_slot_sold_receiver, sender=SoldTimeSlotSale)
 post_save.connect(create_chat, sender=SoldTimeSlotSale)
+
+pre_delete.connect(pre_delete_product_receiver, sender=Product)

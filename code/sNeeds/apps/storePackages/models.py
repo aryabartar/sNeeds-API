@@ -161,6 +161,9 @@ class SoldStorePackage(models.Model):
     paid_price = models.PositiveIntegerField()
     total_price = models.PositiveIntegerField()
 
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
     objects = SoldStorePackageQuerySet.as_manager()
 
     def _update_paid_price(self):

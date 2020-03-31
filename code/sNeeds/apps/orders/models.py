@@ -6,6 +6,7 @@ from django.db import models, transaction
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldProduct
+from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhaseQuerySet, SoldStorePaidPackagePhase
 
 User = get_user_model()
 
@@ -39,10 +40,15 @@ class OrderManager(models.Manager):
             time_slot_sales_number_discount_number = 0
 
         sold_time_slot_sales_qs = time_slot_sales_qs.set_time_slot_sold(sold_to=cart.user)
+        # This is not SoldProduct
         sold_store_packages_qs = store_packages_qs.sell_and_get_sold_package(sold_to=cart.user)
+        # This is SoldProduct
+        sold_store_paid_package_phase_qs = SoldStorePaidPackagePhase.objects.filter(
+            sold_store_package__in=list(sold_store_packages_qs)
+        )
         sold_basic_products_qs = basic_products_qs.add_basic_product_sold(sold_to=cart.user)
 
-        order = Order(
+        order = Order.objects.create(
             user=cart.user,
             status='paid',
             total=cart.total,
@@ -51,10 +57,10 @@ class OrderManager(models.Manager):
             time_slot_sales_number_discount=time_slot_sales_number_discount_number
         )
 
+        order.sold_products.add(*list(sold_time_slot_sales_qs))
+        order.sold_products.add(*list(sold_store_paid_package_phase_qs))
+        order.sold_products.add(*list(sold_basic_products_qs))
         order.save()
-        order.sold_products.set(sold_time_slot_sales_qs)
-        order.sold_products.set(sold_store_packages_qs)
-        order.sold_products.set(sold_basic_products_qs)
 
         cart.delete()
         return order

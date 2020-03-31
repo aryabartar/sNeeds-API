@@ -22,12 +22,10 @@ class CORSMiddleware(object):
         self.get_response = get_response
 
     def __call__(self, request):
-        # import json
-        # print(json.dumps(dict(request.headers), indent=4, sort_keys=True))
-
         response = self.get_response(request)
         response["Access-Control-Allow-Origin"] = "*"
-        response["Access-Control-Allow-Headers"] = 'client-timezone, authorization'
+        response["Access-Control-Allow-Headers"] = 'client-timezone, authorization, content-type'
         response["Access-Control-Allow-Credentials"] = 'true'
+        response["Access-Control-Allow-Methods"] = 'GET, PUT, POST, DELETE, HEAD'
 
         return response

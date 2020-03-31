@@ -2,7 +2,7 @@ from rest_framework import permissions
 from rest_framework.permissions import BasePermission
 
 
-class IsConsultantPermission(permissions.BasePermission):
+class IsConsultantUnsafePermission(permissions.BasePermission):
     message = 'User should be consultant.'
 
     def has_permission(self, request, view):
