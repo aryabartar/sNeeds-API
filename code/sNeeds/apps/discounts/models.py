@@ -52,8 +52,8 @@ class CICharField(models.CharField):
 
 class Discount(models.Model):
     CREATORS = (
-        ('C', 'Consultant'),
-        ('A', 'Admin'),
+        ('consultant', 'Consultant'),
+        ('admin', 'Admin'),
     )
     consultants = models.ManyToManyField(ConsultantProfile, blank=True)
     users = models.ManyToManyField(User, blank=True)
@@ -63,7 +63,7 @@ class Discount(models.Model):
                        help_text="If want to populate automatically, Leave this field blank. Otherwise enter code"
                        )
     use_limit = models.PositiveIntegerField(null=True, blank=True)
-    creator = models.CharField(choices=CREATORS, max_length=1, default="A")
+    creator = models.CharField(choices=CREATORS, max_length=1, default="admin")
 
     objects = DiscountManager.as_manager()
 

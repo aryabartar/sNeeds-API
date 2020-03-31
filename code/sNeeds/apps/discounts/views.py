@@ -49,7 +49,7 @@ class ConsultantForUserDiscountListCreateAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = Discount.objects.filter(consultants=consultant_profile, creator='C')
+        qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
         return qs
 
 
@@ -62,5 +62,5 @@ class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAP
     def get_queryset(self):
         user = self.request.user
         consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = Discount.objects.filter(consultants=consultant_profile, creator='C')
+        qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
         return qs

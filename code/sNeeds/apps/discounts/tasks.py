@@ -23,5 +23,5 @@ def deactivate_discount():
 
 @task()
 def delete_consultant_created_used_discounts():
-	qs = Discount.objects.filter(creator='C', use_limit=0)
+	qs = Discount.objects.filter(creator='consultant', use_limit=0)
 	qs.delete()
