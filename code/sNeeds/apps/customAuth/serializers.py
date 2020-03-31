@@ -182,7 +182,7 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
         }
-
+    # TODO fix
     def validate(self, attrs):
         language_certificate = attrs['language_certificate']
 
