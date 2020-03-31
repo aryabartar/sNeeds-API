@@ -15,4 +15,7 @@ urlpatterns = [
 
     path('consultant-discounts/<int:id>/', views.ConsultantForUserDiscountRetrieveDestroyAPIView.as_view(),
          name='consultant-discount-retrieve-destroy'),
+
+    path('consultant-interact-users', views.ConsultantInteractUserListAPIView.as_view(),
+         name='consultant-interact-user-list')
 ]

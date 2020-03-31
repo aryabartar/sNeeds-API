@@ -1,4 +1,7 @@
+import datetime
 from enum import Enum
+
+from django.core.validators import MinValueValidator, MaxValueValidator
 from enumfields import EnumIntegerField
 
 from django.db import models
@@ -7,8 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
-from sNeeds.apps.account.models import University, FieldOfStudy, \
-    Country
+from sNeeds.apps.account.models import get_student_resume_path
 
 
 class CustomUserManager(BaseUserManager):
@@ -128,5 +130,84 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
+
+
+MARITAL_STATUS_CHOICES = [
+    ('married', 'Married'),
+    ('single', 'Single'),
+]
+
+GRADE_CHOICES = [
+    ('college', 'College'),
+    ('associate', 'Associate'),
+    ('bachelor', 'Bachelor'),
+    ('master', 'Master'),
+    ('doctoral', 'Doctoral'),
+    ('post_doc', 'Post Doctoral'),
+]
+
+LANGUAGE_CERTIFICATE_CHOICES = [
+    ('ielts_academic', 'IELTS Academic'),
+    ('ielts_general', 'IELTS General'),
+    ('toefl', 'TOEFL'),
+    ('duolingo', 'Duolingo'),
+    ('iaeste', 'IAESTE'),
+    ('gre', 'GRE'),
+    ('gmat', 'GMAT'),
+]
+
+MAINLAND_CHOICES = [
+    ('asia', 'Asia'),
+    ('europe', 'Europe'),
+    ('north_america', 'North America'),
+    ('australia', 'Australia'),
+]
+
+
+def year_choices():
+    return [(r, r) for r in range(2000, datetime.date.today().year + 4)]
+
+
+def current_year():
+    return datetime.date.today().year
+
+
+class StudentDetailedInfo(models.Model):
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
+    # Personal information
+    first_name = models.CharField(max_length=64)
+    last_name = models.CharField(max_length=64)
+    age = models.PositiveSmallIntegerField(validators=[MinValueValidator(15), MaxValueValidator(100)])
+    marital_status = models.CharField(max_length=32, choices=MARITAL_STATUS_CHOICES)
+
+    # Last grade info
+    grade = models.CharField(max_length=64, choices=GRADE_CHOICES)
+    university = models.CharField(max_length=128)
+    total_average = models.DecimalField(max_digits=4, decimal_places=2)
+    degree_conferral_year = models.IntegerField(_('year'), choices=year_choices(), default=current_year)
+    major = models.CharField(max_length=128)
+    thesis_title = models.CharField(max_length=512, blank=True, null=True)
+    language_certificate = models.CharField(max_length=64, choices=LANGUAGE_CERTIFICATE_CHOICES)
+    language_certificate_score = models.PositiveSmallIntegerField(null=True, blank=True)
+    language_speaking = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                                         null=True, blank=True)
+    language_listening = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                                          null=True, blank=True)
+    language_writing = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                                        null=True, blank=True)
+    language_reading = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
+                                                        null=True, blank=True)
+
+    mainland = models.CharField(max_length=32, choices=MAINLAND_CHOICES)
+    country = models.CharField(max_length=128)
+    apply_grade = models.CharField(max_length=64, choices=GRADE_CHOICES)
+    apply_major = models.CharField(max_length=128)
+
+    comment = models.TextField(max_length=1024, null=True, blank=True)
+    resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True)
+
+
 
 
