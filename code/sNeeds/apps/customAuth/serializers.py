@@ -12,7 +12,7 @@ from sNeeds.apps.customAuth.models import UserTypeChoices
 from ..consultants.models import ConsultantProfile
 from .utils import jwt_response_payload_handler
 from .fields import EnumField
-from .models import StudentDetailedInfo
+from ..account.models import StudentDetailedInfo
 
 User = get_user_model()
 

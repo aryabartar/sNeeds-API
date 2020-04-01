@@ -14,7 +14,7 @@ from .utils import jwt_response_payload_handler
 from .serializers import UserRegisterSerializer, StudentDetailedInfoSerializer
 from .permissions import NotLoggedInPermission, SameUserPermission, StudentDetailedInfoListCreatePermission,\
     StudentDetailedInfoRetrieveUpdatePermission
-from .models import StudentDetailedInfo
+from ..account.models import StudentDetailedInfo
 from ...utils.custom.custom_permissions import CustomIsAuthenticated
 
 
