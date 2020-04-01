@@ -12,7 +12,6 @@ from sNeeds.apps.customAuth.models import UserTypeChoices
 from ..consultants.models import ConsultantProfile
 from .utils import jwt_response_payload_handler
 from .fields import EnumField
-from ..account.models import StudentDetailedInfo
 
 User = get_user_model()
 
@@ -170,27 +169,3 @@ class MyAccountSerializer(serializers.ModelSerializer):
             return ShortConsultantProfileSerializer(consultant, context={"request":self.context.get('request')}).data
         except ConsultantProfile.DoesNotExist:
             return None
-
-
-class StudentDetailedInfoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = StudentDetailedInfo
-        fields = '__all__'
-        exclude = ('user',)
-
-        extra_kwargs = {
-            'id': {'read_only': True},
-        }
-    # TODO fix
-    def validate(self, attrs):
-        language_certificate = attrs['language_certificate']
-
-
-    def create(self, validated_data):
-        request = self.context.get('request')
-        user = request.user
-        package_form_obj = StudentDetailedInfo.objects.create(user=user, **validated_data)
-        return package_form_obj
-
-

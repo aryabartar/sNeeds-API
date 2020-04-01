@@ -1,7 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 
 from . import models
 from . import serializers
+from .models import StudentDetailedInfo
+from .permissions import StudentDetailedInfoListCreatePermission, StudentDetailedInfoRetrieveUpdatePermission
+from .serializers import StudentDetailedInfoSerializer
 
 
 class CountryDetail(generics.RetrieveAPIView):
@@ -37,3 +40,19 @@ class FieldOfStudyList(generics.ListAPIView):
     serializer_class = serializers.FieldOfStudySerializer
 
 
+class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoListCreatePermission)
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = StudentDetailedInfo.objects.filter(user=user)
+        return qs
+
+
+class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoRetrieveUpdatePermission)

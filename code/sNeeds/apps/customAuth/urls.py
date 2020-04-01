@@ -2,6 +2,7 @@ from django.urls import path, include
 
 from rest_framework_jwt.views import refresh_jwt_token
 
+import sNeeds.apps.account.views
 from . import views
 
 app_name = "auth"
@@ -16,7 +17,4 @@ urlpatterns = [
     path('accounts/<int:id>/', views.UserDetailView.as_view()),
 
     path('my-account/', views.MyAccountInfoView.as_view()),
-    path('user-detailed-info/', views.StudentDetailedInfoListCreateAPIView.as_view(), name='user-detailed-info-list'),
-    path('user-detailed-info/<int:id>', views.StudentDetailedInfoRetrieveUpdateAPIView.as_view(),
-         name='user-detailed-info-detail'),
 ]

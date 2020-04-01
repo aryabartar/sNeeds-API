@@ -9,7 +9,7 @@ from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSeria
 from .permissions import CartDiscountPermission, ConsultantPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.customAuth.serializers import ShortUserSerializer
-from sNeeds.utils.custom.CustomFunctions import get_users_interact_with_consultant
+from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
 
 User = get_user_model()
 

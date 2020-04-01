@@ -4,6 +4,9 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+def current_year():
+    return datetime.date.today().year
+
 MARITAL_STATUS_CHOICES = [
     ('married', 'Married'),
     ('single', 'Single'),
@@ -79,16 +82,9 @@ class FieldOfStudy(models.Model):
         return self.name
 
 
-def year_choices():
-    return [(r, r) for r in range(2000, datetime.date.today().year + 4)]
-
-
-def current_year():
-    return datetime.date.today().year
-
-
 class StudentDetailedInfo(models.Model):
     from django.contrib.auth import get_user_model
+    from sNeeds.utils.custom.custom_functions import current_year
     User = get_user_model()
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     # Personal information
@@ -101,7 +97,7 @@ class StudentDetailedInfo(models.Model):
     grade = models.CharField(max_length=64, choices=GRADE_CHOICES)
     university = models.CharField(max_length=128)
     total_average = models.DecimalField(max_digits=4, decimal_places=2)
-    degree_conferral_year = models.IntegerField(_('year'), choices=year_choices(), default=current_year)
+    degree_conferral_year = models.PositiveSmallIntegerField()
     major = models.CharField(max_length=128)
     thesis_title = models.CharField(max_length=512, blank=True, null=True)
 
