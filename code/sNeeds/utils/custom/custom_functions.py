@@ -9,8 +9,12 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 User = get_user_model()
 
 
-def student_info_year_choices():
+def student_info_year_choicess():
     return [(r, r) for r in range(2000, datetime.date.today().year + 4)]
+
+
+def student_info_year_choices():
+    return [r for r in range(2000, datetime.date.today().year + 4)]
 
 
 def current_year():
@@ -26,13 +30,13 @@ def get_consultants_interact_with_user(user):
     for product in student_bought_products:
         try:
             sold_time_slot_sale = product.soldtimeslotsale
-            result_qs |= sold_time_slot_sale.consultant
+            result_qs |= ConsultantProfile.objects.filter(pk=sold_time_slot_sale.consultant.id)
         except SoldTimeSlotSale.DoesNotExist:
             pass
 
     for sold_store_package in student_bought_store_package:
         if sold_store_package.consultant is not None:
-            result_qs |= sold_store_package.consultant
+            result_qs |= ConsultantProfile.objects.filter(pk=sold_store_package.consultant.id)
 
     return result_qs
 
@@ -45,11 +49,11 @@ def get_users_interact_with_consultant(consultant):
     result_qs = User.objects.none()
 
     for sold_time_slot_sale in consultant_sold_time_slots:
-        result_qs |= sold_time_slot_sale.sold_to
+        result_qs |= User.objects.filter(pk=sold_time_slot_sale.sold_to.id)
 
     for sold_store_package in consultant_sold_store_packages:
         if sold_store_package.consultant is not None:
-            result_qs |= sold_store_package.sold_to
+            result_qs |= User.objects.filter(pk=sold_store_package.sold_to)
 
     result_qs = result_qs.distinct()
     result_qs = result_qs.order_by('last_name')

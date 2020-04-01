@@ -8,7 +8,10 @@ class StudentDetailedInfoListCreatePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         user = request.user
-        return not user.is_consultant()
+        if not user.is_authenticated:
+            return False
+        else:
+            return not user.is_consultant()
 
 
 class StudentDetailedInfoRetrieveUpdatePermission(permissions.BasePermission):

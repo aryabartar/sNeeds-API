@@ -54,7 +54,7 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentDetailedInfo
-        fields = '__all__'
+        # fields = '__all__'
         exclude = ('user',)
 
         extra_kwargs = {
