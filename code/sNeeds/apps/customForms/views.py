@@ -8,5 +8,3 @@ from .models import BugReport
 class BugReportCreateAPIView(generics.CreateAPIView):
     serializer_class = BugReportSerializer
     queryset = BugReport.objects.all()
-
-

@@ -67,12 +67,7 @@ class Cart(models.Model):
             self.total = self.subtotal
             return
 
-
         discount = cart_discount.discount
-
-        # if discount.creator == "C":
-        #     self.total = self.subtotal - discount.amount
-        #     return
 
         # Consultants that are in the discount of code entered
         consultants_qs = cart_discount.discount.consultants.all()
@@ -86,7 +81,7 @@ class Cart(models.Model):
         # If discount is given by one consultant to one user we remove one time slot from products
         # and also consultant from consultants , so no other time slots will be affected by discount
         # but count discount will remain with one fewer time slots
-        if discount.creator == "C":
+        if discount.creator == "consultant":
             discount_creator_time_slot_qs =\
                 self.products.all().get_time_slot_sales().filter(consultant__in=consultants_qs)
 

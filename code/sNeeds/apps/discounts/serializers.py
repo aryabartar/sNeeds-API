@@ -59,7 +59,7 @@ class DiscountSerializer(serializers.ModelSerializer):
 
         obj = Discount.objects.new_discount_with_products_users_consultant(products, users, consultants,
                                                                            amount=consultant_profile.time_slot_price,
-                                                                           use_limit=1, creator="C",
+                                                                           use_limit=1, creator="consultant",
                                                                            )
         return obj
 

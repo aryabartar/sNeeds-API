@@ -11,9 +11,12 @@ from rest_framework_jwt import utils as jwt_utils
 
 from . import serializers
 from .utils import jwt_response_payload_handler
-from .serializers import UserRegisterSerializer
-from .permissions import NotLoggedInPermission, SameUserPermission
+from .serializers import UserRegisterSerializer, StudentDetailedInfoSerializer
+from .permissions import NotLoggedInPermission, SameUserPermission, StudentDetailedInfoListCreatePermission,\
+    StudentDetailedInfoRetrieveUpdatePermission
+from .models import StudentDetailedInfo
 from ...utils.custom.custom_permissions import CustomIsAuthenticated
+
 
 User = get_user_model()
 
@@ -86,4 +89,25 @@ class MyAccountInfoView(APIView):
         my_account = self.get_object()
         serializer = serializers.MyAccountSerializer(my_account, context={"request": request})
         return Response(serializer.data)
+
+
+class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoListCreatePermission)
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = StudentDetailedInfo.objects.filter(user=user)
+        return qs
+
+
+class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoRetrieveUpdatePermission)
+
+
+
 

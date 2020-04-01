@@ -33,6 +33,6 @@ class ConsultantPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.user.is_authenticated and request.user.is_consultant():
+        if request.user.is_consultant():
             return True
         return False
