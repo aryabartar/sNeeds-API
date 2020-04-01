@@ -154,11 +154,12 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
             'consultant': {'write_only': True},
         }
 
-    def validate_consultant(self, value):
-        return value
 
     def validate(self, attrs):
         consultant = attrs.pop('consultant')
+        # if consultant ==
+        # print(attrs.get("content_type").objects.get(id='object_id'))
+        print(attrs.get("content_type"))
         return attrs
 
     def create(self, validated_data):
