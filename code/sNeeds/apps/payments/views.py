@@ -123,16 +123,11 @@ class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
         # # cart = Cart.objects.get(id=kwargs.get("cartid"))
         # # Order.objects.sell_cart_create_order(cart)
-        # from sNeeds.apps.storePackages.models import StorePackage
-        # id = kwargs.get("cartid")
-        # qs = StorePackage.objects.all()
-        # print(qs)
-        # qs.sell_and_get_sold_package(sold_to=request.user)
-        obj = SoldStorePackagePhaseDetail.objects.all().first()
-        print("***")
-        print(obj.content_type)
-        print(obj.object_id)
-        print(obj.content_object)
+        from sNeeds.apps.storePackages.models import StorePackage
+        id = kwargs.get("cartid")
+        qs = StorePackage.objects.all()
+        print(qs)
+        qs.sell_and_get_sold_package(sold_to=request.user)
         return Response()
 
 

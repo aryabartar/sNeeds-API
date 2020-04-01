@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from rest_framework import serializers
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
@@ -45,7 +46,7 @@ class StorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StorePackage
-        fields = ["id", 'url', "price", "total_price", "active", "title", "store_package_phases", ]
+        fields = ['url', "price", "total_price", "active", "title", "store_package_phases", ]
 
 
 class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSerializer):
@@ -127,28 +128,41 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         model = SoldStorePaidPackagePhase
 
 
+class SoldStorePackagePhaseRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        if isinstance(value, SoldStorePaidPackagePhase):
+            return 'hello'
+        elif isinstance(value, SoldStoreUnpaidPackagePhase):
+            return 'hi'
+        raise Exception('Unexpected type of SoldStorePackagePhase object')
+
+
 # TODO: FILTER! In list!
 class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
     url = serializers.HyperlinkedIdentityField(
         lookup_field='id',
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
+    consultant = serializers.PrimaryKeyRelatedField(queryset=ConsultantProfile.objects.all())
+    content_object = SoldStorePackagePhaseRelatedField(read_only=True)
 
     class Meta:
-        fields = ['url', 'status', 'created', 'updated', 'content_type', 'object_id', ]
         model = SoldStorePackagePhaseDetail
+        fields = ['url', 'status', 'created', 'updated', 'consultant', 'content_type', 'object_id', 'content_object']
+        extra_kwargs = {
+            'content_object': {'read_only': True},
+            'consultant': {'write_only': True},
+        }
 
-    # def validate_phase_id(self, value):
-    #     if not SoldStorePaidPackagePhase.objects.filter(id=value).exists() and \
-    #             SoldStoreUnpaidPackagePhase.objects.filter(id=value).exists():
-    #         raise serializers.ValidationError("Phase with {} id does not exist.".format(value))
-    #     return value
+    def validate_consultant(self, value):
+        return value
 
-    # def save(self, **kwargs):
-    #     phase_id = self.validated_data.pop['phase_id']
-    #
-    #     self.validated_data['content_type'] = SoldStorePaidPackagePhase
-    #
-    #     self.validated_data['object_id'] = phase_id
-    #
-    #     print(self.validated_data)
+    def validate(self, attrs):
+        consultant = attrs.pop('consultant')
+        return attrs
+
+    def create(self, validated_data):
+        try:
+            super().create(validated_data)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.message_dict)
