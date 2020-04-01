@@ -143,6 +143,14 @@ GRADE_CHOICES = [
     ('bachelor', 'Bachelor'),
     ('master', 'Master'),
     ('doctoral', 'Doctoral'),
+]
+
+APPLY_GRADE_CHOICES = [
+    ('college', 'College'),
+    ('associate', 'Associate'),
+    ('bachelor', 'Bachelor'),
+    ('master', 'Master'),
+    ('doctoral', 'Doctoral'),
     ('post_doc', 'Post Doctoral'),
 ]
 
@@ -189,8 +197,10 @@ class StudentDetailedInfo(models.Model):
     degree_conferral_year = models.IntegerField(_('year'), choices=year_choices(), default=current_year)
     major = models.CharField(max_length=128)
     thesis_title = models.CharField(max_length=512, blank=True, null=True)
+
+    # Language skills and certificates
     language_certificate = models.CharField(max_length=64, choices=LANGUAGE_CERTIFICATE_CHOICES)
-    language_certificate_score = models.PositiveSmallIntegerField(null=True, blank=True)
+    language_certificate_overall = models.PositiveSmallIntegerField(null=True, blank=True)
     language_speaking = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                          null=True, blank=True)
     language_listening = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
@@ -199,12 +209,13 @@ class StudentDetailedInfo(models.Model):
                                                         null=True, blank=True)
     language_reading = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                         null=True, blank=True)
-
+    # Apply info
     mainland = models.CharField(max_length=32, choices=MAINLAND_CHOICES)
     country = models.CharField(max_length=128)
-    apply_grade = models.CharField(max_length=64, choices=GRADE_CHOICES)
+    apply_grade = models.CharField(max_length=64, choices=APPLY_GRADE_CHOICES)
     apply_major = models.CharField(max_length=128)
 
+    # Extra info
     comment = models.TextField(max_length=1024, null=True, blank=True)
     resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True)
 
