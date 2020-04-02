@@ -1,17 +1,15 @@
 from django.db.models import Q
+
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from . import serializers
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
-from sNeeds.utils.custom import custom_permissions
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
-    SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, sss
-from ...utils.custom.custom_permissions import IsConsultantUnsafePermission
+    SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, IsConsultantPutPostPermission
 
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
@@ -191,7 +189,7 @@ class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
     permission_classes = [
-        permissions.IsAuthenticated,
+        permissions.IsAuthenticated, IsConsultantPutPostPermission
     ]
 
     def get_serializer_context(self):

@@ -88,9 +88,8 @@ class IsConsultantPutPostPermission(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST" or request.method == "PUT":
-            user = self.context.get('request').user
-            try:
-                ConsultantProfile.objects.filter(user=user)
-            except ConsultantProfile.DoesNotExist:
-                return False
+            if ConsultantProfile.objects.filter(user=request.user).exists():
+                return True
+            return False
+        else:
             return True
