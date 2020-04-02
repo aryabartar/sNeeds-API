@@ -3,15 +3,18 @@ from rest_framework import permissions
 from sNeeds.utils.custom.custom_functions import get_consultants_interact_with_user
 
 
-class StudentDetailedInfoListCreatePermission(permissions.BasePermission):
+class IsStudentPermission(permissions.BasePermission):
     message = "Only non consultant users can create StudentDetailedInfo"
 
     def has_permission(self, request, view):
         user = request.user
-        return not user.is_consultant()
+        if not user.is_authenticated:
+            return False
+        else:
+            return not user.is_consultant()
 
 
-class StudentDetailedInfoRetrieveUpdatePermission(permissions.BasePermission):
+class StudentDetailedInfoOwnerOrInteractConsultantPermission(permissions.BasePermission):
     message = "Only owner can update and only owner and consultants that service the owner can see info"
 
     def has_object_permission(self, request, view, obj):

@@ -51,14 +51,17 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
 
 
 class StudentDetailedInfoSerializer(serializers.ModelSerializer):
+    # from sNeeds.apps.customAuth.serializers import ShortUserSerializer
+    # user = ShortUserSerializer(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = StudentDetailedInfo
         fields = '__all__'
-        exclude = ('user',)
 
         extra_kwargs = {
             'id': {'read_only': True},
+            'user': {'read_only': True},
         }
 
     def validate(self, attrs):
@@ -73,5 +76,9 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get('request')
         user = request.user
+        user_student_detailed_info_qs = StudentDetailedInfo.objects.filter(user=user)
+        if user_student_detailed_info_qs.exists():
+            raise ValidationError(_("User already has student detailed info"))
         student_detailed_info_obj = StudentDetailedInfo.objects.create(user=user, **validated_data)
         return student_detailed_info_obj
+

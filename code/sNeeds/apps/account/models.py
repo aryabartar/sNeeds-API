@@ -4,8 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-def current_year():
-    return datetime.date.today().year
+from . import validators
 
 MARITAL_STATUS_CHOICES = [
     ('married', 'Married'),
@@ -24,7 +23,7 @@ APPLY_GRADE_CHOICES = [
     ('bachelor', 'Bachelor'),
     ('master', 'Master'),
     ('doctoral', 'Doctoral'),
-    ('post_doc', 'Post Doctoral'),
+    ('post_doctoral', 'Post Doctoral'),
 ]
 LANGUAGE_CERTIFICATE_CHOICES = [
     ('ielts_academic', 'IELTS Academic'),
@@ -41,6 +40,9 @@ MAINLAND_CHOICES = [
     ('north_america', 'North America'),
     ('australia', 'Australia'),
 ]
+
+def current_year():
+    return datetime.date.today().year
 
 
 def get_image_upload_path(sub_dir):
@@ -91,10 +93,11 @@ class StudentDetailedInfo(models.Model):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
     age = models.PositiveSmallIntegerField(validators=[MinValueValidator(15), MaxValueValidator(100)])
-    marital_status = models.CharField(max_length=32, choices=MARITAL_STATUS_CHOICES)
+    marital_status = models.CharField(max_length=32, choices=MARITAL_STATUS_CHOICES,
+                                      validators=[validators.validate_marital_status])
 
     # Last grade info
-    grade = models.CharField(max_length=64, choices=GRADE_CHOICES)
+    grade = models.CharField(max_length=64, choices=GRADE_CHOICES, validators=[validators.validate_grade])
     university = models.CharField(max_length=128)
     total_average = models.DecimalField(max_digits=4, decimal_places=2)
     degree_conferral_year = models.PositiveSmallIntegerField()
@@ -102,7 +105,8 @@ class StudentDetailedInfo(models.Model):
     thesis_title = models.CharField(max_length=512, blank=True, null=True)
 
     # Language skills and certificates
-    language_certificate = models.CharField(max_length=64, choices=LANGUAGE_CERTIFICATE_CHOICES)
+    language_certificate = models.CharField(max_length=64, choices=LANGUAGE_CERTIFICATE_CHOICES,
+                                            validators=[validators.validate_language_certificate])
     language_certificate_overall = models.PositiveSmallIntegerField(null=True, blank=True)
     language_speaking = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                          null=True, blank=True)
@@ -113,9 +117,10 @@ class StudentDetailedInfo(models.Model):
     language_reading = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                         null=True, blank=True)
     # Apply info
-    mainland = models.CharField(max_length=32, choices=MAINLAND_CHOICES)
+    mainland = models.CharField(max_length=32, choices=MAINLAND_CHOICES, validators=[validators.validate_mainland, ])
     country = models.CharField(max_length=128)
-    apply_grade = models.CharField(max_length=64, choices=APPLY_GRADE_CHOICES)
+    apply_grade = models.CharField(max_length=64, choices=APPLY_GRADE_CHOICES,
+                                   validators=[validators.validate_apply_grade])
     apply_major = models.CharField(max_length=128)
 
     # Extra info
