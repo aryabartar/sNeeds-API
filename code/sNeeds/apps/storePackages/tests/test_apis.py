@@ -351,3 +351,24 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='c2@g.com', password='user1234')
         response = client.put(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_get_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(obj.title, data['title'])
+        self.assertEqual(obj.status, data['status'])
+        self.assertEqual(obj.content_type.id, data['content_type'])
+        self.assertEqual(obj.object_id, data['object_id'])
+        self.assertEqual(obj.content_object.id, data['content_object'])

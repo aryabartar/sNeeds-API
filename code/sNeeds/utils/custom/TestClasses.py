@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 import time
 
@@ -14,8 +15,8 @@ from sNeeds.apps.store.models import TimeSlotSale
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer
 from sNeeds.apps.storePackages.models import (
     StorePackagePhase, StorePackagePhaseThrough, StorePackage,
-    SoldStorePackage, SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase
-)
+    SoldStorePackage, SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase,
+    SoldStorePackagePhaseDetail)
 
 User = get_user_model()
 
@@ -226,6 +227,25 @@ class CustomAPITestCase(APITestCase):
             phase_number=3,
             sold_store_package=self.sold_store_package_1,
             price=self.store_package_1_phase_3.price
+        )
+
+        self.sold_store_package_phase_detail_1 = SoldStorePackagePhaseDetail.objects.create(
+            title='title 1',
+            status='in_progress',
+            content_type=ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase'),
+            object_id=self.sold_store_paid_package_phase_1.id
+        )
+        self.sold_store_package_phase_detail_2 = SoldStorePackagePhaseDetail.objects.create(
+            title='title 2',
+            status='done',
+            content_type=ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase'),
+            object_id=self.sold_store_paid_package_phase_1.id
+        )
+        self.sold_store_package_phase_detail_3 = SoldStorePackagePhaseDetail.objects.create(
+            title='title 3',
+            status='in_progress',
+            content_type=ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase'),
+            object_id=self.sold_store_paid_package_phase_2.id
         )
 
         # Carts -------

@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -130,13 +131,26 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         model = SoldStorePaidPackagePhase
 
 
-class SoldStorePackagePhaseRelatedField(serializers.RelatedField):
+class ContentTypeRelatedField(serializers.RelatedField):
+    def get_queryset(self):
+        return ContentType.objects.filter(app_label='storePackages', model='soldstorepaidpackagephase') | \
+               ContentType.objects.filter(app_label='storePackages', model='soldstoreunpaidpackagephase')
+
+    def to_internal_value(self, data):
+        if data == 'SoldStorePaidPackagePhase':
+            return ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
+        elif data == 'SoldStoreUnpaidPackagePhase':
+            return ContentType.objects.get(app_label='storePackages', model='soldstoreunpaidpackagephase')
+        else:
+            raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
+
     def to_representation(self, value):
-        if isinstance(value, SoldStorePaidPackagePhase):
-            return 'hello'
-        elif isinstance(value, SoldStoreUnpaidPackagePhase):
-            return 'hi'
-        raise Exception('Unexpected type of SoldStorePackagePhase object')
+        if value.model_class() == SoldStorePaidPackagePhase:
+            return 'SoldStorePaidPackagePhase'
+        elif value.model_class() == SoldStoreUnpaidPackagePhase:
+            return 'SoldStoreUnpaidPackagePhase'
+        else:
+            raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
 
 
 # TODO: FILTER! In list!
@@ -145,11 +159,11 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
         lookup_field='id',
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
-    content_object = SoldStorePackagePhaseRelatedField(read_only=True)
+    content_type = ContentTypeRelatedField()
 
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['url', 'title', 'status', 'created', 'updated', 'content_type', 'object_id', 'content_object']
+        fields = ['url', 'title', 'status', 'created', 'updated', 'content_type', 'object_id', ]
         extra_kwargs = {
             'content_object': {'read_only': True},
         }
