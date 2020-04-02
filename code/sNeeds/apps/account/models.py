@@ -23,7 +23,7 @@ APPLY_GRADE_CHOICES = [
     ('bachelor', 'Bachelor'),
     ('master', 'Master'),
     ('doctoral', 'Doctoral'),
-    ('post_doc', 'Post Doctoral'),
+    ('post_doctoral', 'Post Doctoral'),
 ]
 LANGUAGE_CERTIFICATE_CHOICES = [
     ('ielts_academic', 'IELTS Academic'),

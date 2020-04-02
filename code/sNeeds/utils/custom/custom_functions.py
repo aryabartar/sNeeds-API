@@ -38,7 +38,7 @@ def get_consultants_interact_with_user(user):
         if sold_store_package.consultant is not None:
             result_qs |= ConsultantProfile.objects.filter(pk=sold_store_package.consultant.id)
 
-    result_qs = result_qs.distint()
+    result_qs = result_qs.distinct()
     return result_qs
 
 
