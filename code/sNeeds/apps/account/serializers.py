@@ -54,11 +54,11 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentDetailedInfo
-        # fields = '__all__'
-        exclude = ('user',)
+        fields = '__all__'
 
         extra_kwargs = {
             'id': {'read_only': True},
+            'user': {'read_only': True},
         }
 
     def validate(self, attrs):
