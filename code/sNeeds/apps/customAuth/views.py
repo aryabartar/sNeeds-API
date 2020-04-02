@@ -1,22 +1,16 @@
-from datetime import datetime
-
 from django.contrib.auth import authenticate, get_user_model
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from rest_framework import status, permissions, generics, mixins
+from rest_framework import permissions, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_jwt import utils as jwt_utils
 
 from . import serializers
 from .utils import jwt_response_payload_handler
-from .serializers import UserRegisterSerializer, StudentDetailedInfoSerializer
-from .permissions import NotLoggedInPermission, SameUserPermission, StudentDetailedInfoListCreatePermission,\
-    StudentDetailedInfoRetrieveUpdatePermission
-from ..account.models import StudentDetailedInfo
-from ...utils.custom.custom_permissions import CustomIsAuthenticated
-
+from .serializers import UserRegisterSerializer
+from .permissions import NotLoggedInPermission, SameUserPermission
 
 User = get_user_model()
 
@@ -89,25 +83,3 @@ class MyAccountInfoView(APIView):
         my_account = self.get_object()
         serializer = serializers.MyAccountSerializer(my_account, context={"request": request})
         return Response(serializer.data)
-
-
-class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):
-    queryset = StudentDetailedInfo.objects.all()
-    serializer_class = StudentDetailedInfoSerializer
-    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoListCreatePermission)
-
-    def get_queryset(self):
-        user = self.request.user
-        qs = StudentDetailedInfo.objects.filter(user=user)
-        return qs
-
-
-class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
-    lookup_field = 'id'
-    queryset = StudentDetailedInfo.objects.all()
-    serializer_class = StudentDetailedInfoSerializer
-    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoRetrieveUpdatePermission)
-
-
-
-
