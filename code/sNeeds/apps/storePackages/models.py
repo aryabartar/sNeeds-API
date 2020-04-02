@@ -253,7 +253,7 @@ class SoldStorePackagePhase(models.Model):
 
 
 class SoldStorePackagePhaseDetail(models.Model):
-    title = models.CharField(max_length=1024)
+    title = models.CharField(max_length=1024, null=False, blank=False)
     status = models.CharField(
         choices=SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS,
         max_length=1024
