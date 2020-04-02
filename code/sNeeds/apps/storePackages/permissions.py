@@ -81,3 +81,16 @@ class SoldStorePackagePhaseDetailUpdatePermission(permissions.BasePermission):
             return False
         else:
             return True
+
+
+class IsConsultantPutPostPermission(permissions.BasePermission):
+    message = "This user has no access to post/update SoldStorePackagePhaseDetail obj."
+
+    def has_permission(self, request, view):
+        if request.method == "POST" or request.method == "PUT":
+            user = self.context.get('request').user
+            try:
+                ConsultantProfile.objects.filter(user=user)
+            except ConsultantProfile.DoesNotExist:
+                return False
+            return True

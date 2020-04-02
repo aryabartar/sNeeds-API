@@ -1,4 +1,6 @@
 from django.core.exceptions import ValidationError
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import serializers
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
@@ -143,27 +145,26 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
         lookup_field='id',
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
-    consultant = serializers.PrimaryKeyRelatedField(queryset=ConsultantProfile.objects.all())
     content_object = SoldStorePackagePhaseRelatedField(read_only=True)
 
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['url', 'status', 'created', 'updated', 'consultant', 'content_type', 'object_id', 'content_object']
+        fields = ['url', 'status', 'created', 'updated', 'content_type', 'object_id', 'content_object']
         extra_kwargs = {
             'content_object': {'read_only': True},
-            'consultant': {'write_only': True},
         }
 
-
     def validate(self, attrs):
-        consultant = attrs.pop('consultant')
-        # if consultant ==
-        # print(attrs.get("content_type").objects.get(id='object_id'))
-        print(attrs.get("content_type"))
-        return attrs
+        user = self.context.get('request').user
+        consultant = ConsultantProfile.objects.get(user=user)
 
-    def create(self, validated_data):
         try:
-            super().create(validated_data)
-        except ValidationError as e:
-            raise serializers.ValidationError(e.message_dict)
+            content_object = attrs.get("content_type").model_class().objects.get(id=attrs.get('object_id'))
+        except ObjectDoesNotExist as e:
+            raise serializers.ValidationError(e)
+
+        if consultant != content_object.sold_store_package.consultant:
+            raise serializers.ValidationError(
+                {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."}, code=403
+            )
+        return attrs
