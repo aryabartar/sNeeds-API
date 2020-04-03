@@ -431,3 +431,50 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(obj.title, data['title'])
         self.assertEqual(obj.status, data['status'])
         self.assertEqual(obj.content_object, self.sold_store_unpaid_package_phase_3)
+
+    def test_sold_store_package_phase_detail_detail_put_forbidden(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+        data = {
+            "title": "Temp title 1",
+            "status": "done",
+            "content_type": "SoldStoreUnpaidPackagePhase",
+            "object_id": self.sold_store_unpaid_package_phase_3.id
+        }
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_put_unauthorized(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+        data = {
+            "title": "Temp title 1",
+            "status": "done",
+            "content_type": "SoldStoreUnpaidPackagePhase",
+            "object_id": self.sold_store_unpaid_package_phase_3.id
+        }
+
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
