@@ -3,7 +3,7 @@
 <a href="http://sneeds.ir" target="_blank">Sneeds</a> is a consulting platform which connects abroad students with Iranian students to give them advice and chat with them using video chat. The consultant sets times for sale, and Iranian students can buy these time slots. When a time slot is sold chat window opens for both consultant and student, and they can chat with each other.  
 
 #### Tech stack
-`Python`, `Django`, `Django REST framework`, `Vue.js`, `Ubuntu`, `PostgreSQL`, `Nginx`, `Gunicorn`, `Celery`, `Redis`, `Shell Scripts`
+`Python`, `Django`, `Django REST framework`, `Vue.js`, `Docker`, `Ubuntu`, `PostgreSQL`, `Nginx`, `Gunicorn`, `Celery`, `Redis`, `Shell Scripts`
 
 ### RESTful API documentation:
 
