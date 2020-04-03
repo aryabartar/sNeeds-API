@@ -508,7 +508,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
-
     def test_sold_store_package_phase_detail_list_get_success(self):
         client = self.client
 
@@ -533,5 +532,43 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         client.login(email='c2@g.com', password='user1234')
         response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_sold_store_package_phase_detail_list_get_filter_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("store-package:sold-store-package-phase-detail-list")
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_package_phase_detail_1},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': -1},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase'},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstoreunpaidpackagephase'},
+            format='json'
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
