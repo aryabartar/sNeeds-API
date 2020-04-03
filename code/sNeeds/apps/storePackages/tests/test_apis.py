@@ -607,3 +607,26 @@ class TestAPIStorePackage(CustomAPITestCase):
             obj.content_type,
             ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
         )
+
+    def test_sold_store_package_phase_detail_list_post_fail_permission_denied(self):
+        client = self.client
+
+        url = reverse("store-package:sold-store-package-phase-detail-list")
+
+        data = {
+            "title": "t1",
+            "status": "done",
+            "content_type": "soldstorepaidpackagephase",
+            "object_id": self.sold_store_paid_package_phase_1.id
+        }
+
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
