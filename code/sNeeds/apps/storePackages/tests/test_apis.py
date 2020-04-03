@@ -354,7 +354,7 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_sold_store_package_phase_detail_detail_get_success(self):
         client = self.client
-        client.login(email='c1@g.com', password='user1234')
+        client.login(email='u1@g.com', password='user1234')
 
         obj = self.sold_store_package_phase_detail_1
 
@@ -367,7 +367,41 @@ class TestAPIStorePackage(CustomAPITestCase):
         data = response.data
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(obj.id, data['id'])
         self.assertEqual(obj.title, data['title'])
         self.assertEqual(obj.status, data['status'])
         self.assertEqual('SoldStorePaidPackagePhase', data['content_type'])
         self.assertEqual(obj.object_id, data['object_id'])
+
+        client.login(email='c1@g.com', password='user1234')
+
+    def test_sold_store_package_phase_detail_detail_get_permission_fail(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_get_unauthorized(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
