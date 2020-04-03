@@ -137,18 +137,18 @@ class ContentTypeRelatedField(serializers.RelatedField):
                ContentType.objects.filter(app_label='storePackages', model='soldstoreunpaidpackagephase')
 
     def to_internal_value(self, data):
-        if data == 'SoldStorePaidPackagePhase':
+        if data == 'soldstorepaidpackagephase':
             return ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
-        elif data == 'SoldStoreUnpaidPackagePhase':
+        elif data == 'soldstoreunpaidpackagephase':
             return ContentType.objects.get(app_label='storePackages', model='soldstoreunpaidpackagephase')
         else:
             raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
 
     def to_representation(self, value):
         if value.model_class() == SoldStorePaidPackagePhase:
-            return 'SoldStorePaidPackagePhase'
+            return 'soldstorepaidpackagephase'
         elif value.model_class() == SoldStoreUnpaidPackagePhase:
-            return 'SoldStoreUnpaidPackagePhase'
+            return 'soldstoreunpaidpackagephase'
         else:
             raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
 

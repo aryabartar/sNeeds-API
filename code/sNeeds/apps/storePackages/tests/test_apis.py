@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from rest_framework import status
@@ -8,8 +9,8 @@ from rest_framework import status
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhase, StorePackagePhaseThrough, SoldStorePackage,
-    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
-)
+    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, ConsultantSoldStorePackageAcceptRequest,
+    SoldStorePackagePhaseDetail)
 
 
 class TestAPIStorePackage(CustomAPITestCase):
@@ -372,7 +373,7 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(obj.id, data['id'])
         self.assertEqual(obj.title, data['title'])
         self.assertEqual(obj.status, data['status'])
-        self.assertEqual('SoldStorePaidPackagePhase', data['content_type'])
+        self.assertEqual('soldstorepaidpackagephase', data['content_type'])
         self.assertEqual(obj.object_id, data['object_id'])
 
         client.login(email='c1@g.com', password='user1234')
@@ -423,7 +424,7 @@ class TestAPIStorePackage(CustomAPITestCase):
         data = {
             "title": "Temp title 1",
             "status": "done",
-            "content_type": "SoldStoreUnpaidPackagePhase",
+            "content_type": "soldstoreunpaidpackagephase",
             "object_id": self.sold_store_unpaid_package_phase_3.id
         }
 
@@ -585,46 +586,24 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_sold_store_package_phase_detail_list_post_success(self):
         client = self.client
-        client.login(email='u1@g.com', password='user1234')
+        client.login(email='c1@g.com', password='user1234')
 
         url = reverse("store-package:sold-store-package-phase-detail-list")
 
-        response = client.get(
-            url,
-            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_1.id},
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        data = {
+            "title": "t1",
+            "status": "done",
+            "content_type": "soldstorepaidpackagephase",
+            "object_id": self.sold_store_paid_package_phase_1.id
+        }
+        response = client.post(url, data=data, format='json')
+        data = response.data
 
-        response = client.get(
-            url,
-            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_2.id},
-            format='json'
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        obj = SoldStorePackagePhaseDetail.objects.get(id=data.get("id"))
+        self.assertEqual(obj.title, data["title"])
+        self.assertEqual(obj.status, data["status"])
+        self.assertEqual(
+            obj.content_type,
+            ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-        response = client.get(
-            url,
-            {'content_type': 'soldstorepaidpackagephase', 'object_id': "1"},
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
-
-        response = client.get(
-            url,
-            {'content_type': 'soldstorepaidpackagephase'},
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)
-
-        response = client.get(
-            url,
-            {'content_type': 'soldstoreunpaidpackagephase'},
-            format='json'
-        )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
