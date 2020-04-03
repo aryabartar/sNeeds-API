@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
@@ -543,15 +545,23 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         response = client.get(
             url,
-            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_package_phase_detail_1},
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_1.id},
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 2)
 
         response = client.get(
             url,
-            {'content_type': 'soldstorepaidpackagephase', 'object_id': -1},
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_2.id},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': "1"},
             format='json'
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
