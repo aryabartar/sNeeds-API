@@ -369,6 +369,5 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(obj.title, data['title'])
         self.assertEqual(obj.status, data['status'])
-        self.assertEqual(obj.content_type.id, data['content_type'])
+        self.assertEqual('SoldStorePaidPackagePhase', data['content_type'])
         self.assertEqual(obj.object_id, data['object_id'])
-        self.assertEqual(obj.content_object.id, data['content_object'])
