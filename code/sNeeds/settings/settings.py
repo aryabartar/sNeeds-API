@@ -134,6 +134,7 @@ REST_FRAMEWORK = {
         'rest_framework.filters.OrderingFilter'
     ],
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'EXCEPTION_HANDLER': 'sNeeds.utils.custom.exception_handler.exception_handler',
 }
 
 DATABASES = {
