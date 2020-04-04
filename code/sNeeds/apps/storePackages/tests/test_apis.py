@@ -627,6 +627,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        client.login(email='c1@g.com', password='user1234')
+        client.login(email='c2@g.com', password='user1234')
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
