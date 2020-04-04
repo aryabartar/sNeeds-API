@@ -43,6 +43,12 @@ class ProductQuerySet(models.QuerySet):
 
         return result_qs
 
+    def are_all_active(self):
+        for p in self._chain():
+            if not p.active:
+                return False
+        return True
+
 
 class SoldProductQuerySet(models.QuerySet):
     def get_sold_time_slot_sales(self):
@@ -182,4 +188,3 @@ class SoldTimeSlotSale(SoldProduct):
     def clean(self, *args, **kwargs):
         if self.end_time <= self.start_time:
             raise ValidationError(_("End time should be after start time"), code='invalid')
-
