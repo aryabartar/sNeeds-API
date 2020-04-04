@@ -73,7 +73,9 @@ class TestAPIStorePackage(CustomAPITestCase):
         obj = self.store_package_1
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("id"), obj.id)
         self.assertEqual(data.get("title"), obj.title)
+        self.assertEqual(data.get("slug"), obj.slug)
         self.assertEqual(data.get("active"), obj.active)
         self.assertEqual(len(data.get("store_package_phases")), len(obj.store_package_phases.all()))
         self.assertEqual(data.get("price"), obj.price)

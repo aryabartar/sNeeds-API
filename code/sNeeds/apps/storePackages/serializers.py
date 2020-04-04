@@ -49,7 +49,7 @@ class StorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StorePackage
-        fields = ['url', "price", "total_price", "active", "title", "store_package_phases", ]
+        fields = ["id", 'url', "slug", "price", "total_price", "active", "title", "store_package_phases", ]
 
 
 class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSerializer):
