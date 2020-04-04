@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
@@ -178,7 +179,7 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
             raise serializers.ValidationError(e)
 
         if consultant != content_object.sold_store_package.consultant:
-            raise serializers.ValidationError(
-                {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."}, code=403
+            raise PermissionDenied(
+                {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."},
             )
         return attrs
