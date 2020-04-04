@@ -41,16 +41,18 @@ class StorePackageSerializer(serializers.ModelSerializer):
         view_name='store-package:store-package-detail',
     )
 
-    store_package_phases = serializers.HyperlinkedRelatedField(
-        lookup_field='id',
-        many=True,
-        read_only=True,
-        view_name='store-package:store-package-phase-through-detail'
-    )
+    store_package_phases = serializers.SerializerMethodField()
 
     class Meta:
         model = StorePackage
         fields = ["id", 'url', "slug", "price", "total_price", "active", "title", "store_package_phases", ]
+
+    def get_store_package_phases(self, obj):
+        return StorePackagePhaseThroughSerializer(
+            StorePackagePhaseThrough.objects.filter(store_package=obj),
+            context={"request": self.context.get("request")},
+            many=True
+        ).data
 
 
 class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSerializer):
