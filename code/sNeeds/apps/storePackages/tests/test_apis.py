@@ -1,4 +1,7 @@
+import json
+
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 
 from rest_framework import status
@@ -6,8 +9,8 @@ from rest_framework import status
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhase, StorePackagePhaseThrough, SoldStorePackage,
-    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
-)
+    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, ConsultantSoldStorePackageAcceptRequest,
+    SoldStorePackagePhaseDetail)
 
 
 class TestAPIStorePackage(CustomAPITestCase):
@@ -70,7 +73,9 @@ class TestAPIStorePackage(CustomAPITestCase):
         obj = self.store_package_1
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(data.get("id"), obj.id)
         self.assertEqual(data.get("title"), obj.title)
+        self.assertEqual(data.get("slug"), obj.slug)
         self.assertEqual(data.get("active"), obj.active)
         self.assertEqual(len(data.get("store_package_phases")), len(obj.store_package_phases.all()))
         self.assertEqual(data.get("price"), obj.price)
@@ -350,4 +355,280 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         client.login(email='c2@g.com', password='user1234')
         response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_get_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(obj.id, data['id'])
+        self.assertEqual(obj.title, data['title'])
+        self.assertEqual(obj.status, data['status'])
+        self.assertEqual('soldstorepaidpackagephase', data['content_type'])
+        self.assertEqual(obj.object_id, data['object_id'])
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_sold_store_package_phase_detail_detail_get_permission_fail(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_get_unauthorized(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_sold_store_package_phase_detail_detail_put_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+        data = {
+            "title": "Temp title 1",
+            "status": "done",
+            "content_type": "soldstoreunpaidpackagephase",
+            "object_id": self.sold_store_unpaid_package_phase_3.id
+        }
+
+        response = client.put(url, data=data, format='json')
+
+        obj.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(obj.title, data['title'])
+        self.assertEqual(obj.status, data['status'])
+        self.assertEqual(obj.content_object, self.sold_store_unpaid_package_phase_3)
+
+    def test_sold_store_package_phase_detail_detail_put_forbidden(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+        data = {
+            "title": "Temp title 1",
+            "status": "done",
+            "content_type": "SoldStoreUnpaidPackagePhase",
+            "object_id": self.sold_store_unpaid_package_phase_3.id
+        }
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_sold_store_package_phase_detail_detail_put_unauthorized(self):
+        client = self.client
+
+        obj = self.sold_store_package_phase_detail_1
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-detail",
+            args=[obj.id]
+        )
+        data = {
+            "title": "Temp title 1",
+            "status": "done",
+            "content_type": "SoldStoreUnpaidPackagePhase",
+            "object_id": self.sold_store_unpaid_package_phase_3.id
+        }
+
+        response = client.put(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_sold_store_package_phase_detail_list_get_success(self):
+        client = self.client
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-list"
+        )
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_sold_store_package_phase_detail_list_get_success(self):
+        client = self.client
+
+        url = reverse(
+            "store-package:sold-store-package-phase-detail-list"
+        )
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_sold_store_package_phase_detail_list_get_filter_success(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("store-package:sold-store-package-phase-detail-list")
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_1.id},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': self.sold_store_paid_package_phase_2.id},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase', 'object_id': "1"},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstorepaidpackagephase'},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 3)
+
+        response = client.get(
+            url,
+            {'content_type': 'soldstoreunpaidpackagephase'},
+            format='json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_sold_store_package_phase_detail_list_post_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+
+        url = reverse("store-package:sold-store-package-phase-detail-list")
+
+        data = {
+            "title": "t1",
+            "status": "done",
+            "content_type": "soldstorepaidpackagephase",
+            "object_id": self.sold_store_paid_package_phase_1.id
+        }
+        response = client.post(url, data=data, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        obj = SoldStorePackagePhaseDetail.objects.get(id=data.get("id"))
+        self.assertEqual(obj.title, data["title"])
+        self.assertEqual(obj.status, data["status"])
+        self.assertEqual(
+            obj.content_type,
+            ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
+        )
+
+    def test_sold_store_package_phase_detail_list_post_fail_permission_denied(self):
+        client = self.client
+
+        url = reverse("store-package:sold-store-package-phase-detail-list")
+
+        data = {
+            "title": "t1",
+            "status": "done",
+            "content_type": "soldstorepaidpackagephase",
+            "object_id": self.sold_store_paid_package_phase_1.id
+        }
+
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        client.login(email='u1@g.com', password='user1234')
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

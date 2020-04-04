@@ -45,10 +45,15 @@ class Cart(models.Model):
 
     def clean(self):
         from sNeeds.apps.consultants.models import ConsultantProfile
+
+        # Consultant can't create cart
         if ConsultantProfile.objects.filter(user=self.user).exists():
             raise ValidationError({
                 "user": "Cart user can not be a consultant.",
             })
+
+        # Due to this problem products active status is validated in many to many signal
+        # https://stackoverflow.com/questions/7986510/django-manytomany-model-validation
 
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()
@@ -82,7 +87,7 @@ class Cart(models.Model):
         # and also consultant from consultants , so no other time slots will be affected by discount
         # but count discount will remain with one fewer time slots
         if discount.creator == "consultant":
-            discount_creator_time_slot_qs =\
+            discount_creator_time_slot_qs = \
                 self.products.all().get_time_slot_sales().filter(consultant__in=consultants_qs)
 
             if discount_creator_time_slot_qs.exists():

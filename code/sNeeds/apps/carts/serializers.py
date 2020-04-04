@@ -9,8 +9,8 @@ from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSa
 from sNeeds.apps.store.models import SoldTimeSlotSale, TimeSlotSale, Product
 from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.basicProducts.serializers import BasicProductSerializer, SoldBasicProductSerializer
-from ..storePackages.models import StorePackage
-from ..storePackages.serializers import StorePackageSerializer
+from ..storePackages.models import StorePackage, SoldStoreUnpaidPackagePhase
+from ..storePackages.serializers import StorePackageSerializer, SoldStoreUnpaidPackagePhaseSerializer
 
 
 class CartSerializer(serializers.ModelSerializer):
@@ -18,15 +18,18 @@ class CartSerializer(serializers.ModelSerializer):
     time_slot_sales = serializers.SerializerMethodField(read_only=True)
     basic_products = serializers.SerializerMethodField(read_only=True)
     store_packages = serializers.SerializerMethodField(read_only=True)
+    sold_store_unpaid_package_phases = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
         fields = ['id', 'url', 'user', 'products', 'time_slot_sales', 'store_packages', 'basic_products',
-                  'subtotal', 'total', ]
+                  'sold_store_unpaid_package_phases', 'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'time_slot_sales': {'read_only': True},
             'basic_products': {'read_only': True},
+            'store_packages': {'read_only': True},
+            'sold_store_unpaid_package_phases': {'read_only': True},
             'user': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
@@ -75,6 +78,22 @@ class CartSerializer(serializers.ModelSerializer):
 
         return StorePackageSerializer(
             store_packages,
+            context=self.context,
+            many=True
+        ).data
+
+    def get_sold_store_unpaid_package_phases(self, obj):
+        sold_store_unpaid_package_phases = []
+
+        for product in obj.products.all():
+            try:
+                sold_store_unpaid_package_phase = product.soldstoreunpaidpackagephase
+                sold_store_unpaid_package_phases.append(sold_store_unpaid_package_phase)
+            except SoldStoreUnpaidPackagePhase.DoesNotExist:
+                pass
+
+        return SoldStoreUnpaidPackagePhaseSerializer(
+            sold_store_unpaid_package_phases,
             context=self.context,
             many=True
         ).data

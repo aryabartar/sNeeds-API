@@ -4,6 +4,7 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
 
 from . import serializers
+from .filters import SoldStorePackagePhaseDetailFilter
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
 from ..consultants.models import ConsultantProfile
@@ -188,6 +189,7 @@ class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateAPIView):
 class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
+    filter_class = SoldStorePackagePhaseDetailFilter
     permission_classes = [
         permissions.IsAuthenticated, IsConsultantPutPostPermission
     ]

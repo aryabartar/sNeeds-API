@@ -1,7 +1,9 @@
+from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
@@ -39,16 +41,18 @@ class StorePackageSerializer(serializers.ModelSerializer):
         view_name='store-package:store-package-detail',
     )
 
-    store_package_phases = serializers.HyperlinkedRelatedField(
-        lookup_field='id',
-        many=True,
-        read_only=True,
-        view_name='store-package:store-package-phase-through-detail'
-    )
+    store_package_phases = serializers.SerializerMethodField()
 
     class Meta:
         model = StorePackage
-        fields = ['url', "price", "total_price", "active", "title", "store_package_phases", ]
+        fields = ["id", 'url', "slug", "price", "total_price", "active", "title", "store_package_phases", ]
+
+    def get_store_package_phases(self, obj):
+        return StorePackagePhaseThroughSerializer(
+            StorePackagePhaseThrough.objects.filter(store_package=obj),
+            context={"request": self.context.get("request")},
+            many=True
+        ).data
 
 
 class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSerializer):
@@ -130,13 +134,26 @@ class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         model = SoldStorePaidPackagePhase
 
 
-class SoldStorePackagePhaseRelatedField(serializers.RelatedField):
+class ContentTypeRelatedField(serializers.RelatedField):
+    def get_queryset(self):
+        return ContentType.objects.filter(app_label='storePackages', model='soldstorepaidpackagephase') | \
+               ContentType.objects.filter(app_label='storePackages', model='soldstoreunpaidpackagephase')
+
+    def to_internal_value(self, data):
+        if data == 'soldstorepaidpackagephase':
+            return ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
+        elif data == 'soldstoreunpaidpackagephase':
+            return ContentType.objects.get(app_label='storePackages', model='soldstoreunpaidpackagephase')
+        else:
+            raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
+
     def to_representation(self, value):
-        if isinstance(value, SoldStorePaidPackagePhase):
-            return 'hello'
-        elif isinstance(value, SoldStoreUnpaidPackagePhase):
-            return 'hi'
-        raise Exception('Unexpected type of SoldStorePackagePhase object')
+        if value.model_class() == SoldStorePaidPackagePhase:
+            return 'soldstorepaidpackagephase'
+        elif value.model_class() == SoldStoreUnpaidPackagePhase:
+            return 'soldstoreunpaidpackagephase'
+        else:
+            raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
 
 
 # TODO: FILTER! In list!
@@ -145,11 +162,11 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
         lookup_field='id',
         view_name='store-package:sold-store-package-phase-detail-detail'
     )
-    content_object = SoldStorePackagePhaseRelatedField(read_only=True)
+    content_type = ContentTypeRelatedField()
 
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['url', 'title', 'status', 'created', 'updated', 'content_type', 'object_id', 'content_object']
+        fields = ['id', 'url', 'title', 'status', 'created', 'updated', 'content_type', 'object_id', ]
         extra_kwargs = {
             'content_object': {'read_only': True},
         }
@@ -164,7 +181,7 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
             raise serializers.ValidationError(e)
 
         if consultant != content_object.sold_store_package.consultant:
-            raise serializers.ValidationError(
-                {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."}, code=403
+            raise PermissionDenied(
+                {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."},
             )
         return attrs
