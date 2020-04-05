@@ -871,10 +871,12 @@ class CartTests(APITestCase):
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-
     # Test for applying 100 percent
-
-    def test_cart_total_subtotal_correct(self):
+    def test_100_percent_cart_total_subtotal_correct(self):
+        test_cart = Cart.objects.create(user=self.user1)
+        test_cart.products.set([self.time_slot_sale1, self.time_slot_sale2,
+                                self.time_slot_sale4, self.time_slot_sale5,
+                                self.])
 
 
 
