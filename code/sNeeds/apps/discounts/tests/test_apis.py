@@ -32,6 +32,10 @@ class CartTests(APITestCase):
         self.user2.is_admin = False
         self.user2.set_user_type_student()
 
+        self.user3 = User.objects.create_user(email="u3@g.com", password="user1234")
+        self.user3.is_admin = False
+        self.user3.set_user_type_student()
+
         # Countries -------
         self.country1 = Country.objects.create(
             name="country1",
@@ -535,6 +539,8 @@ class CartTests(APITestCase):
         url = reverse("discount:consultant-discount-list")
         client = self.client
         client.force_login(self.consultant2)
+        SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user1,
+                                        paid_price=5000, total_price=15000, title="Hello")
         users = [self.user2]
         payload = {
             "users": [i.id for i in users]
@@ -559,7 +565,7 @@ class CartTests(APITestCase):
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-        response = client.patch(url,payload, format='json')
+        response = client.patch(url, payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
         response = client.put(url, payload, format='json')
@@ -654,11 +660,6 @@ class CartTests(APITestCase):
         client = self.client
         client.force_login(self.consultant2)
 
-        users = [self.user2]
-        payload = {
-            "users": [i.id for i in users]
-        }
-
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -685,11 +686,6 @@ class CartTests(APITestCase):
         client = self.client
         client.force_login(self.user1)
 
-        users = [self.user1]
-        payload = {
-            "users": [i.id for i in users]
-        }
-
         response = client.get(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -698,10 +694,6 @@ class CartTests(APITestCase):
         client = self.client
         client.force_login(self.user1)
 
-        users = [self.user1]
-        payload = {
-            "users": [i.id for i in users]
-        }
 
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
@@ -743,6 +735,148 @@ class CartTests(APITestCase):
 
         response = client.put(url, payload, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    # Tests for get suitable users for give discount by consultant
+    def test_list_consultant_interact_user_get_success(self):
+        url = reverse('discount:consultant-interact-user-list')
+        SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user1,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=1),
+                                        end_time=timezone.now() + timezone.timedelta(hours=3))
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=10),
+                                        end_time=timezone.now() + timezone.timedelta(hours=12))
+
+        SoldStorePackage.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        paid_price=5000, total_price=15000, title="Hello")
+
+        SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user3,
+                                        paid_price=5000, total_price=15000, title="Hello")
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant2_profile, sold_to=self.user3,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=10),
+                                        end_time=timezone.now() + timezone.timedelta(hours=12))
+
+        client = self.client
+        client.force_login(self.consultant1)
+
+        response = client.get(url)
+
+        # print(response.data)
+        self.assertEqual(response.data.get('consultant').get('id'), self.consultant1_profile.id)
+        self.assertEqual(len(response.data.get('interact_users', [])), 2)
+        interact_users = []
+        for user in response.data.get('interact_users', []):
+            interact_users.append(user.get('id'))
+
+        self.assertTrue(self.user1.id in interact_users)
+        self.assertTrue(self.user2.id in interact_users)
+        self.assertFalse(self.user3.id in interact_users)
+
+    def test_list_consultant_interact_user_zero_sold_zero_user(self):
+        url = reverse('discount:consultant-interact-user-list')
+
+        client = self.client
+        client.force_login(self.consultant1)
+
+        response = client.get(url)
+
+        # print(response.data)
+        self.assertEqual(response.data.get('consultant').get('id'), self.consultant1_profile.id)
+        self.assertEqual(len(response.data.get('interact_users', [])), 0)
+
+    def test_list_consultant_interact_post_put_patch_delete_fail(self):
+        url = reverse('discount:consultant-interact-user-list')
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=10),
+                                        end_time=timezone.now() + timezone.timedelta(hours=12))
+
+        SoldStorePackage.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        paid_price=5000, total_price=15000, title="Hello")
+
+        client = self.client
+        client.force_login(self.consultant1)
+
+        payload = {'consultant': {'id': 2, 'first_name': "ALi"}, }
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_list_consultant_interact_access_denied_unauthorized(self):
+        url = reverse('discount:consultant-interact-user-list')
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=10),
+                                        end_time=timezone.now() + timezone.timedelta(hours=12))
+
+        SoldStorePackage.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        paid_price=5000, total_price=15000, title="Hello")
+
+        client = self.client
+
+        payload = {'consultant': {'id': 2, 'first_name': "ALi"}, }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_consultant_interact_non_consultant_user_access_denied(self):
+        url = reverse('discount:consultant-interact-user-list')
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=10),
+                                        end_time=timezone.now() + timezone.timedelta(hours=12))
+
+        SoldStorePackage.objects.create(consultant=self.consultant1_profile, sold_to=self.user2,
+                                        paid_price=5000, total_price=15000, title="Hello")
+
+        client = self.client
+        client.force_login(self.user1)
+
+        payload = {'consultant': {'id': 2, 'first_name': "ALi"}, }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+    # Test for applying 100 percent
+
+    def test_cart_total_subtotal_correct(self):
+
+
 
 
 

@@ -1,15 +1,18 @@
 from rest_framework import status, generics, mixins, permissions
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
-from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer
+from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer,\
+    ConsultantInteractiveUsersSerializer
 from .permissions import CartDiscountPermission, ConsultantPermission, ConsultantDiscountOwnersPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.customAuth.serializers import ShortUserSerializer
 from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
+from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
 
 User = get_user_model()
 
@@ -65,23 +68,18 @@ class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAP
     serializer_class = DiscountSerializer
     permission_classes = [permissions.IsAuthenticated, ConsultantPermission, ConsultantDiscountOwnersPermission]
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     consultant_profile = ConsultantProfile.objects.get(user=user)
-    #     qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
-    #     return qs
-
 
 class ConsultantInteractUserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
-    serializer_class = ShortUserSerializer
+    serializer_class = ConsultantInteractiveUsersSerializer
     permission_classes = [IsAuthenticated, ConsultantPermission]
+    # permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
+        from sNeeds.apps.consultants.models import ConsultantProfile as CP
         user = None
         if request and hasattr(request, "user"):
             user = request.user
-        consultant_profile = ConsultantProfile.objects.get(user=user)
-        queryset = get_users_interact_with_consultant(consultant_profile)
-        serializer = ShortUserSerializer(queryset, many=True)
+        consultant_profile = CP.objects.get(user=user)
+        serializer = ConsultantInteractiveUsersSerializer(consultant_profile, context={'request': request})
         return Response(serializer.data)
