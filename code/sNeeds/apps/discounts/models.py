@@ -63,7 +63,7 @@ class Discount(models.Model):
                        help_text="If want to populate automatically, Leave this field blank. Otherwise enter code"
                        )
     use_limit = models.PositiveIntegerField(null=True, blank=True)
-    creator = models.CharField(choices=CREATORS, max_length=1, default="admin")
+    creator = models.CharField(choices=CREATORS, max_length=10, default="admin")
 
     objects = DiscountManager.as_manager()
 

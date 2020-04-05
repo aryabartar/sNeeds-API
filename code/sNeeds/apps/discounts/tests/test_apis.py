@@ -12,8 +12,10 @@ from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
+from sNeeds.apps.storePackages.models import SoldStorePackage
+
 User = get_user_model()
 
 
@@ -169,6 +171,7 @@ class CartTests(APITestCase):
         )
 
         # Carts -------
+
         self.cart1 = Cart.objects.create(user=self.user1)
         self.cart1.products.set([self.time_slot_sale1, self.time_slot_sale2])
 
@@ -205,6 +208,25 @@ class CartTests(APITestCase):
             code="discountcode3"
         )
         self.discount3.products.set([self.basic_product1])
+
+        self.discount4 = Discount.objects.create(
+            amount=self.consultant1_profile.time_slot_price,
+            code="discount4",
+        )
+        self.discount4.consultants.set([self.consultant1_profile])
+        self.discount4.users.set([self.user1])
+        self.discount4.creator = "consultant"
+        self.discount4.use_limit = 1
+        self.discount4.save()
+
+        self.discount5 = Discount.objects.create(
+            amount=self.consultant1_profile.time_slot_price,
+            code="discount5",
+        )
+        self.discount5.consultants.set([self.consultant1_profile])
+        self.discount5.users.set([self.user2])
+        self.discount5.use_limit = 1
+        self.discount5.save()
 
         # Cart consultant discounts
         self.cart_discount1 = CartDiscount.objects.create(
@@ -439,13 +461,6 @@ class CartTests(APITestCase):
         self.assertEqual(self.cart1.total, 200)
         self.assertEqual(self.cart1.total, 200)
 
-    def test_cart_discount_delete_updates_cart_total_subtotal(self):
-        self.assertEqual(self.cart1.total, 180)
-        self.assertEqual(self.cart1.subtotal, 200)
-        self.cart_discount1.delete()
-        self.assertEqual(self.cart1.total, 200)
-        self.assertEqual(self.cart1.total, 200)
-
     def test_time_slot_sale_number_discount_correct_cart_total_subtotal(self):
         self.assertEqual(self.cart1.total, 180)
         self.assertEqual(self.cart1.subtotal, 200)
@@ -464,3 +479,270 @@ class CartTests(APITestCase):
         # self.cart was not updating!
         self.assertEqual(Cart.objects.get(id=self.cart1.id).total, 180)
         self.assertEqual(Cart.objects.get(id=self.cart1.id).subtotal, 200)
+
+    def test_list_consultant_discounts_time_slot_interact_post_success(self):
+        url = reverse("discount:consultant-discount-list")
+
+        client = self.client
+        client.force_login(self.consultant2)
+
+        SoldTimeSlotSale.objects.create(consultant=self.consultant2_profile, sold_to=self.user2,
+                                        price=5000, start_time=timezone.now() + timezone.timedelta(hours=1),
+                                        end_time=timezone.now() + timezone.timedelta(hours=3))
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNotNone(response.data.get('code', None))
+        self.assertEqual(len(response.data.get('products')), 0)
+        self.assertEqual(response.data.get('users').pop(), self.user2.id)
+        self.assertEqual(response.data.get('consultants').pop(), self.consultant2_profile.id)
+        self.assertEqual(response.data.get('amount'), self.consultant2_profile.time_slot_price)
+        discount_id = response.data.get('id')
+        discount = Discount.objects.get(pk=discount_id)
+        self.assertEqual(discount.use_limit, 1)
+
+    def test_list_consultant_discounts_store_package_interact_post_success(self):
+        url = reverse("discount:consultant-discount-list")
+
+        client = self.client
+        client.force_login(self.consultant2)
+
+        SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user2,
+                                        paid_price=5000, total_price=15000, title="Hello")
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIsNotNone(response.data.get('code', None))
+        self.assertEqual(len(response.data.get('products')), 0)
+        self.assertEqual(response.data.get('users').pop(), self.user2.id)
+        self.assertEqual(response.data.get('consultants').pop(), self.consultant2_profile.id)
+        self.assertEqual(response.data.get('amount'), self.consultant2_profile.time_slot_price)
+        discount_id = response.data.get('id')
+        discount = Discount.objects.get(pk=discount_id)
+        self.assertEqual(discount.use_limit, 1)
+
+    def test_list_consultant_discount_users_no_interacts_post_fail(self):
+        url = reverse("discount:consultant-discount-list")
+        client = self.client
+        client.force_login(self.consultant2)
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_list_consultant_discount_non_consultant_access_fail_forbidden(self):
+        url = reverse("discount:consultant-discount-list")
+        client = self.client
+        client.force_login(self.user2)
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.patch(url,payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_list_consultant_discount_unauthorized_fail(self):
+        url = reverse("discount:consultant-discount-list")
+        client = self.client
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.patch(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_consultant_discount_more_than_1_user_post_fail(self):
+        url = reverse("discount:consultant-discount-list")
+        client = self.client
+        client.force_login(self.consultant2)
+        users = [self.user2, self.user1]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_list_consultant_discount_consultant_in_users_post_fail(self):
+        url = reverse("discount:consultant-discount-list")
+        client = self.client
+        client.force_login(self.consultant2)
+        users = [self.consultant1]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_detail_consultant_discount_get_success(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.consultant1)
+
+        response = client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data.get('users').pop(), self.user1.id)
+
+    def test_detail_consultant_discount_delete_success(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.consultant1)
+
+        discount_id = self.discount4.id
+
+        response = client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Discount.objects.filter(pk=discount_id).exists(), False)
+
+    def test_detail_consultant_discount_put_patch_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.consultant1)
+
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.patch(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_detail_consultant_discount_get_delete_not_owner_consultant_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.consultant2)
+
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_detail_consultant_discount_put_patch_not_owner_consultant_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.consultant2)
+
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+        response = client.patch(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_detail_consultant_discount_get_user_not_owner_non_consultant_but_in_users_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.user1)
+
+        users = [self.user1]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_detail_consultant_discount_delete_user_not_owner_non_consultant_but_in_users_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.user1)
+
+        users = [self.user1]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_detail_consultant_discount_put_patch_user_not_owner_non_consultant_but_in_users_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.user1)
+
+        users = [self.user1]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.patch(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_detail_consultant_discount_access_user_not_owner_not_consultant_not_in_users_fail(self):
+        url = reverse("discount:consultant-discount-detail", args=(self.discount4.id,))
+        client = self.client
+        client.force_login(self.user2)
+
+        users = [self.user2]
+        payload = {
+            "users": [i.id for i in users]
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.patch(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+

@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
 from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer
-from .permissions import CartDiscountPermission, ConsultantPermission
+from .permissions import CartDiscountPermission, ConsultantPermission, ConsultantDiscountOwnersPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.customAuth.serializers import ShortUserSerializer
 from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
@@ -63,13 +63,13 @@ class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAP
     lookup_field = 'id'
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
-    permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
+    permission_classes = [permissions.IsAuthenticated, ConsultantPermission, ConsultantDiscountOwnersPermission]
 
-    def get_queryset(self):
-        user = self.request.user
-        consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
-        return qs
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     consultant_profile = ConsultantProfile.objects.get(user=user)
+    #     qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
+    #     return qs
 
 
 class ConsultantInteractUserListAPIView(generics.ListAPIView):

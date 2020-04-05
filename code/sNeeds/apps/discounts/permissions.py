@@ -1,6 +1,7 @@
 from rest_framework import permissions
 
 from sNeeds.apps.carts.models import Cart
+from .models import Discount
 
 
 class CartDiscountPermission(permissions.BasePermission):
@@ -38,3 +39,14 @@ class ConsultantPermission(permissions.BasePermission):
             return False
         else:
             return user.is_consultant()
+
+
+class ConsultantDiscountOwnersPermission(permissions.BasePermission):
+    message = 'User should be the creator of discount.'
+
+    def has_object_permission(self, request, view, obj):
+        consultants = Discount.objects.get(pk=obj.id).consultants.all()
+        consultants_users = [consultant.user for consultant in consultants]
+        if request.user in consultants_users and obj.creator == "consultant":
+            return True
+        return False

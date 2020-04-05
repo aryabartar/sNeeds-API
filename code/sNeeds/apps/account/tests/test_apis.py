@@ -431,7 +431,7 @@ class StudentDetailedInfoTests(APITestCase):
         self.assertEqual(response.data.get("total_average"), payload.get("total_average"))
         self.assertEqual(response.data.get("language_speaking"), payload.get("language_speaking"))
 
-    def test_detail_patch_user_change_denied(self):
+    def test_detail_patch_change_user_denied(self):
         url = reverse('account:student-detailed-info-detail', args=(self.student_detailed_info1.id,))
         client = self.client
         client.force_login(self.user1)

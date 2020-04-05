@@ -54,7 +54,7 @@ def get_users_interact_with_consultant(consultant):
 
     for sold_store_package in consultant_sold_store_packages:
         if sold_store_package.consultant is not None:
-            result_qs |= User.objects.filter(pk=sold_store_package.sold_to)
+            result_qs |= User.objects.filter(pk=sold_store_package.sold_to.id)
 
     result_qs = result_qs.distinct()
     result_qs = result_qs.order_by('last_name')

@@ -1,10 +1,16 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
 from ..store.models import Product
 from sNeeds.apps.consultants.models import ConsultantProfile
+
+from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
+
+
+User = get_user_model()
 
 
 class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
@@ -51,9 +57,21 @@ class DiscountSerializer(serializers.ModelSerializer):
         if len(users) == 0:
             raise ValidationError("No students defined to use discount")
 
+        if len(users) > 1:
+            raise ValidationError("Give discount to more than one user is not allowed")
+
         users_are_consultants_qs = ConsultantProfile.objects.filter(user__in=users)
         if users_are_consultants_qs.exists():
             raise ValidationError("No Consultant allowed to be in users")
+
+        users_id = [u.id for u in users]
+
+        interactive_users_qs = get_users_interact_with_consultant(consultant_profile)
+
+        allowed_users = interactive_users_qs.filter(id__in=users_id)
+
+        if not allowed_users.exists():
+            raise ValidationError("There is no user that is allowed to get discount code")
 
         products = []
 
