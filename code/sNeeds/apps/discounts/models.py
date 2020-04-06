@@ -70,6 +70,16 @@ class Discount(models.Model):
     def __str__(self):
         return "{} ".format(str(self.amount))
 
+    def update_increase_use_limit(self):
+        if self.use_limit is not None:
+            self.use_limit = self.use_limit + 1
+            self.save()
+
+    def update_decrease_use_limit(self):
+        if self.use_limit is not None:
+            self.use_limit = self.use_limit - 1
+            self.save()
+
 
 # TODO If a discount that was created by a consultant is being removed, cart discount should be removed too?
 # TODO Don't We record discounts created by consultants to discover abuses?

@@ -42,10 +42,6 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        discount = instance.discount
-        if discount.use_limit is not None:
-            discount.use_limit = discount.use_limit + 1
-        discount.save()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 

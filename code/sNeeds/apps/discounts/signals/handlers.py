@@ -22,12 +22,18 @@ def post_delete_time_slot_sale_number_discount(sender, instance, *args, **kwargs
 
 def post_save_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
+    discount = instance.discount
+
     cart.update_price()
+    discount.update_decrease_use_limit()
 
 
 def post_delete_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
+    discount = instance.discount
+
     cart.update_price()
+    discount.update_increase_use_limit()
 
 
 def post_save_discount(sender, instance, *args, **kwargs):

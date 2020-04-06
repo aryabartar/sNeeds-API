@@ -130,12 +130,8 @@ class CartDiscountSerializer(serializers.ModelSerializer):
 
         discount = Discount.objects.get(code=attrs.get("discount").get("code"))
 
-        use_limit = 0
         if discount.use_limit is not None:
-            use_limit = discount.use_limit
-            if use_limit > 0:
-                use_limit -= 1
-            else:
+            if discount.use_limit < 1:
                 raise ValidationError(_("Discount has reached to limit"))
 
         # Checking that if discount has users , cart user is included in discount users
@@ -159,10 +155,6 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0 and \
                 len(list(set(discount_products_id) & set(cart_products_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
-
-        if discount.use_limit is not None:
-            discount.use_limit = use_limit
-        discount.save()
         return attrs
 
     def create(self, validated_data):

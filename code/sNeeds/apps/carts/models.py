@@ -61,6 +61,21 @@ class Cart(models.Model):
     def get_basic_products_count(self):
         return self.products.all().get_basic_products().count()
 
+    def _update_total_cart_no_discount_code_or_deleted(self):
+        # If user doesn't use code discount we wanna he be able to use our non code discounts
+        from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
+
+        time_slots_sales = self.products.all().get_time_slot_sales()
+
+        time_slots_sales_price = 0
+        for time_slots_sale in time_slots_sales:
+            time_slots_sales_price += time_slots_sale.price
+
+        time_slot_sale_count = self.get_time_slot_sales_count()
+        count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
+
+        self.total = self.total - (count_discount * time_slots_sales_price) / 100
+
     def _update_total_cart_discount_amount(self):
         from sNeeds.apps.discounts.models import CartDiscount
         from sNeeds.apps.discounts.models import TimeSlotSaleNumberDiscount
@@ -70,6 +85,7 @@ class Cart(models.Model):
             cart_discount = CartDiscount.objects.get(cart__id=self.id)
         except CartDiscount.DoesNotExist:
             self.total = self.subtotal
+            self._update_total_cart_no_discount_code_or_deleted()
             return
 
         discount = cart_discount.discount

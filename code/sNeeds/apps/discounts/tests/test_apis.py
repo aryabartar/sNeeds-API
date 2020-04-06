@@ -14,7 +14,8 @@ from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNum
 from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
-from sNeeds.apps.storePackages.models import SoldStorePackage
+from sNeeds.apps.storePackages.models import SoldStorePackage, StorePackage, StorePackagePhase, \
+    SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase
 
 User = get_user_model()
 
@@ -213,6 +214,8 @@ class CartTests(APITestCase):
         )
         self.discount3.products.set([self.basic_product1])
 
+
+        # 100 percent consultant1 discount to user1
         self.discount4 = Discount.objects.create(
             amount=self.consultant1_profile.time_slot_price,
             code="discount4",
@@ -236,6 +239,63 @@ class CartTests(APITestCase):
         self.cart_discount1 = CartDiscount.objects.create(
             cart=self.cart1,
             discount=self.discount1
+        )
+
+        self.store_package_1 = StorePackage.objects.create(
+            title="Math Gold Package",
+            slug="math-gold-package"
+        )
+
+        self.store_package_phase_1 = StorePackagePhase.objects.create(
+            title="General Package Phase 1",
+            detailed_title="General Package Phase",
+            price=100
+        )
+        self.store_package_1_phase_2 = StorePackagePhase.objects.create(
+            title="Math Gold Package Phase 2",
+            detailed_title="Math Gold Phase",
+            price=200
+        )
+        self.store_package_1_phase_3 = StorePackagePhase.objects.create(
+            title="Math Gold Package Phase 3",
+            detailed_title="Math Gold Phase",
+            price=400
+        )
+        self.store_package_2_phase_2 = StorePackagePhase.objects.create(
+            title="College Package Phase 2",
+            detailed_title="College Phase",
+            price=200
+        )
+
+        self.sold_store_package_1 = SoldStorePackage.objects.create(
+            title="Math Gold Package",
+            sold_to=self.user1,
+            consultant=self.consultant1_profile
+        )
+
+        self.sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.create(
+            title=self.store_package_phase_1.title,
+            detailed_title=self.store_package_phase_1.detailed_title,
+            phase_number=1,
+            consultant_done=True,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_phase_1.price
+        )
+        self.sold_store_paid_package_phase_2 = SoldStorePaidPackagePhase.objects.create(
+            title=self.store_package_1_phase_2.title,
+            detailed_title=self.store_package_1_phase_2.detailed_title,
+            phase_number=2,
+            consultant_done=False,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_1_phase_2.price
+        )
+
+        self.sold_store_unpaid_package_phase_3 = SoldStoreUnpaidPackagePhase.objects.create(
+            title=self.store_package_1_phase_3.title,
+            detailed_title=self.store_package_1_phase_3.detailed_title,
+            phase_number=3,
+            sold_store_package=self.sold_store_package_1,
+            price=self.store_package_1_phase_3.price
         )
 
         # Setup ------
@@ -871,12 +931,8 @@ class CartTests(APITestCase):
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    # Test for applying 100 percent
-    def test_100_percent_cart_total_subtotal_correct(self):
-        test_cart = Cart.objects.create(user=self.user1)
-        test_cart.products.set([self.time_slot_sale1, self.time_slot_sale2,
-                                self.time_slot_sale4, self.time_slot_sale5,
-                                self.])
+
+
 
 
 
