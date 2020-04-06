@@ -439,3 +439,124 @@ class DiscountTest(APITestCase):
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
         self.assertEqual(self.discount4.use_limit, 1)
+
+    def test_total_subtotal_correct_after_add_after_delete_time_slot_number_discount(self):
+        cart = Cart.objects.create(user=self.user1)
+
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+
+        cart_total = cart_subtotal
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        time_slot_number_discount1 = TimeSlotSaleNumberDiscount.objects.create(number=2, discount=10)
+        time_slot_number_discount2 = TimeSlotSaleNumberDiscount.objects.create(number=3, discount=15)
+        time_slot_number_discount3 = TimeSlotSaleNumberDiscount.objects.create(number=4, discount=20)
+
+        time_slots_price = self.time_slot_sale2.price + self.time_slot_sale4.price + self.time_slot_sale5.price
+        time_slots_price += self.time_slot_sale1.price
+
+        cart_total = cart_subtotal - (20 * time_slots_price) / 100
+
+        cart.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        time_slot_number_discount1.delete()
+        time_slot_number_discount2.delete()
+        time_slot_number_discount3.delete()
+
+        cart_total = cart_subtotal
+
+        cart.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+    def test_discount_with_products_save_delete_correct_total_correct_use_limit(self):
+        cart = Cart.objects.create(user=self.user1)
+
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+        cart_total = cart_subtotal
+
+        discount = Discount.objects.create(use_limit=50, amount=20)
+        discount.products.set([self.sold_store_unpaid_package_phase_3])
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(discount.use_limit, 50)
+
+        cart_discount = CartDiscount.objects.create(cart=cart, discount=discount)
+
+        cart_total = cart_subtotal - discount.amount
+
+        cart.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(discount.use_limit, 49)
+
+        cart_discount.delete()
+
+        cart_total = cart_subtotal
+
+        cart.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(discount.use_limit, 50)
+
+    def test_change_discount_consultants_update_total_correct(self):
+        cart = Cart.objects.create(user=self.user1)
+
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        discount = Discount.objects.create(use_limit=50, amount=20)
+        discount.consultants.set([self.consultant1_profile])
+        discount.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+        cart_total = cart_subtotal
+
+        cart_discount = CartDiscount.objects.create(cart=cart, discount=discount)
+        cart_total = cart_subtotal - discount.amount - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        cart_total = cart_subtotal - discount.amount - discount.amount - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        discount.consultants.set([self.consultant2_profile])
+        cart_total = cart_subtotal - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+

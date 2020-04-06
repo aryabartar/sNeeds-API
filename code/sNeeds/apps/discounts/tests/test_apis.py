@@ -268,9 +268,9 @@ class CartTests(APITestCase):
         )
 
         self.sold_store_package_1 = SoldStorePackage.objects.create(
-            title="Math Gold Package",
+            title="Math Gold Package Here Here Here",
             sold_to=self.user1,
-            consultant=self.consultant1_profile
+            consultant=self.consultant1_profile,
         )
 
         self.sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.create(
@@ -576,6 +576,11 @@ class CartTests(APITestCase):
         client = self.client
         client.force_login(self.consultant2)
 
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+
         SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user2,
                                         paid_price=5000, total_price=15000, title="Hello")
         users = [self.user2]
@@ -599,6 +604,12 @@ class CartTests(APITestCase):
         url = reverse("discount:consultant-discount-list")
         client = self.client
         client.force_login(self.consultant2)
+
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+
         SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user1,
                                         paid_price=5000, total_price=15000, title="Hello")
         users = [self.user2]
@@ -754,7 +765,6 @@ class CartTests(APITestCase):
         client = self.client
         client.force_login(self.user1)
 
-
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
@@ -799,6 +809,12 @@ class CartTests(APITestCase):
     # Tests for get suitable users for give discount by consultant
     def test_list_consultant_interact_user_get_success(self):
         url = reverse('discount:consultant-interact-user-list')
+
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+
         SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user1,
                                         price=5000, start_time=timezone.now() + timezone.timedelta(hours=1),
                                         end_time=timezone.now() + timezone.timedelta(hours=3))
@@ -834,6 +850,12 @@ class CartTests(APITestCase):
         self.assertFalse(self.user3.id in interact_users)
 
     def test_list_consultant_interact_user_zero_sold_zero_user(self):
+
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+
         url = reverse('discount:consultant-interact-user-list')
 
         client = self.client
@@ -841,8 +863,8 @@ class CartTests(APITestCase):
 
         response = client.get(url)
 
-        # print(response.data)
         self.assertEqual(response.data.get('consultant').get('id'), self.consultant1_profile.id)
+
         self.assertEqual(len(response.data.get('interact_users', [])), 0)
 
     def test_list_consultant_interact_post_put_patch_delete_fail(self):
@@ -930,6 +952,108 @@ class CartTests(APITestCase):
 
         response = client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_apply_100_percent_cart_total_subtotal_correct_without_number_discount(self):
+        url = reverse('discount:cart-discount-list')
+        client = self.client
+        client.force_login(self.user1)
+
+        cart = Cart.objects.create(user=self.user1)
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+
+        cart_total = cart_subtotal - self.consultant1_profile.time_slot_price
+
+        payload = {
+            'cart': cart.id,
+            'code': self.discount4.code
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.discount4.refresh_from_db()
+        cart = Cart.objects.get(pk=response.data['cart'])
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(self.discount4.use_limit, 0)
+
+    def test_delete_100_percent_cart_total_subtotal_correct_without_number_discount(self):
+
+        client = self.client
+        client.force_login(self.user1)
+
+        cart = Cart.objects.create(user=self.user1)
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+        cart_total = cart_subtotal - self.consultant1_profile.time_slot_price
+
+        cart_discount = CartDiscount.objects.create(cart=cart, discount=self.discount4)
+
+        url = reverse('discount:cart-discount-detail', args=(cart_discount.id,))
+        response = client.get(url)
+        cart = Cart.objects.get(pk=response.data['cart'])
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        response = client.delete(url, format='json')
+
+        self.discount4.refresh_from_db()
+        cart.refresh_from_db()
+        cart_total = cart_subtotal
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+    def test_list_cart_discount_100_percent_user_no_in_users_fail(self):
+        url = reverse('discount:cart-discount-list')
+        client = self.client
+        client.force_login(self.user2)
+
+        cart = Cart.objects.create(user=self.user2)
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_phase_3]
+        cart.products.set(products)
+        cart.save()
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+        cart_total = cart_subtotal
+
+        payload = {
+            'cart': cart.id,
+            'code': self.discount4.code
+        }
+
+        response = client.post(url, payload, format='json')
+
+        self.discount4.refresh_from_db()
+        cart.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(self.discount4.use_limit, 1)
+
 
 
 
