@@ -15,7 +15,7 @@ def m2m_changed_cart_receiver(sender, instance, action, *args, **kwargs):
         if not product_qs.are_all_active():
             raise ValidationError({"products": "All products should be active."})
 
-    if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+    if action == 'post_add' or action == 'post_remove' or action == 'post_clear' or action == 'post_':
         instance.update_price()
         instance.save()
 

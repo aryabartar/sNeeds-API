@@ -258,8 +258,5 @@ class CustomAPITestCase(APITestCase):
         self.cart3 = Cart.objects.create(user=self.user2)
         self.cart3.products.set([self.time_slot_sale1, self.time_slot_sale5])
 
-        self.cart4 = Cart.objects.create(user=self.user2)
-        self.cart4.products.set([self.time_slot_sale1, self.time_slot_sale4, self.store_package_1])
-
         # Setup ------
         self.client = APIClient()

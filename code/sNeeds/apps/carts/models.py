@@ -167,6 +167,14 @@ class Cart(models.Model):
 
         self.save()
 
+    def update_products(self):
+        products_qs = self.products.all()
+
+        for product in products_qs:
+            if not product.active:
+                self.products.remove(product)
+        self.save()
+
     @transaction.atomic
     def set_time_slot_sales(self, products):
         for p in products:

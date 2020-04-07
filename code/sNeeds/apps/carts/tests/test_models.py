@@ -29,8 +29,10 @@ class CartModelTests(CustomAPITestCase):
             Cart.objects.create(user=self.consultant1)
 
     def test_change_product_to_inactive_remove_from_products_total_subtotal_correct_without_discount(self):
-        cart = self.cart4
-        products = self.cart4.products.all()
+        cart = Cart.objects.create(user=self.user2)
+        cart.products.set([self.time_slot_sale1, self.time_slot_sale4, self.store_package_1])
+
+        products = cart.products.all()
 
         subtotal = 0
         for p in products:
@@ -44,19 +46,14 @@ class CartModelTests(CustomAPITestCase):
         self.store_package_1.active = False
         self.store_package_1.save()
 
-        self.cart4.refresh_from_db()
-        cart = self.cart4
+        cart.refresh_from_db()
 
-        products = cart.products.all()
+        products2 = cart.products.all()
 
         subtotal2 = 0
-        for p in products:
+        for p in products2:
             subtotal2 += p.price
         total2 = subtotal2
-
-        print(total)
-        print(self.store_package_1.price)
-        print(total2)
 
         self.assertEqual(cart.subtotal, subtotal2)
         self.assertEqual(cart.total, total2)
