@@ -172,56 +172,12 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         return obj
 
 
-# class ConsultantInteractiveUsersSerializer(serializers.Serializer):
-#
-#     users = serializers.SerializerMethodField(read_only=True)
-#     consultant = serializers.SerializerMethodField(read_only=True)
-#
-#     def create(self, validated_data):
-#         pass
-#
-#     def update(self, instance, validated_data):
-#         pass
-#
-#     def get_users(self, obj):
-#         user = None
-#         request = self.context.get('request', None)
-#         if request and hasattr(request, "user"):
-#             user = request.user
-#         consultant_profile = ConsultantProfile.objects.get(user=user)
-#         print(consultant_profile.user.email)
-#         users = get_users_interact_with_consultant(consultant_profile)
-#         print(users)
-#         print(ShortUserSerializer(users, many=True, context=self.context).data)
-#         return ShortUserSerializer(users, many=True, context=self.context).data
-#
-    # def get_consultant(self, obj):
-    #     user = None
-    #     request = self.context.get('request', None)
-    #     if request and hasattr(request, "user"):
-    #         user = request.user
-    #     consultant_profile = ConsultantProfile.objects.get(user=user)
-    #     print(consultant_profile.user.email)
-    #     print(ShortConsultantProfileSerializer(consultant_profile, context=self.context).data)
-    #     return ShortConsultantProfileSerializer(consultant_profile, context=self.context).data
-
 class ConsultantInteractiveUsersSerializer(serializers.Serializer):
 
     interact_users = serializers.SerializerMethodField(read_only=True)
     consultant = serializers.SerializerMethodField(read_only=True)
     first_name = serializers.SerializerMethodField(read_only=True)
     last_name = serializers.SerializerMethodField(read_only=True)
-
-
-    # class Meta:
-    #     from sNeeds.apps.consultants.models import ConsultantProfile as CP
-    #     model = CP
-    #     fields = (
-    #         'id',
-    #         'first_name',
-    #         'last_name',
-    #         'interact_users',
-    #     )
 
     def create(self, validated_data):
         pass

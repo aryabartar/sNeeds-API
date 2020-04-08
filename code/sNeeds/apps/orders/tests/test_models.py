@@ -52,8 +52,29 @@ class CartTests(CustomAPITestCase):
         )
 
     def test_sell_cart_create_order_working(self):
-        #TODO: Update this later
         number_of_products = self.cart2.products.count()
         new_order = Order.objects.sell_cart_create_order(self.cart2)
 
+        self.assertFalse(Cart.objects.filter(pk=self.cart2.id).exists())
+        self.assertEqual(self.cart2.subtotal, new_order.subtotal)
+        self.assertEqual(self.cart2.total, new_order.total)
         self.assertEqual(number_of_products, new_order.sold_products.count())
+
+    def test_order_id_creation_correct(self):
+        new_order = Order.objects.sell_cart_create_order(self.cart2)
+        self.assertIsNotNone(new_order.order_id)
+        self.assertEqual(Order.objects.filter(order_id=new_order.order_id).count(), 1)
+
+    def test_time_slots_remove_from_other_carts_create_order(self):
+        cart1 = Cart.objects.create(user=self.user1)
+        cart1.products.set([self.time_slot_sale1])
+
+        cart2 = Cart.objects.create(user=self.user2)
+        cart2.products.set([self.time_slot_sale1, self.time_slot_sale5])
+
+        order = Order.objects.sell_cart_create_order(cart=cart1)
+
+        cart2.refresh_from_db()
+
+        self.assertEqual(cart2.products.all().count(), 1)
+        self.assertEqual(cart2.products.all().first().id, self.time_slot_sale5.id)

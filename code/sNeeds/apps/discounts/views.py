@@ -10,9 +10,6 @@ from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSeria
     ConsultantInteractiveUsersSerializer
 from .permissions import CartDiscountPermission, ConsultantPermission, ConsultantDiscountOwnersPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.customAuth.serializers import ShortUserSerializer
-from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
-from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
 
 User = get_user_model()
 
@@ -69,13 +66,12 @@ class ConsultantInteractUserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = ConsultantInteractiveUsersSerializer
     permission_classes = [IsAuthenticated, ConsultantPermission]
-    # permission_classes = [IsAuthenticated]
 
     def list(self, request, *args, **kwargs):
-        from sNeeds.apps.consultants.models import ConsultantProfile as CP
+        from sNeeds.apps.consultants.models import ConsultantProfile
         user = None
         if request and hasattr(request, "user"):
             user = request.user
-        consultant_profile = CP.objects.get(user=user)
+        consultant_profile = ConsultantProfile.objects.get(user=user)
         serializer = ConsultantInteractiveUsersSerializer(consultant_profile, context={'request': request})
         return Response(serializer.data)

@@ -19,7 +19,7 @@ class OrderListView(generics.ListAPIView):
         return qs
 
 
-class OrderDetailView(generics.RetrieveDestroyAPIView):
+class OrderDetailView(generics.RetrieveAPIView):
     queryset = Order.objects.all()
     serializer_class = serializers.OrderSerializer
     lookup_field = 'id'

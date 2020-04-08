@@ -16,6 +16,7 @@ from sNeeds.apps.orders.models import Order
 from .serializers import ConsultantDepositInfoSerializer
 from .permissions import IsConsultant
 from .models import ConsultantDepositInfo
+from sNeeds.apps.discounts.models import CartDiscount
 
 from .models import PayPayment
 from ..carts.models import Cart
