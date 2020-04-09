@@ -123,14 +123,11 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='c2@g.com', password='user1234')
         url = reverse("store-package:consultant-sold-store-package-accept-request-list")
 
-        data = {"sold_store_package": self.sold_store_package_1.id}
-
-        response = client.post(url, data=data, format='json')
+        response = client.get(url, format='json')
         data = response.data
-        obj = ConsultantSoldStorePackageAcceptRequest.objects.get(id=data.get('id'))
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(obj.sold_store_package, self.sold_store_package_1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), self.sold_store_package_1)
         self.assertEqual(obj.consultant, self.consultant2_profile)
 
     def test_consultant_sold_store_package_accept_request_list_post_success(self):
