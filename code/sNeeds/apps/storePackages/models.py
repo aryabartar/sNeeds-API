@@ -327,3 +327,14 @@ class ConsultantSoldStorePackageAcceptRequest(models.Model):
 
     class Meta:
         unique_together = ['sold_store_package', 'consultant']
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.full_clean()
+        super(ConsultantSoldStorePackageAcceptRequest, self).save()
+
+    def clean(self):
+        if self.sold_store_package.consultant is not None:
+            raise ValidationError(
+                {"sold_store_package": "This sold store package consultant is none."}
+            )
