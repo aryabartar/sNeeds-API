@@ -11,11 +11,11 @@ urlpatterns = [
          name="cart-discount-detail"),
 
     path('consultant-discounts/', views.ConsultantForUserDiscountListCreateAPIView.as_view(),
-         name='consultant-discount-list-create'),
+         name='consultant-discount-list'),
 
     path('consultant-discounts/<int:id>/', views.ConsultantForUserDiscountRetrieveDestroyAPIView.as_view(),
-         name='consultant-discount-retrieve-destroy'),
+         name='consultant-discount-detail'),
 
-    path('consultant-interact-users', views.ConsultantInteractUserListAPIView.as_view(),
+    path('consultant-interact-users/', views.ConsultantInteractUserListAPIView.as_view(),
          name='consultant-interact-user-list')
 ]

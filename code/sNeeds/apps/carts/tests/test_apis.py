@@ -200,3 +200,55 @@ class CartTests(CustomAPITestCase):
             self.cart1.total,
             self.time_slot_sale2.price
         )
+
+    def test_consultant_can_not_create_cart(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.force_login(self.consultant1)
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
+        data = {"products": [i.id for i in products], }
+        response = client.post(url, data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_cart_with_inactive_product_fails(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.force_login(self.user1)
+        self.store_package_1.active = False
+        self.store_package_1.save()
+
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
+        data = {"products": [i.id for i in products], }
+        response = client.post(url, data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_update_delete_cart_fails(self):
+        url = reverse("cart:cart-list")
+        client = self.client
+        client.force_login(self.user1)
+
+        products = [self.time_slot_sale1, self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
+        data = {"products": [i.id for i in products], }
+
+        response = client.post(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # print(response.data)
+
+        url = reverse("cart:cart-detail", args=(response.data["id"],))
+
+        products = [self.time_slot_sale2, self.time_slot_sale5, self.store_package_1]
+        data = {"products": [i.id for i in products], }
+
+        response = client.patch(url, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+
+
+
+

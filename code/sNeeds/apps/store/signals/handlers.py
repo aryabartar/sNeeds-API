@@ -42,8 +42,10 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 def post_save_product_receiver(sender, instance, *args, **kwargs):
     cart_qs = Cart.objects.filter(products__in=[instance])
 
-    # Used when time slot sold price is changed and its signal is triggered to update this model
+    # Used when time slot sold price is changed and its signal is triggered to update this model or product set active
+    # to False
     for obj in cart_qs:
+        obj.update_products()
         obj.update_price()
 
 

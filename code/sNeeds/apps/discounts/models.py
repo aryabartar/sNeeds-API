@@ -63,12 +63,22 @@ class Discount(models.Model):
                        help_text="If want to populate automatically, Leave this field blank. Otherwise enter code"
                        )
     use_limit = models.PositiveIntegerField(null=True, blank=True)
-    creator = models.CharField(choices=CREATORS, max_length=1, default="admin")
+    creator = models.CharField(choices=CREATORS, max_length=10, default="admin")
 
     objects = DiscountManager.as_manager()
 
     def __str__(self):
         return "{} ".format(str(self.amount))
+
+    def update_increase_use_limit(self):
+        if self.use_limit is not None:
+            self.use_limit = self.use_limit + 1
+            self.save()
+
+    def update_decrease_use_limit(self):
+        if self.use_limit is not None:
+            self.use_limit = self.use_limit - 1
+            self.save()
 
 
 # TODO If a discount that was created by a consultant is being removed, cart discount should be removed too?

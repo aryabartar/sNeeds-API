@@ -2,11 +2,8 @@ import datetime
 
 from django.contrib.auth import get_user_model
 
-from sNeeds.apps.store.models import SoldProduct, SoldTimeSlotSale
-from sNeeds.apps.storePackages.models import SoldStorePackage
-from sNeeds.apps.consultants.models import ConsultantProfile
 
-User = get_user_model()
+
 
 
 def student_info_year_choicess():
@@ -22,6 +19,9 @@ def current_year():
 
 
 def get_consultants_interact_with_user(user):
+    from sNeeds.apps.store.models import SoldProduct, SoldTimeSlotSale
+    from sNeeds.apps.storePackages.models import SoldStorePackage
+    from sNeeds.apps.consultants.models import ConsultantProfile
     student_bought_products = SoldProduct.objects.filter(sold_to=user)
     student_bought_store_package = SoldStorePackage.objects.filter(sold_to=user)
 
@@ -44,6 +44,9 @@ def get_consultants_interact_with_user(user):
 
 # TODO merge users properly in order by newer interaction
 def get_users_interact_with_consultant(consultant):
+    from sNeeds.apps.store.models import SoldProduct, SoldTimeSlotSale
+    from sNeeds.apps.storePackages.models import SoldStorePackage
+    User = get_user_model()
     consultant_sold_time_slots = SoldTimeSlotSale.objects.filter(consultant=consultant).order_by('-created')
     consultant_sold_store_packages = SoldStorePackage.objects.filter(consultant=consultant).order_by('-created')
 
@@ -54,7 +57,7 @@ def get_users_interact_with_consultant(consultant):
 
     for sold_store_package in consultant_sold_store_packages:
         if sold_store_package.consultant is not None:
-            result_qs |= User.objects.filter(pk=sold_store_package.sold_to)
+            result_qs |= User.objects.filter(pk=sold_store_package.sold_to.id)
 
     result_qs = result_qs.distinct()
     result_qs = result_qs.order_by('last_name')

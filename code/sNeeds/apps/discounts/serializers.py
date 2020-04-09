@@ -1,10 +1,18 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
 from ..store.models import Product
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.customAuth.serializers import ShortUserSerializer
+from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
+
+from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
+
+
+User = get_user_model()
 
 
 class TimeSlotSaleNumberDiscountSerializer(serializers.ModelSerializer):
@@ -51,9 +59,21 @@ class DiscountSerializer(serializers.ModelSerializer):
         if len(users) == 0:
             raise ValidationError("No students defined to use discount")
 
+        if len(users) > 1:
+            raise ValidationError("Give discount to more than one user is not allowed")
+
         users_are_consultants_qs = ConsultantProfile.objects.filter(user__in=users)
         if users_are_consultants_qs.exists():
             raise ValidationError("No Consultant allowed to be in users")
+
+        users_id = [u.id for u in users]
+
+        interactive_users_qs = get_users_interact_with_consultant(consultant_profile)
+
+        allowed_users = interactive_users_qs.filter(id__in=users_id)
+
+        if not allowed_users.exists():
+            raise ValidationError("There is no user that is allowed to get discount code")
 
         products = []
 
@@ -110,12 +130,8 @@ class CartDiscountSerializer(serializers.ModelSerializer):
 
         discount = Discount.objects.get(code=attrs.get("discount").get("code"))
 
-        use_limit = 0
         if discount.use_limit is not None:
-            use_limit = discount.use_limit
-            if use_limit > 0:
-                use_limit -= 1
-            else:
+            if discount.use_limit < 1:
                 raise ValidationError(_("Discount has reached to limit"))
 
         # Checking that if discount has users , cart user is included in discount users
@@ -139,10 +155,6 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         if len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0 and \
                 len(list(set(discount_products_id) & set(cart_products_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
-
-        if discount.use_limit is not None:
-            discount.use_limit = use_limit
-        discount.save()
         return attrs
 
     def create(self, validated_data):
@@ -158,3 +170,43 @@ class CartDiscountSerializer(serializers.ModelSerializer):
         )
 
         return obj
+
+
+class ConsultantInteractiveUsersSerializer(serializers.Serializer):
+
+    interact_users = serializers.SerializerMethodField(read_only=True)
+    consultant = serializers.SerializerMethodField(read_only=True)
+    first_name = serializers.SerializerMethodField(read_only=True)
+    last_name = serializers.SerializerMethodField(read_only=True)
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+    def get_interact_users(self, obj):
+        from sNeeds.apps.consultants.models import ConsultantProfile
+        user = None
+        request = self.context.get('request', None)
+        if request and hasattr(request, "user"):
+            user = request.user
+        consultant_profile = ConsultantProfile.objects.get(user__id=user.id)
+
+        users = get_users_interact_with_consultant(consultant_profile)
+        return ShortUserSerializer(users, many=True, context=self.context).data
+
+    def get_first_name(self, obj):
+        return obj.user.first_name
+
+    def get_last_name(self, obj):
+        return obj.user.last_name
+
+    def get_consultant(self, obj):
+        user = None
+        request = self.context.get('request', None)
+        if request and hasattr(request, "user"):
+            user = request.user
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        return ShortConsultantProfileSerializer(consultant_profile, context=self.context).data
+

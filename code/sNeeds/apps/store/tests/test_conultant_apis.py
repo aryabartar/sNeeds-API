@@ -235,7 +235,7 @@ class CartTests(APITestCase):
         }
         response = client.post(url, data=data, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_time_slot_sale_detail_delete_success(self):
         client = self.client

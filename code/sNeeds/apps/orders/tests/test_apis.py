@@ -19,9 +19,9 @@ from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.serializers import SoldTimeSlotSaleSerializer
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
+from sNeeds.apps.discounts.models import Discount, CartDiscount
 
 User = get_user_model()
-
 
 
 class CartTests(CustomAPITestCase):
@@ -52,6 +52,16 @@ class CartTests(CustomAPITestCase):
             discount=50
         )
 
+        # 100 percent consultant1 discount to user1
+        self.discount4 = Discount.objects.create(
+            amount=self.consultant1_profile.time_slot_price,
+            code="discount4",
+        )
+        self.discount4.consultants.set([self.consultant1_profile])
+        self.discount4.users.set([self.user1])
+        self.discount4.creator = "consultant"
+        self.discount4.use_limit = 1
+        self.discount4.save()
 
     def test_selling_cart_deletes_sold_products_from_other_carts(self):
         cart1_time_slot_sales = self.cart1.products.all().get_time_slot_sales()
@@ -249,3 +259,73 @@ class CartTests(CustomAPITestCase):
         response = client.get(url, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_orders_list_post_fail(self):
+        url = reverse("order:order-list", )
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        payload = {
+            "sold_products": [p.id for p in self.cart2.products.all()],
+            "user": self.user1.id,
+        }
+        response = client.post(url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_just_one_time_slot_100_percent_consultant_discount_order_create_success(self):
+
+        cart = Cart.objects.create(user=self.user1)
+        cart.products.set([self.time_slot_sale1])
+
+        CartDiscount.objects.create(cart=cart, discount=self.discount4)
+
+        cart.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, self.time_slot_sale1.price)
+        self.assertEqual(cart.total, 0)
+
+        url = reverse('payment:request')
+        client = self.client
+        client.force_login(self.user1)
+        payload = {
+            "cartid": cart.id
+        }
+
+        response = client.post(url, payload)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertDictEqual(response.data, {"detail": "Success", "ReflD": "00000000"})
+
+        order_qs = Order.objects.filter(used_discount=self.discount4)
+
+        self.assertTrue(order_qs.exists())
+        self.assertEqual(order_qs.count(), 1)
+
+        order = order_qs.first()
+
+        self.assertEqual(order.subtotal, self.time_slot_sale1.price)
+        self.assertEqual(order.total, 0)
+
+    def test_order_detail_put_patch_delete_post_denied(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        order1 = Order.objects.sell_cart_create_order(self.cart1)
+        paylaod = {
+            "subtotal": 5
+        }
+        url = reverse("order:order-detail", args=(order1.id,))
+
+        response = client.post(url, paylaod, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.patch(url, paylaod, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, paylaod, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+

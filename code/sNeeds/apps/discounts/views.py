@@ -1,15 +1,15 @@
 from rest_framework import status, generics, mixins, permissions
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
-from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer
-from .permissions import CartDiscountPermission, ConsultantPermission
+from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer,\
+    ConsultantInteractiveUsersSerializer
+from .permissions import CartDiscountPermission, ConsultantPermission, ConsultantDiscountOwnersPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.customAuth.serializers import ShortUserSerializer
-from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
 
 User = get_user_model()
 
@@ -39,10 +39,6 @@ class CartDiscountDetailView(generics.RetrieveDestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        discount = instance.discount
-        if discount.use_limit is not None:
-            discount.use_limit = discount.use_limit + 1
-        discount.save()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -63,25 +59,19 @@ class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAP
     lookup_field = 'id'
     queryset = Discount.objects.all()
     serializer_class = DiscountSerializer
-    permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
-
-    def get_queryset(self):
-        user = self.request.user
-        consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = Discount.objects.filter(consultants=consultant_profile, creator='consultant')
-        return qs
+    permission_classes = [permissions.IsAuthenticated, ConsultantPermission, ConsultantDiscountOwnersPermission]
 
 
 class ConsultantInteractUserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
-    serializer_class = ShortUserSerializer
+    serializer_class = ConsultantInteractiveUsersSerializer
     permission_classes = [IsAuthenticated, ConsultantPermission]
 
     def list(self, request, *args, **kwargs):
+        from sNeeds.apps.consultants.models import ConsultantProfile
         user = None
         if request and hasattr(request, "user"):
             user = request.user
         consultant_profile = ConsultantProfile.objects.get(user=user)
-        queryset = get_users_interact_with_consultant(consultant_profile)
-        serializer = ShortUserSerializer(queryset, many=True)
+        serializer = ConsultantInteractiveUsersSerializer(consultant_profile, context={'request': request})
         return Response(serializer.data)
