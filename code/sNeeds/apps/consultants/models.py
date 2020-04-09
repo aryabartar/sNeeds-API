@@ -44,9 +44,7 @@ class ConsultantProfile(models.Model):
     aparat_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
     slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, blank=True)
-    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
-    countries = models.ManyToManyField(Country, blank=True)
+    universities = models.ManyToManyField(University, blank=True, through='UniversityThrough')
     active = models.BooleanField(default=True)  # TODO: Check this is working.
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
@@ -69,7 +67,7 @@ class ConsultantProfile(models.Model):
         return self.user.get_full_name()
 
 
-class StudyDetailManager(models.QuerySet):
+class UniversityThroughManager(models.QuerySet):
 
     def filter_consultants(self, params):
         qs = self.all()
@@ -98,11 +96,11 @@ class StudyDetailManager(models.QuerySet):
         return result_qs
 
 
-class StudyDetail(models.Model):
+class UniversityThrough(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
-    university = models.ForeignKey(University, blank=True, on_delete=models.PROTECT)
-    field_of_study = models.ForeignKey(FieldOfStudy, blank=True, on_delete=models.PROTECT)
+    university = models.ForeignKey(University, on_delete=models.PROTECT)
+    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.PROTECT)
+    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True)
     grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
-    year = models.DateField()
 
-    objects = StudyDetailManager.as_manager()
+    objects = UniversityThroughManager.as_manager()
