@@ -120,15 +120,31 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_consultant_sold_store_package_accept_request_list_get_success(self):
         client = self.client
-        client.login(email='c2@g.com', password='user1234')
         url = reverse("store-package:consultant-sold-store-package-accept-request-list")
 
+        client.login(email='u1@g.com', password='user1234')
         response = client.get(url, format='json')
         data = response.data
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(data), self.sold_store_package_1)
-        self.assertEqual(obj.consultant, self.consultant2_profile)
+        self.assertEqual(len(data), 1)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        data = response.data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+
+        client.login(email='c1@g.com', password='user1234')
+        response = client.get(url, format='json')
+        data = response.data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        data = response.data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
 
     def test_consultant_sold_store_package_accept_request_list_post_success(self):
         client = self.client
@@ -165,9 +181,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_sold_store_package_list_get_correct(self):
-        self.sold_store_package_1.consultant = self.consultant1_profile
-        self.sold_store_package_1.save()
-
         client = self.client
         client.login(email='u1@g.com', password='user1234')
         url = reverse("store-package:sold-store-package-list")
@@ -179,10 +192,11 @@ class TestAPIStorePackage(CustomAPITestCase):
         client.login(email='u2@g.com', password='user1234')
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 0)
+        self.assertEqual(len(response.data), 1)
 
         client.login(email='c1@g.com', password='user1234')
         response = client.get(url, format='json')
+        print(json.dumps(response.data, indent=3))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -190,6 +204,13 @@ class TestAPIStorePackage(CustomAPITestCase):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
+
+    def test_sold_store_package_list_get_unauthorized(self):
+        client = self.client
+        url = reverse("store-package:sold-store-package-list")
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_sold_store_package_detail_get_correct(self):
         client = self.client
