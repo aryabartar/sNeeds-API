@@ -126,9 +126,8 @@ class VerifyTest(APIView):
         # # Order.objects.sell_cart_create_order(cart)
         from sNeeds.apps.storePackages.models import StorePackage
         id = kwargs.get("cartid")
-        qs = StorePackage.objects.all()
-        print(qs)
-        qs.sell_and_get_sold_package(sold_to=request.user)
+        cart = Cart.objects.get(id=id)
+        order = Order.objects.sell_cart_create_order(cart)
         return Response()
 
 

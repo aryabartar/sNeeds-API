@@ -8,25 +8,28 @@ from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from ..store.serializers import SoldTimeSlotSaleSerializer
 from ..basicProducts.serializers import SoldBasicProductSerializer
+from ..storePackages.serializers import SoldStorePackageSerializer
 
 
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
     sold_time_slot_sales = serializers.SerializerMethodField()
     sold_basic_products = serializers.SerializerMethodField()
+    sold_store_packages = serializers.SerializerMethodField()
     used_discount = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_time_slot_sales', 'created', 'updated',
-                  'used_discount', 'time_slot_sales_number_discount', 'sold_basic_products']
-
+        fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total', 'sold_time_slot_sales', 'sold_basic_products',
+                  'sold_store_packages', 'created', 'updated', 'used_discount', 'time_slot_sales_number_discount', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'order_id': {'read_only': True},
             'status': {'read_only': True},
             'used_discount': {'read_only': True},
             'time_slot_sales_number_discount': {'read_only': True},
+            'sold_basic_products': {'read_only': True},
+            'sold_store_packages': {'read_only': True},
             'subtotal': {'read_only': True},
             'total': {'read_only': True},
             'created': {'read_only': True},
@@ -43,6 +46,12 @@ class OrderSerializer(serializers.ModelSerializer):
         sold_basic_products = obj.sold_products.all().get_sold_basic_products()
         return SoldBasicProductSerializer(
             sold_basic_products, many=True, context={"request": self.context.get("request")}
+        ).data
+
+    def get_sold_store_packages(self, obj):
+        sold_store_packages = obj.sold_products.all().get_sold_store_packages()
+        return SoldStorePackageSerializer(
+            sold_store_packages, many=True, context={"request": self.context.get("request")}
         ).data
 
     def get_used_discount(self, obj):

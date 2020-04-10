@@ -73,6 +73,18 @@ class SoldProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
+    def get_sold_store_paid_package_phases(self):
+        from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhase
+
+        result_qs = SoldStorePaidPackagePhase.objects.none()
+        for i in self.all():
+            try:
+                sold_store_paid_package_phase = i.soldstorepaidpackagephase
+                result_qs |= SoldStorePaidPackagePhase.objects.filter(pk=sold_store_paid_package_phase)
+            except SoldStorePaidPackagePhase.DoesNotExist:
+                pass
+        return result_qs
+
 
 class TimeSlotSaleManager(models.QuerySet):
     @transaction.atomic
