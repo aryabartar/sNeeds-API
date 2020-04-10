@@ -11,6 +11,18 @@ from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
     SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, IsConsultantPutPostPermission
+from ...utils.custom.custom_permissions import IsConsultantPermission
+
+
+class MarketplaceListAPIView(generics.ListAPIView):
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
+
+    def get_queryset(self):
+        qs = SoldStorePackage.objects.filter(
+            consultant=None
+        )
+        return qs
 
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
