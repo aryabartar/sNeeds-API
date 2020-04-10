@@ -1,18 +1,20 @@
 from django_filters import rest_framework as rest_filters, DateTimeFromToRangeFilter
 from django_filters import filters
-from .models import UniversityThrough, ConsultantProfile
+# from .models import UniversityThrough, ConsultantProfile
 
 
 # class UniversityFilter(filters.Filter):
 #     def filter(self, qs, value):
-#         qs2 = UniversityThrough.objects.filter(university_id=value)
-#         print("JJLJLJLJLJLJLJLJLJLJLJLJLJLJLJLLJLJLJLJ")
-#         print(qs)
-#         print('><><><><><<><><><><><><><><><><><><><><><><><><<><><><><><><<')
-#         print(qs2)
-#         print('><><><><><><><><><><><><><><><><>')
-#         qs |= qs2
-#         return qs
+        # qs2 = UniversityThrough.objects.filter(university_id=value)
+        # print("JJLJLJLJLJLJLJLJLJLJLJLJLJLJLJLLJLJLJLJ")
+        # print(qs)
+        # print('><><><><><<><><><><><><><><><><><><><><><><><><<><><><><><><<')
+        # print(qs2)
+        # print('><><><><><><><><><><><><><><><><>')
+        # qs |= qs2
+
+        # qs = qs.filter(universites=value)
+        # return qs
 #
 #
 #

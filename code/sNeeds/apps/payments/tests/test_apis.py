@@ -13,6 +13,7 @@ from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.store.models import TimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.customForms.models import BugReport
+from sNeeds.apps.payments.models import ConsultantDepositInfo
 
 User = get_user_model()
 
@@ -210,6 +211,212 @@ class ConsultantDepositInfoAPITests(APITestCase):
             discount=self.discount1
         )
 
+        self.consultant_deposit_info_1 = ConsultantDepositInfo.objects.create(consultant=self.consultant1_profile,
+                                                                              amount=4000)
+        self.consultant_deposit_info_2 = ConsultantDepositInfo.objects.create(consultant=self.consultant1_profile,
+                                                                              amount=5000)
+        self.consultant_deposit_info_2 = ConsultantDepositInfo.objects.create(consultant=self.consultant2_profile,
+                                                                              amount=5000)
+
         # Setup ------
         self.client = APIClient()
 
+    def test_list_consultant_deposit_get_success(self):
+        url = reverse('payment:consultant-deposit-list')
+        client = self.client
+        client.force_login(self.consultant1)
+
+        response = client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_list_consultant_deposit_post_put_patch_delete_fail(self):
+        url = reverse('payment:consultant-deposit-list')
+        client = self.client
+        client.force_login(self.consultant1)
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_list_consultant_deposit_other_consultant_access_denied(self):
+        url = reverse('payment:consultant-deposit-list')
+        client = self.client
+        client.force_login(self.consultant2)
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_list_consultant_deposit_other_users_access_denied(self):
+        url = reverse('payment:consultant-deposit-list')
+        client = self.client
+        client.force_login(self.user1)
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_list_consultant_deposit_unauthorized_access_denied(self):
+        url = reverse('payment:consultant-deposit-list')
+        client = self.client
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_detail_consultant_deposit_get_success(self):
+        url = reverse('payment:consultant-deposit-detail',
+                      args=(self.consultant_deposit_info_1.consultant_deposit_info_id,))
+        client = self.client
+        client.force_login(self.consultant1)
+
+        response = client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_detail_consultant_deposit_post_put_patch_delete_fail(self):
+        url = reverse('payment:consultant-deposit-detail',
+                      args=(self.consultant_deposit_info_1.consultant_deposit_info_id,))
+        client = self.client
+        client.force_login(self.consultant1)
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_detail_consultant_deposit_other_consultant_access_denied(self):
+        url = reverse('payment:consultant-deposit-detail',
+                      args=(self.consultant_deposit_info_1.consultant_deposit_info_id,))
+        client = self.client
+        client.force_login(self.consultant2)
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_detail_consultant_deposit_other_users_access_denied(self):
+        url = reverse('payment:consultant-deposit-detail',
+                      args=(self.consultant_deposit_info_1.consultant_deposit_info_id,))
+        client = self.client
+        client.force_login(self.user1)
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_detail_consultant_deposit_unauthorized_access_denied(self):
+        url = reverse('payment:consultant-deposit-detail',
+                      args=(self.consultant_deposit_info_1.consultant_deposit_info_id,))
+        client = self.client
+
+        payload = {
+            'consultant': self.consultant1.id,
+            'amount': 6000,
+        }
+
+        response = client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.put(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.patch(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
