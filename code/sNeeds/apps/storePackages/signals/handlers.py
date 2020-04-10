@@ -2,7 +2,7 @@ from django.db.models.signals import pre_save, post_delete, m2m_changed, post_sa
 
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
-    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase
+    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
 )
 
 
@@ -65,6 +65,12 @@ def post_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs)
     instance.sold_store_package.save()
 
 
+def post_save_sold_store_package(sender, instance, *args, **kwargs):
+    if instance.consultant is not None:
+        qs = ConsultantSoldStorePackageAcceptRequest.objects.filter(sold_store_package=instance)
+        qs.delete()
+
+
 def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     # Update SoldStorePackage price
     instance.sold_store_package.update_price()
@@ -103,6 +109,7 @@ pre_save.connect(pre_save_sold_store_unpaid_package_phase, sender=SoldStoreUnpai
 
 post_save.connect(post_save_store_package_phase, sender=StorePackagePhase)
 post_save.connect(post_save_store_package, sender=StorePackage)
+post_save.connect(post_save_sold_store_package, sender=SoldStorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
 post_save.connect(post_save_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
 post_save.connect(post_save_sold_store_unpaid_package_phase, sender=SoldStoreUnpaidPackagePhase)

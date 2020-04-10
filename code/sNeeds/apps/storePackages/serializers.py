@@ -80,7 +80,7 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SoldStorePackage
-        fields = ['url', 'title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+        fields = ['id', 'url', 'title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
         extra_kwargs = {
             'title': {'read_only': True},
             'sold_to': {'read_only': True},
