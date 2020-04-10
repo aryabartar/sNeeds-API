@@ -34,7 +34,7 @@ class DiscountSerializer(serializers.ModelSerializer):
         view_name='discount:consultant-discount-detail',
         read_only=True
     )
-    
+
     class Meta:
         model = Discount
         fields = ['id', 'consultants', 'products', 'amount', 'code', 'users', 'url']
