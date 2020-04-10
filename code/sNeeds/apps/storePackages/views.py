@@ -91,7 +91,7 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
             return Response({"detail": "User is not consultant."}, status=403)
 
 
-class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
+class SoldStorePackageDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePackageSerializer
     queryset = SoldStorePackage.objects.all()
