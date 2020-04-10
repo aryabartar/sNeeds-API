@@ -26,3 +26,4 @@ class ConsultantDepositInfo(models.Model):
     comment = models.TextField(max_length=512, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+

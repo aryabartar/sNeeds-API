@@ -16,7 +16,7 @@ from sNeeds.apps.orders.models import Order
 from .serializers import ConsultantDepositInfoSerializer
 from .permissions import IsConsultant
 from .models import ConsultantDepositInfo
-from sNeeds.apps.discounts.models import CartDiscount
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 from .models import PayPayment
 from ..carts.models import Cart
@@ -149,5 +149,6 @@ class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = ConsultantDepositInfo.objects.filter(consultant=user)
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
         return qs
