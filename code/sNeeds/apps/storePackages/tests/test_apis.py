@@ -23,6 +23,37 @@ class TestAPIStorePackage(CustomAPITestCase):
             consultant=self.consultant1_profile
         )
 
+    def test_marketplace_list_get_success(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("store-package:marketplace-list")
+
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+
+        client.login(email='c2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 1)
+
+    def test_marketplace_list_get_unauthorized(self):
+        client = self.client
+        url = reverse("store-package:marketplace-list")
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_marketplace_list_get_forbidden(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+        url = reverse("store-package:marketplace-list")
+
+        response = client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_store_package_phase_through_list_get_success(self):
         client = self.client
         url = reverse("store-package:store-package-phase-through-list")
