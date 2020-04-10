@@ -9,6 +9,6 @@ urlpatterns = [
     path('verify/', views.Verify.as_view(), name='verify'),
     path('verify-test/<int:cartid>/', views.VerifyTest.as_view()),
     path('consultant-deposits/', views.ConsultantDepositInfoListAPIView.as_view(), name='consultant-deposit-list'),
-    path('consultant-deposits/<int:consultant_deposit_info_id>/', views.ConsultantDepositInfoDetailAPIView.as_view(),
+    path('consultant-deposits/<str:consultant_deposit_info_id>/', views.ConsultantDepositInfoDetailAPIView.as_view(),
          name='consultant-deposit-detail'),
 ]
