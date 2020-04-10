@@ -50,6 +50,7 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
     lookup_field = 'id'
     serializer_class = serializers.ConsultantSoldStorePackageAcceptRequestSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filterset_fields = ['sold_store_package']
 
     def get_serializer_context(self):
         return {'request': self.request}

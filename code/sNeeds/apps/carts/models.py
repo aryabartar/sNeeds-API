@@ -54,6 +54,7 @@ class Cart(models.Model):
 
         # Due to this problem products active status is validated in many to many signal
         # https://stackoverflow.com/questions/7986510/django-manytomany-model-validation
+        # Check m2m_changed signal
 
     def get_time_slot_sales_count(self):
         return self.products.all().get_time_slot_sales().count()

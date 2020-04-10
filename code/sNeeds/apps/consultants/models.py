@@ -5,15 +5,6 @@ from django.db import models
 from sNeeds.apps.account.models import (University, FieldOfStudy, Country)
 from sNeeds.apps.customAuth.models import CustomUser
 
-STUDY_GRADE_CHOICES = [
-    ('college', 'College'),
-    ('associate', 'Associate'),
-    ('bachelor', 'Bachelor'),
-    ('master', 'Master'),
-    ('doctoral', 'Doctoral'),
-    ('post_doctoral', 'Post Doctoral'),
-]
-
 
 def get_consultant_image_path(instance, filename):
     return "account/images/consultants/{}/image/{}".format(instance.user.id, filename)
@@ -44,7 +35,9 @@ class ConsultantProfile(models.Model):
     aparat_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
     slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, blank=True, through='UniversityThrough')
+    universities = models.ManyToManyField(University, blank=True)
+    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
+    countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)  # TODO: Check this is working.
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
@@ -65,42 +58,3 @@ class ConsultantProfile(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
-
-
-class UniversityThroughManager(models.QuerySet):
-
-    def filter_consultants(self, params):
-        qs = self.all()
-        universities = params.get('universities', [])
-        if len(universities) != 0:
-            qs = qs.filter(university__in=universities)
-
-        field_of_studies = params.get('field_of_studies', [])
-        if len(field_of_studies) != 0:
-            qs = qs.filter(field_of_study__in=field_of_studies)
-
-        countries = params.get('countries', [])
-        if len(countries) != 0:
-            qs = qs.filter(country__in=countries)
-
-        grades = params.get('grades', [])
-        if len(grades) != 0:
-            qs = qs.filter(grade__in=grades)
-
-        result_qs = qs.only('consultant')
-
-        active = params.get('active', [])
-        if len(grades) != 0:
-            result_qs = result_qs.filter(active__in=active)
-
-        return result_qs
-
-
-class UniversityThrough(models.Model):
-    consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
-    university = models.ForeignKey(University, on_delete=models.PROTECT)
-    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.PROTECT)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True)
-    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
-
-    objects = UniversityThroughManager.as_manager()
