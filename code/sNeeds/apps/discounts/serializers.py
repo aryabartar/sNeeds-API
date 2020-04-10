@@ -28,9 +28,16 @@ class ShortDiscountSerializer(serializers.ModelSerializer):
 
 
 class DiscountSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedRelatedField(
+        source='discounts',
+        lookup_field='id',
+        view_name='discount:consultant-discount-detail',
+        read_only=True
+    )
+    
     class Meta:
         model = Discount
-        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users']
+        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users', 'url']
         extra_kwargs = {
             'consultants': {'read_only': True},
             'products': {'read_only': True},
