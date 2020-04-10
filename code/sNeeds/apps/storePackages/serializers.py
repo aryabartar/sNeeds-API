@@ -8,6 +8,7 @@ from rest_framework.exceptions import PermissionDenied
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
 from ..consultants.models import ConsultantProfile
+from ..consultants.serializers import ShortConsultantProfileSerializer
 from ..customAuth.serializers import SafeUserDataSerializer
 
 
@@ -60,10 +61,17 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
         lookup_field='id',
         view_name='store-package:consultant-sold-store-package-accept-request-detail'
     )
+    consultant = serializers.SerializerMethodField()
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = ['id', 'url', 'sold_store_package', 'consultant', 'created', 'updated']
+
+    def get_consultant(self, obj):
+        return ShortConsultantProfileSerializer(
+            obj.consultant,
+            context={"request": self.context.get('request')}
+        ).data
 
 
 class SoldStorePackageSerializer(serializers.ModelSerializer):

@@ -336,5 +336,5 @@ class ConsultantSoldStorePackageAcceptRequest(models.Model):
     def clean(self):
         if self.sold_store_package.consultant is not None:
             raise ValidationError(
-                {"sold_store_package": "This sold store package consultant is none."}
+                {"sold_store_package": "This sold store package consultant is not None."}
             )
