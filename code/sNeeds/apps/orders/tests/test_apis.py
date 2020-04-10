@@ -234,6 +234,12 @@ class CartTests(CustomAPITestCase):
             ).data
         )
         self.assertEqual(
+            response_data.get("sold_time_slot_sales"),
+            SoldTimeSlotSaleSerializer(
+                order1.sold_products.all().get_sold_time_slot_sales(), context={"request": request}, many=True
+            ).data
+        )
+        self.assertEqual(
             response.data.get("created"),
             serializers.DateTimeField().to_representation(order1.created)
         )
