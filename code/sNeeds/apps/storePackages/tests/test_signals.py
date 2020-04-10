@@ -27,7 +27,7 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(
             ConsultantSoldStorePackageAcceptRequest.objects.filter(
                 sold_store_package=self.sold_store_package_2
-            ),
+            ).count(),
             1
         )
         self.sold_store_package_2.consultant = self.consultant2_profile
@@ -36,6 +36,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(
             ConsultantSoldStorePackageAcceptRequest.objects.filter(
                 sold_store_package=self.sold_store_package_2
-            ),
+            ).count(),
             0
         )

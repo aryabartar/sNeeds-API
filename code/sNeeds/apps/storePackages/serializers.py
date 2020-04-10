@@ -61,17 +61,16 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
         lookup_field='id',
         view_name='store-package:consultant-sold-store-package-accept-request-detail'
     )
-    consultant = serializers.SerializerMethodField()
+    consultant_url = serializers.HyperlinkedRelatedField(
+        source='consultant',
+        lookup_field='slug',
+        read_only=True,
+        view_name='consultant:consultant-profile-detail'
+    )
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = ['id', 'url', 'sold_store_package', 'consultant', 'created', 'updated']
-
-    def get_consultant(self, obj):
-        return ShortConsultantProfileSerializer(
-            obj.consultant,
-            context={"request": self.context.get('request')}
-        ).data
 
 
 class SoldStorePackageSerializer(serializers.ModelSerializer):
@@ -80,7 +79,9 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         view_name='store-package:sold-store-package-detail'
     )
     sold_to = serializers.SerializerMethodField()
-    consultant = serializers.HyperlinkedRelatedField(
+
+    consultant_url = serializers.HyperlinkedRelatedField(
+        source='consultant',
         lookup_field='slug',
         read_only=True,
         view_name='consultant:consultant-profile-detail'
@@ -88,7 +89,10 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SoldStorePackage
-        fields = ['id', 'url', 'title', 'sold_to', 'consultant', 'paid_price', 'total_price', 'created', 'updated']
+        fields = [
+            'id', 'url', 'title', 'sold_to', 'consultant', 'consultant_url', 'paid_price', 'total_price',
+            'created', 'updated'
+        ]
         extra_kwargs = {
             'title': {'read_only': True},
             'sold_to': {'read_only': True},
@@ -98,6 +102,19 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+    def validate_consultant(self, value):
+        if self.instance is not None:
+            if self.instance.consultant is not None:
+                raise ValidationError("Can't change consultant.")
+        return value
+
+    # def save(self, *args, **kwargs):
+    #     print("hey")
+    #     print()
+    #     print(args)
+    #     print(kwargs)
+    #     super(SoldStorePackageSerializer, self).save(*args, **kwargs)
 
 
 class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):

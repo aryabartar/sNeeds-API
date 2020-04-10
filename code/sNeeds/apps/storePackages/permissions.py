@@ -21,7 +21,7 @@ class SoldStorePackageOwnerUpdatePermission(permissions.BasePermission):
     message = "This user is not sold store package owner so can't update."
 
     def has_object_permission(self, request, view, obj):
-        if request.method == "UPDATE":
+        if request.method == "PUT":
             return obj.sold_to == request.user
         return True
 
