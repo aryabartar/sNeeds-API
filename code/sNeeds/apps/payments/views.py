@@ -138,7 +138,8 @@ class ConsultantDepositInfoListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = ConsultantDepositInfo.objects.filter(consultant=user)
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
         return qs
 
 
