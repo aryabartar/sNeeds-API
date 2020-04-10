@@ -1,6 +1,6 @@
 from django_filters import rest_framework as rest_filters, DateTimeFromToRangeFilter
 from django_filters import filters
-from .models import UniversityThrough, ConsultantProfile
+# from .models import UniversityThrough, ConsultantProfile
 
 
 # class UniversityFilter(filters.Filter):
