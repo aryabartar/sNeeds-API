@@ -19,9 +19,17 @@ class MarketplaceListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
     def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(
-            consultant=None
-        )
+        qs = SoldStorePackage.objects.filter(consultant=None)
+        return qs
+
+
+class MarketplaceDetailAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
+
+    def get_queryset(self):
+        qs = SoldStorePackage.objects.filter(consultant=None)
         return qs
 
 
