@@ -145,33 +145,32 @@ class TestAPIStorePackage(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(data), 0)
 
-    # def test_consultant_sold_store_package_accept_request_list_get_filter_success(self):
-    #     client = self.client
-    #     url = reverse("store-package:consultant-sold-store-package-accept-request-list")
-    #
-    #     client.login(email='u1@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     data = response.data
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(data), 1)
-    #
-    #     client.login(email='u2@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     data = response.data
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(data), 0)
-    #
-    #     client.login(email='c1@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     data = response.data
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(data), 1)
-    #
-    #     client.login(email='c2@g.com', password='user1234')
-    #     response = client.get(url, format='json')
-    #     data = response.data
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(data), 0)
+    def test_consultant_sold_store_package_accept_request_list_get_filter_success(self):
+        ConsultantSoldStorePackageAcceptRequest.objects.create(
+            sold_store_package=self.sold_store_package_2,
+            consultant=self.consultant2_profile
+        )
+
+        # self.sold_store_package_1.
+
+        client = self.client
+        url = reverse("store-package:consultant-sold-store-package-accept-request-list")
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.get(url, format='json')
+        data = response.data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 2)
+
+        client.login(email='u2@g.com', password='user1234')
+        response = client.get(
+            url,
+            {"sold_store_package": str(self.sold_store_package_2.id)},
+            format='json'
+        )
+        data = response.data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 2)
 
     def test_consultant_sold_store_package_accept_request_list_post_success(self):
         client = self.client
