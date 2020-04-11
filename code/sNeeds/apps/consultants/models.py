@@ -46,7 +46,7 @@ class ConsultantProfile(models.Model):
     slug = models.SlugField(unique=True, help_text="lowercase pls")
     # universities = models.ManyToManyField(University, blank=True)
     universities = models.ManyToManyField(University, through='StudyInfo',
-                                          through_fields=('consultant', 'university'))
+                                          through_fields=('consultant', 'university'), blank=True)
     field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
     countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)  # TODO: Check this is working.
@@ -103,9 +103,9 @@ class UniversityThroughManager(models.QuerySet):
 class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
-    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
+    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE, blank=True)
     country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True)
-    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
+    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES, blank=True)
 
     objects = UniversityThroughManager.as_manager()
 
