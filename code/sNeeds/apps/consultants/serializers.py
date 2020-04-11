@@ -3,7 +3,7 @@ from rest_framework import serializers
 import sNeeds.apps
 from sNeeds.apps.account.serializers import UniversitySerializer, FieldOfStudySerializer, CountrySerializer
 from sNeeds.apps.comments.models import SoldTimeSlotRate
-from sNeeds.apps.consultants.models import StudyInfo, Country, FieldOfStudy
+from sNeeds.apps.consultants.models import StudyInfo, Country, FieldOfStudy, University
 
 
 class ShortConsultantProfileSerializer(serializers.ModelSerializer):
@@ -43,7 +43,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     rate = serializers.SerializerMethodField()
 
     universities = UniversitySerializer(many=True, read_only=True)
-    universities2 = UniversitySerializer(many=True, read_only=True)
+    universities2 = serializers.SerializerMethodField()
     field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
     field_of_studies2 = serializers.SerializerMethodField()
     countries = CountrySerializer(many=True, read_only=True)
@@ -78,6 +78,12 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         qs = StudyInfo.objects.filter(consultant=obj)
         countries_id = [s.country.id for s in qs]
         qs = Country.objects.filter(id__in=countries_id)
+        return CountrySerializer(qs, many=True, read_only=True, context=self.context).data
+
+    def get_universities2(self, obj):
+        qs = StudyInfo.objects.filter(consultant=obj)
+        universities_id = [s.university.id for s in qs]
+        qs = University.objects.filter(id__in=universities_id)
         return CountrySerializer(qs, many=True, read_only=True, context=self.context).data
 
 
