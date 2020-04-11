@@ -1,6 +1,6 @@
 from django.db.models import Q
 from django.utils import timezone
-from django.db import models, transaction
+from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
@@ -8,6 +8,7 @@ from django.core.validators import FileExtensionValidator
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
 
+from sNeeds.apps.chats.utils import chat_last_message_updated
 from sNeeds.apps.consultants.models import ConsultantProfile
 
 User = get_user_model()
@@ -30,7 +31,10 @@ class ChatManager(models.QuerySet):
         qs = self._chain().filter(Q(user=user) | Q(consultant__user=user))
         return qs
 
-    # def
+    def sort_based_on_last_message(self):
+        qs = self._chain()
+        ordered = sorted(qs, key=chat_last_message_updated)
+        return ordered
 
 
 class MessageManager(PolymorphicManager):

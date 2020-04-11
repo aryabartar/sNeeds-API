@@ -21,7 +21,9 @@ class ChatSerializer(serializers.ModelSerializer):
             'id',
             'url',
             'other_person',
-            'profile_img'
+            'profile_img',
+            'created',
+            'updated',
         ]
 
     def get_profile_img(self, obj):

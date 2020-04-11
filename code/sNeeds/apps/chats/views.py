@@ -25,6 +25,7 @@ class ChatListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
         qs = Chat.objects.filter(Q(user=user) | Q(consultant__user=user))
+        qs = qs.sort_based_on_last_message()
         return qs
 
 
