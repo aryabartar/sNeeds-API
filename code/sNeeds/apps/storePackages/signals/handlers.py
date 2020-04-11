@@ -80,14 +80,14 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
-    try:
+    if not Chat.objects.filter(
+            user=instance.sold_store_package.sold_to,
+            consultant=instance.consultant
+    ).exists():
         Chat.objects.create(
             user=instance.sold_store_package.sold_to,
             consultant=instance.consultant
         )
-    except IntegrityError as e:
-        # For existing chats, Chat model raises duplicate key error and we want to ignore this.
-        pass
 
 
 def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
