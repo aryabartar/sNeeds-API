@@ -33,7 +33,7 @@ class ChatManager(models.QuerySet):
 
     def sort_based_on_last_message(self):
         qs = self._chain()
-        ordered = sorted(qs, key=chat_last_message_updated)
+        ordered = sorted(qs, key=chat_last_message_updated, reverse=True)
         return ordered
 
 
