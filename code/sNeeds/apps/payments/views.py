@@ -14,7 +14,7 @@ from rest_framework import generics
 from sNeeds.apps.orders.models import Order
 
 from .serializers import ConsultantDepositInfoSerializer
-from .permissions import IsConsultant
+from .permissions import IsConsultant, ConsultantDepositInfoOwner
 from .models import ConsultantDepositInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
 
@@ -144,11 +144,13 @@ class ConsultantDepositInfoListAPIView(generics.ListAPIView):
 
 class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'consultant_deposit_info_id'
+    queryset = qs = ConsultantDepositInfo.objects.all()
     serializer_class = ConsultantDepositInfoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsConsultant]
+    permission_classes = [permissions.IsAuthenticated, IsConsultant, ConsultantDepositInfoOwner]
 
-    def get_queryset(self):
-        user = self.request.user
-        consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
-        return qs
+    # def get_queryset(self):
+    #     # user = self.request.user
+    #     # consultant_profile = ConsultantProfile.objects.get(user=user)
+    #     # qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
+    #     qs = ConsultantDepositInfo.objects.all()
+    #     return qs
