@@ -1,5 +1,7 @@
+from django.db import IntegrityError
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save, pre_delete
 
+from sNeeds.apps.chats.models import Chat
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
     SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
@@ -77,6 +79,17 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     instance.sold_store_package.save()
 
 
+def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
+    try:
+        Chat.objects.create(
+            user=instance.sold_store_package.sold_to,
+            consultant=instance.consultant
+        )
+    except IntegrityError as e:
+        # For existing chats, Chat model raises duplicate key error and we want to ignore this.
+        pass
+
+
 def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     # Update SoldStorePackage price
     instance.sold_store_package.update_price()
@@ -87,19 +100,6 @@ def post_delete_sold_store_unpaid_package_phase(sender, instance, *args, **kwarg
     # Update SoldStorePackage price
     instance.sold_store_package.update_price()
     instance.sold_store_package.save()
-
-
-def handle_phases(sender, instance, *args, **kwargs):
-    sold_store_unpaid_package_phases = SoldStoreUnpaidPackagePhase.objects.filter(
-        sold_store_package__id=instance.id
-    ).order_by('phase_number')
-    sold_store_paid_package_phases = SoldStorePaidPackagePhase.objects.filter(
-        sold_store_package__id=instance.id
-    ).order_by('phase_number')
-
-    sold_store_unpaid_package_phases.deactivate_all()
-
-    current_phase = sold_store_paid_package_phases.first()
 
 
 pre_save.connect(pre_save_store_package, sender=StorePackage)
@@ -113,6 +113,10 @@ post_save.connect(post_save_sold_store_package, sender=SoldStorePackage)
 post_save.connect(post_save_store_package_phase_through, sender=StorePackagePhaseThrough)
 post_save.connect(post_save_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
 post_save.connect(post_save_sold_store_unpaid_package_phase, sender=SoldStoreUnpaidPackagePhase)
+post_save.connect(
+    post_save_consultant_sold_store_package_accept_request,
+    sender=ConsultantSoldStorePackageAcceptRequest
+)
 
 post_delete.connect(post_delete_store_package_phase_through, sender=StorePackagePhaseThrough)
 post_delete.connect(post_delete_sold_store_paid_package_phase, sender=SoldStorePaidPackagePhase)
