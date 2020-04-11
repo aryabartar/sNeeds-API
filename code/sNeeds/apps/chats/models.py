@@ -25,10 +25,12 @@ def get_voice_upload_path(instance, filename):
     return "chats/voices/{}/{}/{}".format(instance.chat, timezone.datetime.now(), filename)
 
 
-class ChatManager(models.Manager):
+class ChatManager(models.QuerySet):
     def get_all_user_chats(self, user):
-        qs = self.get_queryset().filter(Q(user=user) | Q(consultant__user=user))
+        qs = self._chain().filter(Q(user=user) | Q(consultant__user=user))
         return qs
+
+    # def
 
 
 class MessageManager(PolymorphicManager):
@@ -50,7 +52,10 @@ class Chat(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     consultant = models.ForeignKey(ConsultantProfile, null=True, on_delete=models.SET_NULL)
 
-    objects = ChatManager()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    objects = ChatManager.as_manager()
 
     class Meta:
         unique_together = ['user', 'consultant']
@@ -60,6 +65,7 @@ class Message(PolymorphicModel):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     sender = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='+')
     tag = models.IntegerField(editable=False)
+
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -67,9 +73,7 @@ class Message(PolymorphicModel):
 
     def clean(self):
         if self.sender != self.chat.user and self.sender != self.chat.consultant.user:
-            # TODO: Fix this
-            # raise ValidationError(f"User {self.sender} cannot send message to this chat.")
-            raise ValidationError("Error")
+            raise ValidationError("User {} cannot send message to this chat.".format(self.sender))
 
     def save(self, *args, **kwargs):
         self.tag = Message.objects.filter(chat=self.chat).count() + 1
