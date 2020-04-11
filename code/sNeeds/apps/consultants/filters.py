@@ -20,14 +20,16 @@ class UniversityModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
             if v == self.null_value:
                 v = None
             if v is not None:
-                q |= Q(university=v)
+                q = q | Q(university=v)
 
-        consultants_qs = StudyInfo.objects.filter(q).only('consultant').distinct()
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
         consultants_id = []
-        for c in consultants_qs:
-            consultants_id.append(c.id)
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
 
         qs = qs.filter(id__in=consultants_id)
+
         return qs.distinct()
 
 
@@ -48,12 +50,14 @@ class CountryModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
             if v is not None:
                 q |= Q(country=v)
 
-        consultants_qs = StudyInfo.objects.filter(q).only('consultant').distinct()
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
         consultants_id = []
-        for c in consultants_qs:
-            consultants_id.append(c.id)
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
 
         qs = qs.filter(id__in=consultants_id)
+
         return qs.distinct()
 
 
@@ -74,12 +78,14 @@ class FieldOfStudyModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
             if v is not None:
                 q |= Q(field_of_study=v)
 
-        consultants_qs = StudyInfo.objects.filter(q).only('consultant').distinct()
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
         consultants_id = []
-        for c in consultants_qs:
-            consultants_id.append(c.id)
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
 
         qs = qs.filter(id__in=consultants_id)
+
         return qs.distinct()
 
 

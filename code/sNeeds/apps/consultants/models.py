@@ -103,11 +103,18 @@ class StudyInfoManager(models.QuerySet):
 class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
-    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE, blank=True)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True)
-    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES, blank=True)
-    # order = models.PositiveIntegerField(null=True)
+    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.PROTECT)
+    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
+    order = models.PositiveIntegerField(help_text="Enter number above 0")
 
     objects = StudyInfoManager.as_manager()
+
+    class Meta:
+        ordering = ["order"]
+        unique_together = ["consultant", "university", "field_of_study", "grade", "order"]
+
+    def __str__(self):
+        return self.consultant.slug + ", " + self.university.name
 
 
