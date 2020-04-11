@@ -6,6 +6,7 @@ from django.urls import reverse
 
 from rest_framework import status
 
+from sNeeds.apps.chats.models import Chat
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhase, StorePackagePhaseThrough, SoldStorePackage,
@@ -38,4 +39,20 @@ class TestAPIStorePackage(CustomAPITestCase):
                 sold_store_package=self.sold_store_package_2
             ).count(),
             0
+        )
+
+    def test_package_accept_request_creates_new_chat(self):
+        self.assertEqual(
+            Chat.objects.filter(self.user2, self.consultant2_profile).count(),
+            0
+        )
+
+        ConsultantSoldStorePackageAcceptRequest.objects.create(
+            self.sold_store_package_2,
+            self.consultant2_profile
+        )
+
+        self.assertEqual(
+            Chat.objects.filter(self.user2, self.consultant2_profile).count(),
+            1
         )
