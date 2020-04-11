@@ -43,16 +43,16 @@ class TestAPIStorePackage(CustomAPITestCase):
 
     def test_package_accept_request_creates_new_chat(self):
         self.assertEqual(
-            Chat.objects.filter(self.user2, self.consultant2_profile).count(),
+            Chat.objects.filter(user=self.user2, consultant=self.consultant2_profile).count(),
             0
         )
 
         ConsultantSoldStorePackageAcceptRequest.objects.create(
-            self.sold_store_package_2,
-            self.consultant2_profile
+            sold_store_package=self.sold_store_package_2,
+            consultant=self.consultant2_profile
         )
 
         self.assertEqual(
-            Chat.objects.filter(self.user2, self.consultant2_profile).count(),
+            Chat.objects.filter(user=self.user2, consultant=self.consultant2_profile).count(),
             1
         )
