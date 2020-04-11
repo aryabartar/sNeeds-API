@@ -158,6 +158,7 @@ class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['sold_store_package']
 
     def get_queryset(self):
         user = self.request.user
@@ -188,6 +189,7 @@ class SoldStorePaidPackagePhaseListAPIView(generics.ListAPIView):
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePaidPackagePhaseSerializer
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['sold_store_package']
 
     def get_queryset(self):
         user = self.request.user
