@@ -6,12 +6,10 @@ from sNeeds.apps.account.models import (University, FieldOfStudy, Country)
 from sNeeds.apps.customAuth.models import CustomUser
 
 STUDY_GRADE_CHOICES = [
-    ('college', 'College'),
-    ('associate', 'Associate'),
     ('bachelor', 'Bachelor'),
     ('master', 'Master'),
-    ('doctoral', 'Doctoral'),
-    ('post_doctoral', 'Post Doctoral'),
+    ('phd', 'Doctoral'),
+    ('postdoc', 'Post Doc'),
 ]
 
 
@@ -103,7 +101,7 @@ class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
-    grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
+    grade = models.CharField(max_length=256, choices=STUDY_GRADE_CHOICES)
     order = models.PositiveIntegerField(help_text="Enter number above 0")
 
     objects = StudyInfoManager.as_manager()
