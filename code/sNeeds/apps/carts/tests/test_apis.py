@@ -162,8 +162,8 @@ class CartTests(CustomAPITestCase):
 
     def test_get_cart_detail(self):
         cart = self.cart2
-        url = reverse("cart:cart-detail", args=(cart.id,))
         client = self.client
+        url = reverse("cart:cart-detail", args=(cart.id,))
         client.login(email='u1@g.com', password='user1234')
 
         response = client.get(url, format='json')
@@ -235,7 +235,6 @@ class CartTests(CustomAPITestCase):
         response = client.post(url, data=data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-        # print(response.data)
 
         url = reverse("cart:cart-detail", args=(response.data["id"],))
 
