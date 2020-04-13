@@ -58,6 +58,9 @@ class Country(models.Model):
     picture = models.ImageField(upload_to=get_image_upload_path("country-pictures"))
     slug = models.SlugField(unique=True, help_text="Lowercase pls")
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
@@ -69,6 +72,9 @@ class University(models.Model):
     picture = models.ImageField(upload_to=get_image_upload_path("university-pictures"))
     slug = models.SlugField(unique=True, help_text="Lowercase pls")
 
+    class Meta:
+        ordering = ["name"]
+
     def __str__(self):
         return self.name
 
@@ -78,6 +84,9 @@ class FieldOfStudy(models.Model):
     description = models.TextField(blank=True, null=True)
     picture = models.ImageField(upload_to=get_image_upload_path("field-of-study-pictures"))
     slug = models.SlugField(unique=True, help_text="Lowercase pls")
+
+    class Meta:
+        ordering = ["name"]
 
     def __str__(self):
         self.name = self.name
