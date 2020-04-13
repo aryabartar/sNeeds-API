@@ -48,7 +48,7 @@ class CountryModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
             if v == self.null_value:
                 v = None
             if v is not None:
-                q |= Q(country=v)
+                q |= Q(university__country=v)
 
         study_info_qs = StudyInfo.objects.filter(q).only('consultant')
 
