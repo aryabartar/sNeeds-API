@@ -72,7 +72,6 @@ class ConsultantProfile(models.Model):
 
 
 class StudyInfoManager(models.QuerySet):
-
     def filter_consultants(self, params):
         qs = self.all()
         universities = params.get('universities', [])
@@ -104,7 +103,6 @@ class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT)
     grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
     order = models.PositiveIntegerField(help_text="Enter number above 0")
 
