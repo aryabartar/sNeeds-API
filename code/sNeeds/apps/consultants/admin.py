@@ -12,4 +12,4 @@ class StudyInfoInline(admin.TabularInline):
 class StorePackageAdmin(admin.ModelAdmin):
     inlines = (StudyInfoInline,)
     readonly_fields = ["rate", ]
-    list_display = ["id", "__str__", "user","rate" ]
+    list_display = ["id", "__str__", "user", "rate", "active", ]

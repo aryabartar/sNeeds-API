@@ -112,5 +112,3 @@ class StudyInfo(models.Model):
 
     def __str__(self):
         return self.consultant.slug + ", " + self.university.name
-
-
