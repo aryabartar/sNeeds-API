@@ -3,6 +3,7 @@ from rest_framework import serializers
 import sNeeds.apps
 from sNeeds.apps.account.serializers import UniversitySerializer, FieldOfStudySerializer, CountrySerializer
 from sNeeds.apps.comments.models import SoldTimeSlotRate
+from sNeeds.apps.consultants.models import ConsultantProfile
 
 
 class ShortConsultantProfileSerializer(serializers.ModelSerializer):
@@ -46,11 +47,11 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     countries = CountrySerializer(many=True, read_only=True)
 
     class Meta:
-        model = sNeeds.apps.consultants.models.ConsultantProfile
+        model = ConsultantProfile
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'universities', 'field_of_studies', 'countries', 'slug', 'aparat_link',
-            'resume', 'rate', 'active')
+            'resume', 'time_slot_price', 'rate', 'active')
 
     def get_first_name(self, obj):
         return obj.user.first_name
