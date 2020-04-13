@@ -8,8 +8,9 @@ from sNeeds.apps.customAuth.models import CustomUser
 STUDY_GRADE_CHOICES = [
     ('bachelor', 'Bachelor'),
     ('master', 'Master'),
-    ('phd', 'Doctoral'),
+    ('phd', 'PhD'),
     ('postdoc', 'Post Doc'),
+    ('unknown', 'Unknown'),
 ]
 
 

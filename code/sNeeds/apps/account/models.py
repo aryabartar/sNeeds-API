@@ -41,6 +41,7 @@ MAINLAND_CHOICES = [
     ('australia', 'Australia'),
 ]
 
+
 def current_year():
     return datetime.date.today().year
 
@@ -123,8 +124,11 @@ class StudentDetailedInfo(models.Model):
                                                           null=True, blank=True)
     language_writing = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
                                                         null=True, blank=True)
-    language_reading = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                        null=True, blank=True)
+    language_reading = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        null=True,
+        blank=True
+    )
     # Apply info
     mainland = models.CharField(max_length=32, choices=MAINLAND_CHOICES, validators=[validators.validate_mainland, ])
     country = models.CharField(max_length=128)
