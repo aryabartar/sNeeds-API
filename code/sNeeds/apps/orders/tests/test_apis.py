@@ -18,6 +18,7 @@ from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.serializers import SoldTimeSlotSaleSerializer
+from sNeeds.apps.storePackages.serializers import SoldStorePaidPackagePhaseSerializer
 from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 from sNeeds.apps.discounts.models import Discount, CartDiscount
 
@@ -234,6 +235,12 @@ class CartTests(CustomAPITestCase):
             ).data
         )
         self.assertEqual(
+            response_data.get("sold_store_paid_package_phases"),
+            SoldStorePaidPackagePhaseSerializer(
+                order1.sold_products.all().get_sold_store_paid_package_phases(), context={"request": request}, many=True
+            ).data
+        )
+        self.assertEqual(
             response.data.get("created"),
             serializers.DateTimeField().to_representation(order1.created)
         )
@@ -328,4 +335,3 @@ class CartTests(CustomAPITestCase):
 
         response = client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-

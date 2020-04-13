@@ -14,7 +14,7 @@ from rest_framework import generics
 from sNeeds.apps.orders.models import Order
 
 from .serializers import ConsultantDepositInfoSerializer
-from .permissions import IsConsultant
+from .permissions import IsConsultant, ConsultantDepositInfoOwner
 from .models import ConsultantDepositInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
 
@@ -126,9 +126,8 @@ class VerifyTest(APIView):
         # # Order.objects.sell_cart_create_order(cart)
         from sNeeds.apps.storePackages.models import StorePackage
         id = kwargs.get("cartid")
-        qs = StorePackage.objects.all()
-        print(qs)
-        qs.sell_and_get_sold_package(sold_to=request.user)
+        cart = Cart.objects.get(id=id)
+        order = Order.objects.sell_cart_create_order(cart)
         return Response()
 
 
@@ -138,17 +137,20 @@ class ConsultantDepositInfoListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        qs = ConsultantDepositInfo.objects.filter(consultant=user)
+        consultant_profile = ConsultantProfile.objects.get(user=user)
+        qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
         return qs
 
 
 class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'consultant_deposit_info_id'
+    queryset = qs = ConsultantDepositInfo.objects.all()
     serializer_class = ConsultantDepositInfoSerializer
-    permission_classes = [permissions.IsAuthenticated, IsConsultant]
+    permission_classes = [permissions.IsAuthenticated, IsConsultant, ConsultantDepositInfoOwner]
 
-    def get_queryset(self):
-        user = self.request.user
-        consultant_profile = ConsultantProfile.objects.get(user=user)
-        qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
-        return qs
+    # def get_queryset(self):
+    #     # user = self.request.user
+    #     # consultant_profile = ConsultantProfile.objects.get(user=user)
+    #     # qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
+    #     qs = ConsultantDepositInfo.objects.all()
+    #     return qs

@@ -11,6 +11,26 @@ from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
     SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, IsConsultantPutPostPermission
+from ...utils.custom.custom_permissions import IsConsultantPermission
+
+
+class MarketplaceListAPIView(generics.ListAPIView):
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
+
+    def get_queryset(self):
+        qs = SoldStorePackage.objects.filter(consultant=None)
+        return qs
+
+
+class MarketplaceDetailAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    serializer_class = serializers.SoldStorePackageSerializer
+    permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
+
+    def get_queryset(self):
+        qs = SoldStorePackage.objects.filter(consultant=None)
+        return qs
 
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):
@@ -50,6 +70,7 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
     lookup_field = 'id'
     serializer_class = serializers.ConsultantSoldStorePackageAcceptRequestSerializer
     permission_classes = [permissions.IsAuthenticated, ]
+    filterset_fields = ['sold_store_package']
 
     def get_serializer_context(self):
         return {'request': self.request}
@@ -91,6 +112,13 @@ class ConsultantSoldStorePackageAcceptRequestListAPIView(generics.ListCreateAPIV
 
 
 class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
+    """
+    Update format:
+    {
+        "consultant": 1
+    }
+    User can select consultant for sold store package.
+    """
     lookup_field = 'id'
     serializer_class = serializers.SoldStorePackageSerializer
     queryset = SoldStorePackage.objects.all()

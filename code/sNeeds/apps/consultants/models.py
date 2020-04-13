@@ -44,7 +44,11 @@ class ConsultantProfile(models.Model):
     aparat_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
     slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, blank=True, through='UniversityThrough')
+    universities = models.ManyToManyField(University, blank=True, related_name='consultants')
+    universities2 = models.ManyToManyField(University, through='StudyInfo',
+                                           through_fields=('consultant', 'university'), blank=True)
+    field_of_studies = models.ManyToManyField(FieldOfStudy, blank=True)
+    countries = models.ManyToManyField(Country, blank=True)
     active = models.BooleanField(default=True)  # TODO: Check this is working.
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
@@ -67,7 +71,7 @@ class ConsultantProfile(models.Model):
         return self.user.get_full_name()
 
 
-class UniversityThroughManager(models.QuerySet):
+class StudyInfoManager(models.QuerySet):
 
     def filter_consultants(self, params):
         qs = self.all()
@@ -96,11 +100,21 @@ class UniversityThroughManager(models.QuerySet):
         return result_qs
 
 
-class UniversityThrough(models.Model):
+class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
-    university = models.ForeignKey(University, on_delete=models.PROTECT)
-    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.PROTECT)
-    country = models.ForeignKey(Country, on_delete=models.PROTECT, blank=True)
+    university = models.ForeignKey(University, on_delete=models.CASCADE)
+    field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.PROTECT)
     grade = models.CharField(max_length=64, choices=STUDY_GRADE_CHOICES)
+    order = models.PositiveIntegerField(help_text="Enter number above 0")
 
-    objects = UniversityThroughManager.as_manager()
+    objects = StudyInfoManager.as_manager()
+
+    class Meta:
+        ordering = ["order"]
+        unique_together = ["consultant", "university", "field_of_study", "grade", "order"]
+
+    def __str__(self):
+        return self.consultant.slug + ", " + self.university.name
+
+

@@ -1,41 +1,103 @@
-from django_filters import rest_framework as rest_filters, DateTimeFromToRangeFilter
-from django_filters import filters
-from .models import UniversityThrough, ConsultantProfile
+from django.db.models import Q
+from django_filters.rest_framework import filters, FilterSet
+# import django_filters
+from .models import StudyInfo, ConsultantProfile
+from sNeeds.apps.account.models import University, Country, FieldOfStudy
 
 
-# class UniversityFilter(filters.Filter):
-#     def filter(self, qs, value):
-#         qs2 = UniversityThrough.objects.filter(university_id=value)
-#         print("JJLJLJLJLJLJLJLJLJLJLJLJLJLJLJLLJLJLJLJ")
-#         print(qs)
-#         print('><><><><><<><><><><><><><><><><><><><><><><><><<><><><><><><<')
-#         print(qs2)
-#         print('><><><><><><><><><><><><><><><><>')
-#         qs |= qs2
-#         return qs
-#
-#
-#
-# class ContentTypeCharFilter(filters.ChoiceFilter):
-#     def filter(self, qs, value):
-#         if value == "soldstorepaidpackagephase":
-#             qs = qs.filter(
-#                 content_type=ContentType.objects.get(app_label='storePackages', model='soldstorepaidpackagephase')
-#             )
-#         elif value == "soldstoreunpaidpackagephase":
-#             qs = qs.filter(
-#                 content_type=ContentType.objects.get(app_label='storePackages', model='soldstoreunpaidpackagephase')
-#             )
-#
-#         return qs
+class UniversityModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
+
+    def filter(self, qs, value):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
+            return qs
+
+        if self.is_noop(qs, value):
+            return qs
+
+        q = Q()
+        for v in set(value):
+            if v == self.null_value:
+                v = None
+            if v is not None:
+                q = q | Q(university=v)
+
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
+        consultants_id = []
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
+
+        qs = qs.filter(id__in=consultants_id)
+
+        return qs.distinct()
 
 
-# class ConsultantProfileFilterset(rest_filters.FilterSet):
-#     # universities = filters.NumberFilter()
-#     universities = UniversityFilter()
-#
-#     # def filter_universities(self, queryset, name, value):
-#     #     queryset = queryset.filter(universities=value)
-#
-#     class Meta:
-#         model = ConsultantProfile
+class CountryModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
+
+    def filter(self, qs, value):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
+            return qs
+
+        if self.is_noop(qs, value):
+            return qs
+
+        q = Q()
+        for v in set(value):
+            if v == self.null_value:
+                v = None
+            if v is not None:
+                q |= Q(country=v)
+
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
+        consultants_id = []
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
+
+        qs = qs.filter(id__in=consultants_id)
+
+        return qs.distinct()
+
+
+class FieldOfStudyModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
+
+    def filter(self, qs, value):
+        if not value:
+            # Even though not a noop, no point filtering if empty.
+            return qs
+
+        if self.is_noop(qs, value):
+            return qs
+
+        q = Q()
+        for v in set(value):
+            if v == self.null_value:
+                v = None
+            if v is not None:
+                q |= Q(field_of_study=v)
+
+        study_info_qs = StudyInfo.objects.filter(q).only('consultant')
+
+        consultants_id = []
+        for c in study_info_qs:
+            consultants_id.append(c.consultant.id)
+
+        qs = qs.filter(id__in=consultants_id)
+
+        return qs.distinct()
+
+
+class ConsultantProfileFilter(FilterSet):
+    university = UniversityModelMultipleChoiceFilter(field_name='university', queryset=University.objects.all(),
+                                                     label='university')
+
+    country = CountryModelMultipleChoiceFilter(field_name='country', queryset=Country.objects.all(), label='country')
+
+    field_of_study = FieldOfStudyModelMultipleChoiceFilter(field_name='field_of_study',
+                                                           queryset=FieldOfStudy.objects.all(), label='field_of_study')
+
+    class Meta:
+        model = ConsultantProfile
+        fields = ['active']

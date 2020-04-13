@@ -11,8 +11,7 @@ from rest_framework.views import APIView
 
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.consultants.serializers import ConsultantProfileSerializer
-from .models import UniversityThrough
-# from .filters import ConsultantProfileFilterset
+from .filters import ConsultantProfileFilter
 
 
 class ConsultantProfileDetail(APIView):
@@ -35,28 +34,16 @@ class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
     serializer_class = ConsultantProfileSerializer
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     ordering_fields = ['rate', 'created', ]
+
+    #TODO: After Deploy
+    # uncomment filterset_class and delete filterset_fields to use custom filter class (ConsultantProfileFilter)
     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
+    # filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
         #TODO: After deploy
         # return ConsultantProfile.objects.get_active_consultants()
-
-        qs = ConsultantProfile.objects.all()
-        return qs
+        return ConsultantProfile.objects.all()
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
-
-
-# class ConsultantProfileList(generics.ListAPIView):
-#     serializer_class = ConsultantProfileSerializer
-#     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
-#     ordering_fields = ['rate', 'created', ]
-#     filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
-#     # filterset_class = ConsultantProfileFilterset
-#
-#     def get_queryset(self):
-#         #TODO: After deploy
-#         # return ConsultantProfile.objects.get_active_consultants()
-#         return UniversityThrough.objects.filter_consultants(self.request.query_params)
-
