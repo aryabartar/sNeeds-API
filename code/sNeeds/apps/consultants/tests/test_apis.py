@@ -288,5 +288,6 @@ class CartTests(APITestCase):
         self.assertEqual(len(data.get("countries")), len(c1.countries.all()))
         self.assertEqual(data.get("slug"), c1.slug)
         self.assertEqual(data.get("aparat_link"), c1.aparat_link)
+        self.assertEqual(data.get("time_slot_price"), c1.time_slot_price)
         self.assertEqual(data.get("rate"), str(c1.rate))
         self.assertEqual(data.get("active"), c1.active)
