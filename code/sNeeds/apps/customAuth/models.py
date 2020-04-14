@@ -84,6 +84,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def clean(self):
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
+        self.email = self.email.lower()
 
     def is_consultant(self):
         if self.user_type == UserTypeChoices.consultant:
@@ -126,5 +127,3 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
 class StudentProfile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, primary_key=True)
-
-
