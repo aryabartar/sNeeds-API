@@ -13,4 +13,4 @@ class TimeSlotSaleAdmin(admin.ModelAdmin):
 @admin.register(SoldTimeSlotSale)
 class SoldTimeSlotSaleAdmin(admin.ModelAdmin):
     list_display = ["id", "consultant", "start_time", "end_time", "sold_to", "price"]
-    readonly_fields = ["price", "active", ]
+    readonly_fields = ["price",  ]
