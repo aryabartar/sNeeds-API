@@ -192,8 +192,8 @@ class SoldProduct(models.Model):
 class SoldTimeSlotSale(SoldProduct):
     used = models.BooleanField(default=False)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.PROTECT)
-    start_time = models.DateTimeField()
-    end_time = models.DateTimeField()
+    start_time = models.DateTimeField(blank=False, null=False)
+    end_time = models.DateTimeField(blank=False, null=False)
 
     objects = SoldProductQuerySet.as_manager()
 
