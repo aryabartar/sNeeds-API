@@ -65,7 +65,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     def get_rate(self, obj):
         if obj.rate is None:
             return None
-        return '{0:g}'.format(round(obj.rate, 2))
+        return float('{0:g}'.format(round(obj.rate, 2)))
 
     def get_study_info(self, obj):
         qs = StudyInfo.objects.filter(consultant__id=obj.id)
