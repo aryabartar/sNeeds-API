@@ -36,8 +36,8 @@ class ConsultantProfileList(generics.ListAPIView):
     ordering_fields = ['rate', 'created', ]
 
     # TODO: After Deploy
-    # # uncomment filterset_class and delete filterset_fields to use custom filter class (ConsultantProfileFilter)
-    # filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
+    # uncomment filterset_class and delete filterset_fields to use custom filter class (ConsultantProfileFilter)
+    filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
 
     # filterset_class = ConsultantProfileFilter
 
