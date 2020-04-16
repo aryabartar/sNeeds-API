@@ -75,8 +75,12 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 class StudyInfoSerializer(serializers.ModelSerializer):
     university = UniversitySerializer(read_only=True)
     field_of_study = FieldOfStudySerializer(read_only=True)
-    country = CountrySerializer(read_only=True)
+    country = serializers.SerializerMethodField()
 
     class Meta:
         model = sNeeds.apps.consultants.models.StudyInfo
         fields = ('id', 'university', 'field_of_study', 'country', 'grade')
+
+    def get_country(self, obj):
+        qs = Country.objects.filter(id=obj.university.country.id)
+        return CountrySerializer(qs, context=self.context).data
