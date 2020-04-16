@@ -82,5 +82,5 @@ class StudyInfoSerializer(serializers.ModelSerializer):
         fields = ('id', 'university', 'field_of_study', 'country', 'grade')
 
     def get_country(self, obj):
-        qs = Country.objects.filter(id=obj.university.country.id)
+        qs = Country.objects.get(id=obj.university.country.id)
         return CountrySerializer(qs, context=self.context).data
