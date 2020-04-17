@@ -23,7 +23,7 @@ def get_consultant_resume_path(instance, filename):
 
 
 class ConsultantProfileQuerySetManager(models.QuerySet):
-    def get_active_consultants(self, **kwargs):
+    def has_time_slots(self, **kwargs):
         from sNeeds.apps.store.models import TimeSlotSale
         qs = self.none()
         for obj in self._chain():

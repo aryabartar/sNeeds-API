@@ -1,5 +1,15 @@
-from django.test import RequestFactory
+import json
 
-client = RequestFactory()
-response = client.get('http://127.0.0.1:8000/store/packages/sold-store-package-phase-detail-list/?object_id=&content_type=soldstorepaidpackagephase')
-print(response)
+import requests
+
+a = [0] * 36
+for i in range(1, 2):
+    r = requests.get(
+        'http://localhost:8000/consultant/consultant-profiles/?page={}'.format(i)
+    )
+    print(r.json())
+    for c in r.json()["results"]:
+        a[c["id"]] += 1
+
+for i in range(0, len(a)):
+    print(i, ":", a[i])

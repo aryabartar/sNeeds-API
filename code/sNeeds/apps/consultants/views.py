@@ -37,11 +37,9 @@ class ConsultantProfileList(generics.ListAPIView):
 
     # TODO: After Deploy
     # uncomment filterset_class and delete filterset_fields to use custom filter class (ConsultantProfileFilter)
-    filterset_fields = ('universities', 'field_of_studies', 'countries', 'active',)
+    filterset_fields = ['universities', 'field_of_studies', 'countries', 'active',]
 
     # filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
-        # TODO: After deploy
-        # return ConsultantProfile.objects.get_active_consultants()
-        return ConsultantProfile.objects.all().order_by("id")
+        return ConsultantProfile.objects.filter(active=True).has_time_slots()
