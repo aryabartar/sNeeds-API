@@ -10,7 +10,7 @@ def post_save_room_receiver(sender, instance, created, *args, **kwargs):
         instance.sold_time_slot.used = True
         instance.sold_time_slot.save()
 
-        create_room_with_users_in_skyroom.delay(instance.id)
+        create_room_with_users_in_skyroom(instance.id)
 
 
 def post_delete_room_receiver(sender, instance, *args, **kwargs):

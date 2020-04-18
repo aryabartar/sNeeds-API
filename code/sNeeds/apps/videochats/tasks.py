@@ -42,11 +42,14 @@ def create_room_with_users_in_skyroom(room_id):
     consultant_user = room.sold_time_slot.consultant.user
     sold_time_slot_id = room.sold_time_slot.id
 
+    username1 = user.email.split("@")[0]
+    username2 = consultant_user.email.split("@")[0]
+
     data = create_2members_chat_room(
-        username1=user.email,
+        username1=username1,
         nickname1=user.first_name,
         user1email=user.email,
-        username2=consultant_user.email,
+        username2=username2,
         nickname2=consultant_user.first_name,
         user2email=consultant_user.email,
         roomid=sold_time_slot_id
