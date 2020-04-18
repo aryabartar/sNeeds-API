@@ -42,8 +42,8 @@ def create_room_with_users_in_skyroom(room_id):
     consultant_user = room.sold_time_slot.consultant.user
     sold_time_slot_id = room.sold_time_slot.id
 
-    username1 = user.email.split("@")[0]
-    username2 = consultant_user.email.split("@")[0]
+    username1 = "siteuser{}".format(user.id)
+    username2 = "siteuser{}".format(consultant_user.id)
 
     data = create_2members_chat_room(
         username1=username1,
