@@ -34,6 +34,7 @@ class ConsultantProfileDetail(APIView):
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
     ordering_fields = ['rate', 'created', ]
+    pagination_class = StandardResultsSetPagination
 
     # TODO: After Deploy
     # uncomment filterset_class and delete filterset_fields to use custom filter class (ConsultantProfileFilter)
@@ -43,7 +44,3 @@ class ConsultantProfileList(generics.ListAPIView):
 
     def get_queryset(self):
         return ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
-
-
-class ConsultantProfileListTemp(ConsultantProfileList):
-    pagination_class = StandardResultsSetPagination
