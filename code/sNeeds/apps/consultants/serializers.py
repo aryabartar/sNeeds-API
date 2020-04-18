@@ -42,9 +42,6 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.SerializerMethodField(read_only=True)
     rate = serializers.SerializerMethodField()
 
-    universities = UniversitySerializer(many=True, read_only=True)
-    field_of_studies = FieldOfStudySerializer(many=True, read_only=True)
-    countries = CountrySerializer(many=True, read_only=True)
     study_info = serializers.SerializerMethodField()
 
     # TODO: After deploy
@@ -53,7 +50,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
         model = ConsultantProfile
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
-            'universities', 'field_of_studies', 'countries', 'study_info',
+            'study_info',
             'slug', 'aparat_link', 'resume', 'time_slot_price', 'rate', 'active')
 
     def get_first_name(self, obj):
