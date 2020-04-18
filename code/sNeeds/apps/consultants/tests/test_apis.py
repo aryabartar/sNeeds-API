@@ -27,11 +27,12 @@ User = get_user_model()
 
 # from sNeeds.apps.carts.models import Cart
 
-class CartTests(CustomAPITestCase):
+class ConsultantTests(CustomAPITestCase):
     allow_database_queries = True
 
     def setUp(self):
         super().setUp()
+
 
         # Consultant discounts
         self.discount1 = Discount.objects.create(
@@ -95,12 +96,11 @@ class CartTests(CustomAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            len(response.data),
+            len(response.data.get("results")),
             len(ConsultantProfile.objects.all())
         )
 
     def test_consultant_profile_list_order_by_rate_success(self):
-
         client = self.client
         url = "%s?%s=%s" % (
             reverse("consultant:consultant-profile-list"),
@@ -112,15 +112,15 @@ class CartTests(CustomAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
-            response.data[0].get("id"),
+            response.data.get("results")[0].get("id"),
             self.consultant1_profile.id
         )
         self.assertEqual(
-            response.data[0].get("id"),
-            self.consultant1_profile.id
+            response.data.get("results")[1].get("id"),
+            self.consultant2_profile.id
         )
 
-    # TODO: Add filter by uni, country and fielld
+    # TODO: Add filter by uni, country and field
 
     def test_consultant_profile_detail_success(self):
         client = self.client
@@ -136,9 +136,8 @@ class CartTests(CustomAPITestCase):
         self.assertEqual(data.get("bio"), c1.bio)
         self.assertEqual(data.get("first_name"), c1.user.first_name)
         self.assertEqual(data.get("last_name"), c1.user.last_name)
+        # TODO: Update universities detail
         self.assertEqual(len(data.get("universities")), len(c1.universities.all()))
-        self.assertEqual(len(data.get("field_of_studies")), len(c1.field_of_studies.all()))
-        self.assertEqual(len(data.get("countries")), len(c1.countries.all()))
         self.assertEqual(data.get("slug"), c1.slug)
         self.assertEqual(data.get("aparat_link"), c1.aparat_link)
         self.assertEqual(data.get("time_slot_price"), c1.time_slot_price)

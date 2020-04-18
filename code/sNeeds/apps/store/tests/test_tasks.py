@@ -26,7 +26,7 @@ User = get_user_model()
 
 # from sNeeds.apps.carts.models import Cart
 
-class CartTests(CustomAPITestCase):
+class StoreTests(CustomAPITestCase):
     allow_database_queries = True
 
     def setUp(self):

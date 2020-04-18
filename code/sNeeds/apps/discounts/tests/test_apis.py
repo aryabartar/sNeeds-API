@@ -23,7 +23,7 @@ User = get_user_model()
 
 # from sNeeds.apps.carts.models import Cart
 
-class CartTests(CustomAPITestCase):
+class DiscountTests(CustomAPITestCase):
     def setUp(self):
         super().setUp()
 
@@ -388,9 +388,9 @@ class CartTests(CustomAPITestCase):
         client = self.client
         client.force_login(self.consultant2)
 
-        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_1_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
 
         SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user2,
@@ -417,9 +417,9 @@ class CartTests(CustomAPITestCase):
         client = self.client
         client.force_login(self.consultant2)
 
-        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_1_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
 
         SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user1,
@@ -622,9 +622,9 @@ class CartTests(CustomAPITestCase):
     def test_list_consultant_interact_user_get_success(self):
         url = reverse('discount:consultant-interact-user-list')
 
-        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_1_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
 
         SoldTimeSlotSale.objects.create(consultant=self.consultant1_profile, sold_to=self.user1,
@@ -663,9 +663,9 @@ class CartTests(CustomAPITestCase):
 
     def test_list_consultant_interact_user_zero_sold_zero_user(self):
 
-        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_phase_3.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_2.id).delete()
-        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_phase_1.id).delete()
+        SoldStoreUnpaidPackagePhase.objects.get(pk=self.sold_store_unpaid_package_1_phase_3.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
+        SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
 
         url = reverse('discount:consultant-interact-user-list')
@@ -773,7 +773,7 @@ class CartTests(CustomAPITestCase):
         cart = Cart.objects.create(user=self.user1)
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -806,7 +806,7 @@ class CartTests(CustomAPITestCase):
         cart = Cart.objects.create(user=self.user1)
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -843,7 +843,7 @@ class CartTests(CustomAPITestCase):
         cart = Cart.objects.create(user=self.user2)
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
         cart_subtotal = 0

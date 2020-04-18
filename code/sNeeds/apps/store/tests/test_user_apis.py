@@ -24,7 +24,7 @@ User = get_user_model()
 
 # from sNeeds.apps.carts.models import Cart
 
-class CartTests(CustomAPITestCase):
+class StoreTests(CustomAPITestCase):
     def setUp(self):
         super().setUp()
 

@@ -25,7 +25,7 @@ from sNeeds.apps.discounts.models import Discount, CartDiscount
 User = get_user_model()
 
 
-class CartTests(CustomAPITestCase):
+class OrderTests(CustomAPITestCase):
     def setUp(self):
         super().setUp()
 

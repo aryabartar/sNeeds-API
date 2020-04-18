@@ -23,7 +23,7 @@ from sNeeds.utils.custom.TestClasses import CustomAPITestCase
 User = get_user_model()
 
 
-class CartTests(CustomAPITestCase):
+class OrderTests(CustomAPITestCase):
     def setUp(self):
         super().setUp()
 

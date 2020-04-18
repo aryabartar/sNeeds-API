@@ -91,9 +91,6 @@ class ChatListAPIViewTest(APITestCase):
             active=True,
             time_slot_price=100
         )
-        self.consultant1_profile.universities.set([self.university1, self.university2])
-        self.consultant1_profile.field_of_studies.set([self.field_of_study1])
-        self.consultant1_profile.countries.set([self.country1])
 
         self.consultant2 = User.objects.create_user(email="c2@g.com", password="user1234")
         self.consultant2.is_admin = False
