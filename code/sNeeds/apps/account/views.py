@@ -14,7 +14,7 @@ class CountryDetail(generics.RetrieveAPIView):
 
 
 class CountryList(generics.ListAPIView):
-    queryset = models.Country.objects.all()
+    queryset = models.Country.objects.all().exclude(slug="iran")
     serializer_class = serializers.CountrySerializer
 
 

@@ -3,7 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics, mixins, filters
+from rest_framework import generics, mixins, filters, pagination
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
@@ -12,6 +12,7 @@ from rest_framework.views import APIView
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.consultants.serializers import ConsultantProfileSerializer
 from .filters import ConsultantProfileFilter
+from .paginators import StandardResultsSetPagination
 
 
 class ConsultantProfileDetail(APIView):
@@ -30,16 +31,11 @@ class ConsultantProfileDetail(APIView):
         return Response(serializer.data)
 
 
-class ConsultantProfileList(generics.GenericAPIView, mixins.ListModelMixin):
+class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
-    pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
     ordering_fields = ['rate', 'created', ]
+    pagination_class = StandardResultsSetPagination
     filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
-        #TODO: After deploy
-        # return ConsultantProfile.objects.get_active_consultants()
-        return ConsultantProfile.objects.all()
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
+        return ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
