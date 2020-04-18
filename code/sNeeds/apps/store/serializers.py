@@ -12,7 +12,6 @@ from ..consultants.serializers import ShortConsultantProfileSerializer, Consulta
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 
 
-
 class TimeSlotSaleSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         read_only=True,
@@ -71,14 +70,12 @@ class TimeSlotSaleSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(ex.message_dict)  # TODO: This error message is not translating
         return obj
 
-    # TODO: Disabled for test
-
-    # def validate_start_time(self, obj):
-    #     if obj < (timezone.now() + datetime.timedelta(hours=12)):
-    #         raise ValidationError(
-    #             _("You have to choose time later than 1 hour later.")
-    #         )
-    #     return obj
+    def validate_start_time(self, obj):
+        if obj < (timezone.now() + datetime.timedelta(hours=12)):
+            raise ValidationError(
+                _("You have to choose time later than 1 hour later.")
+            )
+        return obj
 
 
 class SoldTimeSlotSaleSerializer(serializers.ModelSerializer):

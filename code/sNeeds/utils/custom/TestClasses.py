@@ -10,8 +10,8 @@ from rest_framework.test import APITestCase, APIClient
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
-from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.store.models import TimeSlotSale
+from sNeeds.apps.consultants.models import ConsultantProfile, StudyInfo
+from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer
 from sNeeds.apps.storePackages.models import (
     StorePackagePhase, StorePackagePhaseThrough, StorePackage,
@@ -91,9 +91,21 @@ class CustomAPITestCase(APITestCase):
             active=True,
             time_slot_price=100
         )
-        self.consultant1_profile.universities.set([self.university1, self.university2])
-        self.consultant1_profile.field_of_studies.set([self.field_of_study1])
-        self.consultant1_profile.countries.set([self.country1])
+
+        StudyInfo.objects.create(
+            consultant=self.consultant1_profile,
+            university=self.university1,
+            field_of_study=self.field_of_study1,
+            grade="bachelor",
+            order=1
+        )
+        StudyInfo.objects.create(
+            consultant=self.consultant1_profile,
+            university=self.university2,
+            field_of_study=self.field_of_study1,
+            grade="master",
+            order=1
+        )
 
         self.consultant2 = User.objects.create_user(email="c2@g.com", password="user1234")
         self.consultant2.is_admin = False
@@ -140,6 +152,32 @@ class CustomAPITestCase(APITestCase):
             end_time=timezone.now() + timezone.timedelta(hours=8),
             price=self.consultant2_profile.time_slot_price
         )
+
+        # SoldTimeSlotSales -------
+        self.sold_time_slot_sale1 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user1,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale2 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=2),
+            price=self.consultant1_profile.time_slot_price
+        )
+
+        self.sold_time_slot_sale3 = SoldTimeSlotSale.objects.create(
+            sold_to=self.user2,
+            consultant=self.consultant2_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
+            price=self.consultant2_profile.time_slot_price
+        )
+
 
         # StorePackages ------
         self.store_package_1 = StorePackage.objects.create(

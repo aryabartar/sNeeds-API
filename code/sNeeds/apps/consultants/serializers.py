@@ -43,8 +43,6 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     study_info = serializers.SerializerMethodField()
 
-    # TODO: After deploy
-    # update fields for move to StudyInfo approach
     class Meta:
         model = ConsultantProfile
         fields = (

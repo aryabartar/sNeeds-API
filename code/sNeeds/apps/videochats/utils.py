@@ -122,7 +122,6 @@ def _get_user_all_rooms(user_id):
         if response.get('ok'):
             break
         if i == NUMBER_OF_TRIES - 1:
-            print(user_id)
             raise SkyroomConnectException("Error using Skyroom, error:", str(response))
 
     return response.get("result")
@@ -202,9 +201,6 @@ def create_2members_chat_room(
     user2_id = create_user_or_get_current_id(username2, ALL_SKYROOM_USERS_PASSWORD, nickname2, user2email)
 
     room_id = create_room_or_get(roomid, ROOM_MAX_USERS)
-
-    print(user1_id)
-    print(user2_id)
 
     make_user_room_presentor(user1_id, room_id)
     make_user_room_presentor(user2_id, room_id)
