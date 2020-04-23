@@ -32,6 +32,10 @@ class CustomAPITestCase(APITestCase):
         self.user2.is_admin = False
         self.user2.set_user_type_student()
 
+        self.user3 = User.objects.create_user(email="u3@g.com", password="user1234", first_name="User 3")
+        self.user3.is_admin = False
+        self.user3.set_user_type_student()
+
         # Countries -------
         self.country1 = Country.objects.create(
             name="country1",
@@ -138,6 +142,12 @@ class CustomAPITestCase(APITestCase):
             consultant=self.consultant1_profile,
             start_time=timezone.now() + timezone.timedelta(days=1),
             end_time=timezone.now() + timezone.timedelta(days=1, hours=1),
+            price=self.consultant1_profile.time_slot_price
+        )
+        self.time_slot_sale33 = TimeSlotSale.objects.create(
+            consultant=self.consultant1_profile,
+            start_time=timezone.now() + timezone.timedelta(days=2),
+            end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
             price=self.consultant1_profile.time_slot_price
         )
         self.time_slot_sale4 = TimeSlotSale.objects.create(

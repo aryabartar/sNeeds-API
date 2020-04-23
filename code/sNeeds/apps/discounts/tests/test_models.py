@@ -12,6 +12,7 @@ from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
+from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.storePackages.models import SoldStorePackage, StorePackage, StorePackagePhase, \
@@ -121,63 +122,6 @@ class DiscountTest(CustomAPITestCase):
             discount=self.discount1
         )
 
-        self.store_package_1 = StorePackage.objects.create(
-            title="Math Gold Package",
-            slug="math-gold-package"
-        )
-
-        self.store_package_phase_1 = StorePackagePhase.objects.create(
-            title="General Package Phase 1",
-            detailed_title="General Package Phase",
-            price=100
-        )
-        self.store_package_1_phase_2 = StorePackagePhase.objects.create(
-            title="Math Gold Package Phase 2",
-            detailed_title="Math Gold Phase",
-            price=200
-        )
-        self.store_package_1_phase_3 = StorePackagePhase.objects.create(
-            title="Math Gold Package Phase 3",
-            detailed_title="Math Gold Phase",
-            price=400
-        )
-        self.store_package_2_phase_2 = StorePackagePhase.objects.create(
-            title="College Package Phase 2",
-            detailed_title="College Phase",
-            price=200
-        )
-
-        self.sold_store_package_1 = SoldStorePackage.objects.create(
-            title="Math Gold Package",
-            sold_to=self.user1,
-            consultant=self.consultant1_profile
-        )
-
-        self.sold_store_paid_package_phase_1 = SoldStorePaidPackagePhase.objects.create(
-            title=self.store_package_phase_1.title,
-            detailed_title=self.store_package_phase_1.detailed_title,
-            phase_number=1,
-            consultant_done=True,
-            sold_store_package=self.sold_store_package_1,
-            price=self.store_package_phase_1.price
-        )
-        self.sold_store_paid_package_phase_2 = SoldStorePaidPackagePhase.objects.create(
-            title=self.store_package_1_phase_2.title,
-            detailed_title=self.store_package_1_phase_2.detailed_title,
-            phase_number=2,
-            consultant_done=False,
-            sold_store_package=self.sold_store_package_1,
-            price=self.store_package_1_phase_2.price
-        )
-
-        self.sold_store_unpaid_package_phase_3 = SoldStoreUnpaidPackagePhase.objects.create(
-            title=self.store_package_1_phase_3.title,
-            detailed_title=self.store_package_1_phase_3.detailed_title,
-            phase_number=3,
-            sold_store_package=self.sold_store_package_1,
-            price=self.store_package_1_phase_3.price
-        )
-
         # Setup ------
         self.client = APIClient()
 
@@ -186,7 +130,7 @@ class DiscountTest(CustomAPITestCase):
         cart = Cart.objects.create(user=self.user1)
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -204,14 +148,20 @@ class DiscountTest(CustomAPITestCase):
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
+        self.assertEqual(self.discount4.use_limit, 1)
+
+        order = Order.objects.sell_cart_create_order(cart)
+        self.discount4.refresh_from_db()
         self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(order.total, cart.total)
+        self.assertEqual(order.subtotal, cart.subtotal)
 
     # Test for applying 100 percent
     def test_delete_100_percent_cart_total_subtotal_correct_without_number_discount(self):
         cart = Cart.objects.create(user=self.user1)
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -228,7 +178,7 @@ class DiscountTest(CustomAPITestCase):
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
-        self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(self.discount4.use_limit, 1)
 
         cart_discount = CartDiscount.objects.get(pk=cart_discount.id)
         cart_discount.delete()
@@ -250,7 +200,7 @@ class DiscountTest(CustomAPITestCase):
 
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -271,7 +221,13 @@ class DiscountTest(CustomAPITestCase):
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
+        self.assertEqual(self.discount4.use_limit, 1)
+
+        order = Order.objects.sell_cart_create_order(cart)
+        self.discount4.refresh_from_db()
         self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(order.total, cart.total)
+        self.assertEqual(order.subtotal, cart.subtotal)
 
     def test_delete_100_percent_cart_total_subtotal_correct_with_number_discount(self):
         cart = Cart.objects.create(user=self.user1)
@@ -282,7 +238,7 @@ class DiscountTest(CustomAPITestCase):
 
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -303,7 +259,7 @@ class DiscountTest(CustomAPITestCase):
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
-        self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(self.discount4.use_limit, 1)
 
         cart_discount = CartDiscount.objects.get(pk=cart_discount.id)
         cart_discount.delete()
@@ -326,7 +282,7 @@ class DiscountTest(CustomAPITestCase):
 
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -369,7 +325,7 @@ class DiscountTest(CustomAPITestCase):
 
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4, self.time_slot_sale5,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -379,7 +335,7 @@ class DiscountTest(CustomAPITestCase):
         cart_total = cart_subtotal
 
         discount = Discount.objects.create(use_limit=50, amount=20)
-        discount.products.set([self.sold_store_unpaid_package_phase_3])
+        discount.products.set([self.sold_store_unpaid_package_1_phase_3])
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
@@ -393,7 +349,7 @@ class DiscountTest(CustomAPITestCase):
 
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
-        self.assertEqual(discount.use_limit, 49)
+        self.assertEqual(discount.use_limit, 50)
 
         cart_discount.delete()
 
@@ -410,7 +366,7 @@ class DiscountTest(CustomAPITestCase):
 
         products = [self.time_slot_sale1, self.time_slot_sale2,
                     self.time_slot_sale4,
-                    self.sold_store_unpaid_package_phase_3]
+                    self.sold_store_unpaid_package_1_phase_3]
         cart.products.set(products)
         cart.save()
 
@@ -440,3 +396,89 @@ class DiscountTest(CustomAPITestCase):
         cart.refresh_from_db()
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
+
+    def test_discount_without_use_limit_no_change_in_use_limit(self):
+        cart = Cart.objects.create(user=self.user1)
+
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4,
+                    self.sold_store_unpaid_package_1_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        discount = Discount.objects.create(amount=20)
+        discount.consultants.set([self.consultant1_profile])
+        discount.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+        cart_total = cart_subtotal
+
+        cart_discount = CartDiscount.objects.create(cart=cart, discount=discount)
+        cart_total = cart_subtotal - discount.amount - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        discount.consultants.set([self.consultant1_profile, self.consultant2_profile])
+        cart_total = cart_subtotal - discount.amount - discount.amount - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        discount.consultants.set([self.consultant2_profile])
+        cart_total = cart_subtotal - discount.amount
+        cart.refresh_from_db()
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+
+        order = Order.objects.sell_cart_create_order(cart)
+        discount.refresh_from_db()
+        self.assertIsNone(discount.use_limit)
+        self.assertEqual(order.total, cart.total)
+        self.assertEqual(order.subtotal, cart.subtotal)
+
+    def test_discount_use_limit_reached_zero_removes_from_carts(self):
+        cart = Cart.objects.create(user=self.user1)
+        products = [self.time_slot_sale1, self.time_slot_sale2,
+                    self.time_slot_sale4, self.time_slot_sale5,
+                    self.sold_store_unpaid_package_1_phase_3]
+        cart.products.set(products)
+        cart.save()
+
+        cart2 = Cart.objects.create(user=self.user1)
+        products2 = [self.time_slot_sale3, self.time_slot_sale33,
+                     ]
+        cart2.products.set(products2)
+        cart2.save()
+
+        cart_subtotal = 0
+        for p in products:
+            cart_subtotal += p.price
+
+        cart_total = cart_subtotal - self.consultant1_profile.time_slot_price
+
+        cart_discount = CartDiscount.objects.create(cart=cart, discount=self.discount4)
+        cart_discount2 = CartDiscount.objects.create(cart=cart2, discount=self.discount4)
+
+        cart.refresh_from_db()
+        cart2.refresh_from_db()
+
+        self.discount4.refresh_from_db()
+
+        self.assertEqual(cart.subtotal, cart_subtotal)
+        self.assertEqual(cart.total, cart_total)
+        self.assertEqual(self.discount4.use_limit, 1)
+
+        self.assertEqual(cart2.total, self.consultant1_profile.time_slot_price)
+
+        order = Order.objects.sell_cart_create_order(cart)
+        self.discount4.refresh_from_db()
+        self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(order.total, cart.total)
+        self.assertEqual(order.subtotal, cart.subtotal)
+
+        self.assertFalse(CartDiscount.objects.filter(pk=cart_discount2.id).exists())
+        cart2.refresh_from_db()
+        self.assertEqual(cart2.total, self.consultant1_profile.time_slot_price * 2)

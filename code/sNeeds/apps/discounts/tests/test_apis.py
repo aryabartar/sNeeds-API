@@ -12,6 +12,7 @@ from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
+from sNeeds.apps.orders.models import Order
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale
 from sNeeds.apps.basicProducts.models import BasicProduct
 from sNeeds.apps.storePackages.models import SoldStorePackage, StorePackage, StorePackagePhase, \
@@ -421,6 +422,7 @@ class DiscountTests(CustomAPITestCase):
         SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
         SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+        SoldTimeSlotSale.objects.get(pk=self.sold_time_slot_sale3).delete()
 
         SoldStorePackage.objects.create(consultant=self.consultant2_profile, sold_to=self.user1,
                                         paid_price=5000, total_price=15000, title="Hello")
@@ -667,6 +669,8 @@ class DiscountTests(CustomAPITestCase):
         SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_2.id).delete()
         SoldStorePaidPackagePhase.objects.get(pk=self.sold_store_paid_package_1_phase_1.id).delete()
         SoldStorePackage.objects.get(pk=self.sold_store_package_1.id).delete()
+        SoldTimeSlotSale.objects.get(pk=self.sold_time_slot_sale1).delete()
+        SoldTimeSlotSale.objects.get(pk=self.sold_time_slot_sale2).delete()
 
         url = reverse('discount:consultant-interact-user-list')
 
@@ -796,7 +800,7 @@ class DiscountTests(CustomAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
-        self.assertEqual(self.discount4.use_limit, 0)
+        self.assertEqual(self.discount4.use_limit, 1)
 
     def test_delete_100_percent_cart_total_subtotal_correct_without_number_discount(self):
 
@@ -865,3 +869,41 @@ class DiscountTests(CustomAPITestCase):
         self.assertEqual(cart.subtotal, cart_subtotal)
         self.assertEqual(cart.total, cart_total)
         self.assertEqual(self.discount4.use_limit, 1)
+
+    def test_apply_a_code_use_limit_reached_zero_fail(self):
+        client = self.client
+        client.login(email='u2@g.com', password='user1234')
+
+        url = reverse("discount:cart-discount-list")
+        post_data = {
+            "cart": self.cart3.id,
+            "code": self.discount5.code
+        }
+
+        response = client.post(url, post_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        Order.objects.sell_cart_create_order(self.cart1)
+
+        cart33 = Cart.objects.create(user=self.user1)
+        cart33.products.set([self.time_slot_sale33, self.time_slot_sale3])
+
+        post_data = {
+            "cart": cart33.id,
+            "code": self.discount5.code
+        }
+
+        response = client.post(url, post_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_apply_discount_user_not_in_users_fail(self):
+        client = self.client
+        client.login(email='u1@g.com', password='user1234')
+
+        url = reverse("discount:cart-discount-list")
+        post_data = {
+            "cart": self.cart1.id,
+            "code": self.discount5.code
+        }
+
+        response = client.post(url, post_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

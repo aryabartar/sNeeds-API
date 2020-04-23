@@ -20,3 +20,5 @@ def post_save_send_order_created(sender, instance, created, *args, **kwargs):
 
 pre_save.connect(pre_save_create_order_id, sender=Order)
 post_save.connect(post_save_send_order_created, sender=Order)
+
+

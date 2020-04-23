@@ -20,6 +20,8 @@ User = get_user_model()
 
 
 class ConsultantDepositInfoAPITests(CustomAPITestCase):
+    super().setUp()
+
     def setUp(self):
         self.client = APIClient()
 

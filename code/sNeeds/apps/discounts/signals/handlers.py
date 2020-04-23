@@ -22,22 +22,23 @@ def post_delete_time_slot_sale_number_discount(sender, instance, *args, **kwargs
 
 def post_save_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
-    discount = instance.discount
-
     cart.update_price()
-    discount.update_decrease_use_limit()
 
 
 def post_delete_cart_discount(sender, instance, *args, **kwargs):
     cart = instance.cart
-    discount = instance.discount
-
     cart.update_price()
-    discount.update_increase_use_limit()
 
 
 def post_save_discount(sender, instance, *args, **kwargs):
     qs = CartDiscount.objects.filter(discount=instance)
+
+    # TODO Is possible to update a discount that the discount use_limit reached to zero????
+    if instance.use_limit is not None:
+        if instance.use_limit == 0:
+            qs.delete()
+            return
+
     for obj in qs:
         cart = obj.cart
         cart.update_price()
