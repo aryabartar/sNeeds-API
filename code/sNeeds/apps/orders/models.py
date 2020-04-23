@@ -63,8 +63,8 @@ class OrderManager(models.Manager):
         order.save()
 
         cart.delete()
-
-        used_discount.update_decrease_use_limit()
+        if used_discount:
+            used_discount.update_decrease_use_limit()
         return order
 
 
