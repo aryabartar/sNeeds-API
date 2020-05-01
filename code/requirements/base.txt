@@ -43,12 +43,12 @@ Jinja2==2.10.1
 Khayyam==3.0.17
 kiwisolver==1.1.0
 kombu==4.6.7
-lxml==4.3.4
+lxml==4.5.0
 MarkupSafe==1.1.1
 matplotlib==3.0.3
 numpy==1.17.4
 packaging==20.1
-Pillow==6.1.0
+Pillow==7.1.1
 psycopg2==2.8.3
 psycopg2-binary==2.8.4
 pycodestyle==2.5.0
