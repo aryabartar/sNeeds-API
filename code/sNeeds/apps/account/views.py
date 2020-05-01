@@ -14,11 +14,12 @@ class CountryDetail(generics.RetrieveAPIView):
 
 
 class CountryList(generics.ListAPIView):
-    from sNeeds.apps.consultants.models import StudyInfo
-    country_list = list(StudyInfo.objects.values_list('university__country_id', flat=True))
-
-    queryset = models.Country.objects.filter(id__in=country_list).exclude(slug="iran")
     serializer_class = serializers.CountrySerializer
+
+    def get_queryset(self):
+        from sNeeds.apps.consultants.models import StudyInfo
+        country_list = list(StudyInfo.objects.values_list('university__country_id', flat=True))
+        return models.Country.objects.filter(id__in=country_list).exclude(slug="iran")
 
 
 class UniversityDetail(generics.RetrieveAPIView):
