@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core import exceptions
 
 from rest_framework import serializers
-from rest_framework_jwt import utils as jwt_utils
+# from rest_framework_jwt import utils as jwt_utils
 
 from ..consultants.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.customAuth.models import UserTypeChoices
