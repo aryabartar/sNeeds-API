@@ -5,12 +5,13 @@ from django.contrib.auth import get_user_model
 from django.core import exceptions
 
 from rest_framework import serializers
-from rest_framework_jwt import utils as jwt_utils
+# from rest_framework_jwt import utils as jwt_utils
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from ..consultants.serializers import ShortConsultantProfileSerializer
 from sNeeds.apps.customAuth.models import UserTypeChoices
 from ..consultants.models import ConsultantProfile
-from .utils import jwt_response_payload_handler
 from .fields import EnumField
 
 User = get_user_model()
@@ -56,12 +57,12 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             'phone_number': {'required': True}
         }
 
-    def get_token_response(self, obj):  # instance of the model
-        user = obj
-        payload = jwt_utils.jwt_payload_handler(user)
-        token = jwt_utils.jwt_encode_handler(payload)
-        response = jwt_response_payload_handler(token, user)
-        return response
+    def get_token_response(self, obj):
+        data = {}
+        refresh = RefreshToken.for_user(obj)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+        return data
 
     def validate_password(self, value):
         validate_user_password(value)
@@ -168,6 +169,6 @@ class MyAccountSerializer(serializers.ModelSerializer):
     def get_consultant(self, obj):
         try:
             consultant = ConsultantProfile.objects.get(user=obj)
-            return ShortConsultantProfileSerializer(consultant, context={"request":self.context.get('request')}).data
+            return ShortConsultantProfileSerializer(consultant, context={"request": self.context.get('request')}).data
         except ConsultantProfile.DoesNotExist:
             return None

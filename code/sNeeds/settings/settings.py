@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
@@ -152,7 +152,7 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, '..', 'translations'),
 ]
 
-from .config.JWTAuthConfig import JWT_AUTH
+from .config.JWTAuthConfig import SIMPLE_JWT
 
 # Loading API keys
 from .celery.celery_config import *

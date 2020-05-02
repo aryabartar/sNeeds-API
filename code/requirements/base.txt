@@ -28,7 +28,7 @@ django-rest-polymorphic==0.1.8
 django-storages==1.9.1
 django-tinymce==2.8.0
 djangorestframework==3.9.4
-djangorestframework-jwt==1.11.0
+djangorestframework-simplejwt==4.4.0
 drf-yasg==1.17.0
 dropbox==9.4.0
 flower==0.9.3
