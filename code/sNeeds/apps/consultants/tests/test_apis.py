@@ -12,7 +12,7 @@ from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.comments.models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate
-from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.consultants.models import ConsultantProfile, StudyInfo
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.discounts.serializers import ShortDiscountSerializer
 from sNeeds.apps.orders.models import Order
@@ -136,10 +136,9 @@ class ConsultantTests(CustomAPITestCase):
         self.assertEqual(data.get("bio"), c1.bio)
         self.assertEqual(data.get("first_name"), c1.user.first_name)
         self.assertEqual(data.get("last_name"), c1.user.last_name)
-        # TODO: Update universities detail
-        self.assertEqual(len(data.get("universities")), len(c1.universities.all()))
+        self.assertEqual(len(data.get("study_info")), len(StudyInfo.objects.filter(consultant=c1)))
         self.assertEqual(data.get("slug"), c1.slug)
         self.assertEqual(data.get("aparat_link"), c1.aparat_link)
         self.assertEqual(data.get("time_slot_price"), c1.time_slot_price)
-        self.assertEqual(data.get("rate"), str(c1.rate))
+        self.assertEqual(data.get("rate"), c1.rate)
         self.assertEqual(data.get("active"), c1.active)

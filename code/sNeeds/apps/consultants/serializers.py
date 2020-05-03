@@ -44,11 +44,11 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     study_info = serializers.SerializerMethodField()
 
     class Meta:
+        ordering = ['-rate']
         model = ConsultantProfile
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
-            'study_info',
-            'slug', 'aparat_link', 'resume', 'time_slot_price', 'rate', 'active')
+            'study_info', 'slug', 'aparat_link', 'resume', 'time_slot_price', 'rate', 'active')
 
     def get_first_name(self, obj):
         return obj.user.first_name
