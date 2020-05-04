@@ -62,9 +62,10 @@ class ConsultantProfile(models.Model):
 
         sold_time_slot_rate_qs = SoldTimeSlotRate.objects.filter(sold_time_slot__consultant__id=self.id)
         average_rate = sold_time_slot_rate_qs.get_average_rate_or_none()
-        if average_rate is None:
-            self.rate = random.randint(38, 50) / 10
         self.rate = average_rate
+
+        if self.rate is None:
+            self.rate = random.randint(38, 50) / 10
         self.save()
 
     def __str__(self):
