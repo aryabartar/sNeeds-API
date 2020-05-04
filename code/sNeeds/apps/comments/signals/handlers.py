@@ -8,9 +8,7 @@ User = get_user_model()
 
 
 def post_save_sold_time_slot_sale_rate(sender, instance, created, *args, **kwargs):
-    # instance.sold_time_slot.consultant.update_rate()
-    for obj in ConsultantProfile.objects.all():
-        obj.update_rate()
+    instance.sold_time_slot.consultant.update_rate()
 
 def post_delete_sold_time_slot_sale_rate(sender, instance, *args, **kwargs):
     instance.sold_time_slot.consultant.update_rate()
