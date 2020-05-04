@@ -51,7 +51,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
             'study_info', 'slug', 'aparat_link', 'resume', 'time_slot_price', 'rate', 'active')
 
     def get_rate(self, obj):
-        return round(obj.rete, 2)
+        return round(obj.rate, 1)
 
     def get_first_name(self, obj):
         return obj.user.first_name
