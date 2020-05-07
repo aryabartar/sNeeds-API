@@ -139,3 +139,6 @@ class StudentDetailedInfo(models.Model):
     # Extra info
     comment = models.TextField(max_length=1024, null=True, blank=True)
     resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True)
+
+    def is_complete(self):
+        return True
