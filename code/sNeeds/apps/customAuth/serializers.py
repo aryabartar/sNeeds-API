@@ -175,10 +175,7 @@ class MyAccountSerializer(serializers.ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-
     def validate(self, attrs):
-        print(attrs)
-        attrs[self.username_field] = attrs[self.username_field].lower
+        attrs[self.username_field] = attrs[self.username_field].lower()
         data = super().validate(attrs)
-        print(data)
         return data
