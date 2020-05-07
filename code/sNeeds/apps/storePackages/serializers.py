@@ -115,8 +115,9 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         ).exists():
             raise ValidationError("This consultant has not requested this sold store package.")
 
-    # def validate(self, attrs):
-
+    def validate(self, attrs):
+        if not StudentDetailedInfo.objects.filter(user=attrs.get('sold_to')).exists():
+            raise ValidationError("User StudentDetailedInfo is not completed.")
 
 
 class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
