@@ -140,5 +140,5 @@ class ConsultantTests(CustomAPITestCase):
         self.assertEqual(data.get("slug"), c1.slug)
         self.assertEqual(data.get("aparat_link"), c1.aparat_link)
         self.assertEqual(data.get("time_slot_price"), c1.time_slot_price)
-        self.assertEqual(data.get("rate"), c1.rate)
+        self.assertEqual(data.get("rate"), 3.2)
         self.assertEqual(data.get("active"), c1.active)

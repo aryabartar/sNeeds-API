@@ -26,6 +26,8 @@ User = get_user_model()
 
 class StoreTests(CustomAPITestCase):
     def setUp(self):
+        super().setUp()
+
         # Consultant discounts
         self.discount1 = Discount.objects.create(
             amount=10,
@@ -84,7 +86,7 @@ class StoreTests(CustomAPITestCase):
         }
         response = client.post(url, data=data, format="json")
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_time_slot_sale_detail_delete_success(self):
         client = self.client
