@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+from django.conf import settings
 
 from sNeeds.apps.account.models import Country, University, FieldOfStudy
 from sNeeds.apps.carts.models import Cart
@@ -23,6 +24,9 @@ User = get_user_model()
 
 class CustomAPITestCase(APITestCase):
     def setUp(self):
+        # Configs
+        settings.SKYROOM_API_KEY = None
+
         # Users -------
         self.user1 = User.objects.create_user(email="u1@g.com", password="user1234", first_name="User 1")
         self.user1.is_admin = False
@@ -187,7 +191,6 @@ class CustomAPITestCase(APITestCase):
             end_time=timezone.now() + timezone.timedelta(days=2, hours=1),
             price=self.consultant2_profile.time_slot_price
         )
-
 
         # StorePackages ------
         self.store_package_1 = StorePackage.objects.create(

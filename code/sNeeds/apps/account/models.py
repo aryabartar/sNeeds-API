@@ -141,4 +141,5 @@ class StudentDetailedInfo(models.Model):
     resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True)
 
     def is_complete(self):
+        # TODO: Hossein, implement this
         return True
