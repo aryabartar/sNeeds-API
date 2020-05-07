@@ -10,7 +10,8 @@ from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, C
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
-    SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, IsConsultantPutPostPermission
+    SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, \
+    IsConsultantPutPostPermission
 from ...utils.custom.custom_permissions import IsConsultantPermission
 
 
@@ -123,7 +124,8 @@ class SoldStorePackageDetailAPIView(generics.RetrieveUpdateAPIView):
     serializer_class = serializers.SoldStorePackageSerializer
     queryset = SoldStorePackage.objects.all()
     permission_classes = [
-        permissions.IsAuthenticated, SoldStorePackageOwnerUpdatePermission, SoldStorePackageGetPermission
+        permissions.IsAuthenticated, SoldStorePackageOwnerUpdatePermission,
+        SoldStorePackageGetPermission
     ]
 
 

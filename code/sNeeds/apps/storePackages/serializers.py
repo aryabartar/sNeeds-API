@@ -7,6 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
+from ..account.models import StudentDetailedInfo
 from ..consultants.models import ConsultantProfile
 from ..consultants.serializers import ShortConsultantProfileSerializer
 from ..customAuth.serializers import SafeUserDataSerializer
@@ -107,14 +108,15 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         if self.instance is not None:
             if self.instance.consultant is not None:
                 raise ValidationError("Can't change consultant.")
-        return value
 
-    # def save(self, *args, **kwargs):
-    #     print("hey")
-    #     print()
-    #     print(args)
-    #     print(kwargs)
-    #     super(SoldStorePackageSerializer, self).save(*args, **kwargs)
+        if not ConsultantSoldStorePackageAcceptRequest.objects.filter(
+                sold_store_package=self.instance,
+                consultant=value
+        ).exists():
+            raise ValidationError("This consultant has not requested this sold store package.")
+
+    # def validate(self, attrs):
+
 
 
 class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):

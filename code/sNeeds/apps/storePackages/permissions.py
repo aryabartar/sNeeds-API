@@ -1,6 +1,8 @@
 from rest_framework import permissions
 
+from sNeeds.apps.account.models import StudentDetailedInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.storePackages.models import ConsultantSoldStorePackageAcceptRequest
 
 
 class ConsultantSoldStorePackageAcceptRequestViewPermission(permissions.BasePermission):
