@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from django.conf import settings
 
-from sNeeds.apps.account.models import Country, University, FieldOfStudy
+from sNeeds.apps.account.models import Country, University, FieldOfStudy, StudentDetailedInfo
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.carts.serializers import CartSerializer
 from sNeeds.apps.consultants.models import ConsultantProfile, StudyInfo
@@ -18,6 +18,30 @@ from sNeeds.apps.storePackages.models import (
     StorePackagePhase, StorePackagePhaseThrough, StorePackage,
     SoldStorePackage, SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase,
     SoldStorePackagePhaseDetail)
+
+USER_DETAILED_INFO_BASE_PAYLOAD = {
+    "first_name": "u1",
+    "last_name": "u1u1",
+    "age": 19,
+    "marital_status": "married",
+    "grade": "college",
+    "university": "payamnoor",
+    "total_average": "16.20",
+    "degree_conferral_year": 2022,
+    "major": "memari jolbak",
+    "thesis_title": "kasht jolbak dar darya",
+    "language_certificate": "ielts_academic",
+    "language_certificate_overall": 50,
+    "language_speaking": 50,
+    "language_listening": 10,
+    "language_writing": 50,
+    "language_reading": 50,
+    "mainland": "asia",
+    "country": "america",
+    "apply_grade": "college",
+    "apply_major": "tashtak sazi",
+    "comment": "HEllllo",
+}
 
 User = get_user_model()
 
@@ -39,6 +63,14 @@ class CustomAPITestCase(APITestCase):
         self.user3 = User.objects.create_user(email="u3@g.com", password="user1234", first_name="User 3")
         self.user3.is_admin = False
         self.user3.set_user_type_student()
+
+        user_1_detailed_info_payload = USER_DETAILED_INFO_BASE_PAYLOAD
+        user_1_detailed_info_payload['user'] = self.user1
+        self.student_detailed_info1 = StudentDetailedInfo.objects.create(**user_1_detailed_info_payload)
+
+        user_2_detailed_info_payload = USER_DETAILED_INFO_BASE_PAYLOAD
+        user_2_detailed_info_payload['user'] = self.user2
+        self.student_detailed_info1 = StudentDetailedInfo.objects.create(**user_2_detailed_info_payload)
 
         # Countries -------
         self.country1 = Country.objects.create(
