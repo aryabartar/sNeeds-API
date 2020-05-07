@@ -19,7 +19,7 @@ class MarketplaceListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
     def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None)
+        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
         return qs
 
 
@@ -29,7 +29,7 @@ class MarketplaceDetailAPIView(generics.RetrieveAPIView):
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
     def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None)
+        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
         return qs
 
 

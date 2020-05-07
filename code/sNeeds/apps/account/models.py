@@ -3,8 +3,11 @@ import datetime
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.contrib.auth import get_user_model
 
 from . import validators
+
+User = get_user_model()
 
 MARITAL_STATUS_CHOICES = [
     ('married', 'Married'),
@@ -95,9 +98,6 @@ class FieldOfStudy(models.Model):
 
 
 class StudentDetailedInfo(models.Model):
-    from django.contrib.auth import get_user_model
-    from sNeeds.utils.custom.custom_functions import current_year
-    User = get_user_model()
     user = models.OneToOneField(User, null=True, on_delete=models.CASCADE)
     # Personal information
     first_name = models.CharField(max_length=64)
