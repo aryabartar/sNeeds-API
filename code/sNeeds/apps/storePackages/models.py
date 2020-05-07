@@ -179,7 +179,7 @@ class SoldStorePackageQuerySet(models.QuerySet):
         returned_qs = self.none()
         for obj in self._chain():
             if StudentDetailedInfo.objects.filter(user=obj.sold_to).exists():
-                returned_qs |= obj
+                returned_qs |= self.filter(id=obj.id)
         return returned_qs
 
 

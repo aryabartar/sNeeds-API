@@ -137,6 +137,7 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
     def get_queryset(self):
         user = self.request.user
 
+        print("ikjikj\n\n\n")
         try:
             consultant = ConsultantProfile.objects.get(user=user)
             qs = SoldStorePackage.objects.filter(
