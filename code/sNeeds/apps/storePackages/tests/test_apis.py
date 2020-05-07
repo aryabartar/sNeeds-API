@@ -402,6 +402,18 @@ class TestAPIStorePackage(CustomAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_sold_store_package_detail_put_fail_because_not_requested(self):
+        client = self.client
+        obj = self.sold_store_package_2
+        url = reverse("store-package:sold-store-package-detail", args=[obj.id])
+        data = {
+            "consultant": self.consultant1_profile.id
+        }
+        client.login(email='u2@g.com', password='user1234')
+        response = client.put(url, data=data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_sold_store_package_detail_put_forbidden(self):
         client = self.client
         obj = self.sold_store_package_2
