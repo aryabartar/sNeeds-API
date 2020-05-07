@@ -70,7 +70,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, value):
         validate_email(value)
-        return value
+        return value.lower()
 
     def validate_phone_number(self, value):
         validate_phone_number(value)
@@ -172,3 +172,13 @@ class MyAccountSerializer(serializers.ModelSerializer):
             return ShortConsultantProfileSerializer(consultant, context={"request": self.context.get('request')}).data
         except ConsultantProfile.DoesNotExist:
             return None
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    def validate(self, attrs):
+        print(attrs)
+        attrs[self.username_field] = attrs[self.username_field].lower
+        data = super().validate(attrs)
+        print(data)
+        return data

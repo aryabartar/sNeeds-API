@@ -36,6 +36,7 @@ static/
 venv/
 shell/
 .env
+test.py
 
 celerybeat*
 celerybeat-schedule

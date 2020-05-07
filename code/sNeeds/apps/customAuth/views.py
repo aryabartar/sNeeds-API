@@ -5,6 +5,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework import permissions, generics, mixins
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from . import serializers
 from .serializers import UserRegisterSerializer
@@ -51,3 +52,8 @@ class MyAccountInfoView(APIView):
         my_account = self.get_object()
         serializer = serializers.MyAccountSerializer(my_account, context={"request": request})
         return Response(serializer.data)
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+
+    serializer_class = serializers.CustomTokenObtainPairSerializer

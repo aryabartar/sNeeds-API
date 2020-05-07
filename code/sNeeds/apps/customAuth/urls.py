@@ -10,7 +10,7 @@ app_name = "auth"
 urlpatterns = [
     # path('jwt/token/', views.AuthView.as_view()),
     # path('jwt/token/refresh/', refresh_jwt_token),
-    path('jwt/token/', jwt_views.TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('jwt/token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('jwt/token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
 
     path('password-reset/', include('django_rest_passwordreset.urls', namespace='password_reset')),
