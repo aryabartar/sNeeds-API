@@ -26,14 +26,6 @@ def pre_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 
 def pre_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs):
-    # Update active
-    sold_store_paid_package_phases = SoldStorePaidPackagePhase.objects.filter(
-        sold_store_package__id=instance.sold_store_package.id
-    ).order_by('phase_number')
-
-    if instance.phase_number == sold_store_paid_package_phases.first().phase_number + 1:
-        instance.active = True
-
     # Update status
     instance.status = instance.get_status()
 
@@ -77,6 +69,17 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     # Update SoldStorePackage price
     instance.sold_store_package.update_price()
     instance.sold_store_package.save()
+
+    # Update active
+    try:
+        sold_store_unpaid_package_phases = SoldStoreUnpaidPackagePhase.objects.get(
+            phase_number=instance.phase_number + 1
+        )
+        sold_store_unpaid_package_phases.active = True
+        sold_store_unpaid_package_phases.save()
+
+    except SoldStoreUnpaidPackagePhase.DoesNotExist:
+        pass
 
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
