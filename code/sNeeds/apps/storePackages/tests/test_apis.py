@@ -54,6 +54,19 @@ class TestAPIStorePackage(CustomAPITestCase):
         response = client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_marketplace_list_no_detailed_study_info(self):
+        client = self.client
+        client.login(email='c1@g.com', password='user1234')
+        url = reverse("store-package:marketplace-list")
+
+        self.user2_student_detailed_info.delete()
+
+        response = client.get(url, format='json')
+        data = response.data
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(data), 0)
+
     def test_marketplace_detail_get_success(self):
         client = self.client
         client.login(email='c1@g.com', password='user1234')
@@ -399,7 +412,6 @@ class TestAPIStorePackage(CustomAPITestCase):
         }
         client.login(email='u1@g.com', password='user1234')
         response = client.put(url, data=data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_sold_store_package_detail_put_fail_because_not_requested(self):
@@ -407,11 +419,10 @@ class TestAPIStorePackage(CustomAPITestCase):
         obj = self.sold_store_package_2
         url = reverse("store-package:sold-store-package-detail", args=[obj.id])
         data = {
-            "consultant": self.consultant1_profile.id
+            "consultant": self.consultant2_profile.id
         }
         client.login(email='u2@g.com', password='user1234')
         response = client.put(url, data=data, format='json')
-
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_sold_store_package_detail_put_forbidden(self):

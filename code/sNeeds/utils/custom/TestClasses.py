@@ -66,11 +66,11 @@ class CustomAPITestCase(APITestCase):
 
         user_1_detailed_info_payload = USER_DETAILED_INFO_BASE_PAYLOAD
         user_1_detailed_info_payload['user'] = self.user1
-        self.student_detailed_info1 = StudentDetailedInfo.objects.create(**user_1_detailed_info_payload)
+        self.user1_student_detailed_info = StudentDetailedInfo.objects.create(**user_1_detailed_info_payload)
 
         user_2_detailed_info_payload = USER_DETAILED_INFO_BASE_PAYLOAD
         user_2_detailed_info_payload['user'] = self.user2
-        self.student_detailed_info1 = StudentDetailedInfo.objects.create(**user_2_detailed_info_payload)
+        self.user2_student_detailed_info = StudentDetailedInfo.objects.create(**user_2_detailed_info_payload)
 
         # Countries -------
         self.country1 = Country.objects.create(
