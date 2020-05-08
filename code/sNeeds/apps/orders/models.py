@@ -25,6 +25,7 @@ class OrderManager(models.Manager):
         cart_products = cart.products.all()
         time_slot_sales_qs = cart_products.get_time_slot_sales()
         store_packages_qs = cart_products.get_store_packages()
+        sold_store_unpaid_package_phases_qs = cart_products.get_sold_store_unpaid_package_phases()
         basic_products_qs = cart_products.get_basic_products()
 
         try:
@@ -47,6 +48,7 @@ class OrderManager(models.Manager):
             sold_store_package__in=list(sold_store_packages_qs)
         )
         sold_basic_products_qs = basic_products_qs.add_basic_product_sold(sold_to=cart.user)
+        sold_store_paid_package_phases_qs = sold_store_unpaid_package_phases_qs.sell_and_get_paid_phases()
 
         order = Order.objects.create(
             user=cart.user,
@@ -60,6 +62,8 @@ class OrderManager(models.Manager):
         order.sold_products.add(*list(sold_time_slot_sales_qs))
         order.sold_products.add(*list(sold_store_paid_package_phase_qs))
         order.sold_products.add(*list(sold_basic_products_qs))
+        order.sold_products.add(*list(sold_store_paid_package_phases_qs))
+
         order.save()
 
         cart.delete()

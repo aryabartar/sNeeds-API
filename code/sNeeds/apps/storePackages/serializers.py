@@ -62,6 +62,12 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
         lookup_field='id',
         view_name='store-package:consultant-sold-store-package-accept-request-detail'
     )
+    sold_store_package_url = serializers.HyperlinkedRelatedField(
+        source='sold_store_package',
+        lookup_field='id',
+        read_only=True,
+        view_name='store-package:sold-store-package-detail'
+    )
     consultant_url = serializers.HyperlinkedRelatedField(
         source='consultant',
         lookup_field='slug',
@@ -71,7 +77,10 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
-        fields = ['id', 'url', 'sold_store_package', 'consultant', 'consultant_url', 'created', 'updated']
+        fields = [
+            'id', 'url', 'sold_store_package', 'sold_store_package_url', 'consultant',
+            'consultant_url', 'created', 'updated'
+        ]
 
 
 class SoldStorePackageSerializer(serializers.ModelSerializer):
@@ -155,7 +164,9 @@ class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ['title', 'detailed_title', 'price', 'sold_store_package', 'phase_number', 'status']
+        fields = [
+            'id', 'title', 'detailed_title', 'price', 'sold_store_package', 'phase_number', 'status',
+        ]
         extra_kwargs = {
             'url': {'read_only': True},
             'title': {'read_only': True},
@@ -174,7 +185,7 @@ class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
     )
 
     class Meta(SoldStorePackagePhaseSerializer.Meta):
-        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url']
+        fields = SoldStorePackagePhaseSerializer.Meta.fields + ['url', 'active']
         model = SoldStoreUnpaidPackagePhase
 
 
@@ -211,7 +222,6 @@ class ContentTypeRelatedField(serializers.RelatedField):
             raise serializers.ValidationError({"content_type": "ContentTypeRelatedField wrong instance."}, code=400)
 
 
-# TODO: FILTER! In list!
 class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
     url = serializers.HyperlinkedIdentityField(
         lookup_field='id',

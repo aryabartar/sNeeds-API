@@ -59,6 +59,7 @@ class StorePackageDetailAPIView(generics.RetrieveAPIView):
 
 class ConsultantSoldStorePackageAcceptRequestDetailAPIView(generics.RetrieveAPIView):
     lookup_field = 'id'
+    filterset_fields = ['sold_store_package']
     serializer_class = serializers.ConsultantSoldStorePackageAcceptRequestSerializer
     queryset = ConsultantSoldStorePackageAcceptRequest.objects.all()
     permission_classes = [permissions.IsAuthenticated, ConsultantSoldStorePackageAcceptRequestViewPermission]

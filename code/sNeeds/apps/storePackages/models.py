@@ -235,6 +235,27 @@ class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
             obj.active = False
             obj.save()
 
+    @transaction.atomic
+    def sell_and_get_paid_phases(self):
+        sold_store_paid_package_phases_list = []
+
+        for obj in self._chain():
+            new_obj = SoldStorePaidPackagePhase.objects.create(
+                title=obj.title,
+                detailed_title=obj.detailed_title,
+                price=obj.price,
+                phase_number=obj.phase_number,
+                sold_store_package=obj.sold_store_package,
+            )
+            sold_store_paid_package_phases_list.append(new_obj)
+            obj.delete()
+
+        sold_store_paid_package_phases_qs = SoldStorePaidPackagePhase.objects.filter(
+            id__in=[obj.id for obj in sold_store_paid_package_phases_list]
+        )
+
+        return sold_store_paid_package_phases_qs
+
 
 class SoldStorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)

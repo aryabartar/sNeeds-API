@@ -43,6 +43,22 @@ class ProductQuerySet(models.QuerySet):
 
         return result_qs
 
+    def get_sold_store_unpaid_package_phases(self):
+        from sNeeds.apps.storePackages.models import SoldStoreUnpaidPackagePhase
+
+        result_qs = SoldStoreUnpaidPackagePhase.objects.none()
+        for i in self.all():
+            try:
+                sold_store_unpaid_package_phase = i.soldstoreunpaidpackagephase
+                result_qs |= SoldStoreUnpaidPackagePhase.objects.filter(
+                    pk=sold_store_unpaid_package_phase.id
+                )
+            except SoldStoreUnpaidPackagePhase.DoesNotExist:
+                pass
+
+        return result_qs
+
+
     def are_all_active(self):
         for p in self._chain():
             if not p.active:
