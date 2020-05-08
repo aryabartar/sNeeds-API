@@ -88,17 +88,22 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         view_name='consultant:consultant-profile-detail'
     )
 
+    sold_store_paid_package_phases = serializers.SerializerMethodField()
+    sold_store_unpaid_package_phases = serializers.SerializerMethodField()
+
     class Meta:
         model = SoldStorePackage
         fields = [
             'id', 'url', 'title', 'sold_to', 'consultant', 'consultant_url', 'paid_price', 'total_price',
-            'created', 'updated'
+            'sold_store_paid_package_phases', 'sold_store_unpaid_package_phases', 'created', 'updated'
         ]
         extra_kwargs = {
             'title': {'read_only': True},
             'sold_to': {'read_only': True},
             'paid_price': {'read_only': True},
             'total_price': {'read_only': True},
+            'sold_store_paid_package_phases': {'read_only': True},
+            'sold_store_unpaid_package_phases': {'read_only': True},
         }
 
     def get_sold_to(self, obj):
@@ -120,6 +125,26 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         if not StudentDetailedInfo.objects.filter(user=self.instance.sold_to).exists():
             raise ValidationError("User StudentDetailedInfo is not completed.")
         return attrs
+
+    def get_sold_store_paid_package_phases(self, obj):
+        qs = SoldStorePaidPackagePhase.objects.filter(
+            sold_store_package=obj,
+        )
+        return SoldStorePaidPackagePhaseSerializer(
+            qs,
+            context={"request": self.context.get("request")},
+            many=True
+        ).data
+
+    def get_sold_store_unpaid_package_phases(self, obj):
+        qs = SoldStoreUnpaidPackagePhase.objects.filter(
+            sold_store_package=obj,
+        )
+        return SoldStoreUnpaidPackagePhaseSerializer(
+            qs,
+            context={"request": self.context.get("request")},
+            many=True
+        ).data
 
 
 class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):

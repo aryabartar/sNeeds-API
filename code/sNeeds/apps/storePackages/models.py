@@ -236,30 +236,6 @@ class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
             obj.save()
 
 
-class SoldStorePackagePhase(models.Model):
-    title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
-    sold_store_package = models.ForeignKey(
-        SoldStorePackage,
-        on_delete=models.CASCADE,
-    )
-
-    phase_number = models.IntegerField()
-
-    status = models.CharField(
-        choices=SOLD_STORE_PACKAGE_PHASE_STATUS,
-        default="not_started",
-        max_length=128
-    )
-
-    class Meta:
-        abstract = True
-        ordering = ['phase_number', ]
-
-
 class SoldStorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)
     status = models.CharField(
@@ -291,6 +267,30 @@ class SoldStorePackagePhaseDetail(models.Model):
 
     class Meta:
         ordering = ['created']
+
+
+class SoldStorePackagePhase(models.Model):
+    title = models.CharField(max_length=1024)
+    detailed_title = models.CharField(
+        max_length=1024,
+        help_text="This field is for ourselves, Feel free to add details."
+    )
+    sold_store_package = models.ForeignKey(
+        SoldStorePackage,
+        on_delete=models.CASCADE,
+    )
+
+    phase_number = models.IntegerField()
+
+    status = models.CharField(
+        choices=SOLD_STORE_PACKAGE_PHASE_STATUS,
+        default="not_started",
+        max_length=128
+    )
+
+    class Meta:
+        abstract = True
+        ordering = ['phase_number', ]
 
 
 class SoldStorePaidPackagePhase(SoldStorePackagePhase, SoldProduct):
