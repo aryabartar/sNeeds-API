@@ -6,6 +6,7 @@ from django.core import exceptions
 
 from rest_framework import serializers
 # from rest_framework_jwt import utils as jwt_utils
+from rest_framework.exceptions import ValidationError, AuthenticationFailed
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -175,7 +176,17 @@ class MyAccountSerializer(serializers.ModelSerializer):
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
     def validate(self, attrs):
         attrs[self.username_field] = attrs[self.username_field].lower()
+
+        try:
+            user = User.objects.get(email=attrs[self.username_field])
+            if not user.check_password(attrs['password']):
+                raise AuthenticationFailed({"detail": "Password is incorrect."})
+
+        except User.DoesNotExist:
+            raise AuthenticationFailed({"detail": "No user found with this email."})
+
         data = super().validate(attrs)
         return data

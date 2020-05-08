@@ -42,7 +42,7 @@ class TestAPIStorePackage(CustomAPITestCase):
         )
 
     def test_package_accept_request_creates_new_chat(self):
-        Chat.objects.all().delete() # Removing previously created chats in sold time slots
+        Chat.objects.all().delete()  # Removing previously created chats in sold time slots
         self.assertEqual(
             Chat.objects.filter(user=self.user2, consultant=self.consultant2_profile).count(),
             0
