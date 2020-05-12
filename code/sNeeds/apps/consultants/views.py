@@ -34,15 +34,15 @@ class ConsultantProfileDetail(APIView):
 
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
-    ordering_fields = ['rate', 'created', ]
+    # ordering_fields = ['rate', 'created', ]
     pagination_class = StandardResultsSetPagination
     filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
-        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
+        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
 
         returned_qs = ConsultantProfile.objects.none()
         for obj in qs:
             if TimeSlotSale.objects.filter(consultant=obj).exists():
                 returned_qs |= ConsultantProfile.objects.filter(id=obj.id)
-        return returned_qs
+        return returned_qs.order_by("-rate")
