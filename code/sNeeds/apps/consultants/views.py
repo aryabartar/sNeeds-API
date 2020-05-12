@@ -52,5 +52,8 @@ class ConsultantProfileList(generics.ListAPIView):
             if TimeSlotSale.objects.filter(consultant=obj).exists():
                 returned_qs |= ConsultantProfile.objects.filter(id=obj.id)
         returned_qs = sorted(returned_qs, key=get_rate, reverse=True)
-
-        return returned_qs
+        r_qs = ConsultantProfile.objects.none()
+        for obj in returned_qs:
+            r_qs |= ConsultantProfile.objects.filter(id=obj.id)
+        print(r_qs)
+        return r_qs
