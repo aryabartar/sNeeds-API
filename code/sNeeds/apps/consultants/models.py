@@ -28,7 +28,7 @@ class ConsultantProfileQuerySetManager(models.QuerySet):
     def at_least_one_time_slot(self, **kwargs):
         from sNeeds.apps.store.models import TimeSlotSale
         qs = self.none()
-        for obj in self._chain():
+        for obj in self.all():
             if TimeSlotSale.objects.filter(consultant=obj).exists():
                 qs |= ConsultantProfile.objects.filter(id=obj.id)
         return qs
