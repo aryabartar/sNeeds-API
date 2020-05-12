@@ -38,6 +38,3 @@ class ConsultantProfileList(generics.ListAPIView):
     ordering_fields = ['rate', 'created', ]
     pagination_class = StandardResultsSetPagination
     filterset_class = ConsultantProfileFilter
-
-    def get_queryset(self):
-        se
