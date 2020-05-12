@@ -49,11 +49,10 @@ class ConsultantProfileList(generics.ListAPIView):
 
         returned_qs = ConsultantProfile.objects.none()
         for obj in qs:
+            if obj.user.first_name == "محمد":
+                raise ValueError("sdds")
+
             if TimeSlotSale.objects.filter(consultant=obj).exists():
                 returned_qs |= ConsultantProfile.objects.filter(id=obj.id)
-        returned_qs = sorted(returned_qs, key=get_rate, reverse=True)
-        r_qs = ConsultantProfile.objects.none()
-        for obj in returned_qs:
-            r_qs |= ConsultantProfile.objects.filter(id=obj.id)
-        print(r_qs)
-        return r_qs
+
+        return returned_qs
