@@ -32,6 +32,12 @@ class ConsultantProfileDetail(APIView):
         return Response(serializer.data)
 
 
+def get_rate(obj):
+    if obj.rate is None:
+        return 0
+    return obj.rate
+
+
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
     # ordering_fields = ['rate', 'created', ]
@@ -45,4 +51,6 @@ class ConsultantProfileList(generics.ListAPIView):
         for obj in qs:
             if TimeSlotSale.objects.filter(consultant=obj).exists():
                 returned_qs |= ConsultantProfile.objects.filter(id=obj.id)
+        returned_qs = sorted(returned_qs, key=get_rate, reverse=True)
+
         return returned_qs
