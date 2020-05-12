@@ -45,6 +45,7 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ConsultantProfile
+        ordering = ['-rate']
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
             'study_info', 'slug', 'aparat_link', 'resume', 'time_slot_price', 'rate', 'active')
