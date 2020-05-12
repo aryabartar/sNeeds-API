@@ -44,7 +44,6 @@ class ConsultantProfileSerializer(serializers.ModelSerializer):
     study_info = serializers.SerializerMethodField()
 
     class Meta:
-        ordering = ['-rate']
         model = ConsultantProfile
         fields = (
             'id', 'url', 'bio', 'profile_picture', 'first_name', 'last_name',
