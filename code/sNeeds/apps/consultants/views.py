@@ -44,6 +44,8 @@ class ConsultantProfileList(generics.ListAPIView):
     filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
+        self.queryset = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
+        self.qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
         qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
 
         return qs
