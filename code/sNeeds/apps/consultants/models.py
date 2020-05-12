@@ -56,9 +56,6 @@ class ConsultantProfile(models.Model):
 
     objects = ConsultantProfileQuerySetManager.as_manager()
 
-    class Meta:
-        ordering = ["-rate"]
-
     def update_rate(self):
         """Currently based on sold time slot sales rate"""
         from sNeeds.apps.comments.models import SoldTimeSlotRate
