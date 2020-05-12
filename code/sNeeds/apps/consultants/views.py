@@ -46,12 +46,4 @@ class ConsultantProfileList(generics.ListAPIView):
     def get_queryset(self):
         qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
 
-        returned_qs = ConsultantProfile.objects.none()
-        for obj in qs:
-            if obj.user.last_name == "تولایی":
-                raise ValueError("sdds")
-
-            if TimeSlotSale.objects.filter(consultant=obj).exists():
-                returned_qs |= ConsultantProfile.objects.filter(id=obj.id)
-
-        return returned_qs
+        return qs
