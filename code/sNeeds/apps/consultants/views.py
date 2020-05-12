@@ -49,7 +49,7 @@ class ConsultantProfileList(generics.ListAPIView):
 
         returned_qs = ConsultantProfile.objects.none()
         for obj in qs:
-            if obj.user.first_name == "محمد":
+            if obj.user.last_name == "تولایی":
                 raise ValueError("sdds")
 
             if TimeSlotSale.objects.filter(consultant=obj).exists():
