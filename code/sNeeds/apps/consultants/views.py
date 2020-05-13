@@ -41,9 +41,7 @@ def get_rate(obj):
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
     pagination_class = StandardResultsSetPagination
-    filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
-        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
-
+        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
         return qs

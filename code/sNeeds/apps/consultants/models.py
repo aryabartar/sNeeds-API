@@ -25,7 +25,7 @@ def get_consultant_resume_path(instance, filename):
 
 
 class ConsultantProfileQuerySetManager(models.QuerySet):
-    def at_least_one_time_slot(self, **kwargs):
+    def at_least_one_time_slot(self):
         from sNeeds.apps.store.models import TimeSlotSale
         qs = self.none()
         for obj in self.all():
@@ -45,8 +45,9 @@ class ConsultantProfile(models.Model):
     aparat_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)
     slug = models.SlugField(unique=True, help_text="lowercase pls")
-    universities = models.ManyToManyField(University, through='StudyInfo',
-                                          through_fields=('consultant', 'university'), blank=True)
+    universities = models.ManyToManyField(
+        University, through='StudyInfo', through_fields=('consultant', 'university'), blank=True
+    )
     active = models.BooleanField(default=True)  # TODO: Check this is working.
     time_slot_price = models.PositiveIntegerField()
     rate = models.FloatField(default=None, null=True, blank=True)
