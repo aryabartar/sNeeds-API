@@ -18,7 +18,8 @@ class CountryList(generics.ListAPIView):
 
     def get_queryset(self):
         from sNeeds.apps.consultants.models import StudyInfo
-        country_list = list(StudyInfo.objects.values_list('university__country_id', flat=True))
+        study_info_with_active_consultant_qs = StudyInfo.objects.all().with_active_consultants()
+        country_list = list(study_info_with_active_consultant_qs.values_list('university__country_id', flat=True))
         return models.Country.objects.filter(id__in=country_list).exclude(slug="iran")
 
 
@@ -29,8 +30,13 @@ class UniversityDetail(generics.RetrieveAPIView):
 
 
 class UniversityList(generics.ListAPIView):
-    queryset = models.University.objects.all()
     serializer_class = serializers.UniversitySerializer
+
+    def get_queryset(self):
+        from sNeeds.apps.consultants.models import StudyInfo
+        study_info_with_active_consultant_qs = StudyInfo.objects.all().with_active_consultants()
+        university_list = list(study_info_with_active_consultant_qs.values_list('university_id', flat=True))
+        return models.University.objects.filter(id__in=university_list)
 
 
 class FieldOfStudyDetail(generics.RetrieveAPIView):
@@ -40,8 +46,13 @@ class FieldOfStudyDetail(generics.RetrieveAPIView):
 
 
 class FieldOfStudyList(generics.ListAPIView):
-    queryset = models.FieldOfStudy.objects.all()
     serializer_class = serializers.FieldOfStudySerializer
+
+    def get_queryset(self):
+        from sNeeds.apps.consultants.models import StudyInfo
+        study_info_with_active_consultant_qs = StudyInfo.objects.all().with_active_consultants()
+        field_of_study_list = list(study_info_with_active_consultant_qs.values_list('field_of_study__id', flat=True))
+        return models.FieldOfStudy.objects.filter(id__in=field_of_study_list)
 
 
 class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):

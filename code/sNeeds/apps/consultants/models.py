@@ -46,6 +46,14 @@ class ConsultantProfileQuerySetManager(models.QuerySet):
         return qs
 
 
+class StudyInfoQueryset(models.QuerySet):
+    def with_active_consultants(self):
+        qs = self.all().filter(
+            consultant__in=list(ConsultantProfile.objects.at_least_one_time_slot())
+        )
+        return qs
+
+
 class ConsultantProfile(models.Model):
     user = models.OneToOneField(CustomUser, null=True, on_delete=models.SET_NULL, )
     bio = RichTextField(default="default")
@@ -84,6 +92,8 @@ class StudyInfo(models.Model):
     field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
     grade = models.CharField(max_length=256, choices=STUDY_GRADE_CHOICES)
     order = models.PositiveIntegerField(help_text="Enter number above 0")
+
+    objects = StudyInfoQueryset.as_manager()
 
     class Meta:
         ordering = ["order"]

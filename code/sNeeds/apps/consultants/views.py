@@ -39,12 +39,6 @@ class ConsultantProfileList(generics.ListAPIView):
     def get_queryset(self):
         qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
 
-        if self.request.query_params.get("ordering") is not None:
-            if "-rate" in self.request.query_params.get("ordering"):
-                qs = qs.order_by(F('rate').desc(nulls_last=True))
-            elif "rate" in self.request.query_params.get("ordering"):
-                qs = qs.order_by(F('rate').asc(nulls_first=True))
-
         university = self.request.query_params.getlist("university")
         country = self.request.query_params.getlist("country")
         field_of_study = self.request.query_params.getlist("field_of_study")
@@ -65,5 +59,11 @@ class ConsultantProfileList(generics.ListAPIView):
 
             qs = qs_for_university | qs_for_country | qs_for_field_of_study
             qs = qs.distinct()
+
+        if self.request.query_params.get("ordering") is not None:
+            if "-rate" in self.request.query_params.get("ordering"):
+                qs = qs.order_by(F('rate').desc(nulls_last=True))
+            elif "rate" in self.request.query_params.get("ordering"):
+                qs = qs.order_by(F('rate').asc(nulls_first=True))
 
         return qs
