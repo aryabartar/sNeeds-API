@@ -1,5 +1,6 @@
 from enum import Enum
 
+from django.core.exceptions import ValidationError
 from enumfields import EnumIntegerField
 
 from django.db import models
@@ -39,6 +40,13 @@ class CustomUserManager(BaseUserManager):
 class UserTypeChoices(Enum):
     student = 1
     consultant = 2
+    admin_consultant = 3  # For automatic chat and ...
+
+
+def validate_user_type(value):
+    if value == UserTypeChoices.admin_consultant:
+        if CustomUser.objects.filter(user_type=UserTypeChoices.admin_consultant).exists():
+            raise ValidationError("User with admin_consultant type exists.")
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -54,7 +62,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(_('first name'), null=True, max_length=30, blank=True)
     last_name = models.CharField(_('last name'), null=True, max_length=150, blank=True)
 
-    user_type = EnumIntegerField(enum=UserTypeChoices, default=UserTypeChoices.student)  # default is student
+    user_type = EnumIntegerField(
+        enum=UserTypeChoices,
+        default=UserTypeChoices.student,
+        validators=[validate_user_type]
+    )
     is_staff = models.BooleanField(
         _('staff status'),
         default=False,
@@ -86,6 +98,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         self.email = self.__class__.objects.normalize_email(self.email)
         self.email = self.email.lower()
 
+
+
     def is_consultant(self):
         if self.user_type == UserTypeChoices.consultant:
             return True
@@ -96,12 +110,21 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
             return True
         return False
 
+    def is_admin_consultant(self):
+        if self.user_type == UserTypeChoices.admin_consultant:
+            return True
+        return False
+
     def set_user_type_consultant(self):
         self.user_type = UserTypeChoices.consultant
         self.save()
 
     def set_user_type_student(self):
         self.user_type = UserTypeChoices.student
+        self.save()
+
+    def set_user_admin_consultant(self):
+        self.user_type = UserTypeChoices.admin_consultant
         self.save()
 
     def get_full_name(self):

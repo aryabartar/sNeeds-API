@@ -14,10 +14,12 @@ User = get_user_model()
 
 def post_save_consultant_profile(sender, instance, created, *args, **kwargs):
     users_qs = User.objects.all()
+
     for user in users_qs:
         try:
             ConsultantProfile.objects.get(user=user)
-            user.set_user_type_consultant()
+            if not user.is_admin_consultant:
+                user.set_user_type_consultant()
         except ConsultantProfile.DoesNotExist:
             user.set_user_type_student()
 
@@ -32,8 +34,10 @@ def password_reset_token_created(sender, instance, reset_password_token, *args, 
         'current_user': reset_password_token.user,
         'username': reset_password_token.user.first_name,
         'email': reset_password_token.user.email,
-        'reset_password_url': "{}?token={}".format(reverse('auth:password_reset:reset-password-request'),
-                                                   reset_password_token.key),
+        'reset_password_url': "{}?token={}".format(
+            reverse('auth:password_reset:reset-password-request'),
+            reset_password_token.key
+        ),
         'token': reset_password_token.key,
     }
     reset_link = FRONTEND_URL + "auth/forget?token={}".format(context['token'])
