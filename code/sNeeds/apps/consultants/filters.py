@@ -90,13 +90,17 @@ class FieldOfStudyModelMultipleChoiceFilter(filters.ModelMultipleChoiceFilter):
 
 
 class ConsultantProfileFilter(FilterSet):
-    university = UniversityModelMultipleChoiceFilter(field_name='university', queryset=University.objects.all(),
-                                                     label='university')
+    university = UniversityModelMultipleChoiceFilter(
+        field_name='university', queryset=University.objects.all(), label='university'
+    )
 
-    country = CountryModelMultipleChoiceFilter(field_name='country', queryset=Country.objects.all(), label='country')
+    country = CountryModelMultipleChoiceFilter(
+        field_name='country', queryset=Country.objects.all(), label='country'
+    )
 
-    field_of_study = FieldOfStudyModelMultipleChoiceFilter(field_name='field_of_study',
-                                                           queryset=FieldOfStudy.objects.all(), label='field_of_study')
+    field_of_study = FieldOfStudyModelMultipleChoiceFilter(
+        field_name='field_of_study', queryset=FieldOfStudy.objects.all(), label='field_of_study'
+    )
 
     class Meta:
         model = ConsultantProfile

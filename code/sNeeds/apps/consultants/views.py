@@ -31,27 +31,30 @@ class ConsultantProfileDetail(APIView):
         return Response(serializer.data)
 
 
-def get_rate(obj):
-    if obj.rate is None:
-        return 0
-    return obj.rate
-
-
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
     pagination_class = StandardResultsSetPagination
-    filterset_class = ConsultantProfileFilter
+    ordering_fields = []
 
     def get_queryset(self):
-        if "-rate" in self.request.query_params.get("ordering"):
-            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by(
-                F('rate').desc(nulls_last=True)
-            )
-        elif "rate" in self.request.query_params.get("ordering"):
-            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by(
-                F('rate').asc(nulls_first=True)
-            )
-        else:
-            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
+        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
+
+        if self.request.query_params.get("ordering") is not None:
+            if "-rate" in self.request.query_params.get("ordering"):
+                qs = qs.order_by(F('rate').desc(nulls_last=True))
+            elif "rate" in self.request.query_params.get("ordering"):
+                qs = qs.order_by(F('rate').asc(nulls_first=True))
+
+        university = self.request.query_params.get("university")
+        if university is not None:
+            qs = qs.filter_consultants({"universities": university})
+
+        country = self.request.query_params.get("country")
+        if country is not None:
+            qs = qs.filter_consultants({"countries": country})
+
+        field_of_study = self.request.query_params.get("field_of_study")
+        if university is not None:
+            qs = qs.filter_consultants({"field_of_studies": field_of_study})
 
         return qs

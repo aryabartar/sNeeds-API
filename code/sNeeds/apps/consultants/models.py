@@ -33,13 +33,21 @@ class ConsultantProfileQuerySetManager(models.QuerySet):
                 qs |= ConsultantProfile.objects.filter(id=obj.id)
         return qs
 
+    def filter_consultants(self, params):
+        qs = self.all()
+
+        if params.get('countries') is not None:
+            qs = qs.filter(studyinfo__university__country__id__in=params.get('countries'))
+        if params.get('field_of_studies') is not None:
+            qs = qs.filter(studyinfo__university__id__in=params.get('field_of_studies'))
+        if params.get('universities') is not None:
+            qs = qs.filter(studyinfo__field_of_study__id__in=params.get('universities'))
+
+        return qs
+
 
 class ConsultantProfile(models.Model):
-    user = models.OneToOneField(
-        CustomUser,
-        null=True,
-        on_delete=models.SET_NULL,
-    )
+    user = models.OneToOneField(CustomUser, null=True, on_delete=models.SET_NULL, )
     bio = RichTextField(default="default")
     profile_picture = models.ImageField(upload_to=get_consultant_image_path)
     aparat_link = models.URLField(null=True, blank=True)
@@ -70,42 +78,12 @@ class ConsultantProfile(models.Model):
         return self.user.get_full_name()
 
 
-class StudyInfoManager(models.QuerySet):
-    def filter_consultants(self, params):
-        qs = self.all()
-        universities = params.get('universities', [])
-        if len(universities) != 0:
-            qs = qs.filter(university__in=universities)
-
-        field_of_studies = params.get('field_of_studies', [])
-        if len(field_of_studies) != 0:
-            qs = qs.filter(field_of_study__in=field_of_studies)
-
-        countries = params.get('countries', [])
-        if len(countries) != 0:
-            qs = qs.filter(country__in=countries)
-
-        grades = params.get('grades', [])
-        if len(grades) != 0:
-            qs = qs.filter(grade__in=grades)
-
-        result_qs = qs.only('consultant')
-
-        active = params.get('active', [])
-        if len(grades) != 0:
-            result_qs = result_qs.filter(active__in=active)
-
-        return result_qs
-
-
 class StudyInfo(models.Model):
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.CASCADE)
     university = models.ForeignKey(University, on_delete=models.CASCADE)
     field_of_study = models.ForeignKey(FieldOfStudy, on_delete=models.CASCADE)
     grade = models.CharField(max_length=256, choices=STUDY_GRADE_CHOICES)
     order = models.PositiveIntegerField(help_text="Enter number above 0")
-
-    objects = StudyInfoManager.as_manager()
 
     class Meta:
         ordering = ["order"]
