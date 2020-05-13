@@ -45,23 +45,25 @@ class ConsultantProfileList(generics.ListAPIView):
             elif "rate" in self.request.query_params.get("ordering"):
                 qs = qs.order_by(F('rate').asc(nulls_first=True))
 
-        qs_for_university = qs.none()
-        qs_for_country = qs.none()
-        qs_for_field_of_study = qs.none()
-
         university = self.request.query_params.getlist("university")
-        if university is not None:
-            qs_for_university = qs.filter_consultants({"universities": university})
-
         country = self.request.query_params.getlist("country")
-        if country is not None:
-            qs_for_country = qs.filter_consultants({"countries": country})
-
         field_of_study = self.request.query_params.getlist("field_of_study")
-        if field_of_study is not None:
-            qs_for_field_of_study = qs.filter_consultants({"field_of_studies": field_of_study})
 
-        qs = qs_for_university | qs_for_country | qs_for_field_of_study
-        qs = qs.distinct()
+        if university != [] or country != [] or field_of_study != []:
+            qs_for_university = qs.none()
+            qs_for_country = qs.none()
+            qs_for_field_of_study = qs.none()
+
+            if university is not None:
+                qs_for_university = qs.filter_consultants({"universities": university})
+
+            if country is not None:
+                qs_for_country = qs.filter_consultants({"countries": country})
+
+            if field_of_study is not None:
+                qs_for_field_of_study = qs.filter_consultants({"field_of_studies": field_of_study})
+
+            qs = qs_for_university | qs_for_country | qs_for_field_of_study
+            qs = qs.distinct()
 
         return qs
