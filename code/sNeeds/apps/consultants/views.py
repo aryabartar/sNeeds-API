@@ -45,9 +45,9 @@ class ConsultantProfileList(generics.ListAPIView):
             elif "rate" in self.request.query_params.get("ordering"):
                 qs = qs.order_by(F('rate').asc(nulls_first=True))
 
-        qs_for_university = qs
-        qs_for_country = qs
-        qs_for_field_of_study = qs
+        qs_for_university = qs.none()
+        qs_for_country = qs.none()
+        qs_for_field_of_study = qs.none()
 
         university = self.request.query_params.get("university")
         if university is not None:
@@ -62,4 +62,5 @@ class ConsultantProfileList(generics.ListAPIView):
             qs_for_field_of_study = qs.filter_consultants({"field_of_studies": field_of_study})
 
         qs = qs_for_university | qs_for_country | qs_for_field_of_study
+        qs.distinct()
         return qs
