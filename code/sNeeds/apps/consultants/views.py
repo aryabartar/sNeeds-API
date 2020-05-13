@@ -1,7 +1,7 @@
 from django.http import Http404
 from django.shortcuts import render
+from django.db.models import F
 
-# Create your views here.
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, mixins, filters, pagination
 from rest_framework.pagination import LimitOffsetPagination
@@ -13,7 +13,6 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.consultants.serializers import ConsultantProfileSerializer
 from .filters import ConsultantProfileFilter
 from .paginators import StandardResultsSetPagination
-from ..store.models import TimeSlotSale
 
 
 class ConsultantProfileDetail(APIView):
@@ -41,7 +40,18 @@ def get_rate(obj):
 class ConsultantProfileList(generics.ListAPIView):
     serializer_class = ConsultantProfileSerializer
     pagination_class = StandardResultsSetPagination
+    filterset_class = ConsultantProfileFilter
 
     def get_queryset(self):
-        qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by("-rate")
+        if "-rate" in self.request.query_params.get("ordering"):
+            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by(
+                F('rate').desc(nulls_last=True)
+            )
+        elif "rate" in self.request.query_params.get("ordering"):
+            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot().order_by(
+                F('rate').asc(nulls_first=True)
+            )
+        else:
+            qs = ConsultantProfile.objects.filter(active=True).at_least_one_time_slot()
+
         return qs
