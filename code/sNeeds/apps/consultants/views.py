@@ -49,18 +49,19 @@ class ConsultantProfileList(generics.ListAPIView):
         qs_for_country = qs.none()
         qs_for_field_of_study = qs.none()
 
-        university = self.request.query_params.get("university")
+        university = self.request.query_params.getlist("university")
         if university is not None:
             qs_for_university = qs.filter_consultants({"universities": university})
 
-        country = self.request.query_params.get("country")
+        country = self.request.query_params.getlist("country")
         if country is not None:
             qs_for_country = qs.filter_consultants({"countries": country})
 
-        field_of_study = self.request.query_params.get("field_of_study")
-        if university is not None:
+        field_of_study = self.request.query_params.getlist("field_of_study")
+        if field_of_study is not None:
             qs_for_field_of_study = qs.filter_consultants({"field_of_studies": field_of_study})
 
         qs = qs_for_university | qs_for_country | qs_for_field_of_study
-        qs.distinct()
+        qs = qs.distinct()
+
         return qs
