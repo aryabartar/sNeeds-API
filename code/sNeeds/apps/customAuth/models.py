@@ -94,11 +94,20 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def clean(self):
+        self.update_user_type()
         super().clean()
         self.email = self.__class__.objects.normalize_email(self.email)
         self.email = self.email.lower()
 
+    def update_user_type(self):
+        from sNeeds.apps.consultants.models import ConsultantProfile
+        if self.user_type == UserTypeChoices.admin_consultant:
+            return
 
+        if ConsultantProfile.objects.filter(user__id=self.id).exists():
+            self.user_type = UserTypeChoices.consultant
+        else:
+            self.user_type = UserTypeChoices.student
 
     def is_consultant(self):
         if self.user_type == UserTypeChoices.consultant:

@@ -16,12 +16,8 @@ def post_save_consultant_profile(sender, instance, created, *args, **kwargs):
     users_qs = User.objects.all()
 
     for user in users_qs:
-        try:
-            ConsultantProfile.objects.get(user=user)
-            if not user.is_admin_consultant:
-                user.set_user_type_consultant()
-        except ConsultantProfile.DoesNotExist:
-            user.set_user_type_student()
+        user.update_user_type()
+        user.save()
 
 
 post_save.connect(post_save_consultant_profile, sender=ConsultantProfile)
