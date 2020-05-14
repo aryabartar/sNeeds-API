@@ -43,12 +43,6 @@ class UserTypeChoices(Enum):
     admin_consultant = 3  # For automatic chat and ...
 
 
-def validate_user_type(value):
-    if value == UserTypeChoices.admin_consultant:
-        if CustomUser.objects.filter(user_type=UserTypeChoices.admin_consultant).exists():
-            raise ValidationError("User with admin_consultant type exists.")
-
-
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     """
     An abstract base class implementing a fully featured User model with
@@ -65,7 +59,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     user_type = EnumIntegerField(
         enum=UserTypeChoices,
         default=UserTypeChoices.student,
-        validators=[validate_user_type]
     )
     is_staff = models.BooleanField(
         _('staff status'),
@@ -94,8 +87,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def clean(self):
-        self.update_user_type()
         super().clean()
+
+        if self.user_type == UserTypeChoices.admin_consultant:
+            if CustomUser.objects.filter(user_type=UserTypeChoices.admin_consultant).exclude(id=self.id).exists():
+                raise ValidationError("User with admin_consultant type exists.")
+
+        self.update_user_type()
+
         self.email = self.__class__.objects.normalize_email(self.email)
         self.email = self.email.lower()
 
