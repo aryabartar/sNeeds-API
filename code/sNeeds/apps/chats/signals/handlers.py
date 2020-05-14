@@ -1,18 +1,19 @@
 from django.db.models.signals import post_save, post_delete
 from django.contrib.auth import get_user_model
 
-from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.comments.models import SoldTimeSlotRate
+from sNeeds.apps.chats.models import Chat
 
 User = get_user_model()
 
 
-def post_save_sold_time_slot_sale_rate(sender, instance, created, *args, **kwargs):
-    instance.sold_time_slot.consultant.update_rate()
+def post_save_user(sender, instance, created, *args, **kwargs):
+    if created:
+        admin_consultant_user = User.objects.get_admin_consultant_or_none()
+        if admin_consultant_user is not None:
+            chat = Chat.objects.get_or_create(
+                user=instance,
+                consultant=admin_consultant_user
+            )
 
-def post_delete_sold_time_slot_sale_rate(sender, instance, *args, **kwargs):
-    instance.sold_time_slot.consultant.update_rate()
 
-
-post_save.connect(post_save_sold_time_slot_sale_rate, sender=SoldTimeSlotRate)
-post_delete.connect(post_delete_sold_time_slot_sale_rate, sender=SoldTimeSlotRate)
+post_save.connect(post_save_user, sender=User)

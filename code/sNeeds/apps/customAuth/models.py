@@ -10,6 +10,12 @@ from django.core.mail import send_mail
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
+class UserTypeChoices(Enum):
+    student = 1
+    consultant = 2
+    admin_consultant = 3  # For automatic chat and ...
+
+
 class CustomUserManager(BaseUserManager):
     def _create_user(self, email, password,
                      is_staff, is_superuser, **extra_fields):
@@ -29,18 +35,20 @@ class CustomUserManager(BaseUserManager):
         return user
 
     def create_user(self, email, password=None, **extra_fields):
-        return self._create_user(email, password, False, False,
-                                 **extra_fields)
+        return self._create_user(
+            email, password, False, False, **extra_fields
+        )
 
     def create_superuser(self, email, password, **extra_fields):
-        return self._create_user(email, password, True, True,
-                                 **extra_fields)
+        return self._create_user(
+            email, password, True, True, **extra_fields
+        )
 
-
-class UserTypeChoices(Enum):
-    student = 1
-    consultant = 2
-    admin_consultant = 3  # For automatic chat and ...
+    def get_admin_consultant_or_none(self):
+        try:
+            return self.get(user_type=UserTypeChoices.admin_consultant)
+        except CustomUser.DoesNotExist:
+            return None
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
@@ -87,11 +95,15 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('users')
 
     def clean(self):
+        from sNeeds.apps.consultants.models import ConsultantProfile
+
         super().clean()
 
         if self.user_type == UserTypeChoices.admin_consultant:
             if CustomUser.objects.filter(user_type=UserTypeChoices.admin_consultant).exclude(id=self.id).exists():
                 raise ValidationError("User with admin_consultant type exists.")
+            if not ConsultantProfile.objects.filter(user__id=self.id).exists():
+                raise ValidationError("No consultant profile for user with admin_consultant exists.")
 
         self.update_user_type()
 
