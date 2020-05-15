@@ -86,7 +86,7 @@ class Message(PolymorphicModel):
 
 
 class TextMessage(Message):
-    text_message = RichTextField()
+    text_message = models.TextField()
 
 
 class FileMessage(Message):
