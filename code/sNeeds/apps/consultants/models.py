@@ -56,7 +56,7 @@ class StudyInfoQueryset(models.QuerySet):
 
 class ConsultantProfile(models.Model):
     user = models.OneToOneField(CustomUser, null=True, on_delete=models.SET_NULL, )
-    bio = RichTextField(default="default")
+    bio = RichTextField()
     profile_picture = models.ImageField(upload_to=get_consultant_image_path)
     aparat_link = models.URLField(null=True, blank=True)
     resume = models.FileField(upload_to=get_consultant_resume_path, null=True, blank=True)

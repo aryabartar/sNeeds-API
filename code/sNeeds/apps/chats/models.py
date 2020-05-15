@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 
+from ckeditor.fields import RichTextField
 from polymorphic.models import PolymorphicModel
 from polymorphic.managers import PolymorphicManager
 
@@ -85,7 +86,7 @@ class Message(PolymorphicModel):
 
 
 class TextMessage(Message):
-    text_message = models.CharField(max_length=2048)
+    text_message = RichTextField()
 
 
 class FileMessage(Message):
