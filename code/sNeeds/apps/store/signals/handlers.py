@@ -2,11 +2,13 @@ from django.db.models.signals import post_save, pre_delete, pre_save, m2m_change
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
+from sNeeds.apps.notifications.models import EmailNotification
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 from sNeeds.apps.store.tasks import notify_sold_time_slot
 from sNeeds.apps.chats.models import Chat
 from sNeeds.settings.config.variables import FRONTEND_URL
 from sNeeds.utils.custom.time_functions import utc_to_jalali_string
+from sNeeds.utils.sendemail import send_sold_time_slot_start_reminder_email
 
 
 def pre_delete_product_receiver(sender, instance, *args, **kwargs):
@@ -38,13 +40,19 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
             end_time=end_time
         )
 
-
+        send_data = {
+            "sold_time_slot_url": " sold_time_slot_url",
+            "send_to": "obj.sold_to.email",
+            "name": "obj.sold_to.get_full_name()",
+            "start_time": "start_time",
+            "end_time": "end_time"
+        }
+        EmailNotification.objects.create(
+            send_date = send_data,
+            user_type=
+        )
         send_sold_time_slot_start_reminder_email(
-            sold_time_slot_url=sold_time_slot_url,
-            send_to=obj.sold_to.email,
-            name=obj.sold_to.get_full_name(),
-            start_time=start_time,
-            end_time=end_time
+
         )
 
         send_sold_time_slot_start_reminder_email(
