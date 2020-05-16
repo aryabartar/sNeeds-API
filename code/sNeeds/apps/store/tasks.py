@@ -3,7 +3,6 @@ from celery import shared_task, task
 from django.utils import timezone
 
 from sNeeds.utils import sendemail
-
 from .models import TimeSlotSale, SoldTimeSlotSale
 from ...settings.config.variables import TIME_SLOT_SALE_DELETE_TIME, FRONTEND_URL
 from ...utils.custom.time_functions import utc_to_jalali_string
