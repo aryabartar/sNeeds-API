@@ -1,4 +1,5 @@
 from django.db.models.signals import post_save, pre_delete, pre_save, m2m_changed
+from django.utils import timezone
 
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.consultants.models import ConsultantProfile
@@ -41,26 +42,27 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         )
 
         send_data = {
-            "sold_time_slot_url": " sold_time_slot_url",
-            "send_to": "obj.sold_to.email",
-            "name": "obj.sold_to.get_full_name()",
-            "start_time": "start_time",
-            "end_time": "end_time"
+            "send_to": instance.sold_to.email,
+            "name": instance.sold_to.get_full_name(),
+            "sold_time_slot_url": sold_time_slot_url,
+            "start_time": start_time,
+            "end_time": end_time
         }
-        EmailNotification.objects.create(
-            send_date = send_data,
-            user_type=
+        # For student
+        EmailNotification.objects.create_sold_time_slot_reminder(
+            send_date=start_time - timezone.timedelta(hours=2),
+            send_data=send_data,
+            email=instance.sold_to.email
         )
-        send_sold_time_slot_start_reminder_email(
 
-        )
+        send_data["send_to"] = instance.consultant.user.email
+        send_data["name"] = instance.consultant.user.get_full_name()
 
-        send_sold_time_slot_start_reminder_email(
-            sold_time_slot_url=sold_time_slot_url,
-            send_to=obj.consultant.user.email,
-            name=obj.consultant.user.get_full_name(),
-            start_time=start_time,
-            end_time=end_time
+        # For student
+        EmailNotification.objects.create_sold_time_slot_reminder(
+            send_date=start_time - timezone.timedelta(hours=2),
+            send_data=send_data,
+            email=instance.sold_to.email
         )
 
 
