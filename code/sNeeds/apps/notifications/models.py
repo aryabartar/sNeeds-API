@@ -10,7 +10,12 @@ class NotificationType(Enum):
 
 class NotificationManager(models.Manager):
     def create_sold_time_slot_reminder(self, **kwargs):
-        self.create(type=NotificationType.sold_time_slot_reminder, **kwargs)
+        data_dict = kwargs.pop("data_dict")
+        print(kwargs)
+        obj = self.create(type=NotificationType.sold_time_slot_reminder, **kwargs)
+        obj.data_dict = data_dict
+        obj.save()
+        return obj
 
 
 class Notification(models.Model):
@@ -30,7 +35,7 @@ class EmailNotification(Notification):
     email = models.EmailField()
     data_dict = {}
 
-    objects = NotificationManager
+    objects = NotificationManager()
 
     def get_data_dict(self):
         return str(self.data_dict)

@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.db.models.signals import post_save, pre_delete, pre_save, m2m_changed
 from django.utils import timezone
 
@@ -26,6 +27,7 @@ def pre_save_time_slot_receiver(sender, instance, *args, **kwargs):
         instance.price = consultant.time_slot_price
 
 
+@transaction.atomic
 def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs):
     # This is sent for consultants
     if created:
@@ -41,7 +43,7 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
             end_time=end_time
         )
 
-        send_data = {
+        data_dict = {
             "send_to": instance.sold_to.email,
             "name": instance.sold_to.get_full_name(),
             "sold_time_slot_url": sold_time_slot_url,
@@ -50,18 +52,18 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         }
         # For student
         EmailNotification.objects.create_sold_time_slot_reminder(
-            send_date=start_time - timezone.timedelta(hours=2),
-            send_data=send_data,
+            send_date=instance.start_time - timezone.timedelta(hours=2),
+            data_dict=data_dict,
             email=instance.sold_to.email
         )
 
-        send_data["send_to"] = instance.consultant.user.email
-        send_data["name"] = instance.consultant.user.get_full_name()
+        data_dict["send_to"] = instance.consultant.user.email
+        data_dict["name"] = instance.consultant.user.get_full_name()
 
-        # For student
+        # For consultant
         EmailNotification.objects.create_sold_time_slot_reminder(
-            send_date=start_time - timezone.timedelta(hours=2),
-            send_data=send_data,
+            send_date=instance.start_time - timezone.timedelta(hours=2),
+            data_dict=data_dict,
             email=instance.sold_to.email
         )
 
