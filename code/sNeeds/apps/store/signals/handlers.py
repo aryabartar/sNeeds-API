@@ -64,7 +64,7 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         EmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
             data_dict=data_dict,
-            email=instance.sold_to.email
+            email=instance.consultant.user.email
         )
 
 
