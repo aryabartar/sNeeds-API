@@ -7,4 +7,4 @@ from .models import Notification, EmailNotification
 
 @admin.register(EmailNotification)
 class DiscountAdmin(admin.ModelAdmin):
-    readonly_fields = ['created', 'updated', 'sent',]
+    readonly_fields = ['created', 'updated', 'sent', 'get_data_dict']
