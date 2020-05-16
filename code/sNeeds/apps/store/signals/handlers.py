@@ -39,6 +39,23 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         )
 
 
+        send_sold_time_slot_start_reminder_email(
+            sold_time_slot_url=sold_time_slot_url,
+            send_to=obj.sold_to.email,
+            name=obj.sold_to.get_full_name(),
+            start_time=start_time,
+            end_time=end_time
+        )
+
+        send_sold_time_slot_start_reminder_email(
+            sold_time_slot_url=sold_time_slot_url,
+            send_to=obj.consultant.user.email,
+            name=obj.consultant.user.get_full_name(),
+            start_time=start_time,
+            end_time=end_time
+        )
+
+
 def post_save_product_receiver(sender, instance, *args, **kwargs):
     cart_qs = Cart.objects.filter(products__in=[instance])
 

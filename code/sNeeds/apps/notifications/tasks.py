@@ -8,9 +8,6 @@ from sNeeds.utils.sendemail import send_sold_time_slot_start_reminder_email
 
 @shared_task
 def send_email_notifications():
-    """
-    Deletes time slots with less than _ hours to start.
-    """
     qs = EmailNotification.objects.filter(
         send_date__lte=timezone.now(),
         sent=False
