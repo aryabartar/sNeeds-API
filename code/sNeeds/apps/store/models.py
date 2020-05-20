@@ -58,7 +58,6 @@ class ProductQuerySet(models.QuerySet):
 
         return result_qs
 
-
     def are_all_active(self):
         for p in self._chain():
             if not p.active:
@@ -196,7 +195,7 @@ class TimeSlotSale(Product):
 
 class SoldProduct(models.Model):
     price = models.PositiveIntegerField()
-    sold_to = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL)
+    sold_to = models.ForeignKey(User, blank=True, on_delete=models.PROTECT)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
