@@ -1,4 +1,6 @@
+import json
 from enum import Enum
+from jsonfield import JSONField
 
 from django.db import models
 from enumfields import EnumIntegerField
@@ -10,12 +12,7 @@ class NotificationType(Enum):
 
 class NotificationManager(models.Manager):
     def create_sold_time_slot_reminder(self, **kwargs):
-        data_dict = kwargs.pop("data_dict")
-        print(data_dict)
         obj = self.create(type=NotificationType.sold_time_slot_reminder, **kwargs)
-        obj.data_dict = data_dict
-        obj.save()
-        print("*" , obj.data_dict)
         return obj
 
 
@@ -34,9 +31,9 @@ class Notification(models.Model):
 
 class EmailNotification(Notification):
     email = models.EmailField()
-    data_dict = {}
+    data_json = JSONField()
 
     objects = NotificationManager()
 
     def get_data_dict(self):
-        return str(self.data_dict)
+        return json.loads(self.data_json)

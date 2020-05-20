@@ -20,6 +20,7 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 
 from .models import PayPayment
 from ..carts.models import Cart
+from ..notifications.tasks import send_email_notifications
 from ..storePackages.models import SoldStorePackagePhaseDetail
 from ...settings.config.variables import FRONTEND_URL
 
@@ -122,10 +123,11 @@ class Verify(APIView):
 
 class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
-        id = kwargs.get("cartid")
-        cart = Cart.objects.get(id=id)
-        Order.objects.sell_cart_create_order(cart)
-        return Response()
+        # id = kwargs.get("cartid")
+        # cart = Cart.objects.get(id=id)
+        # Order.objects.sell_cart_create_order(cart)
+        # return Response()
+        send_email_notifications()
 
 
 class ConsultantDepositInfoListAPIView(generics.ListAPIView):

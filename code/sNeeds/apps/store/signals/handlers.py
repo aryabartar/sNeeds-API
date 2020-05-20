@@ -1,3 +1,5 @@
+import json
+
 from django.db import transaction
 from django.db.models.signals import post_save, pre_delete, pre_save, m2m_changed
 from django.utils import timezone
@@ -44,26 +46,25 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         )
 
         data_dict = {
-            "send_to": instance.sold_to.email,
             "name": instance.sold_to.get_full_name(),
             "sold_time_slot_url": sold_time_slot_url,
             "start_time": start_time,
             "end_time": end_time
         }
+        print("1", data_dict)
         # For student
         EmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
-            data_dict=data_dict,
+            data_json=json.dumps(data_dict),
             email=instance.sold_to.email
         )
 
-        data_dict["send_to"] = instance.consultant.user.email
         data_dict["name"] = instance.consultant.user.get_full_name()
 
         # For consultant
         EmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
-            data_dict=data_dict,
+            data_json=json.dumps(data_dict),
             email=instance.consultant.user.email
         )
 

@@ -27,8 +27,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.customUtils.tasks.backup_database',
         'schedule': timedelta(days=1),
     },
-    'media-regular-backup': {
-        'task': 'sNeeds.apps.customUtils.tasks.media_backup',
-        'schedule': timedelta(days=1),
+    'send-email-notifications': {
+        'task': 'sNeeds.apps.notifications.tasks.send_email_notifications',
+        'schedule': timedelta(minutes=5),
     },
 }
