@@ -13,7 +13,7 @@ from sNeeds.apps.videochats.utils import create_2members_chat_room
 logger = get_task_logger(__name__)
 
 
-@task()
+@shared_task
 def create_rooms_from_sold_time_slots():
     qs = SoldTimeSlotSale.objects.filter(
         start_time__lte=timezone.now() + timezone.timedelta(minutes=BEFORE_AFTER_CLASS_TIME_MINUTES),
@@ -27,7 +27,7 @@ def create_rooms_from_sold_time_slots():
     qs.update(used=True)
 
 
-@task()
+@shared_task
 def delete_used_rooms():
     qs = Room.objects.filter(
         sold_time_slot__end_time__lte=timezone.now() - timezone.timedelta(minutes=5)
