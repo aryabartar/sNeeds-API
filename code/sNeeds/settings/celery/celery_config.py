@@ -31,4 +31,8 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'sNeeds.apps.notifications.tasks.send_email_notifications',
         'schedule': timedelta(minutes=5),
     },
+    'sold-time-slot-start-reminder': {
+        'task': 'sNeeds.apps.store.tasks.sold_time_slot_start_reminder',
+        'schedule': crontab(hour=18, minute=30),  # In UTC | 10 PM in Iran
+    },
 }
