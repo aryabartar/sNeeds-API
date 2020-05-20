@@ -20,6 +20,9 @@ class BasicProductDetail(generics.RetrieveAPIView):
 class ClassProductList(generics.ListAPIView):
     queryset = ClassProduct.objects.all()
     serializer_class = serializers.ClassProductSerializer
+    ordering_fields = ['created']
+    filterset_fields = ["is_held", "is_free"]
+    search_fields = ['descriptions', 'headlines', 'lecturers']
 
 
 class ClassProductDetail(generics.RetrieveAPIView):
@@ -31,6 +34,9 @@ class ClassProductDetail(generics.RetrieveAPIView):
 class WebinarProductList(generics.ListAPIView):
     queryset = WebinarProduct.objects.all()
     serializer_class = serializers.WebinarProductSerializer
+    ordering_fields = ['created']
+    filterset_fields = ["is_held", "is_free"]
+    search_fields = ['title', 'descriptions', 'headlines', 'lecturers']
 
 
 class WebinarProductDetail(generics.RetrieveAPIView):

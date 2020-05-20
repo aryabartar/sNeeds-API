@@ -1,5 +1,7 @@
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from sNeeds.apps.store.models import Product, SoldProduct, ProductQuerySet, SoldProductQuerySet
+from django.utils.translation import gettext_lazy as _
 
 
 def get_lecturer_picture_path(instance, filename):
@@ -89,30 +91,80 @@ class QuestionAnswer(models.Model):
         return self.question[:64]
 
 
-class ClassWebinarPrice(models.Model):
-    early_price = models.PositiveIntegerField(blank=True)
-    regular_price = models.PositiveIntegerField(blank=True)
-
-
 class ClassWebinar(BasicProduct):
-    image = models.ImageField(upload_to=get_class_webinar_image_path)
-    background_image = models.ImageField(upload_to=get_class_webinar_background_image_path)
-    descriptions = models.TextField()
-    headlines = models.TextField()
-    audiences = models.TextField()
-    lecturers = models.TextField()
+    image = models.ImageField(upload_to=get_class_webinar_image_path, blank=True, null=True)
+    background_image = models.ImageField(upload_to=get_class_webinar_background_image_path, blank=True, null=True)
+    descriptions = models.TextField(blank=True, null=True)
+    headlines = models.TextField(blank=True, null=True)
+    audiences = models.TextField(blank=True, null=True)
+    lecturers = models.TextField(blank=True, null=True)
     lecturers_short = models.ManyToManyField(Lecturer)
     holding_date_times = models.ManyToManyField(HoldingDateTime)
     question_answers = models.ManyToManyField(QuestionAnswer)
-    held = models.BooleanField(default=False)
-    early = models.BooleanField(default=False)
-    specialized_price = models.ForeignKey(ClassWebinarPrice, on_delete=models.PROTECT, related_name='products')
 
-    # TODO Perform private download links
+    is_free = models.BooleanField(default=False)
+
+    is_held = models.BooleanField(default=False)
+
+    is_early = models.BooleanField(default=False)
+    early_price = models.PositiveIntegerField(blank=True, null=True)
+    regular_price = models.PositiveIntegerField(blank=True, null=True)
+
+    video_is_discounted = models.BooleanField(default=False)
+    video_regular_price = models.PositiveIntegerField(blank=True, null=True)
+    video_discounted_price = models.PositiveIntegerField(blank=True, null=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title + " (" + str(self.id) + ")"
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super(ClassWebinar, self).save(*args, **kwargs)
+
+    def clean(self):
+        price = None
+        if self.is_free:
+            price = 0
+
+        elif self.is_held:
+            if self.video_is_discounted:
+                # if self.video_discounted_price is None:
+                #     raise ValidationError(_("Due to information some credential not provided:video_discounted_price"))
+                price = self.video_discounted_price
+
+            else:
+                # if self.video_regular_price is None:
+                #     raise ValidationError(_("Due to information some credentials not provided: video_regular_price"))
+                price = self.video_regular_price
+
+        else:
+            if self.is_early:
+                # if self.early_price is None:
+                #     raise ValidationError(_("Due to information some credentials not provided: early_price"))
+                price = self.early_price
+            else:
+                # if self.regular_price is None:
+                #     raise ValidationError(_("Due to information some credentials not provided: regular_price"))
+                price = self.regular_price
+
+        # if price is None:
+        #     raise ValidationError(_("Due to information some credentials not provided: check is_free, is_held, "
+        #                             "is_early, video_is_discounted "))
+
+        self.price = price
+
+
+class DownloadLink(models.Model):
+    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
+    url = models.URLField()
+
+
+class RoomLink(models.Model):
+    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
+    url = models.URLField()
 
 
 class ClassProduct(ClassWebinar):
