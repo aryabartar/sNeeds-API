@@ -58,3 +58,19 @@ def validate_mainland(value):
         raise ValidationError(_("Entered mainland is not in allowed mainlands or has misspelling"))
     else:
         return value
+
+
+def validate_resume_file_extension(value):
+    if value.file.content_type != 'application/pdf':
+        raise ValidationError('Only pdf file can be uploaded')
+    else:
+        return value
+
+
+def validate_resume_file_size(value):
+    filesize = value.size
+
+    if filesize > 5242880:
+        raise ValidationError("The maximum file size that can be uploaded is 5MB")
+    else:
+        return value

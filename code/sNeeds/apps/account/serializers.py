@@ -4,7 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from . import models
-from .models import StudentDetailedInfo
+from .models import StudentDetailedInfo, StudentFormFieldsChoice, StudentFormApplySemesterYear
 from sNeeds.utils.custom.custom_functions import student_info_year_choices, current_year
 
 User = get_user_model()
@@ -49,6 +49,19 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
         model = models.FieldOfStudy
         fields = ('id', 'url', 'name', 'description', 'slug', 'picture')
 
+
+class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFormFieldsChoice
+        fields = ['id', 'name', 'category', 'slug']
+
+
+class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFormApplySemesterYear
+        fields = ['id', 'year', 'semester']
 
 class StudentDetailedInfoSerializer(serializers.ModelSerializer):
     # from sNeeds.apps.customAuth.serializers import ShortUserSerializer
