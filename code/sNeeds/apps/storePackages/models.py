@@ -6,7 +6,7 @@ from django.db import models, transaction
 from django.contrib.auth import get_user_model
 from sendgrid import Content
 
-# from sNeeds.apps.account.models import StudentDetailedInfo
+from sNeeds.apps.account.models import StudentDetailedInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
 
@@ -175,12 +175,12 @@ class SoldStorePackageQuerySet(models.QuerySet):
             obj.update_price()
             obj.save()
 
-    # def get_filled_student_detailed_infos(self):
-    #     returned_qs = self.none()
-    #     for obj in self._chain():
-    #         if StudentDetailedInfo.objects.filter(user=obj.sold_to).exists():
-    #             returned_qs |= self.filter(id=obj.id)
-    #     return returned_qs
+    def get_filled_student_detailed_infos(self):
+        returned_qs = self.none()
+        for obj in self._chain():
+            if StudentDetailedInfo.objects.filter(user=obj.sold_to).exists():
+                returned_qs |= self.filter(id=obj.id)
+        return returned_qs
 
 
 class SoldStorePackage(models.Model):

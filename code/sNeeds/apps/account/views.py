@@ -2,10 +2,10 @@ from rest_framework import generics, permissions
 
 from . import models
 from . import serializers
-# from .models import StudentDetailedInfo, StudentFormFieldsChoice, StudentFormApplySemesterYear
+from .models import StudentDetailedInfo, StudentFormFieldsChoice, StudentFormApplySemesterYear
 from .permissions import IsStudentPermission, StudentDetailedInfoOwnerOrInteractConsultantPermission
-# from .serializers import StudentDetailedInfoSerializer, StudentFormFieldsChoiceSerializer,\
-#     StudentFormApplySemesterYearSerializer
+from .serializers import StudentDetailedInfoSerializer, StudentFormFieldsChoiceSerializer,\
+    StudentFormApplySemesterYearSerializer
 
 
 class CountryDetail(generics.RetrieveAPIView):
@@ -56,30 +56,30 @@ class FieldOfStudyList(generics.ListAPIView):
         return models.FieldOfStudy.objects.filter(id__in=field_of_study_list)
 
 
-# class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):
-#     queryset = StudentDetailedInfo.objects.all()
-#     serializer_class = StudentDetailedInfoSerializer
-#     permission_classes = (permissions.IsAuthenticated, IsStudentPermission)
-#
-#     def get_queryset(self):
-#         user = self.request.user
-#         qs = StudentDetailedInfo.objects.filter(user=user)
-#         return qs
-#
-#
-# class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
-#     lookup_field = 'id'
-#     queryset = StudentDetailedInfo.objects.all()
-#     serializer_class = StudentDetailedInfoSerializer
-#     permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoOwnerOrInteractConsultantPermission)
-#
-#
-# class StudentFormFieldsChoiceListAPIView(generics.ListAPIView):
-#     queryset = StudentFormFieldsChoice.objects.all()
-#     serializer_class = StudentFormFieldsChoiceSerializer
-#     filterset_fields = ['category']
-#
-#
-# class StudentFormApplySemesterYearListAPIView(generics.ListAPIView):
-#     queryset = StudentFormApplySemesterYear.objects.all()
-#     serializer_class = StudentFormApplySemesterYearSerializer
+class StudentDetailedInfoListCreateAPIView(generics.ListCreateAPIView):
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, IsStudentPermission)
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = StudentDetailedInfo.objects.filter(user=user)
+        return qs
+
+
+class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
+    lookup_field = 'id'
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoOwnerOrInteractConsultantPermission)
+
+
+class StudentFormFieldsChoiceListAPIView(generics.ListAPIView):
+    queryset = StudentFormFieldsChoice.objects.all()
+    serializer_class = StudentFormFieldsChoiceSerializer
+    filterset_fields = ['category']
+
+
+class StudentFormApplySemesterYearListAPIView(generics.ListAPIView):
+    queryset = StudentFormApplySemesterYear.objects.all()
+    serializer_class = StudentFormApplySemesterYearSerializer

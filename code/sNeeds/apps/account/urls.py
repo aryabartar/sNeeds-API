@@ -21,12 +21,12 @@ urlpatterns = [
     path('consultant-profiles/<str:slug>/', sNeeds.apps.consultants.views.ConsultantProfileDetail.as_view(),
          name="consultant-profile-detail"),
 
-    # path('student-detailed-info/', views.StudentDetailedInfoListCreateAPIView.as_view(),
-    #      name='student-detailed-info-list'),
-    #
-    # path('student-detailed-info/<int:id>', views.StudentDetailedInfoRetrieveUpdateAPIView.as_view(),
-    #      name='student-detailed-info-detail'),
-    #
-    # path('student-form-choices/', views.StudentFormFieldsChoiceListAPIView.as_view(),
-    #      name="student_form_fields_choice"),
+    path('student-detailed-info/', views.StudentDetailedInfoListCreateAPIView.as_view(),
+         name='student-detailed-info-list'),
+
+    path('student-detailed-info/<int:id>', views.StudentDetailedInfoRetrieveUpdateAPIView.as_view(),
+         name='student-detailed-info-detail'),
+
+    path('student-form-choices/', views.StudentFormFieldsChoiceListAPIView.as_view(),
+         name="student_form_fields_choice"),
     ]
