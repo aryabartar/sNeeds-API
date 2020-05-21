@@ -19,9 +19,9 @@ class MarketplaceListAPIView(generics.ListAPIView):
     serializer_class = serializers.SoldStorePackageSerializer
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
-    def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
-        return qs
+    # def get_queryset(self):
+    #     qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
+    #     return qs
 
 
 class MarketplaceDetailAPIView(generics.RetrieveAPIView):
@@ -29,9 +29,9 @@ class MarketplaceDetailAPIView(generics.RetrieveAPIView):
     serializer_class = serializers.SoldStorePackageSerializer
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
-    def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
-        return qs
+    # def get_queryset(self):
+    #     qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
+    #     return qs
 
 
 class StorePackagePhaseThroughListAPIView(generics.ListAPIView):

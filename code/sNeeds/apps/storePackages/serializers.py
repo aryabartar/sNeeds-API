@@ -7,7 +7,7 @@ from rest_framework.exceptions import PermissionDenied
 
 from .models import StorePackagePhase, StorePackagePhaseThrough, StorePackage, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
-from ..account.models import StudentDetailedInfo
+# from ..account.models import StudentDetailedInfo
 from ..consultants.models import ConsultantProfile
 from ..consultants.serializers import ShortConsultantProfileSerializer
 from ..customAuth.serializers import SafeUserDataSerializer
@@ -131,8 +131,8 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, attrs):
-        if not StudentDetailedInfo.objects.filter(user=self.instance.sold_to).exists():
-            raise ValidationError("User StudentDetailedInfo is not completed.")
+        # if not StudentDetailedInfo.objects.filter(user=self.instance.sold_to).exists():
+        #     raise ValidationError("User StudentDetailedInfo is not completed.")
         return attrs
 
     def get_sold_store_paid_package_phases(self, obj):
