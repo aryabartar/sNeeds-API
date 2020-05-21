@@ -33,7 +33,6 @@ class IsConsultantUnsafePermission(permissions.BasePermission):
 
 
 class CustomIsAuthenticated(permissions.IsAuthenticated):
-
     def has_permission(self, request, view):
         if request.method == "OPTIONS":
             return True
