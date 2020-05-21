@@ -55,13 +55,6 @@ class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'category', 'slug']
 
 
-class StudentFormFieldsChoiceSerializerForShowInForm(serializers.ModelSerializer):
-
-    class Meta:
-        model = StudentFormFieldsChoice
-        fields = ['id', 'name', 'category',]
-
-
 class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
 
     class Meta:
