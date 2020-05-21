@@ -92,5 +92,6 @@ class StudentFormApplySemesterYearListAPIView(generics.ListAPIView):
 
 
 class StudentFormApplySemesterYearRetrieveAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
     queryset = StudentFormApplySemesterYear.objects.all()
     serializer_class = StudentFormApplySemesterYearSerializer
