@@ -2,7 +2,6 @@ from rest_framework import status, generics, mixins, permissions
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
@@ -22,7 +21,7 @@ class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
 
 class CartDiscountListView(generics.ListCreateAPIView):
     serializer_class = CartDiscountSerializer
-    permission_classes = [CartDiscountPermission, permissions.IsAuthenticated]
+    permission_classes = [CartDiscountPermission, permissions.IsAuthenticatedOrReadOnly]
     filterset_fields = ('cart',)
 
     def get_queryset(self):
@@ -65,7 +64,7 @@ class ConsultantForUserDiscountRetrieveDestroyAPIView(generics.RetrieveDestroyAP
 class ConsultantInteractUserListAPIView(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = ConsultantInteractiveUsersSerializer
-    permission_classes = [IsAuthenticated, ConsultantPermission]
+    permission_classes = [permissions.IsAuthenticated, ConsultantPermission]
 
     def list(self, request, *args, **kwargs):
         from sNeeds.apps.consultants.models import ConsultantProfile

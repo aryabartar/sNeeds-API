@@ -34,6 +34,9 @@ class ConsultantPermission(permissions.BasePermission):
     message = 'User should be consultant.'
 
     def has_permission(self, request, view):
+        if request.method == "OPTIONS":
+            return True
+
         user = request.user
         if not user.is_authenticated:
             return False
@@ -45,6 +48,9 @@ class ConsultantDiscountOwnersPermission(permissions.BasePermission):
     message = 'User should be the creator of discount.'
 
     def has_object_permission(self, request, view, obj):
+        if request.method == "OPTIONS":
+            return True
+
         consultants = Discount.objects.get(pk=obj.id).consultants.all()
         consultants_users = [consultant.user for consultant in consultants]
         if request.user in consultants_users and obj.creator == "consultant":
