@@ -80,6 +80,17 @@ class StudentFormFieldsChoiceListAPIView(generics.ListAPIView):
     filterset_fields = ['category']
 
 
+class StudentFormFieldsChoiceRetrieveAPIView(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = StudentFormFieldsChoice.objects.all()
+    serializer_class = StudentFormFieldsChoiceSerializer
+
+
 class StudentFormApplySemesterYearListAPIView(generics.ListAPIView):
+    queryset = StudentFormApplySemesterYear.objects.all()
+    serializer_class = StudentFormApplySemesterYearSerializer
+
+
+class StudentFormApplySemesterYearRetrieveAPIView(generics.RetrieveAPIView):
     queryset = StudentFormApplySemesterYear.objects.all()
     serializer_class = StudentFormApplySemesterYearSerializer
