@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
     'ckeditor',
+    'jet_django',
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
@@ -157,6 +158,8 @@ from .secure import APIs
 SKYROOM_API_KEY = APIs.skyroom
 SENDINBLUE_API_KEY = APIs.sendinblue
 ZARINPAL_MERCHANT = APIs.zarinpal_merchant
+JET_PROJECT = APIs.JET_PROJECT
+JET_TOKEN = APIs.JET_TOKEN
 
 # Keys
 ALL_SKYROOM_USERS_PASSWORD = keys.ALL_SKYROOM_USERS_PASSWORD
