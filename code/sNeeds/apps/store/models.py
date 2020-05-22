@@ -202,6 +202,9 @@ class SoldProduct(models.Model):
 
     objects = SoldProductQuerySet.as_manager()
 
+    def __str__(self):
+        return "jj"
+
 
 # TODO: sold and unsold intersections
 class SoldTimeSlotSale(SoldProduct):
@@ -215,3 +218,6 @@ class SoldTimeSlotSale(SoldProduct):
     def clean(self, *args, **kwargs):
         if self.end_time <= self.start_time:
             raise ValidationError(_("End time should be after start time"), code='invalid')
+
+    def __str__(self):
+        return "jj"

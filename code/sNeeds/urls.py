@@ -26,7 +26,6 @@ from drf_yasg import openapi
 urlpatterns = [
                   path('admin/', admin.site.urls),
                   path('api-auth/', include('rest_framework.urls')),
-                  path('jet_api/', include('jet_django.urls')),
 
                   path('docs/', include('sNeeds.apps.docs.urls')),
                   path('auth/', include('sNeeds.apps.customAuth.urls')),
