@@ -13,3 +13,4 @@ class TimeSlotSaleAdmin(admin.ModelAdmin):
 @admin.register(SoldTimeSlotSale)
 class SoldTimeSlotSaleAdmin(admin.ModelAdmin):
     list_display = ["id", "consultant", "start_time", "end_time", "sold_to", "price"]
+    list_filter = ('consultant', )
