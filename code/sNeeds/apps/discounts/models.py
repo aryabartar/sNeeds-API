@@ -65,6 +65,9 @@ class Discount(models.Model):
     use_limit = models.PositiveIntegerField(null=True, blank=True)
     creator = models.CharField(choices=CREATORS, max_length=10, default="admin")
 
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
     objects = DiscountManager.as_manager()
 
     def __str__(self):

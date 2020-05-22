@@ -100,6 +100,8 @@ class Cart(models.Model):
         # For apply time slot number discount
         time_slot_sale_count = self.get_time_slot_sales_count()
 
+        total = 0
+
         # If discount is given by one consultant to one user we remove one time slot from products
         # and also consultant from consultants , so no other time slots will be affected by discount
         # but count discount will remain with one fewer time slots
@@ -108,14 +110,14 @@ class Cart(models.Model):
                 self.products.all().get_time_slot_sales().filter(consultant__in=consultants_qs)
 
             if discount_creator_time_slot_qs.exists():
-                discount_creator_first_time_slot_id = discount_creator_time_slot_qs.first().id
-                products = self.products.all().exclude(id=discount_creator_first_time_slot_id)
+                # discount_creator_first_time_slot_id = discount_creator_time_slot_qs.first().id
+                # products = self.products.all().exclude(id=discount_creator_first_time_slot_id)
+                total -= discount.amount
                 consultants_qs = consultants_qs.none()
                 time_slot_sale_count -= 1
 
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
 
-        total = 0
         for product in products:
             effective_price = 0
 
@@ -146,6 +148,8 @@ class Cart(models.Model):
                 effective_price = product.price
 
             total += effective_price
+        if total < 0:
+            total = 0
         self.total = total
 
     def is_acceptable_for_pay(self):

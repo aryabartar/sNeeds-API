@@ -26,4 +26,7 @@ urlpatterns = [
 
     path('student-detailed-info/<int:id>', views.StudentDetailedInfoRetrieveUpdateAPIView.as_view(),
          name='student-detailed-info-detail'),
+
+    path('student-form-choices/', views.StudentFormFieldsChoiceListAPIView.as_view(),
+         name="student_form_fields_choice"),
     ]

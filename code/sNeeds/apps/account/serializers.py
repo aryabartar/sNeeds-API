@@ -4,8 +4,7 @@ from rest_framework import serializers
 from rest_framework.validators import ValidationError
 
 from . import models
-from .models import StudentDetailedInfo
-from sNeeds.utils.custom.custom_functions import student_info_year_choices, current_year
+from .models import StudentDetailedInfo, StudentFormFieldsChoice, StudentFormApplySemesterYear
 
 User = get_user_model()
 
@@ -50,10 +49,42 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
         fields = ('id', 'url', 'name', 'description', 'slug', 'picture')
 
 
+class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFormFieldsChoice
+        fields = ['id', 'name', 'category', 'slug']
+
+
+class StudentFormFieldsChoiceSerializerForShowInForm(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFormFieldsChoice
+        fields = ['id']
+
+
+class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentFormApplySemesterYear
+        fields = ['id', 'year', 'semester']
+
+
 class StudentDetailedInfoSerializer(serializers.ModelSerializer):
-    # from sNeeds.apps.customAuth.serializers import ShortUserSerializer
-    # user = ShortUserSerializer(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
+    from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
+    user = SafeUserDataSerializer(read_only=True)
+    grade = StudentFormFieldsChoiceSerializerForShowInForm()
+    university = StudentFormFieldsChoiceSerializerForShowInForm()
+    degree_conferral_year = StudentFormFieldsChoiceSerializerForShowInForm()
+    major = StudentFormFieldsChoiceSerializerForShowInForm()
+    language_certificate = StudentFormFieldsChoiceSerializerForShowInForm()
+    apply_mainland = StudentFormFieldsChoiceSerializerForShowInForm()
+    apply_country = StudentFormFieldsChoiceSerializerForShowInForm()
+    apply_grade = StudentFormFieldsChoiceSerializerForShowInForm()
+    apply_major = StudentFormFieldsChoiceSerializerForShowInForm()
+    apply_university = StudentFormFieldsChoiceSerializerForShowInForm()
+
+    apply_semester_year = StudentFormApplySemesterYearSerializer()
 
     class Meta:
         model = StudentDetailedInfo
@@ -65,12 +96,7 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, attrs):
-        student_info_conferral_year_choices = student_info_year_choices()
-        degree_conferral_year = attrs.get('degree_conferral_year', None)
-        if degree_conferral_year is None:
-            attrs['degree_conferral_year'] = current_year()
-        elif degree_conferral_year not in student_info_conferral_year_choices:
-            raise ValidationError(_("Not valid degree conferral year"))
+        print(attrs.get('apply_country'))
         return attrs
 
     def create(self, validated_data):
