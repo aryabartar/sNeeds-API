@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'polymorphic',  # For django-polymorphic
     'ckeditor',
+    'advanced_filters',
 
     'sNeeds.apps.customAuth',
     'sNeeds.apps.account',
