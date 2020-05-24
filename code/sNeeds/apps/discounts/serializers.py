@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
 from ..store.models import Product
 from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.customAuth.serializers import ShortUserSerializer
+from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
 
 from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
@@ -27,6 +27,18 @@ class ShortDiscountSerializer(serializers.ModelSerializer):
         fields = ['consultants', 'products']
 
 
+# class UsersField(serializers.Field):
+#
+#     def to_representation(self, value):
+#         return SafeUserDataSerializer(value.users, many=True).data
+#
+#     def to_internal_value(self, data):
+#         ret = {
+#             "users": data["users"]['id'],
+#         }
+#         return ret
+
+
 class DiscountSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedRelatedField(
         source='discounts',
@@ -35,15 +47,31 @@ class DiscountSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
+    is_used = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Discount
-        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users', 'url']
+        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users', 'created', 'updated', 'use_limit', 'url',
+                  'is_used']
         extra_kwargs = {
             'consultants': {'read_only': True},
             'products': {'read_only': True},
             'amount': {'read_only': True},
             'code': {'read_only': True},
+            'created': {'read_only': True},
+            'updated': {'read_only': True},
+            'use_limit': {'read_only': True},
+            'is_used': {'read_only': True},
+            'url': {'read_only': True},
         }
+
+    def get_is_used(self, obj):
+        if obj.use_limit is not None:
+            if obj.use_limit == 0:
+                return True
+            else:
+                return False
+        return False
 
     def validate(self, attrs):
         user = None
@@ -201,7 +229,7 @@ class ConsultantInteractiveUsersSerializer(serializers.Serializer):
         consultant_profile = ConsultantProfile.objects.get(user__id=user.id)
 
         users = get_users_interact_with_consultant(consultant_profile)
-        return ShortUserSerializer(users, many=True, context=self.context).data
+        return SafeUserDataSerializer(users, many=True, context=self.context).data
 
     def get_first_name(self, obj):
         return obj.user.first_name

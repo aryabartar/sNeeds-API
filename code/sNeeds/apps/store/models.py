@@ -30,6 +30,28 @@ class ProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
+    def get_webinars(self):
+        from sNeeds.apps.basicProducts.models import WebinarProduct
+        result_qs = WebinarProduct.objects.none()
+        for i in self.all():
+            try:
+                webinar_product = i.webinarproduct
+                result_qs |= WebinarProduct.objects.filter(pk=webinar_product.id)
+            except WebinarProduct.DoesNotExist:
+                pass
+        return result_qs
+
+    def get_classes(self):
+        from sNeeds.apps.basicProducts.models import ClassProduct
+        result_qs = ClassProduct.objects.none()
+        for i in self.all():
+            try:
+                class_product = i.classproduct
+                result_qs |= ClassProduct.objects.filter(pk=class_product.id)
+            except ClassProduct.DoesNotExist:
+                pass
+        return result_qs
+
     def get_store_packages(self):
         from sNeeds.apps.storePackages.models import StorePackage
 

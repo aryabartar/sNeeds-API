@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import BasicProduct, SoldBasicProduct, DownloadLink, ClassProduct, WebinarProduct, RoomLink
-from sNeeds.apps.comments.models import BasicProductRate
 
 
 class DownloadLinkInline(admin.TabularInline):
@@ -11,11 +10,6 @@ class DownloadLinkInline(admin.TabularInline):
 class RoomLinkInline(admin.TabularInline):
     model = RoomLink
     extra = 1
-
-
-# class RateFieldInline(admin.TabularInline):
-#     model = BasicProductRate
-#     extra = 1
 
 
 class ClassWebinarAdmin(admin.ModelAdmin):

@@ -81,7 +81,7 @@ class BasicProductRateField(models.Model):
 
 class SoldBasicProductRate(models.Model):
     sold_basic_product = models.OneToOneField(SoldBasicProduct, on_delete=models.CASCADE)
-    rates = models.ManyToManyField(BasicProductRateField, through='SoldBasicProductRateFieldThrough', null=True)
+    rates = models.ManyToManyField(BasicProductRateField, through='SoldBasicProductRateFieldThrough')
 
     object = SoldClassWebinarRateManager.as_manager()
 
