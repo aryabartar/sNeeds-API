@@ -7,7 +7,7 @@ admin.site.register(TimeSlotSaleNumberDiscount)
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
-    list_display = ('amount', 'creator')
+    list_display = ('code', 'use_limit', 'amount', 'creator', 'created')
     list_filter = ('creator',)
 
 

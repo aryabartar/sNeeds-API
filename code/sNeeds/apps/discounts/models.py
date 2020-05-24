@@ -71,7 +71,7 @@ class Discount(models.Model):
     objects = DiscountManager.as_manager()
 
     def __str__(self):
-        return "{} ".format(str(self.amount))
+        return "{}|{}".format(str(self.amount),str(self.code))
 
     def update_increase_use_limit(self):
         if self.use_limit is not None:
