@@ -44,7 +44,7 @@ class BasicProductManager(models.QuerySet):
                         price=obj.price,
                     )
                 )
-            except ClassProduct.DoesNotExist:
+            except WebinarProduct.DoesNotExist:
                 pass
 
         sold_basic_product_qs = SoldBasicProduct.objects.filter(id__in=[obj.id for obj in sold_basic_product_list])
