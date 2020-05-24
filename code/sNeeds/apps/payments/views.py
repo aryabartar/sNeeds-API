@@ -123,11 +123,11 @@ class Verify(APIView):
 
 class VerifyTest(APIView):
     def get(self, request, *args, **kwargs):
-        # id = kwargs.get("cartid")
-        # cart = Cart.objects.get(id=id)
-        # Order.objects.sell_cart_create_order(cart)
-        # return Response()
-        send_email_notifications()
+        id = kwargs.get("cartid")
+        cart = Cart.objects.get(id=id)
+        Order.objects.sell_cart_create_order(cart)
+        return Response()
+        # send_email_notifications()
 
 
 class ConsultantDepositInfoListAPIView(generics.ListAPIView):
