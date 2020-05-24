@@ -18,6 +18,8 @@ SEMESTER_CHOICES = [
     ('زمستان', 'زمستان'),
 ]
 
+"Attention"
+"the names must be the same as the field names in the model."
 STUDENT_FORM_CATEGORY_CHOICES = [
     ('grade', 'grade'),
     ('major', 'major'),

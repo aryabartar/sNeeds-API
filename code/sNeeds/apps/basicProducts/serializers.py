@@ -44,31 +44,31 @@ class SoldBasicProductSerializer(serializers.ModelSerializer):
 class HoldingDateTimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = HoldingDateTime
-        fields = ['date_time']
+        fields = ['id', 'date_time']
 
 
 class LecturerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecturer
-        fields = ['first_name', 'last_name', 'picture', 'title', 'header']
+        fields = ['id', 'first_name', 'last_name', 'picture', 'title', 'header']
 
 
 class QuestionAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = QuestionAnswer
-        fields = ['question', 'answer']
+        fields = ['id', 'question', 'answer']
 
 
 class DownloadLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = DownloadLink
-        fields = ['url']
+        fields = ['id', 'url', 'product']
 
 
 class RoomLinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomLink
-        fields = ['url']
+        fields = ['id', 'url', 'product']
 
 
 class ClassWebinarSerializer(serializers.ModelSerializer):
@@ -81,7 +81,7 @@ class ClassWebinarSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = None
-        fields = ['title', 'slug', 'price', 'url', 'image', 'background_image',
+        fields = ['id', 'title', 'slug', 'price', 'url', 'image', 'background_image',
                   'descriptions', 'headlines', 'audiences', 'lecturers', 'holding_date_times', 'question_answers',
                   'lecturers_short',
                   'is_free', 'is_held', 'is_early', ' video_is_discounted',

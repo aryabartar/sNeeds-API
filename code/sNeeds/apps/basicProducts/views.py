@@ -22,7 +22,7 @@ class ClassProductList(generics.ListAPIView):
     serializer_class = serializers.ClassProductSerializer
     ordering_fields = ['created']
     filterset_fields = ["is_held", "is_free"]
-    search_fields = ['descriptions', 'headlines', 'lecturers']
+    search_fields = ['title', 'descriptions', 'headlines', 'lecturers']
 
 
 class ClassProductDetail(generics.RetrieveAPIView):
