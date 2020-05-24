@@ -65,13 +65,15 @@ class DiscountSerializer(serializers.ModelSerializer):
         view_name='discount:consultant-discount-detail',
         read_only=True
     )
-    users = UsersCustomPrimaryKeyRelatedField(many=True,  queryset=User.objects.all())
+    users = UsersCustomPrimaryKeyRelatedField(many=True, queryset=User.objects.all())
     is_used = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Discount
-        fields = ['id', 'consultants', 'products', 'amount', 'code', 'users', 'created', 'updated', 'use_limit', 'url',
-                  'is_used']
+        fields = [
+            'id', 'consultants', 'products', 'amount', 'code', 'users', 'created', 'updated', 'use_limit', 'url',
+            'is_used'
+        ]
         extra_kwargs = {
             'consultants': {'read_only': True},
             'products': {'read_only': True},
