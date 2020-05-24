@@ -1,3 +1,7 @@
+import json
+from collections import OrderedDict
+
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from django.utils.translation import gettext as _
@@ -10,7 +14,6 @@ from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
 
 from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
-
 
 User = get_user_model()
 
@@ -27,16 +30,32 @@ class ShortDiscountSerializer(serializers.ModelSerializer):
         fields = ['consultants', 'products']
 
 
-# class UsersField(serializers.Field):
-#
-#     def to_representation(self, value):
-#         return SafeUserDataSerializer(value.users, many=True).data
-#
-#     def to_internal_value(self, data):
-#         ret = {
-#             "users": data["users"]['id'],
-#         }
-#         return ret
+class UsersCustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def get_choices(self, cutoff=None):
+        """
+        This method is overridden.
+        Issue was:
+        https://stackoverflow.com/questions/50973569/django-rest-framework-relatedfield-cant-return-a-dict-object
+        """
+        queryset = self.get_queryset()
+        if queryset is None:
+            # Ensure that field.choices returns something sensible
+            # even when accessed with a read-only field.
+            return {}
+
+        if cutoff is not None:
+            queryset = queryset[:cutoff]
+
+        return OrderedDict([
+            (
+                item.pk,
+                self.display_value(item)
+            )
+            for item in queryset
+        ])
+
+    def to_representation(self, value):
+        return SafeUserDataSerializer(value).data
 
 
 class DiscountSerializer(serializers.ModelSerializer):
@@ -46,7 +65,7 @@ class DiscountSerializer(serializers.ModelSerializer):
         view_name='discount:consultant-discount-detail',
         read_only=True
     )
-
+    users = UsersCustomPrimaryKeyRelatedField(many=True,  queryset=User.objects.all())
     is_used = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -95,7 +114,7 @@ class DiscountSerializer(serializers.ModelSerializer):
             raise ValidationError("No students defined to use discount")
 
         if len(users) > 1:
-            raise ValidationError("Give discount to more than one user is not allowed")
+            raise ValidationError("Giving discount to more than one user is not allowed")
 
         users_are_consultants_qs = ConsultantProfile.objects.filter(user__in=users)
         if users_are_consultants_qs.exists():
@@ -112,10 +131,11 @@ class DiscountSerializer(serializers.ModelSerializer):
 
         products = []
 
-        obj = Discount.objects.new_discount_with_products_users_consultant(products, users, consultants,
-                                                                           amount=consultant_profile.time_slot_price,
-                                                                           use_limit=1, creator="consultant",
-                                                                           )
+        obj = Discount.objects.new_discount_with_products_users_consultant(
+            products, users, consultants,
+            amount=consultant_profile.time_slot_price,
+            use_limit=1, creator="consultant",
+        )
         return obj
 
 
@@ -208,7 +228,6 @@ class CartDiscountSerializer(serializers.ModelSerializer):
 
 
 class ConsultantInteractiveUsersSerializer(serializers.Serializer):
-
     interact_users = serializers.SerializerMethodField(read_only=True)
     consultant = serializers.SerializerMethodField(read_only=True)
     first_name = serializers.SerializerMethodField(read_only=True)
@@ -244,4 +263,3 @@ class ConsultantInteractiveUsersSerializer(serializers.Serializer):
             user = request.user
         consultant_profile = ConsultantProfile.objects.get(user=user)
         return ShortConsultantProfileSerializer(consultant_profile, context=self.context).data
-
