@@ -1,11 +1,15 @@
 from django.contrib import admin
 
-from .models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate, BasicProductRateField,\
+from .models import ConsultantComment, ConsultantAdminComment, SoldTimeSlotRate, BasicProductRateField, \
     BasicProductRate, SoldBasicProductRateFieldThrough, SoldBasicProductRate
 
 admin.site.register(ConsultantComment)
 admin.site.register(ConsultantAdminComment)
-admin.site.register(SoldTimeSlotRate)
+
+
+@admin.register(SoldTimeSlotRate)
+class SoldTimeSlotRateAdmin(admin.ModelAdmin):
+    list_display = ('id', 'rate', 'sold_time_slot',)
 
 
 class BasicProductRateFieldInline(admin.TabularInline):
@@ -25,4 +29,4 @@ class SoldBasicProductRateFieldThroughInline(admin.TabularInline):
 
 @admin.register(SoldBasicProductRate)
 class SoldBasicProductRateAdmin(admin.ModelAdmin):
-    inlines = (SoldBasicProductRateFieldThroughInline, )
+    inlines = (SoldBasicProductRateFieldThroughInline,)
