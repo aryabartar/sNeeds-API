@@ -6,6 +6,9 @@ class IsConsultantPermission(permissions.BasePermission):
     message = 'User is not consultant.'
 
     def has_permission(self, request, view):
+        if request.method == "OPTIONS":
+            return True
+
         # User is authenticated
         if not (request.user and request.user.is_authenticated):
             return False
