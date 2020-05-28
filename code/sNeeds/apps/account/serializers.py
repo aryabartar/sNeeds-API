@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.contrib.auth import get_user_model
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
@@ -52,7 +54,44 @@ class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StudentFormFieldsChoice
-        fields = ['id', 'name', 'category', 'slug']
+        fields = [
+            'id', 'name', 'category', 'slug'
+        ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'name': {'read_only': True},
+            'category': {'read_only': False},
+            'slug': {'read_only': False},
+        }
+
+
+class StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def get_choices(self, cutoff=None):
+        """
+        This method is overridden.
+        Issue was:
+        https://stackoverflow.com/questions/50973569/django-rest-framework-relatedfield-cant-return-a-dict-object
+        """
+        queryset = self.get_queryset()
+        if queryset is None:
+            # Ensure that field.choices returns something sensible
+            # even when accessed with a read-only field.
+            return {}
+
+        if cutoff is not None:
+            queryset = queryset[:cutoff]
+
+        return OrderedDict([
+            (
+                item.pk,
+                self.display_value(item)
+            )
+            for item in queryset
+        ])
+
+    def to_representation(self, value):
+        obj = StudentFormFieldsChoice.objects.get(pk=value.pk)
+        return StudentFormFieldsChoiceSerializer(obj).data
 
 
 class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
@@ -62,19 +101,76 @@ class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
         fields = ['id', 'year', 'semester']
 
 
+class StudentFormApplySemesterYearCustomPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def get_choices(self, cutoff=None):
+        """
+        This method is overridden.
+        Issue was:
+        https://stackoverflow.com/questions/50973569/django-rest-framework-relatedfield-cant-return-a-dict-object
+        """
+        queryset = self.get_queryset()
+        if queryset is None:
+            # Ensure that field.choices returns something sensible
+            # even when accessed with a read-only field.
+            return {}
+
+        if cutoff is not None:
+            queryset = queryset[:cutoff]
+
+        return OrderedDict([
+            (
+                item.pk,
+                self.display_value(item)
+            )
+            for item in queryset
+        ])
+
+    def to_representation(self, value):
+        obj = StudentFormApplySemesterYear.objects.get(pk=value.pk)
+        return StudentFormApplySemesterYearSerializer(obj).data
+
+
 class StudentDetailedInfoSerializer(serializers.ModelSerializer):
     from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
     user = SafeUserDataSerializer(read_only=True)
 
+    grade \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    major \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    university \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    apply_grade \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    apply_major \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    apply_country \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    apply_mainland \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    marital_status \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    apply_university \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    language_certificate \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+    degree_conferral_year \
+        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
+
+    apply_semester_year \
+        = StudentFormApplySemesterYearCustomPrimaryKeyRelatedField(many=False,
+                                                                   queryset=StudentFormApplySemesterYear.objects.all())
+
     class Meta:
         model = StudentDetailedInfo
-        fields = ['user', 'created', 'updated', 'age', 'marital_status', 'grade', 'university', 'degree_conferral_year',
-                  'major', 'total_average', 'thesis_title',
-                  'language_certificate', 'language_certificate_overall', 'language_speaking', 'language_listening',
-                  'language_writing', 'language_reading',
-                  'apply_mainland', 'apply_country', 'apply_grade', 'apply_major', 'apply_university',
-                  'apply_semester_year',
-                  'comment', 'resume']
+        fields = [
+            'id', 'user', 'created', 'updated', 'age', 'marital_status', 'grade', 'university', 'degree_conferral_year',
+            'major', 'total_average', 'thesis_title',
+            'language_certificate', 'language_certificate_overall', 'language_speaking', 'language_listening',
+            'language_writing', 'language_reading',
+            'apply_mainland', 'apply_country', 'apply_grade', 'apply_major', 'apply_university',
+            'apply_semester_year',
+            'comment', 'resume']
 
         extra_kwargs = {
             'id': {'read_only': True},
