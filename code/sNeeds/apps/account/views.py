@@ -74,6 +74,14 @@ class StudentDetailedInfoRetrieveUpdateAPIView(generics.RetrieveUpdateAPIView):
     permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoOwnerOrInteractConsultantPermission)
 
 
+class UserStudentDetailedInfoRetrieveAPIView(generics.RetrieveAPIView):
+    queryset = StudentDetailedInfo.objects.all()
+    serializer_class = StudentDetailedInfoSerializer
+    permission_classes = (permissions.IsAuthenticated, StudentDetailedInfoOwnerOrInteractConsultantPermission)
+    lookup_url_kwarg = 'user_id'
+    lookup_field = 'user__id'
+
+
 class StudentFormFieldsChoiceListAPIView(generics.ListAPIView):
     queryset = StudentFormFieldsChoice.objects.all()
     serializer_class = StudentFormFieldsChoiceSerializer
