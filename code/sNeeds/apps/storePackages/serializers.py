@@ -68,19 +68,21 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
         read_only=True,
         view_name='store-package:sold-store-package-detail'
     )
-    consultant_url = serializers.HyperlinkedRelatedField(
-        source='consultant',
-        lookup_field='slug',
-        read_only=True,
-        view_name='consultant:consultant-profile-detail'
-    )
+    consultant= serializers.SerializerMethodField()
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = [
             'id', 'url', 'sold_store_package', 'sold_store_package_url', 'consultant',
-            'consultant_url', 'created', 'updated'
+            'created', 'updated'
         ]
+
+    def get_consultant(self, obj):
+        request = self.context.get('request')
+
+        return ShortConsultantProfileSerializer(
+            obj.consultant, context={'request': request}
+        ).data
 
 
 class SoldStorePackageSerializer(serializers.ModelSerializer):

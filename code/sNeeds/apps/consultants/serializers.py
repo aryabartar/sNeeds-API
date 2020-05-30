@@ -19,6 +19,7 @@ class ShortConsultantProfileSerializer(serializers.ModelSerializer):
         model = sNeeds.apps.consultants.models.ConsultantProfile
         fields = (
             'id',
+            'slug',
             'url',
             'profile_picture',
             'first_name',
