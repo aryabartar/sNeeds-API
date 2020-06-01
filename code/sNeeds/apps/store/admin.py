@@ -54,9 +54,24 @@ class SoldTimeSlotSalePaymentInfoAdmin(admin.ModelAdmin):
             data["orders_subtotal"] = list(obj.order_set.all().values_list('subtotal', flat=True))
             response.context_data['data'].append(data)
 
+        response.context_data['sums'] = {"orders_total_sum": 0, "orders_subtotal_sum": 0}
+        for data in response.context_data['data']:
+            temp_orders_total = 0
+            for t in data["orders_total"]:
+                temp_orders_total += t
+
+            temp_orders_subtotal = 0
+            for t in data["orders_subtotal"]:
+                temp_orders_subtotal += t
+
+            response.context_data['sums']["orders_total_sum"] += temp_orders_total
+            response.context_data['sums']["orders_subtotal_sum"] += temp_orders_subtotal
+
+
         return response
 
     def has_add_permission(self, request, obj=None):
         return False
+
 
 admin.site.register(SoldTimeSlotSale, SoldTimeSlotSaleAdmin)

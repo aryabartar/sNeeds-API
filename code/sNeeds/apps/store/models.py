@@ -239,6 +239,7 @@ class SoldTimeSlotSale(SoldProduct):
             raise ValidationError(_("End time should be after start time"), code='invalid')
 
 
+# Used for SoldTimeSlotSalePaymentInfoAdmin in admin panel
 class SoldTimeSlotSalePaymentInfo(SoldTimeSlotSale):
     class Meta:
         proxy = True

@@ -83,6 +83,17 @@
                     <td> {{ row.orders_subtotal }} </td>
                 </tr>
             {% endfor %}
+            <tr style="font-weight:bold; border-top:2px solid #DDDDDD;">
+                <td> Total</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> {{ sums.orders_total_sum }}</td>
+                <td> {{ sums.orders_subtotal_sum }}</td>
+            </tr>
             </tbody>
 
         </table>
