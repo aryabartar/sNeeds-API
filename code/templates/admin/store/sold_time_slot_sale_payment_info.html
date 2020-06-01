@@ -1,0 +1,91 @@
+{% extends "admin/change_list.html" %}
+
+{% block content_title %}
+    <h1> SoldTimeSlotSale Payment Info </h1>
+{% endblock %}
+
+{% block result_list %}
+
+    <div class="results">
+        <table>
+
+            <thead>
+            <tr>
+                <th>
+                    <div class="text">
+                        <a href="#">ID</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">consultant</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">time_slot_price</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">start_time</a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>end_time</strong>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>created</strong>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>orders</strong>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>orders_total</strong>
+                        </a>
+                    </div>
+                </th>
+                <th>
+                    <div class="text">
+                        <a href="#">
+                            <strong>orders_subtotal</strong>
+                        </a>
+                    </div>
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for row in data %}
+                <tr class="{% cycle 'row1' 'row2' %}">
+                    <td> {{ row.ID }} </td>
+                    <td> {{ row.consultant }} </td>
+                    <td> {{ row.time_slot_price }} </td>
+                    <td> {{ row.start_time }}</td>
+                    <td> {{ row.end_time }} </td>
+                    <td> {{ row.created }} </td>
+                    <td> {{ row.orders }} </td>
+                    <td> {{ row.orders_total }} </td>
+                    <td> {{ row.orders_subtotal }} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+    </div>{% endblock %}
+
+{% block pagination %}{% endblock %}
