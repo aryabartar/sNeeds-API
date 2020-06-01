@@ -7,6 +7,7 @@ from . import serializers
 from .filters import SoldStorePackagePhaseDetailFilter
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
+from .serializers import SoldStorePackagePhaseDetailPATCHSerializer
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
@@ -216,6 +217,13 @@ class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateAPIView):
         permissions.IsAuthenticated, SoldStorePackagePhaseDetailGetPermission,
         SoldStorePackagePhaseDetailUpdatePermission
     ]
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method == 'PATCH':
+            serializer_class = SoldStorePackagePhaseDetailPATCHSerializer
+
+        return serializer_class
 
 
 class SoldStorePackagePhaseDetailListAPIView(generics.ListCreateAPIView):

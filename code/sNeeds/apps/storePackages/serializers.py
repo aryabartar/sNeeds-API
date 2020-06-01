@@ -252,3 +252,10 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
                 {"detail": "Consultant has no permission to SoldStorePackagePhaseDetail."},
             )
         return attrs
+
+
+class SoldStorePackagePhaseDetailPATCHSerializer(SoldStorePackagePhaseSerializer):
+    class Meta:
+        model = SoldStorePackagePhaseDetail
+        fields = ['title', 'status', ]
+
