@@ -68,19 +68,16 @@ class ConsultantSoldStorePackageAcceptRequestSerializer(serializers.ModelSeriali
         read_only=True,
         view_name='store-package:sold-store-package-detail'
     )
-    consultant = serializers.SerializerMethodField()
+    consultant_info = serializers.SerializerMethodField()
 
     class Meta:
         model = ConsultantSoldStorePackageAcceptRequest
         fields = [
             'id', 'url', 'sold_store_package', 'sold_store_package_url', 'consultant',
-            'created', 'updated'
+            'consultant_info', 'created', 'updated'
         ]
-        extra_kwargs = {
-            'consultant': {'read_only': True},
-        }
 
-    def get_consultant(self, obj):
+    def get_consultant_info(self, obj):
         request = self.context.get('request')
 
         return ShortConsultantProfileSerializer(
