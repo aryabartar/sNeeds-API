@@ -39,3 +39,4 @@ class SoldStorePackagePhaseAdmin(admin.ModelAdmin):
 
 admin.site.register(StorePackagePhase)
 admin.site.register(ConsultantSoldStorePackageAcceptRequest)
+admin.site.register(SoldStorePackagePhaseDetail)
