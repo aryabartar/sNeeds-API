@@ -8,6 +8,9 @@ class IsStudentPermission(permissions.BasePermission):
     message = "Only student users can create StudentDetailedInfo"
 
     def has_permission(self, request, view):
+        if request.method == "OPTIONS":
+            return True
+
         user = request.user
         if not user.is_authenticated:
             return False
@@ -19,6 +22,9 @@ class StudentDetailedInfoOwnerOrInteractConsultantPermission(permissions.BasePer
     message = "Only owner can update and only owner and consultants that service the owner can see info"
 
     def has_object_permission(self, request, view, obj):
+        if request.method == "OPTIONS":
+            return True
+
         user = request.user
         if obj.user == user:
             return True
