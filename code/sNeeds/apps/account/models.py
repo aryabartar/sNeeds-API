@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
@@ -153,7 +153,7 @@ class StudentDetailedInfo(models.Model):
     # Extra info
     comment = models.TextField(max_length=1024, null=True, blank=True)
     resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True,
-                              validators=[validate_resume_file_extension, validate_resume_file_size])
+                              validators=[FileExtensionValidator(allowed_extensions=['pdf']), validate_resume_file_size])
 
     def is_complete(self):
         # TODO: Hossein, implement this
