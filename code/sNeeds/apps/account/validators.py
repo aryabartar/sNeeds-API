@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+import os
 from . import models
 from django.utils.translation import gettext_lazy as _
 
@@ -24,10 +25,13 @@ def validate_mainland(value):
 
 
 def validate_resume_file_extension(value):
-    if value.file.content_type != 'application/pdf':
-        raise ValidationError('Only pdf file can be uploaded')
-    else:
-        return value
+    ext = ""
+    if os.path.splitext(value.name)[1] is not None:
+        ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.pdf']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+    return value
 
 
 def validate_resume_file_size(value):

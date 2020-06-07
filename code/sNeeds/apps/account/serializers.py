@@ -136,13 +136,7 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
 
     grade \
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
-    major \
-        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
-    university \
-        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
     apply_grade \
-        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
-    apply_major \
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
     apply_country \
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
@@ -150,11 +144,7 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
     marital_status \
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
-    apply_university \
-        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
     language_certificate \
-        = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
-    degree_conferral_year \
         = StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(queryset=StudentFormFieldsChoice.objects.all())
 
     apply_semester_year \
@@ -181,19 +171,9 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
         if attrs.get('grade').category != 'grade':
             raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
                                     .format('grade', 'grade')))
-
-        if attrs.get('major').category != 'major':
-            raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
-                                    .format('major', 'major')))
-        if attrs.get('university').category != 'university':
-            raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
-                                    .format('university', 'university')))
         if attrs.get('apply_grade').category != 'apply_grade':
             raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
                                     .format('apply_grade', 'apply_grade')))
-        if attrs.get('apply_major').category != 'apply_major':
-            raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
-                                    .format('apply_major', 'apply_major')))
         if attrs.get('apply_country').category != 'apply_country':
             raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
                                     .format('apply_country', 'apply_country')))
@@ -203,15 +183,9 @@ class StudentDetailedInfoSerializer(serializers.ModelSerializer):
         if attrs.get('marital_status').category != 'marital_status':
             raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
                                     .format('marital_status', 'marital_status')))
-        if attrs.get('apply_university').category != 'apply_university':
-            raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
-                                    .format('apply_university', 'apply_university')))
         if attrs.get('language_certificate').category != 'language_certificate':
             raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
                                     .format('language_certificate', 'language_certificate')))
-        if attrs.get('degree_conferral_year').category != 'degree_conferral_year':
-            raise ValidationError(_("The Value Entered for: {} is not in allowed category: {}"
-                                    .format('degree_conferral_year', 'degree_conferral_year')))
         return attrs
 
     def create(self, validated_data):

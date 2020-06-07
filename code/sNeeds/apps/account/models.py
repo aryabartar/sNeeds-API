@@ -120,10 +120,9 @@ class StudentDetailedInfo(models.Model):
 
     # Last grade info
     grade = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='grade')
-    university = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='university')
-    degree_conferral_year = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT,
-                                              related_name='degree_conferral_year')
-    major = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='major')
+    university = models.CharField(max_length=256)
+    degree_conferral_year = models.PositiveSmallIntegerField()
+    major = models.CharField(max_length=256)
     total_average = models.DecimalField(max_digits=4, decimal_places=2)
     thesis_title = models.CharField(max_length=512, blank=True, null=True)
 
@@ -146,9 +145,8 @@ class StudentDetailedInfo(models.Model):
     apply_mainland = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_mainland')
     apply_country = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_country')
     apply_grade = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_grade')
-    apply_major = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_major')
-    apply_university = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT,
-                                         related_name='apply_university')
+    apply_major = models.CharField(max_length=256)
+    apply_university = models.CharField(max_length=256)
     apply_semester_year = models.ForeignKey(StudentFormApplySemesterYear, on_delete=models.PROTECT,
                                             related_name='apply_semester_year')
 
