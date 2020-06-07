@@ -209,7 +209,7 @@ class SoldStorePaidPackagePhaseListAPIView(generics.ListAPIView):
         return qs
 
 
-class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateAPIView):
+class SoldStorePackagePhaseDetailDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'id'
     queryset = SoldStorePackagePhaseDetail.objects.all()
     serializer_class = serializers.SoldStorePackagePhaseDetailSerializer
