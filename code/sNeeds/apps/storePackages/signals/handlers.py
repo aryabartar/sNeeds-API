@@ -73,6 +73,7 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
     # Update active
     try:
         sold_store_unpaid_package_phases = SoldStoreUnpaidPackagePhase.objects.get(
+            sold_store_package=instance.sold_store_package,
             phase_number=instance.phase_number + 1
         )
         sold_store_unpaid_package_phases.active = True

@@ -47,6 +47,7 @@ class SendRequest(APIView):
                 return Response({"detail": "cartid field is empty."}, 400)
 
             cart = Cart.objects.get(id=cart_id)
+
         except Cart.DoesNotExist:
             return Response({"detail": "No cart exists."}, 400)
 
@@ -132,7 +133,6 @@ class VerifyTest(APIView):
         cart = Cart.objects.get(id=id)
         Order.objects.sell_cart_create_order(cart)
         return Response()
-        # send_email_notifications()
 
 
 class ConsultantDepositInfoListAPIView(generics.ListAPIView):
@@ -152,9 +152,3 @@ class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ConsultantDepositInfoSerializer
     permission_classes = [permissions.IsAuthenticated, IsConsultant, ConsultantDepositInfoOwner]
 
-    # def get_queryset(self):
-    #     # user = self.request.user
-    #     # consultant_profile = ConsultantProfile.objects.get(user=user)
-    #     # qs = ConsultantDepositInfo.objects.filter(consultant=consultant_profile)
-    #     qs = ConsultantDepositInfo.objects.all()
-    #     return qs
