@@ -1,7 +1,7 @@
 import datetime
 
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth import get_user_model
@@ -120,10 +120,9 @@ class StudentDetailedInfo(models.Model):
 
     # Last grade info
     grade = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='grade')
-    university = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='university')
-    degree_conferral_year = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT,
-                                              related_name='degree_conferral_year')
-    major = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='major')
+    university = models.CharField(max_length=256)
+    degree_conferral_year = models.PositiveSmallIntegerField()
+    major = models.CharField(max_length=256)
     total_average = models.DecimalField(max_digits=4, decimal_places=2)
     thesis_title = models.CharField(max_length=512, blank=True, null=True)
 
@@ -146,16 +145,15 @@ class StudentDetailedInfo(models.Model):
     apply_mainland = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_mainland')
     apply_country = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_country')
     apply_grade = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_grade')
-    apply_major = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_major')
-    apply_university = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT,
-                                         related_name='apply_university')
+    apply_major = models.CharField(max_length=256)
+    apply_university = models.CharField(max_length=256)
     apply_semester_year = models.ForeignKey(StudentFormApplySemesterYear, on_delete=models.PROTECT,
                                             related_name='apply_semester_year')
 
     # Extra info
     comment = models.TextField(max_length=1024, null=True, blank=True)
     resume = models.FileField(upload_to=get_student_resume_path, null=True, blank=True,
-                              validators=[validate_resume_file_extension, validate_resume_file_size])
+                              validators=[FileExtensionValidator(allowed_extensions=['pdf']), validate_resume_file_size])
 
     def is_complete(self):
         # TODO: Hossein, implement this
