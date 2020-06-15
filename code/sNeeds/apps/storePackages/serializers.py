@@ -233,7 +233,7 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
 
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['id', 'url', 'title', 'status', 'created', 'updated', 'content_type', 'object_id', ]
+        fields = ['id', 'url', 'title', 'status', 'file', 'created', 'updated', 'content_type', 'object_id', ]
         extra_kwargs = {
             'content_object': {'read_only': True},
         }
@@ -257,5 +257,4 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
 class SoldStorePackagePhaseDetailPATCHSerializer(SoldStorePackagePhaseSerializer):
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['title', 'status', ]
-
+        fields = ['title', 'status', 'file']
