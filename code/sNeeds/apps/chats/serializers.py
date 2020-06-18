@@ -28,10 +28,16 @@ class ChatSerializer(serializers.ModelSerializer):
 
     def get_profile_img(self, obj):
         request = self.context.get("request")
+        user = request.user
         consultant = obj.consultant
-        if consultant.profile_picture:
+
+        if user == consultant.user:
+            return None
+
+        elif consultant.profile_picture:
             profile_img = consultant.profile_picture.url
             return request.build_absolute_uri(profile_img)
+
         else:
             return None
 
