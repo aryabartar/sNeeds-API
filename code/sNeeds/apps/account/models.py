@@ -130,17 +130,10 @@ class StudentDetailedInfo(models.Model):
     language_certificate = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT,
                                              related_name='language_certificate')
     language_certificate_overall = models.PositiveSmallIntegerField(null=True, blank=True)
-    language_speaking = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                         null=True, blank=True)
-    language_listening = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                          null=True, blank=True)
-    language_writing = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(100)],
-                                                        null=True, blank=True)
-    language_reading = models.PositiveSmallIntegerField(
-        validators=[MinValueValidator(0), MaxValueValidator(100)],
-        null=True,
-        blank=True
-    )
+    language_speaking = models.PositiveSmallIntegerField(null=True, blank=True)
+    language_listening = models.PositiveSmallIntegerField(null=True, blank=True)
+    language_writing = models.PositiveSmallIntegerField(null=True, blank=True)
+    language_reading = models.PositiveSmallIntegerField(null=True, blank=True)
     # Apply info
     apply_mainland = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_mainland')
     apply_country = models.ForeignKey(StudentFormFieldsChoice, on_delete=models.PROTECT, related_name='apply_country')

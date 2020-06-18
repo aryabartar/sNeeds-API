@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import BasicProduct, SoldBasicProduct, HoldingDateTime, Lecturer, QuestionAnswer, \
-    ClassProduct, WebinarProduct, SoldClassWebinar, SoldClassProduct, SoldWebinarProduct, DownloadLink, RoomLink
+    ClassProduct, WebinarProduct, SoldClassWebinar, SoldClassProduct, SoldWebinarProduct, DownloadLink, RoomLink, \
+    WebinarRoomLink, ClassRoomLink
 from ..customAuth.serializers import SafeUserDataSerializer
 
 
@@ -65,18 +66,12 @@ class DownloadLinkSerializer(serializers.ModelSerializer):
         fields = ['id', 'url', 'product']
 
 
-class RoomLinkSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = RoomLink
-        fields = ['id', 'url', 'product']
-
-
 class ClassWebinarSerializer(serializers.ModelSerializer):
     lecturers_short = LecturerSerializer(read_only=True, many=True)
     holding_date_times = HoldingDateTimeSerializer(read_only=True, many=True)
     question_answers = QuestionAnswerSerializer(read_only=True, many=True)
     download_links = serializers.SerializerMethodField(read_only=True)
-    room_links = serializers.SerializerMethodField(read_only=True)
+    # room_links = serializers.SerializerMethodField(read_only=True)
     url = None
 
     class Meta:
@@ -99,16 +94,16 @@ class ClassWebinarSerializer(serializers.ModelSerializer):
                 download_links_qs = DownloadLink.objects.filter(product=obj)
         return DownloadLinkSerializer(download_links_qs, many=True).data
 
-    def get_room_links(self, obj):
-        room_links_qs = RoomLink.objects.none()
-        request = self.context.get('request')
-        user = None
-        if request and hasattr(request, "user"):
-            user = request.user
-        if user:
-            if user.is_authenticated and SoldClassWebinar.objects.filter(sold_to=user, basic_product=obj).exists():
-                room_links_qs = RoomLink.objects.filter(product=obj)
-        return RoomLinkSerializer(room_links_qs, many=True).data
+    # def get_room_links(self, obj):
+    #     room_links_qs = RoomLink.objects.none()
+    #     request = self.context.get('request')
+    #     user = None
+    #     if request and hasattr(request, "user"):
+    #         user = request.user
+    #     if user:
+    #         if user.is_authenticated and SoldClassWebinar.objects.filter(sold_to=user, basic_product=obj).exists():
+    #             room_links_qs = RoomLink.objects.filter(product=obj)
+    #     return RoomLinkSerializer(room_links_qs, many=True).data
 
 
 class ClassProductSerializer(ClassWebinarSerializer):
@@ -181,3 +176,18 @@ class SoldWebinarProductSerializer(serializers.ModelSerializer):
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+
+class RoomLinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ['id', 'user', 'url', 'product']
+
+
+class WebinarRoomLinkSerializer(serializers.ModelSerializer):
+    class Meta(RoomLinkSerializer.Meta):
+        model = WebinarRoomLink
+
+
+class ClassRoomLinkSerializer(serializers.ModelSerializer):
+    class Meta(RoomLinkSerializer.Meta):
+        model = ClassRoomLink

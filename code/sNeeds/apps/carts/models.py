@@ -95,7 +95,7 @@ class Cart(models.Model):
         consultants_qs = cart_discount.discount.consultants.all()
 
         # Products that are in the discount of code entered
-        products_qs = cart_discount.discount.products.all()
+        discount_products_qs = cart_discount.discount.products.all()
 
         # For apply time slot number discount
         time_slot_sale_count = self.get_time_slot_sales_count()
@@ -140,7 +140,7 @@ class Cart(models.Model):
                 pass
 
             # For products
-            if product in products_qs:
+            if product in discount_products_qs:
                 effective_price = product.price - cart_discount.discount.amount
                 if effective_price < 0:
                     effective_price = 0

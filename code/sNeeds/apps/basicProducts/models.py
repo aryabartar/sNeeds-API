@@ -2,6 +2,8 @@ from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from sNeeds.apps.store.models import Product, SoldProduct, ProductQuerySet, SoldProductQuerySet
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 def get_lecturer_picture_path(instance, filename):
@@ -157,16 +159,6 @@ class ClassWebinar(BasicProduct):
         self.price = price
 
 
-class DownloadLink(models.Model):
-    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
-    url = models.URLField()
-
-
-class RoomLink(models.Model):
-    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
-    url = models.URLField()
-
-
 class ClassProduct(ClassWebinar):
     pass
 
@@ -185,3 +177,22 @@ class SoldClassProduct(SoldClassWebinar):
 
 class SoldWebinarProduct(SoldClassWebinar):
     pass
+
+
+class DownloadLink(models.Model):
+    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
+    url = models.URLField()
+
+
+class RoomLink(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    url = models.URLField(null=True, blank=True)
+
+
+class WebinarRoomLink(RoomLink):
+    product = models.ForeignKey(WebinarProduct, on_delete=models.CASCADE, default=2)
+
+
+class ClassRoomLink(RoomLink):
+    product = models.ForeignKey(ClassProduct, on_delete=models.CASCADE, default=2)
+
