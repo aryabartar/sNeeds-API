@@ -56,7 +56,8 @@ class SendRequest(APIView):
 
         if not cart.is_acceptable_for_pay():
             # If price is zero it may a 100 percent for one time slot. so we check that is just one time slot
-            if cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1:
+            if (cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1) or\
+                    (cart.products.all().count() == 1 and cart.get_basic_products_count() == 1):
                 Order.objects.sell_cart_create_order(cart)
                 return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
             else:

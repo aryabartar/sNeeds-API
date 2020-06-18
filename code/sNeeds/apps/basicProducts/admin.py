@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import BasicProduct, SoldBasicProduct, DownloadLink, ClassProduct, WebinarProduct, RoomLink
+from .models import BasicProduct, SoldBasicProduct, DownloadLink, ClassProduct, WebinarProduct, RoomLink, \
+    SoldClassProduct, SoldWebinarProduct
 
 
 class DownloadLinkInline(admin.TabularInline):
@@ -26,5 +27,5 @@ class ClassAdmin(ClassWebinarAdmin):
 
 admin.site.register(ClassProduct, ClassAdmin)
 admin.site.register(WebinarProduct, WebinarAdmin)
-admin.site.register(BasicProduct)
-admin.site.register(SoldBasicProduct)
+admin.site.register(SoldClassProduct)
+admin.site.register(SoldWebinarProduct)
