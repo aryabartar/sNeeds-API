@@ -185,14 +185,14 @@ class DownloadLink(models.Model):
 
 
 class RoomLink(models.Model):
-    product = models.ForeignKey(ClassWebinar, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
-    url = models.URLField()
+    url = models.URLField(null=True, blank=True)
 
 
 class WebinarRoomLink(RoomLink):
-    pass
+    product = models.ForeignKey(WebinarProduct, on_delete=models.CASCADE, default=2)
 
 
 class ClassRoomLink(RoomLink):
-    pass
+    product = models.ForeignKey(ClassProduct, on_delete=models.CASCADE, default=2)
+
