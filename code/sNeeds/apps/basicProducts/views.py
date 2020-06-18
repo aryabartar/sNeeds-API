@@ -2,8 +2,9 @@ from django.shortcuts import render
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from . import serializers
-from .models import BasicProduct, SoldBasicProduct, ClassProduct, SoldClassProduct, WebinarProduct, SoldWebinarProduct
-from .permissions import SoldBasicProductOwnerPermission
+from .models import BasicProduct, SoldBasicProduct, ClassProduct, SoldClassProduct, WebinarProduct, SoldWebinarProduct, \
+    RoomLink, ClassRoomLink, WebinarRoomLink
+from .permissions import SoldBasicProductOwnerPermission, IsLinkOwner
 
 
 class BasicProductList(generics.ListAPIView):
@@ -94,6 +95,42 @@ class SoldWebinarProductDetail(generics.RetrieveAPIView):
     queryset = SoldWebinarProduct.objects.all()
     serializer_class = serializers.SoldWebinarProductSerializer
     permission_classes = [IsAuthenticated, SoldBasicProductOwnerPermission]
+
+
+class WebinarRoomLinkList(generics.ListAPIView):
+    queryset = WebinarRoomLink.objects.all()
+    serializer_class = serializers.WebinarRoomLinkSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = WebinarRoomLink.objects.filter(user=user)
+        return qs
+
+
+class WebinarRoomLinkDetail(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = WebinarRoomLink.objects.all()
+    serializer_class = serializers.WebinarRoomLinkSerializer
+    permission_classes = [IsAuthenticated, IsLinkOwner]
+
+
+class ClassRoomLinkList(generics.ListAPIView):
+    queryset = ClassRoomLink.objects.all()
+    serializer_class = serializers.ClassRoomLinkSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = ClassRoomLink.objects.filter(user=user)
+        return qs
+
+
+class ClassRoomLinkDetail(generics.RetrieveAPIView):
+    lookup_field = 'id'
+    queryset = ClassRoomLink.objects.all()
+    serializer_class = serializers.ClassRoomLinkSerializer
+    permission_classes = [IsAuthenticated, IsLinkOwner]
 
 
 

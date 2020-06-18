@@ -21,4 +21,10 @@ urlpatterns = [
     path('sold-webinar-products/', views.SoldWebinarProductList.as_view(), name="sold-webinar-product-list"),
     path('sold-webinar-products/<int:id>/', views.SoldWebinarProductDetail.as_view(), name="sold-webinar-product-detail"),
 
+    path('class-room-links/', views.ClassRoomLinkList.as_view(), name="class-room-link-list"),
+    path('class-room-links/<int:id>/', views.ClassRoomLinkDetail.as_view(), name="class-room-link-detail"),
+
+    path('webinar-room-links/', views.WebinarRoomLinkList.as_view(), name="webinar-room-link-list"),
+    path('webinar-room-links/<int:id>/', views.WebinarRoomLinkDetail.as_view(), name="webinar-room-link-detail"),
+
 ]
