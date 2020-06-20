@@ -47,7 +47,7 @@ class StorePackageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StorePackage
-        fields = ["id", 'url', "slug", "price", "total_price", "active", "title", "store_package_phases", ]
+        fields = ["id", 'url', "image", "slug", "price", "total_price", "active", "title", "store_package_phases", ]
 
     def get_store_package_phases(self, obj):
         return StorePackagePhaseThroughSerializer(
@@ -105,11 +105,12 @@ class SoldStorePackageSerializer(serializers.ModelSerializer):
     class Meta:
         model = SoldStorePackage
         fields = [
-            'id', 'url', 'title', 'sold_to', 'consultant', 'consultant_url', 'paid_price', 'total_price',
+            'id', 'url', 'image', 'title', 'sold_to', 'consultant', 'consultant_url', 'paid_price', 'total_price',
             'sold_store_paid_package_phases', 'sold_store_unpaid_package_phases', 'created', 'updated'
         ]
         extra_kwargs = {
             'title': {'read_only': True},
+            'image': {'read_only': True},
             'sold_to': {'read_only': True},
             'paid_price': {'read_only': True},
             'total_price': {'read_only': True},

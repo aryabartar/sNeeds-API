@@ -32,7 +32,11 @@ def get_sold_store_package_phase_detail_file_upload_path(instance, file_name):
 
 
 def get_store_package_image_upload_path(instance, file_name):
-    return "storePackage/images/store-package/{}/{}".format(instance.id, file_name)
+    return "storePackage/images/store-package-images/{}/{}".format(instance.id, file_name)
+
+
+def get_sold_store_package_image_upload_path(instance, file_name):
+    return "storePackage/images/sold-store-package-images/{}/{}".format(instance.id, file_name)
 
 
 class StorePackageQuerySetManager(models.QuerySet):
@@ -98,16 +102,18 @@ class StorePackagePhase(models.Model):
 
 class StorePackage(Product):
     title = models.CharField(max_length=1024)
+    image = models.ImageField(
+        blank=False, null=True, upload_to=get_sold_store_package_image_upload_path
+    )
+    slug = models.SlugField(unique=True)
+
     store_package_phases = models.ManyToManyField(
         StorePackagePhase,
         through='StorePackagePhaseThrough',
         related_name='store_packages'
     )
+
     total_price = models.PositiveIntegerField(blank=True)
-    slug = models.SlugField(unique=True)
-    image = models.ImageField(
-        blank=False, null=True, upload_to=get_store_package_image_upload_path
-    )
 
     objects = StorePackageQuerySetManager.as_manager()
 
@@ -191,6 +197,9 @@ class SoldStorePackageQuerySet(models.QuerySet):
 
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
+    image = models.ImageField(
+        blank=False, null=True, upload_to=get_sold_store_package_image_upload_path
+    )
 
     sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
