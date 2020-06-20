@@ -1,5 +1,6 @@
 import os
 
+from ckeditor.fields import RichTextField
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -70,6 +71,7 @@ class StorePackageQuerySetManager(models.QuerySet):
                 if store_package_phase_through_obj.phase_number == 1:
                     SoldStorePaidPackagePhase.objects.create(
                         title=store_package_phase_through_obj.store_package_phase.title,
+                        description=store_package_phase_through_obj.store_package_phase.description,
                         detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
                         price=store_package_phase_through_obj.store_package_phase.price,
                         phase_number=store_package_phase_through_obj.phase_number,
@@ -78,6 +80,7 @@ class StorePackageQuerySetManager(models.QuerySet):
                 else:
                     SoldStoreUnpaidPackagePhase.objects.create(
                         title=store_package_phase_through_obj.store_package_phase.title,
+                        description=store_package_phase_through_obj.store_package_phase.description,
                         detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
                         price=store_package_phase_through_obj.store_package_phase.price,
                         phase_number=store_package_phase_through_obj.phase_number,
@@ -96,6 +99,8 @@ class StorePackagePhase(models.Model):
         max_length=1024,
         help_text="This field is for ourselves, Feel free to add details."
     )
+    description = RichTextField(null=True, blank=True)
+
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
@@ -319,6 +324,7 @@ class SoldStorePackagePhase(models.Model):
         max_length=1024,
         help_text="This field is for ourselves, Feel free to add details."
     )
+    description = RichTextField(null=True, blank=True)
     sold_store_package = models.ForeignKey(
         SoldStorePackage,
         on_delete=models.CASCADE,

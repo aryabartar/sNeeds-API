@@ -24,14 +24,18 @@ class StorePackagePhaseThroughSerializer(serializers.ModelSerializer):
         view_name='store-package:store-package-detail'
     )
     title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
     price = serializers.SerializerMethodField()
 
     class Meta:
         model = StorePackagePhaseThrough
-        fields = ['id', 'url', 'title', 'store_package', 'phase_number', 'price']
+        fields = ['id', 'url', 'description', 'title', 'store_package', 'phase_number', 'price']
 
     def get_title(self, obj):
         return obj.store_package_phase.title
+
+    def get_description(self, obj):
+        return obj.store_package_phase.description
 
     def get_price(self, obj):
         return obj.store_package_phase.price
@@ -168,12 +172,12 @@ class SoldStorePackagePhaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = [
-            'id', 'title', 'detailed_title', 'price', 'sold_store_package', 'phase_number', 'status',
+            'id', 'title', 'description', 'price', 'sold_store_package', 'phase_number', 'status',
         ]
         extra_kwargs = {
             'url': {'read_only': True},
             'title': {'read_only': True},
-            'detailed_title': {'read_only': True},
+            'description': {'read_only': True},
             'price': {'read_only': True},
             'sold_store_package': {'read_only': True},
             'phase_number': {'read_only': True},
@@ -234,7 +238,9 @@ class SoldStorePackagePhaseDetailSerializer(SoldStorePackagePhaseSerializer):
 
     class Meta:
         model = SoldStorePackagePhaseDetail
-        fields = ['id', 'url', 'title', 'status', 'file', 'created', 'updated', 'content_type', 'object_id', ]
+        fields = [
+            'id', 'url', 'title', 'status', 'file', 'created', 'updated', 'content_type', 'object_id',
+        ]
         extra_kwargs = {
             'content_object': {'read_only': True},
         }
