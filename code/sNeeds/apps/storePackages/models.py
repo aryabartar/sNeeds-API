@@ -31,6 +31,10 @@ def get_sold_store_package_phase_detail_file_upload_path(instance, file_name):
     return "storePackage/files/sold-store-package-phase-detail/{}/{}".format(instance.id, file_name)
 
 
+def get_store_package_image_upload_path(instance, file_name):
+    return "storePackage/images/store-package/{}/{}".format(instance.id, file_name)
+
+
 class StorePackageQuerySetManager(models.QuerySet):
     def update(self, **kwargs):
         super().update(**kwargs)
@@ -101,6 +105,9 @@ class StorePackage(Product):
     )
     total_price = models.PositiveIntegerField(blank=True)
     slug = models.SlugField(unique=True)
+    image = models.ImageField(
+        blank=False, null=True, upload_to=get_store_package_image_upload_path
+    )
 
     objects = StorePackageQuerySetManager.as_manager()
 
