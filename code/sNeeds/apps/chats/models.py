@@ -37,6 +37,14 @@ class ChatManager(models.QuerySet):
         ordered = sorted(qs, key=chat_last_message_updated, reverse=True)
         return ordered
 
+    def get_users(self):
+        qs1 = self._chain()
+        result_qs = User.objects.none()
+
+        for i in qs1:
+            result_qs |= User.objects.filter(pk=i.user.id)
+        return result_qs
+
 
 class MessageManager(PolymorphicManager):
     def get_chats_messages(self, chats_qs):
@@ -51,6 +59,7 @@ class MessageManager(PolymorphicManager):
                 qs = qs | queryset.filter(chat=chat)
 
         return qs
+
 
 
 class Chat(models.Model):

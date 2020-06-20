@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, Discount, TimeSlotSaleNumberDiscount
+from ..chats.models import Chat
 from ..store.models import Product
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
@@ -249,7 +250,8 @@ class ConsultantInteractiveUsersSerializer(serializers.Serializer):
             user = request.user
         consultant_profile = ConsultantProfile.objects.get(user__id=user.id)
 
-        users = get_users_interact_with_consultant(consultant_profile)
+        # users = get_users_interact_with_consultant(consultant_profile)
+        users = Chat.objects.filter(consultant=consultant_profile).get_users()
         return SafeUserDataSerializer(users, many=True, context=self.context).data
 
     def get_first_name(self, obj):
