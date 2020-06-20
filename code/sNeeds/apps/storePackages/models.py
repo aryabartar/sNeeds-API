@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
@@ -56,6 +58,8 @@ class StorePackageQuerySetManager(models.QuerySet):
                 paid_price=obj.price,
                 sold_to=sold_to,
             )
+            new_sold_store_package.image.save(obj.image_name, obj.image, True)
+
             sold_store_package_list.append(new_sold_store_package)
 
             store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
@@ -103,7 +107,7 @@ class StorePackagePhase(models.Model):
 class StorePackage(Product):
     title = models.CharField(max_length=1024)
     image = models.ImageField(
-        blank=False, null=True, upload_to=get_sold_store_package_image_upload_path
+        blank=False, null=True, upload_to=get_store_package_image_upload_path
     )
     slug = models.SlugField(unique=True)
 
@@ -147,6 +151,10 @@ class StorePackage(Product):
              update_fields=None):
         self.full_clean()
         super(StorePackage, self).save()
+
+    @property
+    def image_name(self):
+        return os.path.basename(self.image.name)
 
     def __str__(self):
         return self.title
