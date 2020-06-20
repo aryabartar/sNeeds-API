@@ -21,7 +21,14 @@ class MarketplaceListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
     def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
+        consultant = ConsultantProfile.objects.get(user=self.request.user)
+        accept_requested_store_packages_id_list = ConsultantSoldStorePackageAcceptRequest.objects.filter(
+            consultant=consultant
+        ).values_list("sold_store_package", flat=True)
+
+        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos().exclude(
+            id__in=accept_requested_store_packages_id_list
+        )
         return qs
 
 
