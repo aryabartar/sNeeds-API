@@ -41,7 +41,6 @@ class StorePackageQuerySetManager(models.QuerySet):
                     new_sold_store_paid_package_phase = SoldStorePaidPackagePhase.objects.create(
                         title=store_package_phase_through_obj.store_package_phase.title,
                         description=store_package_phase_through_obj.store_package_phase.description,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
                         price=store_package_phase_through_obj.store_package_phase.price,
                         phase_number=store_package_phase_through_obj.phase_number,
                         sold_store_package=new_sold_store_package
@@ -61,7 +60,6 @@ class StorePackageQuerySetManager(models.QuerySet):
                     new_sold_store_unpaid_package_phase = SoldStoreUnpaidPackagePhase.objects.create(
                         title=store_package_phase_through_obj.store_package_phase.title,
                         description=store_package_phase_through_obj.store_package_phase.description,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
                         price=store_package_phase_through_obj.store_package_phase.price,
                         phase_number=store_package_phase_through_obj.phase_number,
                         sold_store_package=new_sold_store_package,
@@ -124,7 +122,6 @@ class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
         for obj in self._chain():
             new_obj = SoldStorePaidPackagePhase.objects.create(
                 title=obj.title,
-                detailed_title=obj.detailed_title,
                 price=obj.price,
                 phase_number=obj.phase_number,
                 sold_store_package=obj.sold_store_package,

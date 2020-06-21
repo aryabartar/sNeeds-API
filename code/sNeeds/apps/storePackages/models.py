@@ -52,12 +52,13 @@ class StorePackagePhaseDetail(models.Model):
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     description = RichTextField(null=True, blank=True)
-    phase_details = models.ManyToManyField(StorePackagePhaseDetail)
+    phase_details = models.ManyToManyField(
+        StorePackagePhaseDetail, blank=True
+    )
 
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
-
 
 
 class StorePackage(Product):
@@ -174,7 +175,6 @@ class SoldStorePackage(models.Model):
     def update_price(self):
         self._update_paid_price()
         self._update_total_price()
-
 
 
 class SoldStorePackagePhaseDetail(models.Model):
