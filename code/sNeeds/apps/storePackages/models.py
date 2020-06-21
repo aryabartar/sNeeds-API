@@ -94,6 +94,10 @@ class StorePackageQuerySetManager(models.QuerySet):
         return sold_store_package_qs
 
 
+class StorePackagePhaseDetail(models.Model):
+    title = models.CharField(max_length=1024, null=False, blank=False)
+
+
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     detailed_title = models.CharField(
@@ -101,6 +105,7 @@ class StorePackagePhase(models.Model):
         help_text="This field is for ourselves, Feel free to add details."
     )
     description = RichTextField(null=True, blank=True)
+    phase_details = models.ManyToManyField(StorePackagePhaseDetail)
 
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
