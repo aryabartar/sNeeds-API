@@ -159,6 +159,8 @@ class StorePackage(Product):
 
     @property
     def image_name(self):
+        if self.image is None:
+            return None
         return os.path.basename(self.image.name)
 
     def __str__(self):
