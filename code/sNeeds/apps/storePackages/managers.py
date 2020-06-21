@@ -116,17 +116,32 @@ class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
     @transaction.atomic
     def sell_and_get_paid_phases(self):
         from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhase
+        from sNeeds.apps.storePackages.models import SoldStorePackagePhaseDetail
 
         sold_store_paid_package_phases_list = []
 
         for obj in self._chain():
-            new_obj = SoldStorePaidPackagePhase.objects.create(
+            new_sold_store_paid_package_phase = SoldStorePaidPackagePhase.objects.create(
                 title=obj.title,
                 price=obj.price,
                 phase_number=obj.phase_number,
                 sold_store_package=obj.sold_store_package,
             )
-            sold_store_paid_package_phases_list.append(new_obj)
+            sold_store_paid_package_phases_list.append(new_sold_store_paid_package_phase)
+
+            sold_store_package_phase_detail_qs = obj.phase_detail.all()
+            for phase_obj in sold_store_package_phase_detail_qs:
+                SoldStorePackagePhaseDetail.objects.create(
+                    title=phase_obj.title,
+                    status=phase_obj.status,
+                    object_id=new_sold_store_paid_package_phase.id,
+                    content_type=ContentType.objects.get(
+                        app_label='storePackages', model='soldstorepaidpackagephase'
+                    ),
+                    file=phase_obj.file
+                )
+
+            sold_store_package_phase_detail_qs.delete()
             obj.delete()
 
         sold_store_paid_package_phases_qs = SoldStorePaidPackagePhase.objects.filter(
