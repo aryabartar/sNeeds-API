@@ -4,13 +4,15 @@ from ckeditor.fields import RichTextField
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db import models, transaction
+from django.core.validators import MinValueValidator
+from django.db import models
 from django.contrib.auth import get_user_model
 
 from sNeeds.apps.account.models import StudentDetailedInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
+from sNeeds.apps.storePackages.managers import StorePackageQuerySetManager, SoldStorePackageQuerySet, \
+    SoldStorePaidPackagePhaseQuerySet, SoldStoreUnpaidPackagePhaseQuerySet
 
 User = get_user_model()
 
@@ -40,58 +42,6 @@ def get_store_package_image_upload_path(instance, file_name):
 
 def get_sold_store_package_image_upload_path(instance, file_name):
     return "storePackage/images/sold-store-package-images/{}/{}".format(instance.id, file_name)
-
-
-class StorePackageQuerySetManager(models.QuerySet):
-    def update(self, **kwargs):
-        super().update(**kwargs)
-        for obj in self._chain():
-            obj.save()
-
-    @transaction.atomic
-    def sell_and_get_sold_package(self, sold_to):
-        qs = self.all()
-        sold_store_package_list = []
-
-        for obj in qs:
-            new_sold_store_package = SoldStorePackage.objects.create(
-                title=obj.title,
-                paid_price=obj.price,
-                sold_to=sold_to,
-            )
-            if obj.image:
-                new_sold_store_package.image.save(obj.image_name, obj.image, True)
-
-            sold_store_package_list.append(new_sold_store_package)
-
-            store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
-                store_package=obj
-            )
-
-            for store_package_phase_through_obj in store_package_phase_through_qs:
-                if store_package_phase_through_obj.phase_number == 1:
-                    SoldStorePaidPackagePhase.objects.create(
-                        title=store_package_phase_through_obj.store_package_phase.title,
-                        description=store_package_phase_through_obj.store_package_phase.description,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
-                        price=store_package_phase_through_obj.store_package_phase.price,
-                        phase_number=store_package_phase_through_obj.phase_number,
-                        sold_store_package=new_sold_store_package
-                    )
-                else:
-                    SoldStoreUnpaidPackagePhase.objects.create(
-                        title=store_package_phase_through_obj.store_package_phase.title,
-                        description=store_package_phase_through_obj.store_package_phase.description,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
-                        price=store_package_phase_through_obj.store_package_phase.price,
-                        phase_number=store_package_phase_through_obj.phase_number,
-                        sold_store_package=new_sold_store_package,
-                        active=False
-                    )
-
-        sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
-
-        return sold_store_package_qs
 
 
 class StorePackagePhaseDetail(models.Model):
@@ -194,28 +144,6 @@ class StorePackagePhaseThrough(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_price(self):
-        total = 0
-        for obj in self._chain():
-            total += obj.price
-        return total
-
-
-class SoldStorePackageQuerySet(models.QuerySet):
-    def update_qs_prices(self):
-        for obj in self._chain():
-            obj.update_price()
-            obj.save()
-
-    def get_filled_student_detailed_infos(self):
-        returned_qs = self.none()
-        for obj in self._chain():
-            if StudentDetailedInfo.objects.filter(user=obj.sold_to).exists():
-                returned_qs |= self.filter(id=obj.id)
-        return returned_qs
-
-
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
     image = models.ImageField(
@@ -252,45 +180,6 @@ class SoldStorePackage(models.Model):
         self._update_paid_price()
         self._update_total_price()
 
-
-class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_price(self):
-        qs_price = 0
-        for obj in self._chain():
-            qs_price += obj.price
-        return qs_price
-
-
-class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    pass
-
-
-class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    def deactivate_all(self):
-        for obj in self._chain():
-            obj.active = False
-            obj.save()
-
-    @transaction.atomic
-    def sell_and_get_paid_phases(self):
-        sold_store_paid_package_phases_list = []
-
-        for obj in self._chain():
-            new_obj = SoldStorePaidPackagePhase.objects.create(
-                title=obj.title,
-                detailed_title=obj.detailed_title,
-                price=obj.price,
-                phase_number=obj.phase_number,
-                sold_store_package=obj.sold_store_package,
-            )
-            sold_store_paid_package_phases_list.append(new_obj)
-            obj.delete()
-
-        sold_store_paid_package_phases_qs = SoldStorePaidPackagePhase.objects.filter(
-            id__in=[obj.id for obj in sold_store_paid_package_phases_list]
-        )
-
-        return sold_store_paid_package_phases_qs
 
 
 class SoldStorePackagePhaseDetail(models.Model):
