@@ -47,6 +47,7 @@ def get_sold_store_package_image_upload_path(instance, file_name):
 
 class StorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)
+    description = RichTextField(null=True, blank=True)
 
 
 class StorePackagePhase(models.Model):
@@ -188,6 +189,8 @@ class SoldStorePackagePhaseDetail(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to=CONTENT_TYPE_LIMIT_CHOICE
     )
+
+    description = RichTextField(null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
