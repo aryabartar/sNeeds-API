@@ -2,8 +2,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models, transaction
 
 from sNeeds.apps.account.models import StudentDetailedInfo
-from sNeeds.apps.storePackages.models import SoldStorePackage, StorePackagePhaseThrough, SoldStorePaidPackagePhase, \
-    SoldStorePackagePhaseDetail, SoldStoreUnpaidPackagePhase
 
 
 class StorePackageQuerySetManager(models.QuerySet):
@@ -14,6 +12,12 @@ class StorePackageQuerySetManager(models.QuerySet):
 
     @transaction.atomic
     def sell_and_get_sold_package(self, sold_to):
+        from sNeeds.apps.storePackages.models import SoldStorePackage
+        from sNeeds.apps.storePackages.models import StorePackagePhaseThrough
+        from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhase
+        from sNeeds.apps.storePackages.models import SoldStorePackagePhaseDetail
+        from sNeeds.apps.storePackages.models import SoldStoreUnpaidPackagePhase
+
         qs = self.all()
         sold_store_package_list = []
 
@@ -42,7 +46,6 @@ class StorePackageQuerySetManager(models.QuerySet):
                         phase_number=store_package_phase_through_obj.phase_number,
                         sold_store_package=new_sold_store_package
                     )
-
 
                     for obj in store_package_phase_through_obj.store_package_phase.phase_details.all():
                         SoldStorePackagePhaseDetail.objects.create(
@@ -104,6 +107,8 @@ class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
 
     @transaction.atomic
     def sell_and_get_paid_phases(self):
+        from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhase
+
         sold_store_paid_package_phases_list = []
 
         for obj in self._chain():
