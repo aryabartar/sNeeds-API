@@ -59,7 +59,8 @@ class StorePackageQuerySetManager(models.QuerySet):
                 paid_price=obj.price,
                 sold_to=sold_to,
             )
-            new_sold_store_package.image.save(obj.image_name, obj.image, True)
+            if obj.image:
+                new_sold_store_package.image.save(obj.image_name, obj.image, True)
 
             sold_store_package_list.append(new_sold_store_package)
 
@@ -112,7 +113,7 @@ class StorePackagePhase(models.Model):
 class StorePackage(Product):
     title = models.CharField(max_length=1024)
     image = models.ImageField(
-        blank=False, null=True, upload_to=get_store_package_image_upload_path
+        blank=True, null=True, upload_to=get_store_package_image_upload_path
     )
     slug = models.SlugField(unique=True)
 
