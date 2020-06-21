@@ -58,7 +58,7 @@ class StorePackageQuerySetManager(models.QuerySet):
                         )
 
                 else:
-                    SoldStoreUnpaidPackagePhase.objects.create(
+                    new_sold_store_unpaid_package_phase = SoldStoreUnpaidPackagePhase.objects.create(
                         title=store_package_phase_through_obj.store_package_phase.title,
                         description=store_package_phase_through_obj.store_package_phase.description,
                         detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
@@ -67,6 +67,16 @@ class StorePackageQuerySetManager(models.QuerySet):
                         sold_store_package=new_sold_store_package,
                         active=False
                     )
+
+                    for obj in store_package_phase_through_obj.store_package_phase.phase_details.all():
+                        SoldStorePackagePhaseDetail.objects.create(
+                            title=obj.title,
+                            status="not_started",
+                            content_type=ContentType.objects.get(
+                                app_label='storePackages', model='soldstoreunpaidpackagephase'
+                            ),
+                            object_id=new_sold_store_unpaid_package_phase.id,
+                        )
 
         sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
 

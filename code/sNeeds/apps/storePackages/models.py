@@ -23,6 +23,7 @@ SOLD_STORE_PACKAGE_PHASE_STATUS = [
     ('done', "انجام شده")
 ]
 SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = [
+    ("not_started", "شروع نشده"),
     ("in_progress", "در حال انجام"),
     ("done", "انجام شد"),
     ("finished", "دریافت نتیجه"),
@@ -50,10 +51,6 @@ class StorePackagePhaseDetail(models.Model):
 
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
     description = RichTextField(null=True, blank=True)
     phase_details = models.ManyToManyField(StorePackagePhaseDetail)
 
@@ -61,8 +58,6 @@ class StorePackagePhase(models.Model):
         validators=[MinValueValidator(0), ],
     )
 
-    def __str__(self):
-        return self.detailed_title
 
 
 class StorePackage(Product):
@@ -217,10 +212,6 @@ class SoldStorePackagePhaseDetail(models.Model):
 
 class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
     description = RichTextField(null=True, blank=True)
     sold_store_package = models.ForeignKey(
         SoldStorePackage,
