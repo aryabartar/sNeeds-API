@@ -196,6 +196,12 @@ class SoldStoreUnpaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
         model = SoldStoreUnpaidPackagePhase
 
 
+class SoldStoreUnpaidPackagePhasePATCHSerializer(SoldStorePackagePhaseSerializer):
+    class Meta:
+        fields = ['active']
+        model = SoldStoreUnpaidPackagePhase
+
+
 class SoldStorePaidPackagePhaseSerializer(SoldStorePackagePhaseSerializer):
     url = serializers.HyperlinkedIdentityField(
         lookup_field='id',

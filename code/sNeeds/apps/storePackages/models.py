@@ -214,7 +214,7 @@ class SoldStorePackageQuerySet(models.QuerySet):
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
     image = models.ImageField(
-        blank=False, null=True, upload_to=get_sold_store_package_image_upload_path
+        blank=True, null=True, upload_to=get_sold_store_package_image_upload_path
     )
 
     sold_to = models.ForeignKey(User, on_delete=models.PROTECT)

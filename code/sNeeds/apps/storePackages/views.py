@@ -7,12 +7,12 @@ from . import serializers
 from .filters import SoldStorePackagePhaseDetailFilter
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
-from .serializers import SoldStorePackagePhaseDetailPATCHSerializer
+from .serializers import SoldStorePackagePhaseDetailPATCHSerializer, SoldStoreUnpaidPackagePhasePATCHSerializer
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
     SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, \
-    IsConsultantPutPostPermission
+    IsConsultantPutPostPermission, SoldStoreUnpaidPackagePhasePATCHPermission
 from ...utils.custom.custom_permissions import IsConsultantPermission
 
 
@@ -157,11 +157,22 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
         return qs
 
 
-class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveAPIView):
+class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
+    http_method_names = ["get", "patch"]
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
-    permission_classes = [permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission]
+    permission_classes = [
+        permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission,
+        SoldStoreUnpaidPackagePhasePATCHPermission
+    ]
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method == 'PATCH':
+            serializer_class = SoldStoreUnpaidPackagePhasePATCHSerializer
+
+        return serializer_class
 
 
 class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):
