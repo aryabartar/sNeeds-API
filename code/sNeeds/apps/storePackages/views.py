@@ -158,7 +158,6 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
         return qs
 
 
-@csrf_exempt
 class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
     http_method_names = ["get", "put", "patch"]
     lookup_field = 'id'
