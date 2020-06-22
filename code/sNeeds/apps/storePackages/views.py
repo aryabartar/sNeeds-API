@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -157,8 +158,9 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
         return qs
 
 
+@csrf_exempt
 class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
-    http_method_names = ["get", "patch"]
+    http_method_names = ["get", "put", "patch"]
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
