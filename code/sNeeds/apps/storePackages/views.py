@@ -159,7 +159,7 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
 
 
 class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
-    http_method_names = ["get", "put", "patch"]
+    http_method_names = ["get", "patch"]
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
