@@ -168,9 +168,9 @@ class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
     ]
 
     def get_serializer_class(self):
-        # serializer_class = self.serializer_class
-        # if self.request.method == 'PATCH':
-        serializer_class = SoldStoreUnpaidPackagePhasePATCHSerializer
+        serializer_class = self.serializer_class
+        if self.request.method == 'PATCH':
+            serializer_class = SoldStoreUnpaidPackagePhasePATCHSerializer
 
         return serializer_class
 
