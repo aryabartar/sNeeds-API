@@ -54,6 +54,54 @@ class BasicProductManager(models.QuerySet):
         return sold_basic_product_qs
 
 
+class ClassProductManager(models.QuerySet):
+    @transaction.atomic
+    def add_class_product_sold(self, sold_to):
+        qs = self.all()
+
+        sold_class_product_list = []
+        for obj in qs:
+            try:
+                class_product = obj.classproduct
+                sold_class_product_list.append(
+                    SoldClassProduct.objects.create(
+                        basic_product=obj,
+                        sold_to=sold_to,
+                        price=obj.price,
+                    )
+                )
+            except ClassProduct.DoesNotExist:
+                pass
+
+        sold_class_product_qs = SoldBasicProduct.objects.filter(id__in=[obj.id for obj in sold_class_product_list])
+
+        return sold_class_product_qs
+
+
+class WebinarProductManager(models.QuerySet):
+    @transaction.atomic
+    def add_webinar_product_sold(self, sold_to):
+        qs = self.all()
+
+        sold_webinar_product_list = []
+        for obj in qs:
+            try:
+                webinar_product = obj.webinarproduct
+                sold_webinar_product_list.append(
+                    SoldWebinarProduct.objects.create(
+                        basic_product=obj,
+                        sold_to=sold_to,
+                        price=obj.price,
+                    )
+                )
+            except WebinarProduct.DoesNotExist:
+                pass
+
+        sold_webinar_product_qs = SoldBasicProduct.objects.filter(id__in=[obj.id for obj in sold_webinar_product_list])
+
+        return sold_webinar_product_qs
+
+
 class BasicProduct(Product):
     title = models.CharField(max_length=256)
     slug = models.SlugField(unique=True)
@@ -100,9 +148,9 @@ class ClassWebinar(BasicProduct):
     headlines = models.TextField(blank=True, null=True)
     audiences = models.TextField(blank=True, null=True)
     lecturers = models.TextField(blank=True, null=True)
-    lecturers_short = models.ManyToManyField(Lecturer)
-    holding_date_times = models.ManyToManyField(HoldingDateTime)
-    question_answers = models.ManyToManyField(QuestionAnswer)
+    lecturers_short = models.ManyToManyField(Lecturer, related_name="%(app_label)s_%(class)s")
+    holding_date_times = models.ManyToManyField(HoldingDateTime, related_name="%(app_label)s_%(class)s")
+    question_answers = models.ManyToManyField(QuestionAnswer, related_name="%(app_label)s_%(class)s")
 
     is_free = models.BooleanField(default=False)
 
@@ -160,11 +208,11 @@ class ClassWebinar(BasicProduct):
 
 
 class ClassProduct(ClassWebinar):
-    pass
+    objects = ClassProductManager.as_manager()
 
 
 class WebinarProduct(ClassWebinar):
-    pass
+    objects = WebinarProductManager.as_manager()
 
 
 class SoldClassWebinar(SoldBasicProduct):
@@ -185,14 +233,14 @@ class DownloadLink(models.Model):
 
 
 class RoomLink(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     url = models.URLField(null=True, blank=True)
 
 
 class WebinarRoomLink(RoomLink):
-    product = models.ForeignKey(WebinarProduct, on_delete=models.CASCADE, default=2)
+    product = models.ForeignKey(WebinarProduct, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s")
 
 
 class ClassRoomLink(RoomLink):
-    product = models.ForeignKey(ClassProduct, on_delete=models.CASCADE, default=2)
+    product = models.ForeignKey(ClassProduct, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s")
 

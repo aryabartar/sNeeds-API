@@ -27,7 +27,8 @@ class OrderManager(models.Manager):
         time_slot_sales_qs = cart_products.get_time_slot_sales()
         store_packages_qs = cart_products.get_store_packages()
         sold_store_unpaid_package_phases_qs = cart_products.get_sold_store_unpaid_package_phases()
-        basic_products_qs = cart_products.get_basic_products()
+        class_products_qs = cart_products.get_class_products()
+        webinar_products_qs = cart_products.get_webinar_products()
 
         try:
             used_discount = CartDiscount.objects.get(cart=cart).discount
@@ -48,7 +49,8 @@ class OrderManager(models.Manager):
         sold_store_paid_package_phase_qs = SoldStorePaidPackagePhase.objects.filter(
             sold_store_package__in=list(sold_store_packages_qs)
         )
-        sold_basic_products_qs = basic_products_qs.add_basic_product_sold(sold_to=cart.user)
+        sold_class_products_qs = class_products_qs.add_class_product_sold(sold_to=cart.user)
+        sold_webinar_products_qs = webinar_products_qs.add_webinar_product_sold(sold_to=cart.user)
         sold_store_paid_package_phases_qs = sold_store_unpaid_package_phases_qs.sell_and_get_paid_phases()
 
         order = Order.objects.create(
@@ -62,7 +64,8 @@ class OrderManager(models.Manager):
 
         order.sold_products.add(*list(sold_time_slot_sales_qs))
         order.sold_products.add(*list(sold_store_paid_package_phase_qs))
-        order.sold_products.add(*list(sold_basic_products_qs))
+        order.sold_products.add(*list(sold_class_products_qs))
+        order.sold_products.add(*list(sold_webinar_products_qs))
         order.sold_products.add(*list(sold_store_paid_package_phases_qs))
 
         order.save()

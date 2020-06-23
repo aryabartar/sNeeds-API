@@ -30,7 +30,7 @@ class ProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
-    def get_webinars(self):
+    def get_webinar_products(self):
         from sNeeds.apps.basicProducts.models import WebinarProduct
         result_qs = WebinarProduct.objects.none()
         for i in self.all():
@@ -41,7 +41,7 @@ class ProductQuerySet(models.QuerySet):
                 pass
         return result_qs
 
-    def get_classes(self):
+    def get_class_products(self):
         from sNeeds.apps.basicProducts.models import ClassProduct
         result_qs = ClassProduct.objects.none()
         for i in self.all():
@@ -105,8 +105,32 @@ class SoldProductQuerySet(models.QuerySet):
         for i in self.all():
             try:
                 sold_basic_product = i.soldbasicproduct
-                result_qs |= SoldBasicProduct.objects.filter(pk=sold_basic_product)
+                result_qs |= SoldBasicProduct.objects.filter(pk=sold_basic_product.id)
             except SoldBasicProduct.DoesNotExist:
+                pass
+        return result_qs
+
+    def get_sold_class_products(self):
+        from sNeeds.apps.basicProducts.models import SoldClassProduct
+
+        result_qs = SoldClassProduct.objects.none()
+        for i in self.all():
+            try:
+                sold_class_product = i.soldclassproduct
+                result_qs |= SoldClassProduct.objects.filter(pk=sold_class_product.id)
+            except SoldClassProduct.DoesNotExist:
+                pass
+        return result_qs
+
+    def get_sold_webinar_products(self):
+        from sNeeds.apps.basicProducts.models import SoldWebinarProduct
+
+        result_qs = SoldWebinarProduct.objects.none()
+        for i in self.all():
+            try:
+                sold_webinar_product = i.soldwebinarproduct
+                result_qs |= SoldWebinarProduct.objects.filter(pk=sold_webinar_product.id)
+            except SoldWebinarProduct.DoesNotExist:
                 pass
         return result_qs
 

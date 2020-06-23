@@ -7,8 +7,9 @@ from .models import Cart
 
 from sNeeds.apps.store.serializers import TimeSlotSaleSerializer, SoldTimeSlotSaleSerializer
 from sNeeds.apps.store.models import SoldTimeSlotSale, TimeSlotSale, Product
-from sNeeds.apps.basicProducts.models import BasicProduct
-from sNeeds.apps.basicProducts.serializers import BasicProductSerializer, SoldBasicProductSerializer
+from sNeeds.apps.basicProducts.models import BasicProduct, ClassProduct, WebinarProduct
+from sNeeds.apps.basicProducts.serializers import BasicProductSerializer, SoldBasicProductSerializer, \
+    ClassProductSerializer, WebinarProductSerializer
 from ..storePackages.models import StorePackage, SoldStoreUnpaidPackagePhase
 from ..storePackages.serializers import StorePackageSerializer, SoldStoreUnpaidPackagePhaseSerializer
 
@@ -16,18 +17,22 @@ from ..storePackages.serializers import StorePackageSerializer, SoldStoreUnpaidP
 class CartSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="cart:cart-detail", lookup_field='id', read_only=True)
     time_slot_sales = serializers.SerializerMethodField(read_only=True)
-    basic_products = serializers.SerializerMethodField(read_only=True)
+    class_products = serializers.SerializerMethodField(read_only=True)
+    webinar_products = serializers.SerializerMethodField(read_only=True)
     store_packages = serializers.SerializerMethodField(read_only=True)
     sold_store_unpaid_package_phases = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Cart
-        fields = ['id', 'url', 'user', 'products', 'time_slot_sales', 'store_packages', 'basic_products',
-                  'sold_store_unpaid_package_phases', 'subtotal', 'total', ]
+        fields = ['id', 'url', 'user', 'products',
+                  'time_slot_sales', 'store_packages', 'class_products', 'webinar_products',
+                  'sold_store_unpaid_package_phases',
+                  'subtotal', 'total', ]
         extra_kwargs = {
             'id': {'read_only': True},
             'time_slot_sales': {'read_only': True},
-            'basic_products': {'read_only': True},
+            'class_products': {'read_only': True},
+            'webinar_products': {'read_only': True},
             'store_packages': {'read_only': True},
             'sold_store_unpaid_package_phases': {'read_only': True},
             'user': {'read_only': True},
@@ -51,17 +56,32 @@ class CartSerializer(serializers.ModelSerializer):
             many=True
         ).data
 
-    def get_basic_products(self, obj):
-        basic_products = []
+    def get_class_products(self, obj):
+        class_products = []
         for product in obj.products.all():
             try:
-                basic_product = product.basicproduct
-                basic_products.append(basic_product)
-            except BasicProduct.DoesNotExist:
+                class_product = product.classproduct
+                class_products.append(class_product)
+            except ClassProduct.DoesNotExist:
                 pass
 
-        return BasicProductSerializer(
-            basic_products,
+        return ClassProductSerializer(
+            class_products,
+            context=self.context,
+            many=True
+        ).data
+
+    def get_webinar_products(self, obj):
+        webinar_products = []
+        for product in obj.products.all():
+            try:
+                webinar_product = product.webinarproduct
+                webinar_products.append(webinar_product)
+            except WebinarProduct.DoesNotExist:
+                pass
+
+        return WebinarProductSerializer(
+            webinar_products,
             context=self.context,
             many=True
         ).data
