@@ -28,7 +28,7 @@ class SoldStorePackageOwnerUpdatePermission(permissions.BasePermission):
         if request.method == "OPTIONS":
             return True
 
-        if request.method == "PUT":
+        if request.method == "PUT" or request.method == "PATCH" :
             return obj.sold_to == request.user
         return True
 
@@ -57,6 +57,22 @@ class SoldStorePackagePhaseGetPermission(permissions.BasePermission):
         if obj.sold_store_package.consultant is None:
             return user == obj.sold_store_package.sold_to
         return user == obj.sold_store_package.sold_to or user == obj.sold_store_package.consultant.user
+
+
+class SoldStoreUnpaidPackagePhasePATCHPermission(permissions.BasePermission):
+    message = "This user has no patch permission to SoldStoreUnpaidPackagePhase obj."
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == "OPTIONS":
+            return True
+
+        elif request.method == "PATCH":
+            user = request.user
+            if obj.sold_store_package.consultant is None:
+                return None
+            return user == obj.sold_store_package.consultant.user
+
+        return True
 
 
 class SoldStorePackagePaidPhaseUpdatePermission(permissions.BasePermission):

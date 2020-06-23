@@ -6,7 +6,8 @@ from django.db import models, transaction
 from sNeeds.apps.carts.models import Cart
 from sNeeds.apps.discounts.models import Discount, CartDiscount, TimeSlotSaleNumberDiscount
 from sNeeds.apps.store.models import SoldProduct
-from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhaseQuerySet, SoldStorePaidPackagePhase
+from sNeeds.apps.storePackages.models import SoldStorePaidPackagePhase
+from sNeeds.apps.storePackages.managers import SoldStorePaidPackagePhaseQuerySet
 
 User = get_user_model()
 

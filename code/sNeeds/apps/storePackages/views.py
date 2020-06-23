@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 
 from rest_framework import status, generics, mixins, permissions
 from rest_framework.response import Response
@@ -7,12 +8,12 @@ from . import serializers
 from .filters import SoldStorePackagePhaseDetailFilter
 from .models import StorePackagePhase, StorePackage, StorePackagePhaseThrough, ConsultantSoldStorePackageAcceptRequest, \
     SoldStorePackage, SoldStoreUnpaidPackagePhase, SoldStorePaidPackagePhase, SoldStorePackagePhaseDetail
-from .serializers import SoldStorePackagePhaseDetailPATCHSerializer
+from .serializers import SoldStorePackagePhaseDetailPATCHSerializer, SoldStoreUnpaidPackagePhasePATCHSerializer
 from ..consultants.models import ConsultantProfile
 from .permissions import ConsultantSoldStorePackageAcceptRequestViewPermission, SoldStorePackageOwnerUpdatePermission, \
     SoldStorePackageGetPermission, SoldStorePackagePhaseGetPermission, SoldStorePackagePaidPhaseUpdatePermission, \
     SoldStorePackagePhaseDetailGetPermission, SoldStorePackagePhaseDetailUpdatePermission, \
-    IsConsultantPutPostPermission
+    IsConsultantPutPostPermission, SoldStoreUnpaidPackagePhasePATCHPermission
 from ...utils.custom.custom_permissions import IsConsultantPermission
 
 
@@ -21,7 +22,14 @@ class MarketplaceListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated, IsConsultantPermission]
 
     def get_queryset(self):
-        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos()
+        consultant = ConsultantProfile.objects.get(user=self.request.user)
+        accept_requested_store_packages_id_list = ConsultantSoldStorePackageAcceptRequest.objects.filter(
+            consultant=consultant
+        ).values_list("sold_store_package", flat=True)
+
+        qs = SoldStorePackage.objects.filter(consultant=None).get_filled_student_detailed_infos().exclude(
+            id__in=accept_requested_store_packages_id_list
+        )
         return qs
 
 
@@ -150,11 +158,22 @@ class SoldStorePackageListAPIView(generics.ListAPIView):
         return qs
 
 
-class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveAPIView):
+class SoldStoreUnpaidPackagePhaseDetailAPIView(generics.RetrieveUpdateAPIView):
+    http_method_names = ["options", "get", "patch"]
     lookup_field = 'id'
     queryset = SoldStoreUnpaidPackagePhase.objects.all()
     serializer_class = serializers.SoldStoreUnpaidPackagePhaseSerializer
-    permission_classes = [permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission]
+    permission_classes = [
+        permissions.IsAuthenticated, SoldStorePackagePhaseGetPermission,
+        SoldStoreUnpaidPackagePhasePATCHPermission
+    ]
+
+    def get_serializer_class(self):
+        serializer_class = self.serializer_class
+        if self.request.method == 'PATCH':
+            serializer_class = SoldStoreUnpaidPackagePhasePATCHSerializer
+
+        return serializer_class
 
 
 class SoldStoreUnpaidPackagePhaseListAPIView(generics.ListAPIView):

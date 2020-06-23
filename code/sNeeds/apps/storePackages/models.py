@@ -1,13 +1,18 @@
+import os
+
+from ckeditor.fields import RichTextField
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db import models, transaction
+from django.core.validators import MinValueValidator
+from django.db import models
 from django.contrib.auth import get_user_model
 
 from sNeeds.apps.account.models import StudentDetailedInfo
 from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.store.models import Product, SoldProduct
+from sNeeds.apps.storePackages.managers import StorePackageQuerySetManager, SoldStorePackageQuerySet, \
+    SoldStorePaidPackagePhaseQuerySet, SoldStoreUnpaidPackagePhaseQuerySet
 
 User = get_user_model()
 
@@ -18,6 +23,7 @@ SOLD_STORE_PACKAGE_PHASE_STATUS = [
     ('done', "انجام شده")
 ]
 SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS = [
+    ("not_started", "شروع نشده"),
     ("in_progress", "در حال انجام"),
     ("done", "انجام شد"),
     ("finished", "دریافت نتیجه"),
@@ -31,76 +37,45 @@ def get_sold_store_package_phase_detail_file_upload_path(instance, file_name):
     return "storePackage/files/sold-store-package-phase-detail/{}/{}".format(instance.id, file_name)
 
 
-class StorePackageQuerySetManager(models.QuerySet):
-    def update(self, **kwargs):
-        super().update(**kwargs)
-        for obj in self._chain():
-            obj.save()
+def get_store_package_image_upload_path(instance, file_name):
+    return "storePackage/images/store-package-images/{}/{}".format(instance.id, file_name)
 
-    @transaction.atomic
-    def sell_and_get_sold_package(self, sold_to):
-        qs = self.all()
-        sold_store_package_list = []
 
-        for obj in qs:
-            new_sold_store_package = SoldStorePackage.objects.create(
-                title=obj.title,
-                paid_price=obj.price,
-                sold_to=sold_to,
-            )
-            sold_store_package_list.append(new_sold_store_package)
+def get_sold_store_package_image_upload_path(instance, file_name):
+    return "storePackage/images/sold-store-package-images/{}/{}".format(instance.id, file_name)
 
-            store_package_phase_through_qs = StorePackagePhaseThrough.objects.filter(
-                store_package=obj
-            )
 
-            for store_package_phase_through_obj in store_package_phase_through_qs:
-                if store_package_phase_through_obj.phase_number == 1:
-                    SoldStorePaidPackagePhase.objects.create(
-                        title=store_package_phase_through_obj.store_package_phase.title,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
-                        price=store_package_phase_through_obj.store_package_phase.price,
-                        phase_number=store_package_phase_through_obj.phase_number,
-                        sold_store_package=new_sold_store_package
-                    )
-                else:
-                    SoldStoreUnpaidPackagePhase.objects.create(
-                        title=store_package_phase_through_obj.store_package_phase.title,
-                        detailed_title=store_package_phase_through_obj.store_package_phase.detailed_title,
-                        price=store_package_phase_through_obj.store_package_phase.price,
-                        phase_number=store_package_phase_through_obj.phase_number,
-                        sold_store_package=new_sold_store_package,
-                        active=False
-                    )
-
-        sold_store_package_qs = SoldStorePackage.objects.filter(id__in=[obj.id for obj in sold_store_package_list])
-
-        return sold_store_package_qs
+class StorePackagePhaseDetail(models.Model):
+    title = models.CharField(max_length=1024, null=False, blank=False)
+    description = RichTextField(null=True, blank=True)
 
 
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
+    description = RichTextField(null=True, blank=True)
+    phase_details = models.ManyToManyField(
+        StorePackagePhaseDetail, blank=True
     )
+
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
     )
 
-    def __str__(self):
-        return self.detailed_title
-
 
 class StorePackage(Product):
     title = models.CharField(max_length=1024)
+    image = models.ImageField(
+        blank=True, null=True, upload_to=get_store_package_image_upload_path
+    )
+    slug = models.SlugField(unique=True)
+
     store_package_phases = models.ManyToManyField(
         StorePackagePhase,
         through='StorePackagePhaseThrough',
         related_name='store_packages'
     )
+
     total_price = models.PositiveIntegerField(blank=True)
-    slug = models.SlugField(unique=True)
 
     objects = StorePackageQuerySetManager.as_manager()
 
@@ -135,6 +110,12 @@ class StorePackage(Product):
         self.full_clean()
         super(StorePackage, self).save()
 
+    @property
+    def image_name(self):
+        if self.image is None:
+            return None
+        return os.path.basename(self.image.name)
+
     def __str__(self):
         return self.title
 
@@ -160,30 +141,11 @@ class StorePackagePhaseThrough(models.Model):
         ordering = ['phase_number', ]
 
 
-class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_price(self):
-        total = 0
-        for obj in self._chain():
-            total += obj.price
-        return total
-
-
-class SoldStorePackageQuerySet(models.QuerySet):
-    def update_qs_prices(self):
-        for obj in self._chain():
-            obj.update_price()
-            obj.save()
-
-    def get_filled_student_detailed_infos(self):
-        returned_qs = self.none()
-        for obj in self._chain():
-            if StudentDetailedInfo.objects.filter(user=obj.sold_to).exists():
-                returned_qs |= self.filter(id=obj.id)
-        return returned_qs
-
-
 class SoldStorePackage(models.Model):
     title = models.CharField(max_length=1024)
+    image = models.ImageField(
+        blank=True, null=True, upload_to=get_sold_store_package_image_upload_path
+    )
 
     sold_to = models.ForeignKey(User, on_delete=models.PROTECT)
     consultant = models.ForeignKey(ConsultantProfile, on_delete=models.SET_NULL, blank=True, null=True)
@@ -216,46 +178,6 @@ class SoldStorePackage(models.Model):
         self._update_total_price()
 
 
-class SoldStorePackagePhaseQuerySet(models.QuerySet):
-    def get_qs_price(self):
-        qs_price = 0
-        for obj in self._chain():
-            qs_price += obj.price
-        return qs_price
-
-
-class SoldStorePaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    pass
-
-
-class SoldStoreUnpaidPackagePhaseQuerySet(SoldStorePackagePhaseQuerySet):
-    def deactivate_all(self):
-        for obj in self._chain():
-            obj.active = False
-            obj.save()
-
-    @transaction.atomic
-    def sell_and_get_paid_phases(self):
-        sold_store_paid_package_phases_list = []
-
-        for obj in self._chain():
-            new_obj = SoldStorePaidPackagePhase.objects.create(
-                title=obj.title,
-                detailed_title=obj.detailed_title,
-                price=obj.price,
-                phase_number=obj.phase_number,
-                sold_store_package=obj.sold_store_package,
-            )
-            sold_store_paid_package_phases_list.append(new_obj)
-            obj.delete()
-
-        sold_store_paid_package_phases_qs = SoldStorePaidPackagePhase.objects.filter(
-            id__in=[obj.id for obj in sold_store_paid_package_phases_list]
-        )
-
-        return sold_store_paid_package_phases_qs
-
-
 class SoldStorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)
     status = models.CharField(
@@ -267,6 +189,8 @@ class SoldStorePackagePhaseDetail(models.Model):
         on_delete=models.CASCADE,
         limit_choices_to=CONTENT_TYPE_LIMIT_CHOICE
     )
+
+    description = RichTextField(null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
@@ -291,10 +215,7 @@ class SoldStorePackagePhaseDetail(models.Model):
 
 class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    detailed_title = models.CharField(
-        max_length=1024,
-        help_text="This field is for ourselves, Feel free to add details."
-    )
+    description = RichTextField(null=True, blank=True)
     sold_store_package = models.ForeignKey(
         SoldStorePackage,
         on_delete=models.CASCADE,
