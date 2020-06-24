@@ -1,7 +1,10 @@
 from rest_framework import serializers
+from django.urls.base import reverse
+
 from .models import BasicProduct, SoldBasicProduct, HoldingDateTime, Lecturer, QuestionAnswer, \
     ClassProduct, WebinarProduct, SoldClassWebinar, SoldClassProduct, SoldWebinarProduct, DownloadLink, RoomLink, \
     WebinarRoomLink, ClassRoomLink
+
 from ..customAuth.serializers import SafeUserDataSerializer
 
 
@@ -149,22 +152,27 @@ class SoldClassProductSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
-    class_product = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        lookup_field='slug',
-        view_name='basic-product:class-product-detail'
-    )
+    class_product = serializers.SerializerMethodField()
+
+    class_product_url = serializers.SerializerMethodField()
 
     sold_to = serializers.SerializerMethodField()
 
     class Meta:
         model = SoldClassProduct
         fields = [
-            'id', 'url', 'class_product', 'price', 'sold_to',
+            'id', 'url', 'class_product', 'class_product_url', 'price', 'sold_to',
         ]
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+    def get_class_product(self, obj):
+        return obj.basic_product.slug
+
+    def get_class_product_url(self, obj):
+        return self.context.get('request').build_absolute_uri(reverse('basic-product:class-product-detail',
+                                                                      args=[obj.basic_product.slug]))
 
 
 class SoldWebinarProductSerializer(serializers.ModelSerializer):
@@ -174,22 +182,27 @@ class SoldWebinarProductSerializer(serializers.ModelSerializer):
         read_only=True
     )
 
-    webinar_product = serializers.HyperlinkedRelatedField(
-        read_only=True,
-        lookup_field='slug',
-        view_name='basic-product:webinar-product-detail'
-    )
+    webinar_product = serializers.SerializerMethodField()
+
+    webinar_product_url = serializers.SerializerMethodField()
 
     sold_to = serializers.SerializerMethodField()
 
     class Meta:
         model = SoldWebinarProduct
         fields = [
-            'id', 'url', 'webinar_product', 'price', 'sold_to',
+            'id', 'url', 'webinar_product', 'webinar_product_url', 'price', 'sold_to',
         ]
 
     def get_sold_to(self, obj):
         return SafeUserDataSerializer(obj.sold_to).data
+
+    def get_webinar_product(self, obj):
+        return obj.basic_product.slug
+
+    def get_webinar_product_url(self, obj):
+        return self.context.get('request').build_absolute_uri(reverse('basic-product:webinar-product-detail',
+                                                                      args=[obj.basic_product.slug]))
 
 
 class RoomLinkSerializer(serializers.ModelSerializer):

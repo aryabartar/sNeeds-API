@@ -116,7 +116,7 @@ class SoldProductQuerySet(models.QuerySet):
         result_qs = SoldClassProduct.objects.none()
         for i in self.all():
             try:
-                sold_class_product = i.soldclassproduct
+                sold_class_product = SoldClassProduct.objects.get(pk=i.pk)
                 result_qs |= SoldClassProduct.objects.filter(pk=sold_class_product.id)
             except SoldClassProduct.DoesNotExist:
                 pass
@@ -128,7 +128,7 @@ class SoldProductQuerySet(models.QuerySet):
         result_qs = SoldWebinarProduct.objects.none()
         for i in self.all():
             try:
-                sold_webinar_product = i.soldwebinarproduct
+                sold_webinar_product = SoldWebinarProduct.objects.get(pk=i.pk)
                 result_qs |= SoldWebinarProduct.objects.filter(pk=sold_webinar_product.id)
             except SoldWebinarProduct.DoesNotExist:
                 pass

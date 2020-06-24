@@ -113,7 +113,7 @@ class BasicProduct(Product):
 
 
 class SoldBasicProduct(SoldProduct):
-    basic_product = models.ForeignKey(BasicProduct, on_delete=models.PROTECT)
+    basic_product = models.ForeignKey(BasicProduct, on_delete=models.PROTECT, related_name="%(app_label)s_%(class)s")
 
     objects = SoldProductQuerySet.as_manager()
 

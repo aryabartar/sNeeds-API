@@ -15,8 +15,8 @@ from ..storePackages.serializers import SoldStorePackageSerializer, SoldStorePai
 class OrderSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name="order:order-detail", lookup_field='id', read_only=True)
     sold_time_slot_sales = serializers.SerializerMethodField()
-    sold_classes = serializers.SerializerMethodField()
-    sold_webinars = serializers.SerializerMethodField()
+    sold_class_products = serializers.SerializerMethodField()
+    sold_webinar_products = serializers.SerializerMethodField()
     sold_store_paid_package_phases = serializers.SerializerMethodField()
     used_discount = serializers.SerializerMethodField()
 
@@ -25,7 +25,8 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = ['id', 'url', 'order_id', 'status', 'subtotal', 'total',
                   'sold_time_slot_sales', 'sold_class_products', 'sold_webinar_products',
                   'sold_store_paid_package_phases', 'created', 'updated',
-                  'used_discount', 'time_slot_sales_number_discount', ]
+                  'used_discount', 'time_slot_sales_number_discount',
+                  ]
         extra_kwargs = {
             'id': {'read_only': True},
             'order_id': {'read_only': True},
@@ -53,13 +54,13 @@ class OrderSerializer(serializers.ModelSerializer):
             sold_basic_products, many=True, context={"request": self.context.get("request")}
         ).data
 
-    def get_sold_classes(self, obj):
+    def get_sold_class_products(self, obj):
         sold_class_products = obj.sold_products.all().get_sold_class_products()
         return SoldClassProductSerializer(
             sold_class_products, many=True, context={"request": self.context.get("request")}
         ).data
 
-    def get_sold_webinars(self, obj):
+    def get_sold_webinar_products(self, obj):
         sold_webinar_products = obj.sold_products.all().get_sold_webinar_products()
         return SoldWebinarProductSerializer(
             sold_webinar_products, many=True, context={"request": self.context.get("request")}
