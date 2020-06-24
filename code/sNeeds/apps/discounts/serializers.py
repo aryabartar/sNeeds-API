@@ -211,18 +211,14 @@ class CartDiscountSerializer(serializers.ModelSerializer):
             cart.products.all().values_list('id', flat=True)
         )
 
-        if len(list(set(discount_products_id))) == 0 and len(list(set(discount_consultants_id))) > 0 and\
+        if len(list(set(discount_consultants_id))) > 0 and\
                 len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0:
             raise ValidationError(_("There is no consultant in cart products that this discount can apply to."))
 
-        if len(list(set(discount_products_id))) > 0 and len(list(set(discount_consultants_id))) == 0 and\
+        if len(list(set(discount_products_id))) > 0 and\
                 len(list(set(discount_products_id) & set(cart_products_id))) == 0:
             raise ValidationError(_("There is no product in cart that this discount can apply to."))
 
-        if len(list(set(discount_products_id))) > 0 and len(list(set(discount_consultants_id))) > 0 and\
-                len(list(set(discount_products_id) & set(cart_products_id))) == 0 and\
-                len(list(set(discount_consultants_id) & set(cart_products_consultants_id))) == 0:
-            raise ValidationError(_("There is nor product nor consultant in cart that this discount can apply to."))
         return attrs
 
     def create(self, validated_data):
