@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import user_passes_test
 from zeep import Client
 
 from django.urls import reverse
@@ -56,7 +57,7 @@ class SendRequest(APIView):
 
         if not cart.is_acceptable_for_pay():
             # If price is zero it may a 100 percent for one time slot. so we check that is just one time slot
-            if (cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1) or\
+            if (cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1) or \
                     (cart.products.all().count() == 1 and cart.get_basic_products_count() == 1):
                 Order.objects.sell_cart_create_order(cart)
                 return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
@@ -129,10 +130,20 @@ class Verify(APIView):
 
 
 class VerifyTest(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def get(self, request, *args, **kwargs):
+        user = request.user
+        if not user.is_superuser:
+            return Response("Not superuser!")
+
         id = kwargs.get("cartid")
-        cart = Cart.objects.get(id=id)
-        Order.objects.sell_cart_create_order(cart)
+        try:
+            cart = Cart.objects.get(id=id)
+            Order.objects.sell_cart_create_order(cart)
+        except:
+            return Response("No cart found!")
+
         return Response()
 
 
@@ -152,4 +163,3 @@ class ConsultantDepositInfoDetailAPIView(generics.RetrieveAPIView):
     queryset = qs = ConsultantDepositInfo.objects.all()
     serializer_class = ConsultantDepositInfoSerializer
     permission_classes = [permissions.IsAuthenticated, IsConsultant, ConsultantDepositInfoOwner]
-
