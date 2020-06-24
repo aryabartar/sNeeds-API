@@ -63,6 +63,11 @@ def post_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs)
 
 def post_save_sold_store_package(sender, instance, *args, **kwargs):
     if instance.consultant is not None:
+        # When consultant is changed in admin interface.
+        Chat.objects.get_or_create(
+            user=instance.sold_to,
+            consultant=instance.consultant
+        )
         qs = ConsultantSoldStorePackageAcceptRequest.objects.filter(sold_store_package=instance)
         qs.delete()
 
@@ -86,14 +91,10 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
-    if not Chat.objects.filter(
-            user=instance.sold_store_package.sold_to,
-            consultant=instance.consultant
-    ).exists():
-        Chat.objects.create(
-            user=instance.sold_store_package.sold_to,
-            consultant=instance.consultant
-        )
+    Chat.objects.get_or_create(
+        user=instance.sold_store_package.sold_to,
+        consultant=instance.consultant
+    )
 
 
 def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
