@@ -1,10 +1,26 @@
 from django.contrib import admin
 from .models import BasicProduct, SoldBasicProduct, DownloadLink, ClassProduct, WebinarProduct, RoomLink, \
-    SoldClassProduct, SoldWebinarProduct, WebinarRoomLink, ClassRoomLink, ClassWebinar
+    SoldClassProduct, SoldWebinarProduct, WebinarRoomLink, ClassRoomLink, ClassWebinar, HoldingDateTime, Lecturer, \
+    QuestionAnswer
 
 
 class DownloadLinkInline(admin.TabularInline):
     model = DownloadLink
+    extra = 1
+
+
+class HoldingDateTimeInline(admin.TabularInline):
+    model = HoldingDateTime
+    extra = 1
+
+
+class LecturerInline(admin.TabularInline):
+    model = Lecturer
+    extra = 1
+
+
+class QuestionAnswerInline(admin.StackedInline):
+    model = QuestionAnswer
     extra = 1
 
 
@@ -32,3 +48,6 @@ admin.site.register(SoldWebinarProduct)
 admin.site.register(ClassWebinar)
 admin.site.register(ClassRoomLink)
 admin.site.register(WebinarRoomLink)
+admin.site.register(HoldingDateTime)
+admin.site.register(QuestionAnswer)
+admin.site.register(Lecturer)

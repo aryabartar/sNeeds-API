@@ -58,9 +58,10 @@ class CartSerializer(serializers.ModelSerializer):
 
     def get_class_products(self, obj):
         class_products = []
+
         for product in obj.products.all():
             try:
-                class_product = product.classproduct
+                class_product = ClassProduct.objects.get(pk=product.id)
                 class_products.append(class_product)
             except ClassProduct.DoesNotExist:
                 pass
@@ -68,14 +69,29 @@ class CartSerializer(serializers.ModelSerializer):
         return ClassProductSerializer(
             class_products,
             context=self.context,
-            many=True
+            many=True,
         ).data
+
+        # basic_products = []
+        #
+        # for product in obj.products.all():
+        #     try:
+        #         basic_product = product.basicproduct
+        #         basic_products.append(basic_product)
+        #     except BasicProduct.DoesNotExist:
+        #         pass
+        #
+        # return BasicProductSerializer(
+        #     basic_products,
+        #     context=self.context,
+        #     many=True
+        #  ).data
 
     def get_webinar_products(self, obj):
         webinar_products = []
         for product in obj.products.all():
             try:
-                webinar_product = product.webinarproduct
+                webinar_product = WebinarProduct.objects.get(pk=product.id)
                 webinar_products.append(webinar_product)
             except WebinarProduct.DoesNotExist:
                 pass
@@ -83,8 +99,23 @@ class CartSerializer(serializers.ModelSerializer):
         return WebinarProductSerializer(
             webinar_products,
             context=self.context,
-            many=True
+            many=True,
         ).data
+
+        # basic_products = []
+        #
+        # for product in obj.products.all():
+        #     try:
+        #         basic_product = product.basicproduct
+        #         basic_products.append(basic_product)
+        #     except BasicProduct.DoesNotExist:
+        #         pass
+        #
+        # return BasicProductSerializer(
+        #     basic_products,
+        #     context=self.context,
+        #     many=True
+        # ).data
 
     def get_store_packages(self, obj):
         store_packages = []

@@ -6,11 +6,11 @@ urlpatterns = [
     path('basic-products/', views.BasicProductList.as_view(), name="basic-product-list"),
     path('basic-products/<slug:slug>/', views.BasicProductDetail.as_view(), name="basic-product-detail"),
 
-    # path('class-products/', views.ClassProductList.as_view(), name="class-product-list"),
-    # path('class-products/<slug:slug>/', views.ClassProductDetail.as_view(), name="class-product-detail"),
+    path('class-products/', views.ClassProductList.as_view(), name="class-product-list"),
+    path('class-products/<slug:slug>/', views.ClassProductDetail.as_view(), name="class-product-detail"),
 
-    # path('webinar-products/', views.WebinarProductList.as_view(), name="webinar-product-list"),
-    # path('webinar-products/<slug:slug>/', views.WebinarProductDetail.as_view(), name="webinar-product-detail"),
+    path('webinar-products/', views.WebinarProductList.as_view(), name="webinar-product-list"),
+    path('webinar-products/<slug:slug>/', views.WebinarProductDetail.as_view(), name="webinar-product-detail"),
 
     path('sold-basic-products/', views.SoldBasicProductList.as_view(), name="sold-basic-product-list"),
     path('sold-basic-products/<int:id>/', views.SoldBasicProductDetail.as_view(), name="sold-basic-product-detail"),
