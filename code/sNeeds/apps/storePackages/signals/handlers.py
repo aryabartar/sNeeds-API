@@ -3,6 +3,7 @@ from django.db.models.signals import pre_save, post_delete, m2m_changed, post_sa
 from django.dispatch import receiver
 
 from sNeeds.apps.chats.models import Chat
+from sNeeds.apps.discounts.models import Discount
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
     SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest,
@@ -91,10 +92,19 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
+    if created:
+        Discount.objects.create_consultant_100_discount(
+            consultant=instance.consultant,
+            user=instance.sold_store_package.sold_to,
+            use_limit=1
+        )
+
     Chat.objects.get_or_create(
         user=instance.sold_store_package.sold_to,
         consultant=instance.consultant
     )
+
+
 
 
 def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
