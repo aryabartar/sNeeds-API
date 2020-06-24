@@ -242,7 +242,12 @@ class RoomLink(models.Model):
 class WebinarRoomLink(RoomLink):
     product = models.ForeignKey(WebinarProduct, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s")
 
+    # class Meta:
+    #     unique_together = ['product', 'user']
+
 
 class ClassRoomLink(RoomLink):
     product = models.ForeignKey(ClassProduct, on_delete=models.CASCADE, related_name="%(app_label)s_%(class)s")
-
+    #
+    # class Meta:
+    #     unique_together = ['product', 'user']
