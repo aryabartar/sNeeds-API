@@ -271,3 +271,4 @@ class SoldStorePackagePhaseDetailPATCHSerializer(SoldStorePackagePhaseSerializer
     class Meta:
         model = SoldStorePackagePhaseDetail
         fields = ['title', 'description', 'status', 'file']
+

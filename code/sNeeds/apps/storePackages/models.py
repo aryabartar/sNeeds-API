@@ -207,7 +207,15 @@ class SoldStorePackagePhaseDetail(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
+
+        if self.pk is None:
+            saved_file = self.file
+            self.file = None
+            super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
+            self.file = saved_file
+
         super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
+
 
     class Meta:
         ordering = ['created']

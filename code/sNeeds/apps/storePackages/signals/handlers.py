@@ -1,10 +1,12 @@
 from django.db import IntegrityError
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save, pre_delete
+from django.dispatch import receiver
 
 from sNeeds.apps.chats.models import Chat
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
-    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
+    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest,
+    SoldStorePackagePhaseDetail
 )
 
 
