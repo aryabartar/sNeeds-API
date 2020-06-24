@@ -118,7 +118,7 @@ class ClassProductSerializer(ClassWebinarSerializer):
         if request and hasattr(request, "user"):
             user = request.user
         if user:
-            if user.is_authenticated and SoldClassProduct.objects.filter(sold_to=user, basic_product=obj).exists():
+            if user.is_authenticated and SoldClassProduct.objects.filter(sold_to=user, class_product=obj).exists():
                 download_links_qs = DownloadLink.objects.filter(product=obj)
         return DownloadLinkSerializer(download_links_qs, many=True).data
 
@@ -140,7 +140,7 @@ class WebinarProductSerializer(ClassWebinarSerializer):
         if request and hasattr(request, "user"):
             user = request.user
         if user:
-            if user.is_authenticated and SoldWebinarProduct.objects.filter(sold_to=user, basic_product=obj).exists():
+            if user.is_authenticated and SoldWebinarProduct.objects.filter(sold_to=user, webinar_product=obj).exists():
                 download_links_qs = DownloadLink.objects.filter(product=obj)
         return DownloadLinkSerializer(download_links_qs, many=True).data
 
@@ -168,12 +168,15 @@ class SoldClassProductSerializer(serializers.ModelSerializer):
         return SafeUserDataSerializer(obj.sold_to).data
 
     def get_class_product(self, obj):
-        return obj.basic_product.slug
+        if obj.class_product is not None:
+            return obj.class_product.slug
+        return ""
 
     def get_class_product_url(self, obj):
-        return self.context.get('request').build_absolute_uri(reverse('basic-product:class-product-detail',
-                                                                      args=[obj.basic_product.slug]))
-
+        if obj.class_product is not None:
+            return self.context.get('request').build_absolute_uri(reverse('basic-product:class-product-detail',
+                                                                          args=[obj.class_product.slug]))
+        return self.context.get('request').build_absolute_uri(reverse('basic-product:class-product-list'))
 
 class SoldWebinarProductSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(
@@ -198,11 +201,15 @@ class SoldWebinarProductSerializer(serializers.ModelSerializer):
         return SafeUserDataSerializer(obj.sold_to).data
 
     def get_webinar_product(self, obj):
-        return obj.basic_product.slug
+        if obj.webinar_product is not None:
+            return obj.webinar_product.slug
+        return ""
 
     def get_webinar_product_url(self, obj):
-        return self.context.get('request').build_absolute_uri(reverse('basic-product:webinar-product-detail',
-                                                                      args=[obj.basic_product.slug]))
+        if obj.webinar_product is not None:
+            return self.context.get('request').build_absolute_uri(reverse('basic-product:webinar-product-detail',
+                                                                          args=[obj.webinar_product.slug]))
+        return self.context.get('request').build_absolute_uri(reverse('basic-product:webinar-product-list'))
 
 
 class RoomLinkSerializer(serializers.ModelSerializer):

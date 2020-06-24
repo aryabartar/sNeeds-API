@@ -65,7 +65,7 @@ class ClassProductManager(models.QuerySet):
                 class_product = obj.classproduct
                 sold_class_product_list.append(
                     SoldClassProduct.objects.create(
-                        basic_product=obj,
+                        class_product=obj,
                         sold_to=sold_to,
                         price=obj.price,
                     )
@@ -89,7 +89,7 @@ class WebinarProductManager(models.QuerySet):
                 webinar_product = obj.webinarproduct
                 sold_webinar_product_list.append(
                     SoldWebinarProduct.objects.create(
-                        basic_product=obj,
+                        class_product=obj,
                         sold_to=sold_to,
                         price=obj.price,
                     )
@@ -113,8 +113,6 @@ class BasicProduct(Product):
 
 
 class SoldBasicProduct(SoldProduct):
-    basic_product = models.ForeignKey(BasicProduct, on_delete=models.PROTECT, related_name="%(app_label)s_%(class)s")
-
     objects = SoldProductQuerySet.as_manager()
 
 
@@ -222,11 +220,11 @@ class SoldClassWebinar(SoldBasicProduct):
 
 
 class SoldClassProduct(SoldClassWebinar):
-    pass
+    class_product = models.ForeignKey(ClassProduct, on_delete=models.PROTECT, null=True)
 
 
 class SoldWebinarProduct(SoldClassWebinar):
-    pass
+    webinar_product = models.ForeignKey(WebinarProduct, on_delete=models.PROTECT, null=True)
 
 
 class DownloadLink(models.Model):

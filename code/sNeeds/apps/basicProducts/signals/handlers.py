@@ -4,14 +4,14 @@ from sNeeds.apps.basicProducts.models import RoomLink, SoldClassWebinar, Webinar
 
 
 def post_save_sold_webinar_product(sender, instance, *args, **kwargs):
-    webinar_product = WebinarProduct.objects.get(id=instance.basic_product.id)
-    WebinarRoomLink.objects.update_or_create(product=webinar_product, user=instance.sold_to,
+    # webinar_product = WebinarProduct.objects.get(id=instance.basic_product.id)
+    WebinarRoomLink.objects.update_or_create(product=instance.webinar_product, user=instance.sold_to,
                                              defaults={})
 
 
 def post_save_sold_class_product(sender, instance, *args, **kwargs):
-    class_product = ClassProduct.objects.get(id=instance.basic_product.id)
-    ClassRoomLink.objects.update_or_create(product=class_product, user=instance.sold_to,
+    # class_product = ClassProduct.objects.get(id=instance.basic_product.id)
+    ClassRoomLink.objects.update_or_create(product=instance.class_product, user=instance.sold_to,
                                            defaults={})
 
 
