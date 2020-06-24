@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 
 from .models import CartDiscount, TimeSlotSaleNumberDiscount, Discount
-from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer,\
+from .serializers import CartDiscountSerializer, TimeSlotSaleNumberDiscountSerializer, DiscountSerializer, \
     ConsultantInteractiveUsersSerializer
 from .permissions import CartDiscountPermission, ConsultantPermission, ConsultantDiscountOwnersPermission
 from sNeeds.apps.consultants.models import ConsultantProfile
@@ -21,7 +21,10 @@ class TimeSlotSaleNumberDiscountListView(generics.ListAPIView):
 
 class CartDiscountListView(generics.ListCreateAPIView):
     serializer_class = CartDiscountSerializer
-    permission_classes = [CartDiscountPermission, permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        CartDiscountPermission
+    ]
     filterset_fields = ('cart',)
 
     def get_queryset(self):

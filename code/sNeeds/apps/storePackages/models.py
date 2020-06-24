@@ -206,7 +206,15 @@ class SoldStorePackagePhaseDetail(models.Model):
             raise ValidationError({"object_id": "Id is not valid."})
 
     def save(self, *args, **kwargs):
+        # Solution for None id in file upload: https://stackoverflow.com/a/15776267
         self.clean()
+
+        if self.pk is None:
+            saved_file = self.file
+            self.file = None
+            super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
+            self.file = saved_file
+
         super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
 
     class Meta:

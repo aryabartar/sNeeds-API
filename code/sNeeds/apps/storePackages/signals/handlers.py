@@ -1,10 +1,13 @@
 from django.db import IntegrityError
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save, pre_delete
+from django.dispatch import receiver
 
 from sNeeds.apps.chats.models import Chat
+from sNeeds.apps.discounts.models import Discount
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
-    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest
+    SoldStorePaidPackagePhase, SoldStoreUnpaidPackagePhase, ConsultantSoldStorePackageAcceptRequest,
+    SoldStorePackagePhaseDetail
 )
 
 
@@ -61,6 +64,11 @@ def post_save_sold_store_unpaid_package_phase(sender, instance, *args, **kwargs)
 
 def post_save_sold_store_package(sender, instance, *args, **kwargs):
     if instance.consultant is not None:
+        # When consultant is changed in admin interface.
+        Chat.objects.get_or_create(
+            user=instance.sold_to,
+            consultant=instance.consultant
+        )
         qs = ConsultantSoldStorePackageAcceptRequest.objects.filter(sold_store_package=instance)
         qs.delete()
 
@@ -84,14 +92,19 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
-    if not Chat.objects.filter(
+    if created:
+        Discount.objects.create_consultant_100_discount(
+            consultant=instance.consultant,
             user=instance.sold_store_package.sold_to,
-            consultant=instance.consultant
-    ).exists():
-        Chat.objects.create(
-            user=instance.sold_store_package.sold_to,
-            consultant=instance.consultant
+            use_limit=1
         )
+
+    Chat.objects.get_or_create(
+        user=instance.sold_store_package.sold_to,
+        consultant=instance.consultant
+    )
+
+
 
 
 def post_delete_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
