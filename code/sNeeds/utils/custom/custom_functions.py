@@ -62,3 +62,8 @@ def get_users_interact_with_consultant(consultant):
     result_qs = result_qs.distinct()
     result_qs = result_qs.order_by('last_name')
     return result_qs
+
+
+def get_users_interact_with_consultant_by_chat(consultant_profile):
+    from sNeeds.apps.chats.models import Chat
+    return Chat.objects.filter(consultant=consultant_profile).get_users()

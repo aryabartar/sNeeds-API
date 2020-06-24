@@ -14,7 +14,7 @@ from sNeeds.apps.consultants.models import ConsultantProfile
 from sNeeds.apps.customAuth.serializers import SafeUserDataSerializer
 from sNeeds.apps.consultants.serializers import ShortConsultantProfileSerializer
 
-from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant
+from sNeeds.utils.custom.custom_functions import get_users_interact_with_consultant_by_chat
 
 User = get_user_model()
 
@@ -125,12 +125,13 @@ class DiscountSerializer(serializers.ModelSerializer):
 
         users_id = [u.id for u in users]
 
-        interactive_users_qs = get_users_interact_with_consultant(consultant_profile)
+        interactive_users_qs = get_users_interact_with_consultant_by_chat(consultant_profile)
 
         allowed_users = interactive_users_qs.filter(id__in=users_id)
 
         if not allowed_users.exists():
-            raise ValidationError("There is no user that is allowed to get discount code")
+            raise ValidationError("There is no user that is allowed to get discount code.Be sure user has meaningful "
+                                  "relation by consultant.")
 
         products = []
 
@@ -250,8 +251,7 @@ class ConsultantInteractiveUsersSerializer(serializers.Serializer):
             user = request.user
         consultant_profile = ConsultantProfile.objects.get(user__id=user.id)
 
-        # users = get_users_interact_with_consultant(consultant_profile)
-        users = Chat.objects.filter(consultant=consultant_profile).get_users()
+        users = get_users_interact_with_consultant_by_chat(consultant_profile)
         return SafeUserDataSerializer(users, many=True, context=self.context).data
 
     def get_first_name(self, obj):
