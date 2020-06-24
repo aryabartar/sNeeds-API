@@ -7,7 +7,6 @@ from .models import Discount
 class CartDiscountPermission(permissions.BasePermission):
     message = "This user is not discount owner."
 
-    # TODO Bug what about GET method? everybody is allowed to get cart discount?
     def has_permission(self, request, view):
         if request.method == "POST":
             cart_id = request.data.get("cart")
