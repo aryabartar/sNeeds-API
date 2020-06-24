@@ -92,7 +92,7 @@ class Cart(models.Model):
         discount = cart_discount.discount
 
         # Consultants that are in the discount of code entered
-        consultants_qs = cart_discount.discount.consultants.all()
+        discount_consultants_qs = cart_discount.discount.consultants.all()
 
         # Products that are in the discount of code entered
         discount_products_qs = cart_discount.discount.products.all()
@@ -102,19 +102,20 @@ class Cart(models.Model):
 
         total = 0
 
-        # If discount is given by one consultant to one user we remove one time slot from products
-        # and also consultant from consultants , so no other time slots will be affected by discount
-        # but count discount will remain with one fewer time slots
+        """If discount is given by one consultant to one user we remove one time slot from products
+        and also consultant from consultants , so no other time slots will be affected by discount
+        but count discount will remain with one fewer time slots"""
         if discount.creator == "consultant":
             discount_creator_time_slot_qs = \
-                self.products.all().get_time_slot_sales().filter(consultant__in=consultants_qs)
+                self.products.all().get_time_slot_sales().filter(consultant__in=discount_consultants_qs)
 
             if discount_creator_time_slot_qs.exists():
-                # discount_creator_first_time_slot_id = discount_creator_time_slot_qs.first().id
-                # products = self.products.all().exclude(id=discount_creator_first_time_slot_id)
                 total -= discount.amount
-                consultants_qs = consultants_qs.none()
+                discount_consultants_qs = discount_consultants_qs.none()
                 time_slot_sale_count -= 1
+
+        elif discount_consultants_qs.count() == 0 and discount_products_qs.count() == 0:
+            total -= discount.amount * products.count()
 
         count_discount = TimeSlotSaleNumberDiscount.objects.get_discount_or_zero(time_slot_sale_count)
 
@@ -126,7 +127,7 @@ class Cart(models.Model):
                 time_slot_sale = product.timeslotsale  # Checks here
 
                 # If user applied discount code we apply num discount for lower price
-                if time_slot_sale.consultant in consultants_qs:
+                if time_slot_sale.consultant in discount_consultants_qs:
                     effective_price = product.price - cart_discount.discount.amount
                 else:
                     effective_price = product.price
