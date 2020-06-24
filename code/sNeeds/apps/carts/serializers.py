@@ -72,21 +72,6 @@ class CartSerializer(serializers.ModelSerializer):
             many=True,
         ).data
 
-        # basic_products = []
-        #
-        # for product in obj.products.all():
-        #     try:
-        #         basic_product = product.basicproduct
-        #         basic_products.append(basic_product)
-        #     except BasicProduct.DoesNotExist:
-        #         pass
-        #
-        # return BasicProductSerializer(
-        #     basic_products,
-        #     context=self.context,
-        #     many=True
-        #  ).data
-
     def get_webinar_products(self, obj):
         webinar_products = []
         for product in obj.products.all():
@@ -101,21 +86,6 @@ class CartSerializer(serializers.ModelSerializer):
             context=self.context,
             many=True,
         ).data
-
-        # basic_products = []
-        #
-        # for product in obj.products.all():
-        #     try:
-        #         basic_product = product.basicproduct
-        #         basic_products.append(basic_product)
-        #     except BasicProduct.DoesNotExist:
-        #         pass
-        #
-        # return BasicProductSerializer(
-        #     basic_products,
-        #     context=self.context,
-        #     many=True
-        # ).data
 
     def get_store_packages(self, obj):
         store_packages = []
