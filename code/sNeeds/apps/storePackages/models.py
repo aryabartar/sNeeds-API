@@ -215,7 +215,8 @@ class SoldStorePackagePhaseDetail(models.Model):
             super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
             self.file = saved_file
 
-        super(SoldStorePackagePhaseDetail, self).save(*args, **kwargs)
+        kwargs.pop('force_insert', None)
+        super(SoldStorePackagePhaseDetail, self).save()
 
     class Meta:
         ordering = ['created']
