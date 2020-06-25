@@ -141,7 +141,7 @@ class VerifyTest(APIView):
         try:
             cart = Cart.objects.get(id=id)
             Order.objects.sell_cart_create_order(cart)
-        except:
+        except Cart.DoesNotExist:
             return Response("No cart found!")
 
         return Response()

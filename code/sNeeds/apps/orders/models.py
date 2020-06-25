@@ -49,8 +49,8 @@ class OrderManager(models.Manager):
         sold_store_paid_package_phase_qs = SoldStorePaidPackagePhase.objects.filter(
             sold_store_package__in=list(sold_store_packages_qs)
         )
-        sold_class_products_qs = class_products_qs.add_class_product_sold(sold_to=cart.user)
-        sold_webinar_products_qs = webinar_products_qs.add_webinar_product_sold(sold_to=cart.user)
+        # sold_class_products_qs = class_products_qs.add_class_product_sold(sold_to=cart.user)
+        # sold_webinar_products_qs = webinar_products_qs.add_webinar_product_sold(sold_to=cart.user)
         sold_store_paid_package_phases_qs = sold_store_unpaid_package_phases_qs.sell_and_get_paid_phases()
 
         order = Order.objects.create(
@@ -64,8 +64,8 @@ class OrderManager(models.Manager):
 
         order.sold_products.add(*list(sold_time_slot_sales_qs))
         order.sold_products.add(*list(sold_store_paid_package_phase_qs))
-        order.sold_products.add(*list(sold_class_products_qs))
-        order.sold_products.add(*list(sold_webinar_products_qs))
+        # order.sold_products.add(*list(sold_class_products_qs))
+        # order.sold_products.add(*list(sold_webinar_products_qs))
         order.sold_products.add(*list(sold_store_paid_package_phases_qs))
 
         order.save()
