@@ -47,12 +47,12 @@ def get_sold_store_package_image_upload_path(instance, file_name):
 
 class StorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)
-    description = RichTextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
 
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    description = RichTextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     phase_details = models.ManyToManyField(
         StorePackagePhaseDetail, blank=True
     )
@@ -190,7 +190,7 @@ class SoldStorePackagePhaseDetail(models.Model):
         limit_choices_to=CONTENT_TYPE_LIMIT_CHOICE
     )
 
-    description = RichTextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
@@ -223,7 +223,7 @@ class SoldStorePackagePhaseDetail(models.Model):
 
 class SoldStorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
-    description = RichTextField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
     sold_store_package = models.ForeignKey(
         SoldStorePackage,
         on_delete=models.CASCADE,
