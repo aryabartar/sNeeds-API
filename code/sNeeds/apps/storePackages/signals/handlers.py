@@ -2,7 +2,7 @@ from django.db import IntegrityError
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save, pre_delete
 from django.dispatch import receiver
 
-from sNeeds.apps.chats.models import Chat
+from sNeeds.apps.chats.models import Chat, TextMessage
 from sNeeds.apps.discounts.models import Discount
 from sNeeds.apps.storePackages.models import (
     StorePackage, StorePackagePhaseThrough, StorePackagePhase, SoldStorePackage,
@@ -93,16 +93,24 @@ def post_save_sold_store_paid_package_phase(sender, instance, *args, **kwargs):
 
 def post_save_consultant_sold_store_package_accept_request(sender, instance, created, *args, **kwargs):
     if created:
-        Discount.objects.create_consultant_100_discount(
+        chat, created = Chat.objects.get_or_create(
+            user=instance.sold_store_package.sold_to,
+            consultant=instance.consultant
+        )
+        text_message = "سلام. برای شما یک تخفیف صادر شده  تا بتونید با مشاور گفت و گو کنید و اگر تمایل داشتید برای ادامه روند انتخاب کنید." \
+                       "\n\r توجه کنید که این کد تخفیف قابل استفاده برای رزرو زمان گفت و گو و مشاوره برای همین مشاور است." \
+                       "\n\r مدت زمان مشاوره نیز 30 دقیقه می باشد."
+
+        TextMessage.objects.create(chat=chat,
+                                   sender=instance.consultant.user,
+                                   text_message=text_message,
+                                   )
+
+        discount = Discount.objects.create_consultant_100_discount(
             consultant=instance.consultant,
             user=instance.sold_store_package.sold_to,
             use_limit=1
         )
-
-    Chat.objects.get_or_create(
-        user=instance.sold_store_package.sold_to,
-        consultant=instance.consultant
-    )
 
 
 
