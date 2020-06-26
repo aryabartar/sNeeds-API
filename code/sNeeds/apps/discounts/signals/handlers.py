@@ -40,7 +40,7 @@ def post_save_discount(sender, instance, *args, **kwargs):
         if instance.use_limit == 0:
             qs.delete()
             return
-    """update carts that has applied this code but not """
+    "Update carts that has applied this code but not "
     for obj in qs:
         cart = obj.cart
         cart.update_price()
@@ -56,13 +56,15 @@ def post_save_discount(sender, instance, *args, **kwargs):
                 )
                 text_message = "کد تخفیف زیر مخصوص شماست. " \
                                "\n\r {}  " \
-                               "\n\r با این کد میتونید یه زمان مشاوره رایگان داشته باشید.".format(instance.code)
+                               "\n\r با اعمال این رو سبد خریدتون می‌تونید با من یه مشاوره رایگان داشته باشید.".format(
+                    instance.code
+                )
 
-                TextMessage.objects.create(chat=chat,
-                                           sender=consultant.user,
-                                           text_message=text_message
-                                           )
-
+                TextMessage.objects.create(
+                    chat=chat,
+                    sender=consultant.user,
+                    text_message=text_message
+                )
 
 
 def m2m_changed_discount(sender, instance, action, *args, **kwargs):
@@ -89,7 +91,10 @@ m2m_changed.connect(post_save_discount, sender=Discount.consultants.through)
 
 m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
 pre_save.connect(pre_save_create_discount_code, sender=Discount)
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> 7552a6afbfe0b603acfcf2f5cea400714e0c104d
