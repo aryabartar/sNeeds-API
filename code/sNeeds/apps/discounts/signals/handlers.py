@@ -32,7 +32,7 @@ def post_delete_cart_discount(sender, instance, *args, **kwargs):
     cart.update_price()
 
 
-def post_save_discount(sender, instance, created, *args, **kwargs):
+def post_save_discount(sender, instance, *args, **kwargs):
     qs = CartDiscount.objects.filter(discount=instance)
 
     # TODO Is possible to update a discount that the discount use_limit reached to zero????
@@ -46,8 +46,6 @@ def post_save_discount(sender, instance, created, *args, **kwargs):
         cart.update_price()
 
     if instance.creator == "consultant":
-        print("creator consultant")
-        print(instance.consultants.all().exists())
         consultants = instance.consultants.all()
         users = instance.users.all()
         for consultant in consultants:
@@ -84,7 +82,14 @@ post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleN
 post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_save.connect(post_save_cart_discount, sender=CartDiscount)
 post_delete.connect(post_delete_cart_discount, sender=CartDiscount)
+
 post_save.connect(post_save_discount, sender=Discount)
+m2m_changed.connect(post_save_discount, sender=Discount.users.through)
+m2m_changed.connect(post_save_discount, sender=Discount.consultants.through)
+
 m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
 pre_save.connect(pre_save_create_discount_code, sender=Discount)
+
+
+
 
