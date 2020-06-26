@@ -1,4 +1,6 @@
 from django.db.models.signals import pre_save, post_delete, m2m_changed, post_save
+
+from sNeeds.apps.chats.models import Chat, TextMessage
 from sNeeds.apps.discounts.utils import unique_discount_code_generator
 from sNeeds.apps.discounts.models import (
     TimeSlotSaleNumberDiscount,
@@ -30,7 +32,7 @@ def post_delete_cart_discount(sender, instance, *args, **kwargs):
     cart.update_price()
 
 
-def post_save_discount(sender, instance, *args, **kwargs):
+def post_save_discount(sender, instance, created, *args, **kwargs):
     qs = CartDiscount.objects.filter(discount=instance)
 
     # TODO Is possible to update a discount that the discount use_limit reached to zero????
@@ -38,10 +40,31 @@ def post_save_discount(sender, instance, *args, **kwargs):
         if instance.use_limit == 0:
             qs.delete()
             return
-
+    """update carts that has applied this code but not """
     for obj in qs:
         cart = obj.cart
         cart.update_price()
+
+    if instance.creator == "consultant":
+        print("creator consultant")
+        print(instance.consultants.all().exists())
+        consultants = instance.consultants.all()
+        users = instance.users.all()
+        for consultant in consultants:
+            for user in users:
+                chat, _ = Chat.objects.get_or_create(
+                    user=user,
+                    consultant=consultant
+                )
+                text_message = "کد تخفیف زیر مخصوص شماست. " \
+                               "\n\r {}  " \
+                               "\n\r با این کد میتونید یه زمان مشاوره رایگان داشته باشید.".format(instance.code)
+
+                TextMessage.objects.create(chat=chat,
+                                           sender=consultant.user,
+                                           text_message=text_message
+                                           )
+
 
 
 def m2m_changed_discount(sender, instance, action, *args, **kwargs):
@@ -64,3 +87,4 @@ post_delete.connect(post_delete_cart_discount, sender=CartDiscount)
 post_save.connect(post_save_discount, sender=Discount)
 m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
 pre_save.connect(pre_save_create_discount_code, sender=Discount)
+
