@@ -91,10 +91,4 @@ m2m_changed.connect(post_save_discount, sender=Discount.consultants.through)
 
 m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
 pre_save.connect(pre_save_create_discount_code, sender=Discount)
-<<<<<<< HEAD
 
-
-
-
-=======
->>>>>>> 7552a6afbfe0b603acfcf2f5cea400714e0c104d
