@@ -88,12 +88,13 @@ class FieldOfStudy(models.Model):
 
 
 class StudentFormFieldsChoice(models.Model):
-    name = models.CharField(max_length=256, unique=True)
-    slug = models.SlugField(unique=True, help_text="Lowercase pls")
+    name = models.CharField(max_length=256)
+    slug = models.SlugField(help_text="Lowercase pls")
     category = models.CharField(max_length=256, choices=STUDENT_FORM_CATEGORY_CHOICES)
 
     class Meta:
         ordering = ["category", "name"]
+        unique_together = ["category", "name"]
 
     def __str__(self):
         return self.name
