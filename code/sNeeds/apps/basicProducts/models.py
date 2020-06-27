@@ -89,7 +89,7 @@ class WebinarProductManager(models.QuerySet):
                 webinar_product = obj.webinarproduct
                 sold_webinar_product_list.append(
                     SoldWebinarProduct.objects.create(
-                        class_product=obj,
+                        webinar_product=obj,
                         sold_to=sold_to,
                         price=obj.price,
                     )
