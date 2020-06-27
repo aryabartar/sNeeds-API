@@ -61,7 +61,6 @@ class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
             'name': {'read_only': True},
             'category': {'read_only': False},
-            'slug': {'read_only': False},
         }
 
 

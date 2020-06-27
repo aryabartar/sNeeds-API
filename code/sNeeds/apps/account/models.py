@@ -89,7 +89,6 @@ class FieldOfStudy(models.Model):
 
 class StudentFormFieldsChoice(models.Model):
     name = models.CharField(max_length=256)
-    slug = models.SlugField(unique=True, help_text="Lowercase pls")
     category = models.CharField(max_length=256, choices=STUDENT_FORM_CATEGORY_CHOICES)
 
     class Meta:
