@@ -22,16 +22,16 @@ SEMESTER_CHOICES = [
 "the names must be the same as the field names in the model."
 STUDENT_FORM_CATEGORY_CHOICES = [
     ('grade', 'grade'),
-    ('major', 'major'),
-    ('university', 'university'),
+    # ('major', 'major'),
+    # ('university', 'university'),
     ('apply_grade', 'apply_grade'),
-    ('apply_major', 'apply_major'),
+    # ('apply_major', 'apply_major'),
     ('apply_country', 'apply_country'),
     ('apply_mainland', 'apply_mainland'),
     ('marital_status', 'marital_status'),
-    ('apply_university', 'apply_university'),
+    # ('apply_university', 'apply_university'),
     ('language_certificate', 'language_certificate'),
-    ('degree_conferral_year', 'degree_conferral_year'),
+    # ('degree_conferral_year', 'degree_conferral_year'),
 ]
 
 
