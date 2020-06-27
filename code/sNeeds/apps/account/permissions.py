@@ -34,5 +34,7 @@ class StudentDetailedInfoOwnerOrInteractConsultantPermission(permissions.BasePer
                 and if had not bought package any other user can not see that. in this situation to let consultants that
                 had time slot with user to see the form uncommnet the qs_2 line"""
                 # qs_1 = get_consultants_interact_with_user(user=obj.user).filter(user=user)
+
+                # TODO If all sold store packages of user have consultant, other consultants won't access the form
                 qs_2 = SoldStorePackage.objects.filter(sold_to=obj.user)
                 return qs_2.exists()
