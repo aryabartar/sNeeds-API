@@ -49,17 +49,18 @@ class StorePackagePhaseDetail(models.Model):
     title = models.CharField(max_length=1024, null=False, blank=False)
     description = models.TextField(null=True, blank=True)
 
+    status = models.CharField(
+        choices=SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS,
+        max_length=1024,
+        default="not_started"
+    )
+
 
 class StorePackagePhase(models.Model):
     title = models.CharField(max_length=1024)
     description = models.TextField(null=True, blank=True)
     phase_details = models.ManyToManyField(
         StorePackagePhaseDetail, blank=True
-    )
-    status = models.CharField(
-        choices=SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS,
-        max_length=1024,
-        default="not_started"
     )
 
     price = models.IntegerField(
