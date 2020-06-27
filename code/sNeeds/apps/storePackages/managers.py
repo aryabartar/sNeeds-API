@@ -49,7 +49,7 @@ class StorePackageQuerySetManager(models.QuerySet):
                     for obj in store_package_phase_through_obj.store_package_phase.phase_details.all():
                         SoldStorePackagePhaseDetail.objects.create(
                             title=obj.title,
-                            status="done",
+                            status=obj.status,
                             content_type=ContentType.objects.get(
                                 app_label='storePackages', model='soldstorepaidpackagephase'
                             ),
@@ -69,7 +69,7 @@ class StorePackageQuerySetManager(models.QuerySet):
                     for obj in store_package_phase_through_obj.store_package_phase.phase_details.all():
                         SoldStorePackagePhaseDetail.objects.create(
                             title=obj.title,
-                            status="not_started",
+                            status=obj.status,
                             content_type=ContentType.objects.get(
                                 app_label='storePackages', model='soldstoreunpaidpackagephase'
                             ),

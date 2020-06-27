@@ -56,6 +56,11 @@ class StorePackagePhase(models.Model):
     phase_details = models.ManyToManyField(
         StorePackagePhaseDetail, blank=True
     )
+    status = models.CharField(
+        choices=SOLD_STORE_PACKAGE_PHASE_DETAIL_STATUS,
+        max_length=1024,
+        default="not_started"
+    )
 
     price = models.IntegerField(
         validators=[MinValueValidator(0), ],
