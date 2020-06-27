@@ -24,13 +24,6 @@ class DiscountManager(models.QuerySet):
 
     @transaction.atomic
     def create_consultant_100_discount(self, consultant, user=None, use_limit=None):
-        # obj = Discount(amount=consultant.time_slot_price,
-        #     use_limit=use_limit,
-        #     creator="consultant",)
-        # obj.users.set([user.id])
-        # obj.consultants.set([consultant.id])
-        # obj.save()
-
         obj = self.create(
             amount=consultant.time_slot_price,
             use_limit=use_limit,

@@ -45,7 +45,15 @@ def post_save_discount(sender, instance, *args, **kwargs):
         cart = obj.cart
         cart.update_price()
 
-    if instance.creator == "consultant":
+
+def m2m_changed_discount_consultants(sender, instance, action, *args, **kwargs):
+    if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
+        qs = CartDiscount.objects.filter(discount=instance)
+        for obj in qs:
+            cart = obj.cart
+            cart.update_price()
+
+    if action == 'post_add' and instance.creator == "consultant":
         consultants = instance.consultants.all()
         users = instance.users.all()
         for consultant in consultants:
@@ -54,25 +62,20 @@ def post_save_discount(sender, instance, *args, **kwargs):
                     user=user,
                     consultant=consultant
                 )
-                text_message = "کد تخفیف زیر مخصوص شماست. " \
-                               "\n\r {}  " \
-                               "\n\r با اعمال این رو سبد خریدتون می‌تونید با من یه مشاوره رایگان داشته باشید.".format(
-                    instance.code
+                TextMessage.objects.create_discount_message(chat=chat, sender=consultant.user, code=instance.code)
+
+
+def m2m_changed_discount_users(sender, instance, action, *args, **kwargs):
+    if action == 'post_add' and instance.creator == "consultant":
+        consultants = instance.consultants.all()
+        users = instance.users.all()
+        for consultant in consultants:
+            for user in users:
+                chat, _ = Chat.objects.get_or_create(
+                    user=user,
+                    consultant=consultant
                 )
-
-                TextMessage.objects.create(
-                    chat=chat,
-                    sender=consultant.user,
-                    text_message=text_message
-                )
-
-
-def m2m_changed_discount(sender, instance, action, *args, **kwargs):
-    if action == 'post_add' or action == 'post_remove' or action == 'post_clear':
-        qs = CartDiscount.objects.filter(discount=instance)
-        for obj in qs:
-            cart = obj.cart
-            cart.update_price()
+                TextMessage.objects.create_discount_message(chat=chat, sender=consultant.user, code=instance.code)
 
 
 def pre_save_create_discount_code(sender, instance, *args, **kwargs):
@@ -84,11 +87,8 @@ post_save.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleN
 post_delete.connect(post_save_time_slot_sale_number_discount, sender=TimeSlotSaleNumberDiscount)
 post_save.connect(post_save_cart_discount, sender=CartDiscount)
 post_delete.connect(post_delete_cart_discount, sender=CartDiscount)
-
 post_save.connect(post_save_discount, sender=Discount)
-m2m_changed.connect(post_save_discount, sender=Discount.users.through)
-m2m_changed.connect(post_save_discount, sender=Discount.consultants.through)
-
-m2m_changed.connect(m2m_changed_discount, sender=Discount.consultants.through)
+m2m_changed.connect(m2m_changed_discount_consultants, sender=Discount.consultants.through)
+m2m_changed.connect(m2m_changed_discount_users, sender=Discount.users.through)
 pre_save.connect(pre_save_create_discount_code, sender=Discount)
 

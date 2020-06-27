@@ -60,6 +60,17 @@ class MessageManager(PolymorphicManager):
 
         return qs
 
+    def create_discount_message(self, chat, sender, code):
+        text_message = "کد تخفیف زیر مخصوص شماست. " \
+                       "\n\r {}  " \
+                       "\n\r با اعمال این رو سبد خریدتون می‌تونید با من یه مشاوره رایگان داشته باشید.".format(code)
+
+        obj = self.create(
+            chat=chat,
+            sender=sender,
+            text_message=text_message
+        )
+        return obj
 
 
 class Chat(models.Model):
