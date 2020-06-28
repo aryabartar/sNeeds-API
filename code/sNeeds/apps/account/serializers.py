@@ -51,11 +51,10 @@ class FieldOfStudySerializer(serializers.ModelSerializer):
 
 
 class StudentFormFieldsChoiceSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = StudentFormFieldsChoice
         fields = [
-            'id', 'name', 'category', 'slug'
+            'id', 'name', 'category',
         ]
         extra_kwargs = {
             'id': {'read_only': True},
@@ -94,7 +93,6 @@ class StudentFormFieldsChoiceCustomPrimaryKeyRelatedField(serializers.PrimaryKey
 
 
 class StudentFormApplySemesterYearSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = StudentFormApplySemesterYear
         fields = ['id', 'year', 'semester']
