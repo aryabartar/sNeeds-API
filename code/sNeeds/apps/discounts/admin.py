@@ -9,6 +9,7 @@ admin.site.register(TimeSlotSaleNumberDiscount)
 class DiscountAdmin(admin.ModelAdmin):
     list_display = ('code', 'use_limit', 'amount', 'creator', 'created')
     list_filter = ('creator',)
+    filter_horizontal = ["consultants", "users", "products"]
 
 
 @admin.register(CartDiscount)
