@@ -11,6 +11,7 @@ admin.site.register(Product)
 class TimeSlotSaleAdmin(admin.ModelAdmin):
     list_display = ["id", "consultant", "start_time", "end_time", "price"]
     readonly_fields = ["price", "active", ]
+    search_fields = ["consultant", "id", ]
 
 
 class SoldTimeSlotSaleAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
@@ -66,7 +67,6 @@ class SoldTimeSlotSalePaymentInfoAdmin(admin.ModelAdmin):
 
             response.context_data['sums']["orders_total_sum"] += temp_orders_total
             response.context_data['sums']["orders_subtotal_sum"] += temp_orders_subtotal
-
 
         return response
 
