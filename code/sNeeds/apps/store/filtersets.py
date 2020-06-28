@@ -9,5 +9,5 @@ class TimeSlotSaleFilter(filters.FilterSet):
     class Meta:
         model = models.TimeSlotSale
         fields = [
-            'consultant', 'price'
+            'consultant', 'price', 'start_time', 'end_time'
         ]
