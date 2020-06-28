@@ -158,6 +158,11 @@ class Cart(models.Model):
             return True
         return False
 
+    def is_acceptable_with_zero_price(self):
+        if self.total == 0 and self.products.all().exists():
+            return True
+        return False
+
     def _update_total(self):
         # For code discount and time slot number discount
         self._update_total_cart_discount_amount()

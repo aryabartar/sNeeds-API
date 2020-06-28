@@ -55,30 +55,30 @@ class SendRequest(APIView):
         if not cart.user == user:
             return Response({"detail": "This user is not cart's owner."}, 400)
 
-        if not cart.is_acceptable_for_pay():
-            # If price is zero it may a 100 percent for one time slot. so we check that is just one time slot
-            if (cart.products.all().count() == 1 and cart.get_time_slot_sales_count() == 1) or \
-                    (cart.products.all().count() == 1 and cart.get_basic_products_count() == 1):
-                Order.objects.sell_cart_create_order(cart)
-                return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
-            else:
-                return Response({"detail": "Can not pay, The price is 0."}, 400)
+        if cart.is_acceptable_with_zero_price():
+            Order.objects.sell_cart_create_order(cart)
+            return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
 
-        result = client.service.PaymentRequest(
-            ZARINPAL_MERCHANT,
-            int(cart.total),
-            "پرداخت اسنیدز",
-            cart.user.email,
-            cart.user.phone_number,
-            FRONTEND_URL + "user/payment/accept/",
-        )
+        if cart.is_acceptable_for_pay():
 
-        if result.Status != 100:
-            return Response({"detail": 'Error code: ' + str(result.Status)}, 400)
+            result = client.service.PaymentRequest(
+                ZARINPAL_MERCHANT,
+                int(cart.total),
+                "پرداخت اسنیدز",
+                cart.user.email,
+                cart.user.phone_number,
+                FRONTEND_URL + "user/payment/accept/",
+            )
 
-        PayPayment.objects.create(user=user, cart=cart, authority=result.Authority)
+            if result.Status != 100:
+                return Response({"detail": 'Error code: ' + str(result.Status)}, 400)
 
-        return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
+            PayPayment.objects.create(user=user, cart=cart, authority=result.Authority)
+
+            return Response({"redirect": 'https://www.zarinpal.com/pg/StartPay/' + str(result.Authority)})
+
+        if not cart.is_acceptable_for_pay() and not cart.is_acceptable_with_zero_price():
+            return Response({"detail": "Can not pay, The price is 0 but no products are included."}, 400)
 
 
 class Verify(APIView):
