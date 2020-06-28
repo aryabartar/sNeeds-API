@@ -11,7 +11,7 @@ admin.site.register(Product)
 class TimeSlotSaleAdmin(admin.ModelAdmin):
     list_display = ["id", "consultant", "start_time", "end_time", "price"]
     readonly_fields = ["price", "active", ]
-    search_fields = ["consultant", "id", ]
+    list_filter = ['consultant',]
 
 
 class SoldTimeSlotSaleAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
