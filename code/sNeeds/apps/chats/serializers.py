@@ -31,7 +31,10 @@ class ChatSerializer(serializers.ModelSerializer):
         user = request.user
         consultant = obj.consultant
 
-        if consultant is not None and user == consultant.user:
+        if not consultant:
+            return None
+
+        if user == consultant.user:
             return None
 
         elif consultant.profile_picture:
