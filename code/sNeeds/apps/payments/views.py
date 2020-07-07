@@ -56,8 +56,8 @@ class SendRequest(APIView):
             return Response({"detail": "This user is not cart's owner."}, 400)
 
         if cart.is_acceptable_with_zero_price():
-            Order.objects.sell_cart_create_order(cart)
-            return Response({"detail": "Success", "ReflD": "00000000"}, status=200)
+            order = Order.objects.sell_cart_create_order(cart)
+            return Response({"detail": "Success", "ReflD": "00000000", "order": order.id}, status=200)
 
         if cart.is_acceptable_for_pay():
 
