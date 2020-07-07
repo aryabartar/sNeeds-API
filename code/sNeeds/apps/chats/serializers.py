@@ -48,7 +48,10 @@ class ChatSerializer(serializers.ModelSerializer):
         user = request.user
 
         if user == obj.user:
-            other_person = obj.consultant.user
+            if obj.consultant:
+                other_person = obj.consultant.user
+            else:
+                other_person = None
         else:
             other_person = obj.user
 
