@@ -5,14 +5,12 @@ from django.db.models.signals import post_save, pre_delete, pre_save, m2m_change
 from django.utils import timezone
 
 from sNeeds.apps.carts.models import Cart
-from sNeeds.apps.consultants.models import ConsultantProfile
-from sNeeds.apps.notifications.models import EmailNotification
+from sNeeds.apps.notifications.models import SoldTimeSlotEmailNotification
 from sNeeds.apps.store.models import TimeSlotSale, SoldTimeSlotSale, Product
 from sNeeds.apps.store.tasks import notify_sold_time_slot
 from sNeeds.apps.chats.models import Chat
 from sNeeds.settings.config.variables import FRONTEND_URL
 from sNeeds.utils.custom.time_functions import utc_to_jalali_string
-from sNeeds.utils.sendemail import send_sold_time_slot_start_reminder_email
 
 
 def pre_delete_product_receiver(sender, instance, *args, **kwargs):
@@ -53,12 +51,13 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         }
 
         # For student
-        EmailNotification.objects.create_sold_time_slot_reminder(
-            send_date=instance.start_time - timezone.timedelta(days=2),
+        SoldTimeSlotEmailNotification.objects.create_sold_time_slot_reminder(
+            sold_time_slot_id=instance.id,
+            send_date=instance.start_time - timezone.timedelta(days=1),
             data_json=json.dumps(data_dict),
             email=instance.sold_to.email
         )
-        EmailNotification.objects.create_sold_time_slot_reminder(
+        SoldTimeSlotEmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
             data_json=json.dumps(data_dict),
             email=instance.sold_to.email
@@ -67,12 +66,13 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
         data_dict["name"] = instance.consultant.user.get_full_name()
 
         # For consultant
-        EmailNotification.objects.create_sold_time_slot_reminder(
-            send_date=instance.start_time - timezone.timedelta(days=2),
+        SoldTimeSlotEmailNotification.objects.create_sold_time_slot_reminder(
+            sold_time_slot_id=instance.id,
+            send_date=instance.start_time - timezone.timedelta(days=1),
             data_json=json.dumps(data_dict),
             email=instance.consultant.user.email
         )
-        EmailNotification.objects.create_sold_time_slot_reminder(
+        SoldTimeSlotEmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
             data_json=json.dumps(data_dict),
             email=instance.consultant.user.email
