@@ -39,5 +39,9 @@ class EmailNotification(Notification):
         return json.loads(self.data_json)
 
 
-class SoldTimeSlotEmailNotification(EmailNotification):
+class SoldTimeSlotReminderEmailNotification(EmailNotification):
     sold_time_slot_id = models.PositiveIntegerField()
+
+
+class SoldTimeSlotChangedEmailNotification(EmailNotification):
+    pass
