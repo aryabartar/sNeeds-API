@@ -39,10 +39,10 @@ class ConsultantProfileQuerySetManager(models.QuerySet):
         if params.get('countries') is not None:
             qs = qs.filter(studyinfo__university__country__id__in=params.get('countries'))
         if params.get('field_of_studies') is not None:
-            qs = qs.filter(studyinfo__field_of_study__id__in=params.get('universities'))
+            qs = qs.filter(studyinfo__field_of_study__id__in=params.get('field_of_studies'))
         if params.get('universities') is not None:
-            qs = qs.filter(studyinfo__university__id__in=params.get('field_of_studies'))
-
+            qs = qs.filter(studyinfo__university__id__in=params.get('universities'))
+            pass
         return qs
 
 
