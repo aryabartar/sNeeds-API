@@ -42,7 +42,9 @@ class ConsultantProfileList(generics.ListAPIView):
         university = self.request.query_params.getlist("university")
         country = self.request.query_params.getlist("country")
         field_of_study = self.request.query_params.getlist("field_of_study")
-
+        print(university)
+        print(country)
+        print(field_of_study)
         if university != [] or country != [] or field_of_study != []:
             qs_for_university = qs.none()
             qs_for_country = qs.none()
