@@ -51,8 +51,13 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
             "start_time": start_time,
             "end_time": end_time
         }
-        print("1", data_dict)
+
         # For student
+        EmailNotification.objects.create_sold_time_slot_reminder(
+            send_date=instance.start_time - timezone.timedelta(days=2),
+            data_json=json.dumps(data_dict),
+            email=instance.sold_to.email
+        )
         EmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
             data_json=json.dumps(data_dict),
@@ -63,6 +68,11 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 
         # For consultant
         EmailNotification.objects.create_sold_time_slot_reminder(
+            send_date=instance.start_time - timezone.timedelta(days=2),
+            data_json=json.dumps(data_dict),
+            email=instance.consultant.user.email
+        )
+        EmailNotification.objects.create_sold_time_slot_reminder(
             send_date=instance.start_time - timezone.timedelta(hours=2),
             data_json=json.dumps(data_dict),
             email=instance.consultant.user.email
@@ -72,8 +82,8 @@ def post_save_time_slot_sold_receiver(sender, instance, created, *args, **kwargs
 def post_save_product_receiver(sender, instance, *args, **kwargs):
     cart_qs = Cart.objects.filter(products__in=[instance])
 
-    # Used when time slot sold price is changed and its signal is triggered to update this model or product set active
-    # to False
+    # Used when time slot sold price is changed and its signal is triggered to
+    # update this model or product set active to False
     for obj in cart_qs:
         obj.update_products()
         obj.update_price()
