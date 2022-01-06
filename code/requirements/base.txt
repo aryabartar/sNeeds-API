@@ -8,7 +8,7 @@ Babel==2.7.0
 billiard==3.6.2.0
 bitcoin==1.1.42
 cached-property==1.5.1
-celery==4.4.0
+celery==5.2.2
 certifi==2019.6.16
 chardet==3.0.4
 coreapi==2.3.3
