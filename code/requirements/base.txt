@@ -55,7 +55,7 @@ kombu==4.6.7
 lxml==4.5.0
 MarkupSafe==1.1.1
 matplotlib==3.0.3
-numpy==1.17.4
+numpy==1.22.0
 packaging==20.1
 Pillow==7.1.1
 prompt-toolkit==2.0.9
